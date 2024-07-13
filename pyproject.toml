@@ -1,0 +1,26 @@
+[project]
+name = "jsonyx"
+version = "0.0.2"
+authors = [
+  { name="Nice Zombies", email="nineteendo19d0@gmail.com" },
+]
+description = "JSONYX module"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["typing_extensions"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/nineteendo/jsonyx"
+Issues = "https://github.com/nineteendo/jsonyx/issues"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["jsonyx"]
