@@ -1,6 +1,6 @@
 [project]
 name = "jsonyx"
-version = "0.0.2"
+version = "0.0.3"
 authors = [
   { name="Nice Zombies", email="nineteendo19d0@gmail.com" },
 ]
@@ -21,6 +21,3 @@ Issues = "https://github.com/nineteendo/jsonyx/issues"
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
-
-[tool.setuptools.packages.find]
-where = ["jsonyx"]
