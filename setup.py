@@ -8,4 +8,6 @@ __all__: list[str] = []
 from setuptools import Extension, setup  # type: ignore
 
 if __name__ == "__main__":
-    setup(ext_modules=[Extension("_jsonyx", ["src/jsonyx/_accelerator.c"])])
+    setup(ext_modules=[
+        Extension("_jsonyx.__init__", ["src/_jsonyx/__init__.c"]),
+    ])
