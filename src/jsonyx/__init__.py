@@ -140,7 +140,7 @@ class Encoder:
 
         :param allow: the allowed JSON deviations, defaults to NOTHING
         :type allow: Container[str], optional
-        :param end: the string to append at the end, defaults to "\n"
+        :param end: the string to append at the end, defaults to "\\n"
         :type end: str, optional
         :param ensure_ascii: escape non-ASCII characters, defaults to False
         :type ensure_ascii: bool, optional
@@ -387,7 +387,7 @@ def write(  # noqa: PLR0913
     :type filename: StrPath
     :param allow: the allowed JSON deviations, defaults to NOTHING
     :type allow: Container[str], optional
-    :param end: the string to append at the end, defaults to "\n"
+    :param end: the string to append at the end, defaults to "\\n"
     :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to False
     :type ensure_ascii: bool, optional
@@ -439,7 +439,7 @@ def dump(  # noqa: PLR0913
     :type fp: SupportsWrite[str], optional
     :param allow: the allowed JSON deviations, defaults to NOTHING
     :type allow: Container[str], optional
-    :param end: the string to append at the end, defaults to "\n"
+    :param end: the string to append at the end, defaults to "\\n"
     :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to False
     :type ensure_ascii: bool, optional
@@ -488,7 +488,7 @@ def dumps(  # noqa: PLR0913
     :type obj: object
     :param allow: the allowed JSON deviations, defaults to NOTHING
     :type allow: Container[str], optional
-    :param end: the string to append at the end, defaults to "\n"
+    :param end: the string to append at the end, defaults to "\\n"
     :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to False
     :type ensure_ascii: bool, optional
