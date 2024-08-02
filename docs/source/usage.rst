@@ -100,15 +100,15 @@ Classes
 
 .. autoclass:: jsonyx.Decoder
 
-    .. autofunction:: load
-    .. autofunction:: loads
-    .. autofunction:: read
+    .. autofunction:: jsonyx.Decoder.load
+    .. autofunction:: jsonyx.Decoder.loads
+    .. autofunction:: jsonyx.Decoder.read
 .. autoclass:: jsonyx.DuplicateKey
 .. autoclass:: jsonyx.Encoder
 
-    .. autofunction:: dump
-    .. autofunction:: dumps
-    .. autofunction:: write
+    .. autofunction:: jsonyx.Encoder.dump
+    .. autofunction:: jsonyx.Encoder.dumps
+    .. autofunction:: jsonyx.Encoder.write
 
 Exceptions
 ----------
