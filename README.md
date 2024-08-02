@@ -30,4 +30,4 @@ Key Features:
     ```
 
 The latest documentation for jsonyx is available online at:
-https://jsonyx.readthedocs.io/en/stable/usage.html
+https://jsonyx.readthedocs.io/en/latest/usage.html

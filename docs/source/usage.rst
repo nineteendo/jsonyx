@@ -83,21 +83,30 @@ Using :mod:`jsonyx.tool` from the shell to validate and pretty-print:
          ^
     jsonyx._decoder.JSONSyntaxError: Expecting string
 
-Basic Usage
------------
+Functions
+---------
 
+.. autofunction:: jsonyx.detect_encoding
 .. autofunction:: jsonyx.dump
 .. autofunction:: jsonyx.dumps
+.. autofunction:: jsonyx.format_syntax_error
 .. autofunction:: jsonyx.load
 .. autofunction:: jsonyx.loads
 .. autofunction:: jsonyx.read
 .. autofunction:: jsonyx.write
 
-Decoders and Encoders
----------------------
+Classes
+-------
 
 .. autoclass:: jsonyx.Decoder
+    .. autofunction:: load
+    .. autofunction:: loads
+    .. autofunction:: read
+.. autoclass:: jsonyx.DuplicateKey
 .. autoclass:: jsonyx.Encoder
+    .. autofunction:: dump
+    .. autofunction:: dumps
+    .. autofunction:: write
 
 Exceptions
 ----------
