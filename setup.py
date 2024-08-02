@@ -1,5 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
-"""JSONYX extension modules."""
+"""jsonyx extension modules."""
 from __future__ import annotations
 
 __all__: list[str] = []

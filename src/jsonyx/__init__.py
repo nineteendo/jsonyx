@@ -1,5 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
-"""JSONYX module for JSON (de)serialization."""
+"""jsonyx module for JSON (de)serialization."""
 from __future__ import annotations
 
 __all__: list[str] = [

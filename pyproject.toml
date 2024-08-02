@@ -4,12 +4,11 @@ version = "0.0.5"
 authors = [
   { name="Nice Zombies", email="nineteendo19d0@gmail.com" },
 ]
-description = "JSONYX module"
+description = "jsonyx module"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["typing_extensions"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
@@ -17,6 +16,7 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://github.com/nineteendo/jsonyx"
+Documentation = "https://jsonyx.readthedocs.io"
 Issues = "https://github.com/nineteendo/jsonyx/issues"
 
 [build-system]
