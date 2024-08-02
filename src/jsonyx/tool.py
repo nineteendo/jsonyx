@@ -30,7 +30,11 @@ class JSONNamespace:
 
 
 def register(parser: ArgumentParser) -> None:
-    """Register JSON tool."""
+    """Register JSON tool.
+
+    :param parser: an argument parser
+    :type parser: ArgumentParser
+    """
     parser.add_argument(
         "filename",
         nargs="?",
@@ -79,7 +83,11 @@ def register(parser: ArgumentParser) -> None:
 
 
 def run(args: JSONNamespace) -> None:
-    """Run JSON tool."""
+    """Run JSON tool.
+
+    :param args: the commandline arguments
+    :type args: JSONNamespace
+    """
     if args.filename:
         filename: str = args.filename
         s: bytes | str = Path(filename).read_bytes()

@@ -184,6 +184,8 @@ Functions
 .. autofunction:: jsonyx.loads
 .. autofunction:: jsonyx.read
 .. autofunction:: jsonyx.write
+.. autofunction:: jsonyx.tool.register
+.. autofunction:: jsonyx.tool.run
 
 Classes
 -------
@@ -200,6 +202,9 @@ Classes
         {'key': 'value 1', 'key': 'value 2'}
 
 .. autoclass:: jsonyx.Encoder
+    :members:
+
+.. autoclass:: jsonyx.tool.JSONNamespace
     :members:
 
 Exceptions
