@@ -99,11 +99,13 @@ Classes
 -------
 
 .. autoclass:: jsonyx.Decoder
+
     .. autofunction:: load
     .. autofunction:: loads
     .. autofunction:: read
 .. autoclass:: jsonyx.DuplicateKey
 .. autoclass:: jsonyx.Encoder
+
     .. autofunction:: dump
     .. autofunction:: dumps
     .. autofunction:: write
