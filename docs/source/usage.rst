@@ -77,7 +77,7 @@ Using :mod:`jsonyx.tool` from the shell to validate and pretty-print:
 
 .. code-block:: shell-session
 
-    $ echo '{"json":"obj"}' | python -m jsonyx.tool --indent 4
+    $ echo '{"json": "obj"}' | python -m jsonyx.tool --indent 4
     {
         "json": "obj"
     }
@@ -86,6 +86,8 @@ Using :mod:`jsonyx.tool` from the shell to validate and pretty-print:
         {1.2: 3.4}
          ^
     jsonyx._decoder.JSONSyntaxError: Expecting string
+
+See :ref:`json-commandline` for detailed documentation.
 
 Constants
 ---------
@@ -204,3 +206,84 @@ Exceptions
 ----------
 
 .. autoexception:: jsonyx.JSONSyntaxError
+
+.. _json-commandline:
+.. program:: jsonyx.tool
+
+Command Line Interface
+----------------------
+
+The :mod:`jsonyx.tool` module provides a simple command line interface to
+validate and pretty-print JSON objects.
+
+If the optional ``filename`` argument is not specified, :data:`sys.stdin` will 
+be used:
+
+.. code-block:: shell-session
+
+    $ echo '{"json": "obj"}' | python -m jsonyx.tool --indent 4
+    {
+        "json": "obj"
+    }
+    $ echo '{1.2: 3.4}' | python -m jsonyx.tool
+      File "<stdin>", line 1, column 2
+        {1.2: 3.4}
+         ^
+    jsonyx._decoder.JSONSyntaxError: Expecting string
+
+Command line options
+^^^^^^^^^^^^^^^^^^^^
+
+.. option:: filename
+
+   The JSON file to be validated or pretty-printed:
+
+   .. code-block:: shell-session
+
+        $ python -m jsonyx.tool mp_films.json
+        [
+            {
+                "title": "And Now for Something Completely Different",
+                "year": 1971
+            },
+            {
+                "title": "Monty Python and the Holy Grail",
+                "year": 1975
+            }
+        ]
+
+   If *filename* is not specified, read from :data:`sys.stdin`.
+
+.. option:: -h, --help
+
+   Show the help message and exit.
+
+.. option:: --compact
+
+   Don't add unnecessary whitespace after "," and ":".
+
+.. option:: --ensure-ascii
+
+   Escape non-ascii characters.
+
+.. option:: --indent
+            --indent-tab
+
+   Mutually exclusive options for whitespace control.
+
+.. option:: --no-commas
+            --trailing-comma
+
+   Mutually exclusive options for comma control.
+
+.. option:: --nonstrict
+
+   Allow all JSON deviations.
+
+.. option:: --sort-keys
+
+   Sort the keys of objects.
+
+.. option:: --use-decimal
+
+   Use decimal instead of float.
