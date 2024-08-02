@@ -28,7 +28,7 @@ Key Features:
     }
 
 Check out the :doc:`usage` section for further information, including how to
-:ref:`install` the project.
+:ref:`installation` the project.
 
 Contents
 --------
