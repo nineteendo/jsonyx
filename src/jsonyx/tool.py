@@ -8,14 +8,14 @@ __all__: list[str] = ["JSONNamespace", "register", "run"]
 import sys
 from argparse import ArgumentParser
 from pathlib import Path
-from sys import stdin
+from sys import stderr, stdin
 
-from jsonyx import JSONSyntaxError, dumps, format_syntax_error, loads
+from jsonyx import JSONSyntaxError, dump, format_syntax_error, loads
 from jsonyx.allow import EVERYTHING, NOTHING, SURROGATES
-from typing_extensions import Any  # type: ignore
 
 
-class JSONNamespace:  # pylint: disable=R0903
+# pylint: disable-next=R0903
+class JSONNamespace:
     """JSON namespace."""
 
     compact: bool
@@ -25,6 +25,7 @@ class JSONNamespace:  # pylint: disable=R0903
     no_commas: bool
     nonstrict: bool
     sort_keys: bool
+    trailing_comma: bool
     use_decimal: bool
 
 
@@ -38,7 +39,9 @@ def register(parser: ArgumentParser) -> None:
     group.add_argument(
         "--indent-tab", action="store_const", const="\t", dest="indent",
     )
-    parser.add_argument("--no-commas", action="store_true")
+    group2 = parser.add_mutually_exclusive_group()
+    group2.add_argument("--no-commas", action="store_true")
+    group2.add_argument("--trailing-comma", action="store_true")
     parser.add_argument("--nonstrict", action="store_true")
     parser.add_argument("--sort-keys", action="store_true")
     parser.add_argument("--use-decimal", action="store_true")
@@ -46,26 +49,27 @@ def register(parser: ArgumentParser) -> None:
 
 def run(args: JSONNamespace) -> None:
     """Run JSON tool."""
-    s: bytes | str
     if args.filename:
         filename: str = args.filename
-        s = Path(filename).read_bytes()
-    elif stdin.isatty():
-        filename, s = "<stdin>", "\n".join(iter(input, ""))
+        s: bytes | str = Path(filename).read_bytes()
     else:
-        filename, s = "<stdin>", stdin.buffer.read()
+        filename = "<stdin>"
+        s = "\n".join(
+            iter(input, ""),
+        ) if stdin.isatty() else stdin.buffer.read()
 
     try:
-        obj: Any = loads(
+        obj: object = loads(
             s,
             allow=EVERYTHING - SURROGATES if args.nonstrict else NOTHING,
             filename=filename,
             use_decimal=args.use_decimal,
         )
     except JSONSyntaxError as exc:
-        raise SystemExit(format_syntax_error(exc)) from None
+        stderr.write("".join(format_syntax_error(exc)))
+        sys.exit(1)
 
-    print(dumps(
+    dump(
         obj,
         allow=EVERYTHING - SURROGATES if args.nonstrict else NOTHING,
         ensure_ascii=args.ensure_ascii,
@@ -75,7 +79,8 @@ def run(args: JSONNamespace) -> None:
         ),
         key_separator=":" if args.compact else ": ",
         sort_keys=args.sort_keys,
-    ))
+        trailing_comma=args.trailing_comma,
+    )
 
 
 def _main() -> None:

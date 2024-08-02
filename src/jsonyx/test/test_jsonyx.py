@@ -1,50 +1,28 @@
 # Copyright (C) 2024 Nice Zombies
-# TODO(Nice Zombies): test jsonyx.Decoder
-# TODO(Nice Zombies): test jsonyx.Encoder
-# TODO(Nice Zombies): test jsonyx.JSONSyntaxError
-# TODO(Nice Zombies): test jsonyx.dump
-# TODO(Nice Zombies): test jsonyx.dumps
-# TODO(Nice Zombies): test jsonyx.format_syntax_error
-# TODO(Nice Zombies): test jsonyx.load
-# TODO(Nice Zombies): test jsonyx.read
-# TODO(Nice Zombies): test jsonyx.write
 """JSON tests."""
 from __future__ import annotations
 
-__all__: list[str] = ["get_json"]
+__all__: list[str] = []
 
-from test.support.import_helper import import_fresh_module  # type: ignore
+from io import StringIO
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from typing import TYPE_CHECKING
 
 import pytest
-from jsonyx import JSONSyntaxError, detect_encoding
+from jsonyx import JSONSyntaxError, detect_encoding, format_syntax_error
+# pylint: disable-next=W0611
+from jsonyx.test import get_json  # type: ignore # noqa: F401
 
 if TYPE_CHECKING:
     from types import ModuleType
 
-cjson: ModuleType | None = import_fresh_module(
-    "jsonyx", fresh=["_jsonyx.__init__"],
-)
-pyjson: ModuleType | None = import_fresh_module("jsonyx", blocked=["_jsonyx"])
-if cjson:
-    # JSONSyntaxError is cached inside the _jsonyx module
-    cjson.JSONSyntaxError = JSONSyntaxError  # type: ignore
-
-
-@pytest.fixture(params=[cjson, pyjson], ids=["cjson", "pyjson"], name="json")
-def get_json(request: pytest.FixtureRequest) -> ModuleType:
-    """Get JSON module."""
-    json: ModuleType | None = request.param
-    if json is None:
-        pytest.skip("requires _jsonyx")
-
-    return json
-
 
 def test_duplicate_key(json: ModuleType) -> None:
     """Test DuplicateKey."""
-    string: str = json.DuplicateKey("a")
-    assert str(string) == "a"
+    string: object = json.DuplicateKey("")
+    assert isinstance(string, str)
+    assert not str(string)
     assert hash(string) == id(string)
 
 
@@ -95,5 +73,44 @@ def test_duplicate_key(json: ModuleType) -> None:
 ])
 def test_detect_encoding(s: str, encoding: str) -> None:
     """Test detect JSON encoding."""
-    b: bytes = bytes.fromhex(s.replace("XX", "01"))
-    assert detect_encoding(b) == encoding
+    assert detect_encoding(bytes.fromhex(s.replace("XX", "01"))) == encoding
+
+
+@pytest.mark.parametrize(("doc", "end", "line_range", "column_range"), [
+    ("line 1", 5, "1", "6"),
+    #      ^
+    ("line 1", 6, "1", "6-7"),
+    #      ^
+    ("line 1\nline 2", 12, "1-2", "6"),
+    #      ^^^^^^^^
+    ("line 1\nline 2", 13, "1-2", "6-7"),
+    #      ^^^^^^^^^
+])
+def test_format_syntax_error(
+    doc: str, end: int, line_range: str, column_range: str,
+) -> None:
+    """Test format_syntax_error."""
+    exc: JSONSyntaxError = JSONSyntaxError("", "<string>", doc, 5, end)
+    assert format_syntax_error(exc)[0] == (
+        f'  File "<string>", line {line_range}, column {column_range}\n'
+    )
+
+
+def test_dump(json: ModuleType) -> None:
+    """Test JSON dump."""
+    fp: StringIO = StringIO()
+    json.dump(0, fp, end="")
+    assert fp.getvalue() == "0"
+
+
+def test_load(json: ModuleType) -> None:
+    """Test JSON load."""
+    assert json.load(StringIO("0")) == 0
+
+
+def test_read(json: ModuleType) -> None:
+    """Test JSON read."""
+    with TemporaryDirectory() as tmpdir:
+        filename: Path = Path(tmpdir) / "file.json"
+        filename.write_text("0", "utf_8")
+        assert json.read(filename) == 0

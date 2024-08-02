@@ -21,16 +21,15 @@ from codecs import (
     BOM_UTF8, BOM_UTF16_BE, BOM_UTF16_LE, BOM_UTF32_BE, BOM_UTF32_LE,
 )
 from decimal import Decimal
-from io import StringIO
 from os import fspath
 from os.path import realpath
 from pathlib import Path
-from typing import TYPE_CHECKING
+from sys import stdout
+from typing import TYPE_CHECKING, Any, Literal
 
 from jsonyx._decoder import DuplicateKey, JSONSyntaxError, make_scanner
-from jsonyx._encoder import make_writer
+from jsonyx._encoder import make_encoder
 from jsonyx.allow import NOTHING
-from typing_extensions import Any, Literal  # type: ignore
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Container
@@ -41,11 +40,6 @@ if TYPE_CHECKING:
         "comments", "duplicate_keys", "missing_commas", "nan_and_infinity",
         "surrogates", "trailing_comma",
     ] | str]
-
-try:
-    from _jsonyx import make_encoder
-except ImportError:
-    make_encoder = None
 
 
 class Decoder:
@@ -65,12 +59,17 @@ class Decoder:
 
     def read(self, filename: StrPath) -> Any:
         """Deserialize a JSON file to a Python object."""
-        with Path(filename).open("rb") as fp:
-            self.loads(fp.read(), filename=filename)
+        return self.loads(Path(filename).read_bytes(), filename=filename)
 
-    def load(self, fp: SupportsRead[bytes | str]) -> Any:
+    def load(
+        self, fp: SupportsRead[bytes | str], *, root: StrPath = ".",
+    ) -> Any:
         """Deserialize an open JSON file to a Python object."""
-        return self.loads(fp.read(), filename=getattr(fp, "name", "<string>"))
+        name: str | None
+        if name := getattr(fp, "name", None):
+            return self.loads(fp.read(), filename=Path(root) / name)
+
+        return self.loads(fp.read())
 
     def loads(
         self, s: bytearray | bytes | str, *, filename: StrPath = "<string>",
@@ -78,15 +77,10 @@ class Decoder:
         """Deserialize a JSON string to a Python object."""
         filename = fspath(filename)
         if not filename.startswith("<") and not filename.endswith(">"):
-            try:
-                filename = realpath(filename, strict=True)
-            except OSError:
-                filename = "<unknown>"
+            filename = realpath(filename)
 
         if not isinstance(s, str):
             s = s.decode(detect_encoding(s), self._errors)
-            # Normalize newlines
-            s = s.replace("\r\n", "\n").replace("\r", "\n")
         elif s.startswith("\ufeff"):
             msg: str = "Unexpected UTF-8 BOM"
             raise JSONSyntaxError(msg, filename, s, 0)
@@ -97,22 +91,28 @@ class Decoder:
 class Encoder:
     """JSON encoder."""
 
-    # TODO(Nice Zombies): add trailing_comma=True
     # pylint: disable-next=R0913
     def __init__(  # noqa: PLR0913
         self,
         *,
         allow: _AllowList = NOTHING,
+        end: str = "\n",
         ensure_ascii: bool = False,
         indent: int | str | None = None,
         item_separator: str = ", ",
         key_separator: str = ": ",
         sort_keys: bool = False,
+        trailing_comma: bool = False,
     ) -> None:
         """Create new JSON encoder."""
         allow_nan_and_infinity: bool = "nan_and_infinity" in allow
         allow_surrogates: bool = "surrogates" in allow
         decimal_str: Callable[[Decimal], str] = Decimal.__str__
+
+        if indent is not None:
+            item_separator = item_separator.rstrip()
+            if isinstance(indent, int):
+                indent = " " * indent
 
         def encode_decimal(decimal: Decimal) -> str:
             if not decimal.is_finite():
@@ -129,43 +129,24 @@ class Encoder:
 
             return decimal_str(decimal)
 
-        if indent is not None:
-            item_separator = item_separator.rstrip()
-            if isinstance(indent, int):
-                indent = " " * indent
-
-        if make_encoder is None:
-            self._encoder: Callable[[Any], str] | None = None
-        else:
-            self._encoder = make_encoder(
-                encode_decimal, indent, item_separator, key_separator,
-                allow_nan_and_infinity, allow_surrogates, ensure_ascii,
-                sort_keys,
-            )
-
-        # TODO(Nice Zombies): implement writer in C
-        self._writer: Callable[[Any, SupportsWrite[str]], None] = make_writer(
-            encode_decimal, indent, item_separator, key_separator,
+        self._encoder: Callable[[object], str] = make_encoder(
+            encode_decimal, indent, end, item_separator, key_separator,
             allow_nan_and_infinity, allow_surrogates, ensure_ascii, sort_keys,
+            trailing_comma,
         )
+        self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 
-    def write(self, obj: Any, filename: StrPath) -> None:
+    def write(self, obj: object, filename: StrPath) -> None:
         """Serialize a Python object to a JSON file."""
-        with Path(filename).open("w", encoding="utf_8") as fp:
-            self._writer(obj, fp)
+        Path(filename).write_text(self._encoder(obj), "utf_8", self._errors)
 
-    def dump(self, obj: Any, fp: SupportsWrite[str]) -> None:
+    def dump(self, obj: object, fp: SupportsWrite[str] = stdout) -> None:
         """Serialize a Python object to an open JSON file."""
-        self._writer(obj, fp)
+        fp.write(self._encoder(obj))
 
-    def dumps(self, obj: Any) -> str:
+    def dumps(self, obj: object) -> str:
         """Serialize a Python object to a JSON string."""
-        if self._encoder:
-            return self._encoder(obj)
-
-        fp: StringIO = StringIO()
-        self._writer(obj, fp)
-        return fp.getvalue()
+        return self._encoder(obj)
 
 
 def detect_encoding(b: bytearray | bytes) -> str:
@@ -201,29 +182,26 @@ def detect_encoding(b: bytearray | bytes) -> str:
     return encoding
 
 
-def format_syntax_error(exc: JSONSyntaxError) -> str:
+def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
     """Format JSON syntax error."""
-    if exc.end_lineno != exc.lineno:
-        linerange: str = f"{exc.lineno:d}-{exc.end_lineno:d}"
+    if exc.end_lineno == exc.lineno:
+        line_range: str = f"{exc.lineno:d}"
     else:
-        linerange = f"{exc.lineno:d}"
+        line_range = f"{exc.lineno:d}-{exc.end_lineno:d}"
 
-    if exc.end_colno != exc.colno:
-        colrange: str = f"{exc.colno:d}-{exc.end_colno:d}"
+    if exc.end_colno == exc.colno:
+        column_range: str = f"{exc.colno:d}"
     else:
-        colrange = f"{exc.colno:d}"
+        column_range = f"{exc.colno:d}-{exc.end_colno:d}"
 
-    selection_length: int = exc.end_offset - exc.offset  # type: ignore
-    caret_line: str = (  # type: ignore
-        " " * (exc.offset - 1) + "^" * selection_length  # type: ignore
-    )
-    exc_type: type[JSONSyntaxError] = type(exc)
-    return f"""\
-  File {exc.filename!r}, line {linerange}, column {colrange}
-    {exc.text}
-    {caret_line}
-{exc_type.__module__}.{exc_type.__qualname__}: {exc.msg}\
-"""
+    caret_indent: str = " " * (exc.offset - 1)  # type: ignore
+    caret_selection: str = "^" * (exc.end_offset - exc.offset)  # type: ignore
+    return [
+        f'  File "{exc.filename}", line {line_range}, column {column_range}\n',
+        f"    {exc.text}\n",
+        f"    {caret_indent}{caret_selection}\n",
+        f"{exc.__module__}.{type(exc).__qualname__}: {exc.msg}\n",
+    ]
 
 
 def read(
@@ -240,10 +218,11 @@ def load(
     fp: SupportsRead[bytes | str],
     *,
     allow: _AllowList = NOTHING,
+    root: StrPath = ".",
     use_decimal: bool = False,
 ) -> Any:
     """Deserialize an open JSON file to a Python object."""
-    return Decoder(allow=allow, use_decimal=use_decimal).load(fp)
+    return Decoder(allow=allow, use_decimal=use_decimal).load(fp, root=root)
 
 
 def loads(
@@ -261,65 +240,79 @@ def loads(
 
 # pylint: disable-next=R0913
 def write(  # noqa: PLR0913
-    obj: Any,
+    obj: object,
     filename: StrPath,
     *,
     allow: _AllowList = NOTHING,
+    end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     item_separator: str = ", ",
     key_separator: str = ": ",
     sort_keys: bool = False,
+    trailing_comma: bool = False,
 ) -> None:
     """Serialize a Python object to a JSON file."""
     return Encoder(
         allow=allow,
+        end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
         item_separator=item_separator,
         key_separator=key_separator,
         sort_keys=sort_keys,
+        trailing_comma=trailing_comma,
     ).write(obj, filename)
 
 
 # pylint: disable-next=R0913
 def dump(  # noqa: PLR0913
-    obj: Any,
-    fp: SupportsWrite[str],
+    obj: object,
+    fp: SupportsWrite[str] = stdout,
     *,
     allow: _AllowList = NOTHING,
-    ensure_ascii: bool = False,
-    indent: int | str | None = None,
-    item_separator: str = ", ",
-    key_separator: str = ": ",
-) -> None:
-    """Serialize a Python object to an open JSON file."""
-    Encoder(
-        allow=allow,
-        ensure_ascii=ensure_ascii,
-        indent=indent,
-        item_separator=item_separator,
-        key_separator=key_separator,
-    ).dump(obj, fp)
-
-
-# pylint: disable-next=R0913
-def dumps(  # noqa: PLR0913
-    obj: Any,
-    *,
-    allow: _AllowList = NOTHING,
+    end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     item_separator: str = ", ",
     key_separator: str = ": ",
     sort_keys: bool = False,
-) -> str:
-    """Serialize a Python object to a JSON string."""
-    return Encoder(
+    trailing_comma: bool = False,
+) -> None:
+    """Serialize a Python object to an open JSON file."""
+    Encoder(
         allow=allow,
+        end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
         item_separator=item_separator,
         key_separator=key_separator,
         sort_keys=sort_keys,
+        trailing_comma=trailing_comma,
+    ).dump(obj, fp)
+
+
+# pylint: disable-next=R0913
+def dumps(  # noqa: PLR0913
+    obj: object,
+    *,
+    allow: _AllowList = NOTHING,
+    end: str = "\n",
+    ensure_ascii: bool = False,
+    indent: int | str | None = None,
+    item_separator: str = ", ",
+    key_separator: str = ": ",
+    sort_keys: bool = False,
+    trailing_comma: bool = False,
+) -> str:
+    """Serialize a Python object to a JSON string."""
+    return Encoder(
+        allow=allow,
+        end=end,
+        ensure_ascii=ensure_ascii,
+        indent=indent,
+        item_separator=item_separator,
+        key_separator=key_separator,
+        sort_keys=sort_keys,
+        trailing_comma=trailing_comma,
     ).dumps(obj)

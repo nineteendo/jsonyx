@@ -9,5 +9,5 @@ from setuptools import Extension, setup  # type: ignore
 
 if __name__ == "__main__":
     setup(ext_modules=[
-        Extension("_jsonyx.__init__", ["src/_jsonyx/__init__.c"]),
+        Extension("_jsonyx", ["src/jsonyx/_speedups.c"], optional=True),
     ])

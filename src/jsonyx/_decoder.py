@@ -9,9 +9,7 @@ from decimal import Decimal, InvalidOperation
 from math import isinf
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from shutil import get_terminal_size
-from typing import TYPE_CHECKING
-
-from typing_extensions import Any  # type: ignore
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -31,6 +29,9 @@ _UNESCAPE: dict[str, str] = {
 _match_chunk: Callable[[str, int], Match[str] | None] = re.compile(
     r'[^"\\\x00-\x1f]+', _FLAGS,
 ).match
+_match_line_end: Callable[[str, int], Match[str] | None] = re.compile(
+    r"[^\n\r]+", _FLAGS,
+).match
 _match_number: Callable[[str, int], Match[str] | None] = re.compile(
     r"(-?(?:0|[1-9]\d*))(\.\d+)?([eE][-+]?\d+)?", _FLAGS,
 ).match
@@ -40,12 +41,21 @@ _match_whitespace: Callable[[str, int], Match[str] | None] = re.compile(
 
 
 def _get_err_context(doc: str, start: int, end: int) -> tuple[int, str, int]:
-    line_start: int = doc.rfind("\n", 0, start) + 1
-    if (line_end := doc.find("\n", start)) == -1:
-        line_end = len(doc)
+    line_start: int = max(
+        doc.rfind("\n", 0, start), doc.rfind("\r", 0, start),
+    ) + 1
+    if (match := _match_line_end(doc, start)):
+        line_end: int = match.end()
+    else:
+        line_end = start
 
-    end = min(max(start + 1, line_end), end)
+    if (end := min(max(start + 1, line_end), end)) == start:
+        end += 1
+
     max_chars: int = get_terminal_size().columns - 4  # leading spaces
+    if end == line_end + 1:  # newline
+        max_chars -= 1
+
     text_start: int = max(min(
         line_end - max_chars, end - max_chars // 2 - 1, start - max_chars // 3,
     ), line_start)
@@ -67,20 +77,9 @@ def _get_err_context(doc: str, start: int, end: int) -> tuple[int, str, int]:
     return start - text_start + 1, text, end - text_start + 1
 
 
-def _unescape_unicode(filename: str, s: str, end: int) -> int:
-    esc: str = s[end:end + 4]
-    if len(esc) == 4 and esc[1] not in "xX":
-        try:
-            return int(esc, 16)
-        except ValueError:
-            pass
-
-    msg: str = "Expecting 4 hex digits"
-    raise _errmsg(msg, filename, s, end, -4)
-
-
 try:
-    from _jsonyx import DuplicateKey  # type: ignore
+    if not TYPE_CHECKING:
+        from _jsonyx import DuplicateKey
 except ImportError:
     class DuplicateKey(str):
         """Duplicate key."""
@@ -95,20 +94,35 @@ except ImportError:
 class JSONSyntaxError(SyntaxError):
     """JSON syntax error."""
 
-    def __init__(  # pylint: disable=R0913
+    # pylint: disable-next=R0913
+    def __init__(
         self, msg: str, filename: str, doc: str, start: int, end: int = 0,
     ) -> None:
         """Create new JSON syntax error."""
-        lineno: int = doc.count("\n", 0, start) + 1
-        colno: int = start - doc.rfind("\n", 0, start)
-        if end > 0:
-            end_lineno: int = doc.count("\n", 0, end) + 1
-            end_colno: int = end - doc.rfind("\n", 0, end)
-        else:
-            end_lineno = lineno
-            end_colno = colno - end
-            end = start + max(1, -end)
+        lineno: int = (
+            doc.count("\n", 0, start)
+            + doc.count("\r", 0, start)
+            - doc.count("\r\n", 0, start)
+            + 1
+        )
+        colno: int = start - max(
+            doc.rfind("\n", 0, start), doc.rfind("\r", 0, start),
+        )
+        if end <= 0:  # offset
+            if (match := _match_line_end(doc, start)):
+                end = min(match.end(), start - end)
+            else:
+                end = start
 
+        end_lineno: int = (
+            doc.count("\n", 0, end)
+            + doc.count("\r", 0, end)
+            - doc.count("\r\n", 0, end)
+            + 1
+        )
+        end_colno: int = end - max(
+            doc.rfind("\n", 0, end), doc.rfind("\r", 0, end),
+        )
         offset, text, end_offset = _get_err_context(doc, start, end)
         super().__init__(
             msg, (filename, lineno, offset, text, end_lineno, end_offset),
@@ -118,9 +132,19 @@ class JSONSyntaxError(SyntaxError):
 
     def __str__(self) -> str:
         """Convert to string."""
+        if self.end_lineno == self.lineno:
+            line_range: str = f"{self.lineno:d}"
+        else:
+            line_range = f"{self.lineno:d}-{self.end_lineno:d}"
+
+        if self.end_colno == self.colno:
+            column_range: str = f"{self.colno:d}"
+        else:
+            column_range = f"{self.colno:d}-{self.end_colno:d}"
+
         return (
-            f"{self.msg} (file {self.filename}, line {self.lineno:d}, column "
-            f"{self.colno:d})"
+            f"{self.msg} ({self.filename}, line {line_range}, column "
+            f"{column_range})"
         )
 
 
@@ -128,7 +152,8 @@ _errmsg: type[JSONSyntaxError] = JSONSyntaxError
 
 
 try:  # noqa: PLR1702
-    from _jsonyx import make_scanner
+    if not TYPE_CHECKING:
+        from _jsonyx import make_scanner
 except ImportError:
     # pylint: disable-next=R0915, R0913, R0914
     def make_scanner(  # noqa: C901, PLR0915, PLR0917, PLR0913
@@ -143,7 +168,9 @@ except ImportError:
         """Make JSON scanner."""
         memo: dict[str, str] = {}
         memoize: Callable[[str, str], str] = memo.setdefault
-        parse_float: Callable[[str], Any] = Decimal if use_decimal else float
+        parse_float: Callable[
+            [str], Decimal | float,
+        ] = Decimal if use_decimal else float
 
         def skip_comments(filename: str, s: str, end: int) -> int:
             find: Callable[[str, int], int] = s.find
@@ -153,14 +180,13 @@ except ImportError:
 
                 comment_idx: int = end
                 if (comment_prefix := s[end:end + 2]) == "//":
-                    if (end := find("\n", end + 2)) != -1:
-                        end += 1
-                    else:
-                        end = len(s)
+                    end += 2
+                    if (match := _match_line_end(s, end)):
+                        end = match.end()
                 elif comment_prefix == "/*":
                     if (end := find("*/", end + 2)) == -1:
                         if allow_comments:
-                            msg = "Unterminated comment"
+                            msg: str = "Unterminated comment"
                         else:
                             msg = "Comments are not allowed"
 
@@ -173,6 +199,17 @@ except ImportError:
                 if not allow_comments:
                     msg = "Comments are not allowed"
                     raise _errmsg(msg, filename, s, comment_idx, end)
+
+        def unescape_unicode(filename: str, s: str, end: int) -> int:
+            esc: str = s[end:end + 4]
+            if len(esc) == 4 and esc[1] not in "xX":
+                try:
+                    return int(esc, 16)
+                except ValueError:
+                    pass
+
+            msg: str = "Expecting 4 hex digits"
+            raise _errmsg(msg, filename, s, end, -4)
 
         # pylint: disable-next=R0912, R0915
         def scan_string(  # noqa: C901, PLR0912, PLR0915
@@ -199,7 +236,7 @@ except ImportError:
                     return "".join(chunks), end + 1
 
                 if terminator != "\\":
-                    if terminator == "\n":
+                    if terminator in {"\n", "\r"}:
                         msg = "Unterminated string"
                         raise _errmsg(msg, filename, s, str_idx, end)
 
@@ -218,7 +255,7 @@ except ImportError:
                     try:
                         char = _UNESCAPE[esc]
                     except KeyError:
-                        if esc == "\n":
+                        if esc in {"\n", "\r"}:
                             msg = "Expecting escaped character"
                             raise _errmsg(msg, filename, s, end) from None
 
@@ -229,11 +266,11 @@ except ImportError:
 
                     end += 1
                 else:
-                    uni: int = _unescape_unicode(filename, s, end + 1)
+                    uni: int = unescape_unicode(filename, s, end + 1)
                     end += 5
                     if 0xd800 <= uni <= 0xdbff:
                         if s[end:end + 2] == r"\u":
-                            uni2: int = _unescape_unicode(filename, s, end + 2)
+                            uni2: int = unescape_unicode(filename, s, end + 2)
                             if 0xdc00 <= uni2 <= 0xdfff:
                                 uni = ((uni - 0xd800) << 10) | (uni2 - 0xdc00)
                                 uni += 0x10000
@@ -346,7 +383,7 @@ except ImportError:
                 return [], end + 1
 
             values: list[Any] = []
-            append_value: Callable[[Any], None] = values.append
+            append_value: Callable[[object], None] = values.append
             while True:
                 value, end = scan_value(filename, s, end)
                 append_value(value)
@@ -385,7 +422,7 @@ except ImportError:
 
                     return values, end + 1
 
-        # pylint: disable-next=R0912
+        # pylint: disable-next=R0912, R0915
         def scan_value(  # noqa: C901, PLR0912
             filename: str, s: str, idx: int,
         ) -> tuple[Any, int]:

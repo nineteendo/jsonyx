@@ -35,12 +35,14 @@ typedef struct _PyEncoderObject {
     PyObject *Decimal;
     PyObject *encode_decimal;
     PyObject *indent;
+    PyObject *end;
     PyObject *item_separator;
     PyObject *key_separator;
     int allow_nan_and_infinity;
     int allow_surrogates;
     int ensure_ascii;
     int sort_keys;
+    int trailing_comma;
 } PyEncoderObject;
 
 static Py_hash_t duplicatekey_hash(PyUnicodeObject *self) {
@@ -58,8 +60,6 @@ static PyTypeObject PyDuplicateKeyType = {
 
 static PyObject *
 ascii_escape_unicode(PyObject *pystr, int allow_surrogates);
-static PyObject *
-py_encode_basestring_ascii(PyObject* Py_UNUSED(self), PyObject *allow_surrogates, PyObject *pystr);
 static PyObject *
 scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyObject *pystr, Py_ssize_t idx, Py_ssize_t *next_idx_ptr);
 static PyObject *
@@ -112,7 +112,7 @@ _skip_comments(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py_ssi
             PyUnicode_READ(kind, str, idx + 1) == '/')
         {
             idx += 2;
-            while (idx < len && PyUnicode_READ(kind,str, idx) != '\n') {
+            while (idx < len && (PyUnicode_READ(kind,str, idx) != '\n' || PyUnicode_READ(kind,str, idx) != '\r')) {
                 idx++;
             }
         }
@@ -178,7 +178,7 @@ ascii_escape_unichar(Py_UCS4 c, unsigned char *output, Py_ssize_t chars, int all
                 c = Py_UNICODE_LOW_SURROGATE(c);
                 output[chars++] = '\\';
             }
-            if (0xd800 <= c && c <= 0xdfff && !allow_surrogates) {
+            else if (0xd800 <= c && c <= 0xdfff && !allow_surrogates) {
                 PyErr_SetString(PyExc_ValueError, "Surrogates are not allowed");
                 return -1;
             }
@@ -417,7 +417,7 @@ scanstring_unicode(PyObject *pyfilename, PyObject *pystr, Py_ssize_t end, int al
                     break;
                 }
                 if (d <= 0x1f) {
-                    if (d == '\n') {
+                    if (d == '\n' || d == '\r') {
                         raise_errmsg("Unterminated string", pyfilename, pystr, begin, next);
                     }
                     else {
@@ -474,7 +474,7 @@ scanstring_unicode(PyObject *pyfilename, PyObject *pystr, Py_ssize_t end, int al
                 case 'r': c = '\r'; break;
                 case 't': c = '\t'; break;
                 default:
-                    if (c == '\n') {
+                    if (c == '\n' || c == '\r') {
                         raise_errmsg("Expecting escaped character", pyfilename, pystr, end - 1, 0);
                     }
                     else {
@@ -574,55 +574,6 @@ bail:
     *next_end_ptr = -1;
     _PyUnicodeWriter_Dealloc(&writer);
     return NULL;
-}
-
-PyDoc_STRVAR(pydoc_encode_basestring_ascii,
-    "encode_basestring_ascii(string) -> string\n"
-    "\n"
-    "Return the ASCII-only JSON representation of a Python string"
-);
-
-static PyObject *
-py_encode_basestring_ascii(PyObject* Py_UNUSED(self), PyObject *allow_surrogates, PyObject *pystr)
-{
-    PyObject *rval;
-    /* Return an ASCII-only JSON representation of a Python string */
-    /* METH_O */
-    if (PyUnicode_Check(pystr)) {
-        rval = ascii_escape_unicode(pystr, PyObject_IsTrue(allow_surrogates));
-    }
-    else {
-        PyErr_Format(PyExc_TypeError,
-                     "second argument must be a string, not %.80s",
-                     Py_TYPE(pystr)->tp_name);
-        return NULL;
-    }
-    return rval;
-}
-
-
-PyDoc_STRVAR(pydoc_encode_basestring,
-    "encode_basestring(string) -> string\n"
-    "\n"
-    "Return the JSON representation of a Python string"
-);
-
-static PyObject *
-py_encode_basestring(PyObject* Py_UNUSED(self), PyObject *pystr)
-{
-    PyObject *rval;
-    /* Return a JSON representation of a Python string */
-    /* METH_O */
-    if (PyUnicode_Check(pystr)) {
-        rval = escape_unicode(pystr);
-    }
-    else {
-        PyErr_Format(PyExc_TypeError,
-                     "first argument must be a string, not %.80s",
-                     Py_TYPE(pystr)->tp_name);
-        return NULL;
-    }
-    return rval;
 }
 
 static void
@@ -1166,7 +1117,7 @@ scanner_call(PyScannerObject *self, PyObject *args, PyObject *kwds)
     Py_ssize_t idx = 0;
     Py_ssize_t next_idx = -1;
     static char *kwlist[] = {"filename", "string", NULL};
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "UU:scan_once", kwlist, &pyfilename, &pystr) ||
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "UU:scanner", kwlist, &pyfilename, &pystr) ||
         _skip_comments(self, pyfilename, pystr, &idx))
     {
         return NULL;
@@ -1261,20 +1212,23 @@ static PyType_Spec PyScannerType_spec = {
 static PyObject *
 encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    static char *kwlist[] = {"encode_decimal", "indent", "item_separator",
-                             "key_separator", "allow_nan_and_infinity",
-                             "allow_surrogates", "ensure_ascii", "sort_keys",
+    static char *kwlist[] = {"encode_decimal", "indent", "end",
+                             "item_separator", "key_separator",
+                             "allow_nan_and_infinity", "allow_surrogates",
+                             "ensure_ascii", "sort_keys", "trailing_comma",
                              NULL};
 
     PyEncoderObject *s;
     PyObject *encode_decimal, *indent;
-    PyObject *item_separator, *key_separator;
+    PyObject *end, *item_separator, *key_separator;
     int allow_nan_and_infinity, allow_surrogates, ensure_ascii, sort_keys;
+    int trailing_comma;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOUUpppp:make_encoder", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOUUUppppp:make_encoder", kwlist,
         &encode_decimal, &indent,
-        &item_separator, &key_separator,
-        &allow_nan_and_infinity, &allow_surrogates, &ensure_ascii, &sort_keys))
+        &end, &item_separator, &key_separator,
+        &allow_nan_and_infinity, &allow_surrogates, &ensure_ascii, &sort_keys,
+        &trailing_comma))
         return NULL;
 
     s = (PyEncoderObject *)type->tp_alloc(type, 0);
@@ -1292,12 +1246,14 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     }
     s->encode_decimal = Py_NewRef(encode_decimal);
     s->indent = Py_NewRef(indent);
+    s->end = Py_NewRef(end);
     s->item_separator = Py_NewRef(item_separator);
     s->key_separator = Py_NewRef(key_separator);
     s->allow_nan_and_infinity = allow_nan_and_infinity;
     s->allow_surrogates = allow_surrogates;
     s->ensure_ascii = ensure_ascii;
     s->sort_keys = sort_keys;
+    s->trailing_comma = trailing_comma;
     return (PyObject *)s;
 
 bail:
@@ -1313,7 +1269,7 @@ encoder_call(PyEncoderObject *self, PyObject *args, PyObject *kwds)
     PyObject *obj;
     _PyUnicodeWriter writer;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O:_iterencode", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O:encode", kwlist,
         &obj))
         return NULL;
 
@@ -1337,6 +1293,9 @@ encoder_call(PyEncoderObject *self, PyObject *args, PyObject *kwds)
 
     Py_DECREF(markers);
     Py_XDECREF(newline_indent);
+    if (_PyUnicodeWriter_WriteStr(&writer, self->end) < 0) {
+        goto bail;
+    }
     return _PyUnicodeWriter_Finish(&writer);
 
 bail:
@@ -1351,26 +1310,26 @@ encoder_encode_float(PyEncoderObject *s, PyObject *obj)
 {
     /* Return the JSON representation of a PyFloat. */
     double i = PyFloat_AS_DOUBLE(obj);
-    if (!isfinite(i)) {
-        if (!s->allow_nan_and_infinity) {
-            PyErr_Format(
-                    PyExc_ValueError,
-                    "%R is not allowed",
-                    obj
-                    );
-            return NULL;
-        }
-        if (i > 0) {
-            return PyUnicode_FromString("Infinity");
-        }
-        else if (i < 0) {
-            return PyUnicode_FromString("-Infinity");
-        }
-        else {
-            return PyUnicode_FromString("NaN");
-        }
+    if (isfinite(i)) {
+        return PyFloat_Type.tp_repr(obj);
     }
-    return PyFloat_Type.tp_repr(obj);
+    else if (!s->allow_nan_and_infinity) {
+        PyErr_Format(
+                PyExc_ValueError,
+                "%R is not allowed",
+                obj
+                );
+        return NULL;
+    }
+    if (i > 0) {
+        return PyUnicode_FromString("Infinity");
+    }
+    else if (i < 0) {
+        return PyUnicode_FromString("-Infinity");
+    }
+    else {
+        return PyUnicode_FromString("NaN");
+    }
 }
 
 static PyObject *
@@ -1592,8 +1551,9 @@ encoder_listencode_dict(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter 
     if (s->indent != Py_None) {
         Py_CLEAR(new_newline_indent);
         Py_CLEAR(separator_indent);
-
-        if (_PyUnicodeWriter_WriteStr(writer, newline_indent) < 0) {
+        if ((s->trailing_comma && _PyUnicodeWriter_WriteStr(writer, s->item_separator) < 0) ||
+            _PyUnicodeWriter_WriteStr(writer, newline_indent) < 0)
+        {
             goto bail;
         }
     }
@@ -1679,7 +1639,9 @@ encoder_listencode_list(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter 
     if (s->indent != Py_None) {
         Py_CLEAR(new_newline_indent);
         Py_CLEAR(separator_indent);
-        if (_PyUnicodeWriter_WriteStr(writer, newline_indent) < 0) {
+        if ((s->trailing_comma && _PyUnicodeWriter_WriteStr(writer, s->item_separator) < 0) ||
+            _PyUnicodeWriter_WriteStr(writer, newline_indent) < 0)
+        {
             goto bail;
         }
     }
@@ -1714,6 +1676,7 @@ encoder_traverse(PyEncoderObject *self, visitproc visit, void *arg)
     Py_VISIT(Py_TYPE(self));
     Py_VISIT(self->encode_decimal);
     Py_VISIT(self->indent);
+    Py_VISIT(self->end);
     Py_VISIT(self->key_separator);
     Py_VISIT(self->item_separator);
     return 0;
@@ -1725,6 +1688,7 @@ encoder_clear(PyEncoderObject *self)
     /* Deallocate Encoder */
     Py_CLEAR(self->encode_decimal);
     Py_CLEAR(self->indent);
+    Py_CLEAR(self->end);
     Py_CLEAR(self->key_separator);
     Py_CLEAR(self->item_separator);
     return 0;
@@ -1748,18 +1712,6 @@ static PyType_Spec PyEncoderType_spec = {
     .itemsize = 0,
     .flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC,
     .slots = PyEncoderType_slots
-};
-
-static PyMethodDef speedups_methods[] = {
-    {"encode_basestring_ascii",
-        (PyCFunction)py_encode_basestring_ascii,
-        METH_O,
-        pydoc_encode_basestring_ascii},
-    {"encode_basestring",
-        (PyCFunction)py_encode_basestring,
-        METH_O,
-        pydoc_encode_basestring},
-    {NULL, NULL, 0, NULL}
 };
 
 PyDoc_STRVAR(module_doc,
@@ -1817,7 +1769,6 @@ static struct PyModuleDef jsonmodule = {
     .m_base = PyModuleDef_HEAD_INIT,
     .m_name = "_jsonyx",
     .m_doc = module_doc,
-    .m_methods = speedups_methods,
     .m_slots = _json_slots,
 };
 
@@ -1826,11 +1777,3 @@ PyInit__jsonyx(void)
 {
     return PyModuleDef_Init(&jsonmodule);
 }
-
-#ifdef MS_WINDOWS
-PyMODINIT_FUNC
-PyInit___init__(void)
-{
-    return PyInit__jsonyx();
-}
-#endif
