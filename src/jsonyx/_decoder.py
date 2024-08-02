@@ -92,7 +92,7 @@ except ImportError:
 
 
 class JSONSyntaxError(SyntaxError):
-    """JSON syntax error."""
+    """Invalid JSON syntax."""
 
     # pylint: disable-next=R0913
     def __init__(

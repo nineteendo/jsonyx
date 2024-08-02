@@ -112,7 +112,15 @@ Classes
 
 .. autoclass:: jsonyx.Decoder
     :members:
+
 .. autoclass:: jsonyx.DuplicateKey
+
+    Example::
+
+        >>> import jsonyx
+        >>> {"key": "value 1", jsonyx.DuplicateKey("key"): "value 2"}
+        {'key': 'value 1', 'key': 'value 2'}
+
 .. autoclass:: jsonyx.Encoder
     :members:
 
