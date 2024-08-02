@@ -17,36 +17,36 @@ Quick start
 
 Encoding basic Python object hierarchies::
 
-    >>> import jsonyx
+    >>> import jsonyx as json
     >>> import jsonyx.allow
-    >>> jsonyx.dumps({'foo': ['bar', None, 1.0, 2]})
+    >>> json.dumps({'foo': ['bar', None, 1.0, 2]})
     '{"foo": ["bar", null, 1.0, 2]}\n'
-    >>> jsonyx.dump("\"foo\bar")
+    >>> json.dump("\"foo\bar")
     "\"foo\bar"
-    >>> jsonyx.dump('\\')
+    >>> json.dump('\\')
     "\\"
-    >>> jsonyx.dump(float("nan"), allow=jsonyx.allow.NAN_AND_INFINITY)
+    >>> json.dump(float("nan"), allow=jsonyx.allow.NAN_AND_INFINITY)
     NaN
-    >>> jsonyx.dump('\u1234', ensure_ascii=True)
+    >>> json.dump('\u1234', ensure_ascii=True)
     "\u1234"
-    >>> jsonyx.dump({"c": 3, "b": 2, "a": 1}, sort_keys=True)
+    >>> json.dump({"c": 3, "b": 2, "a": 1}, sort_keys=True)
     {"a": 1, "b": 2, "c": 3}
     >>> from io import StringIO
     >>> io = StringIO()
-    >>> jsonyx.dump(['streaming API'], io)
+    >>> json.dump(['streaming API'], io)
     >>> io.getvalue()
     '["streaming API"]\n'
 
 Compact encoding::
 
-    >>> import jsonyx
-    >>> jsonyx.dumps({'1': 2, '3': 4}, end="", item_separator=",", key_separator=":")
+    >>> import jsonyx as json
+    >>> json.dumps({'1': 2, '3': 4}, end="", item_separator=",", key_separator=":")
     '{"1":2,"3":4}'
 
 Pretty printing::
 
-    >>> import jsonyx
-    >>> jsonyx.dump({'3': 4, '1': 2}, indent=4, sort_keys=True)
+    >>> import jsonyx as json
+    >>> json.dump({'3': 4, '1': 2}, indent=4, sort_keys=True)
     {
         "1": 2,
         "3": 4
@@ -54,20 +54,28 @@ Pretty printing::
 
 Decoding JSON::
 
-    >>> import jsonyx
+    >>> import jsonyx as json
     >>> import jsonyx.allow
-    >>> jsonyx.loads('{"foo": ["bar", null, 1.0, 2]}')
+    >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
     {'foo': ['bar', None, 1.0, 2]}
-    >>> jsonyx.loads('"\\"foo\\bar"')
+    >>> json.loads('"\\"foo\\bar"')
     '"foo\x08ar'
-    >>> jsonyx.loads('NaN', allow=jsonyx.allow.NAN_AND_INFINITY)
+    >>> json.loads('NaN', allow=jsonyx.allow.NAN_AND_INFINITY)
     nan
-    >>> jsonyx.loads('1.1', use_decimal=True)
-    Decimal('1.1')
     >>> from io import StringIO
     >>> io = StringIO('["streaming API"]')
-    >>> jsonyx.load(io)
+    >>> json.load(io)
     ['streaming API']
+
+Using Decimal instead of float::
+
+    >>> import jsonyx as json
+    >>> from decimal import Decimal
+    >>> json.loads('1.1', use_decimal=True)
+    Decimal('1.1')
+    >>> json.dump(Decimal('1.1'))
+    '1.1'
+
 
 Using :mod:`jsonyx.tool` from the shell to validate and pretty-print:
 
@@ -117,8 +125,8 @@ Classes
 
     Example::
 
-        >>> import jsonyx
-        >>> {"key": "value 1", jsonyx.DuplicateKey("key"): "value 2"}
+        >>> import jsonyx as json
+        >>> {"key": "value 1", json.DuplicateKey("key"): "value 2"}
         {'key': 'value 1', 'key': 'value 2'}
 
 .. autoclass:: jsonyx.Encoder
