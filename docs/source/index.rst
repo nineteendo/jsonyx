@@ -36,4 +36,4 @@ Contents
 .. toctree::
 
    usage
-   api
+   api/index
