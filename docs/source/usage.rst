@@ -99,16 +99,10 @@ Classes
 -------
 
 .. autoclass:: jsonyx.Decoder
-
-    .. autofunction:: jsonyx.Decoder.load
-    .. autofunction:: jsonyx.Decoder.loads
-    .. autofunction:: jsonyx.Decoder.read
+    :members:
 .. autoclass:: jsonyx.DuplicateKey
 .. autoclass:: jsonyx.Encoder
-
-    .. autofunction:: jsonyx.Encoder.dump
-    .. autofunction:: jsonyx.Encoder.dumps
-    .. autofunction:: jsonyx.Encoder.write
+    :members:
 
 Exceptions
 ----------
