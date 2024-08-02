@@ -19,7 +19,7 @@ Key Features:
 
 - Optionally supports these JSON deviations
 
-.. code-block:: json
+.. code-block:: none
 
     {
         /* Block */ // and line comments
