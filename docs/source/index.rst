@@ -8,14 +8,18 @@ performance and no dependencies.
 Key Features:
 
 - Dedicated functions for reading and writing files
-- Detailed error messages::
+- Detailed error messages
+
+.. code-block:: pytb
 
       File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
          "path": "c:\users"
                       ^^^^
       jsonyx._decoder.JSONSyntaxError: Expecting 4 hex digits
 
-- Optionally supports these JSON deviations::
+- Optionally supports these JSON deviations
+
+.. code-block:: json
 
     {
         /* Block */ // and line comments
