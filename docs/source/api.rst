@@ -2,7 +2,8 @@ API
 ===
 
 .. autosummary::
-   :recursive:
    :toctree: generated
 
    jsonyx
+   jsonyx.allow
+   jsonyx.tool
