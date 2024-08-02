@@ -136,3 +136,4 @@ Exceptions
 ----------
 
 .. autoexception:: jsonyx.JSONSyntaxError
+    :members:
