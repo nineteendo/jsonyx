@@ -83,6 +83,18 @@ Using :mod:`jsonyx.tool` from the shell to validate and pretty-print:
          ^
     jsonyx._decoder.JSONSyntaxError: Expecting string
 
+Constants
+---------
+
+.. autodata:: jsonyx.allow.NOTHING
+.. autodata:: jsonyx.allow.COMMENTS
+.. autodata:: jsonyx.allow.DUPLICATE_KEYS
+.. autodata:: jsonyx.allow.MISSING_COMMAS
+.. autodata:: jsonyx.allow.NAN_AND_INFINITY
+.. autodata:: jsonyx.allow.TRAILING_COMMA
+.. autodata:: jsonyx.allow.SURROGATES
+.. autodata:: jsonyx.allow.EVERYTHING
+
 Functions
 ---------
 
