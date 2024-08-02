@@ -10,26 +10,26 @@ Key Features:
 - Dedicated functions for reading and writing files
 - Detailed error messages
 
-.. code-block:: pytb
+    .. code-block:: pytb
 
-      File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
-         "path": "c:\users"
-                      ^^^^
-      jsonyx._decoder.JSONSyntaxError: Expecting 4 hex digits
+        File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
+            "path": "c:\users"
+                        ^^^^
+        jsonyx._decoder.JSONSyntaxError: Expecting 4 hex digits
 
 - Optionally supports these JSON deviations
 
-.. code-block:: none
+    .. code-block:: none
 
-    {
-        /* Block */ // and line comments
-        "Decimal numbers": [1.0000000000000001, 1e400],
-        "Duplicate keys": {"key": "value 1", "key": "value 2"},
-        "Missing commas": [1 2 3],
-        "NaN and infinity": [NaN, Infinity, -Infinity],
-        "Trailing comma": [0,],
-        "Surrogates": "\ud800"
-    }
+        {
+            /* Block */ // and line comments
+            "Decimal numbers": [1.0000000000000001, 1e400],
+            "Duplicate keys": {"key": "value 1", "key": "value 2"},
+            "Missing commas": [1 2 3],
+            "NaN and infinity": [NaN, Infinity, -Infinity],
+            "Trailing comma": [0,],
+            "Surrogates": "\ud800"
+        }
 
 Check out the :doc:`usage` section for further information, including how to
 :ref:`installation` the project.
