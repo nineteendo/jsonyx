@@ -2,7 +2,7 @@ API
 ===
 
 .. autosummary::
-   :toctree: api
+   :toctree:
 
    jsonyx
    jsonyx.allow
