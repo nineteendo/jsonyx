@@ -85,7 +85,7 @@ Using :mod:`jsonyx` from the shell to validate and pretty-print:
          ^
     jsonyx._decoder.JSONSyntaxError: Expecting string
 
-See :ref:`json-commandline` for detailed documentation.
+See :ref:`command_line_options` for more details.
 
 Constants
 ---------
@@ -210,26 +210,17 @@ Exceptions
 
 .. autoexception:: jsonyx.JSONSyntaxError
 
-.. _json-commandline:
-.. program:: jsonyx
-
-Command Line Interface
-----------------------
-
-The :mod:`jsonyx` module provides a simple command line interface to
-validate and pretty-print JSON objects.
-
-If the optional ``input_filename`` and ``output_filename`` arguments are not
-specified, :data:`sys.stdin` and :data:`sys.stdout` will be used respectively.
+.. _command_line_options:
 
 Command line options
-^^^^^^^^^^^^^^^^^^^^
+--------------------
 
 .. option:: input_filename
 
-   The path to the input JSON file, or "-" for standard input.
+    The path to the input JSON file, or "-" for standard input. If not
+    specified, read from :data:`sys.stdin`.
 
-   .. code-block:: shell-session
+    .. code-block:: shell-session
 
         $ python -m jsonyx mp_films.json --indent 4
         [
@@ -245,7 +236,8 @@ Command line options
 
 .. option:: output_filename
 
-    The path to the output JSON file.
+    The path to the output JSON file. If not specified, write to
+    :data:`sys.stdout`.
 
 .. option:: -h, --help
 
