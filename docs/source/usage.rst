@@ -219,7 +219,7 @@ Command Line Interface
 The :mod:`jsonyx` module provides a simple command line interface to
 validate and pretty-print JSON objects.
 
-If the optional ``filename`` argument is not specified, :data:`sys.stdin` will 
+If the optional ``filename`` argument is not specified, :data:`sys.stdin` will
 be used:
 
 .. code-block:: shell-session
@@ -259,34 +259,40 @@ Command line options
 
 .. option:: -h, --help
 
-   Show the help message and exit.
+    Show the help message and exit.
 
-.. option:: --compact
+.. option:: -a, --ensure-ascii
 
-   Don't add unnecessary whitespace after "," and ":".
+    Escape non-ascii characters.
 
-.. option:: --ensure-ascii
+.. option:: -c, --compact
 
-   Escape non-ascii characters.
+    Don't add unnecessary whitespace after "," and ":".
 
-.. option:: --indent
-            --indent-tab
+.. option:: -C, --no-commas
 
-   Mutually exclusive options for whitespace control.
+    Separate items by whitespace instead of comma's.
 
-.. option:: --no-commas
-            --trailing-comma
+.. option:: -d, --use-decimal
 
-   Mutually exclusive options for comma control.
+    Use decimal instead of float.
 
-.. option:: --nonstrict
+.. option:: -i SPACES, --indent SPACES
 
-   Allow all JSON deviations.
+    Indent using spaces.
 
-.. option:: --sort-keys
+.. option:: -s, --sort-keys
 
-   Sort the keys of objects.
+    Sort the keys of objects.
 
-.. option:: --use-decimal
+.. option:: -S, --nonstrict
 
-   Use decimal instead of float.
+    Allow all JSON deviations.
+
+.. option:: -t, --trailing-comma
+
+    Add a trailing comma if indented.
+
+.. option:: -T, --indent-tab
+
+    Indent using tabs.

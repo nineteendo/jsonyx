@@ -43,44 +43,63 @@ def register(parser: ArgumentParser) -> None:
         help="the JSON file to be validated or pretty-printed",
     )
     parser.add_argument(
-        "--compact",
-        action="store_true",
-        help='don\'t add unnecessary whitespace after "," and ":"',
-    )
-    parser.add_argument(
+        "-a",
         "--ensure-ascii",
         action="store_true",
         help="escape non-ascii characters",
     )
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument(
-        "--indent", type=int, metavar="SPACES", help="indent using spaces",
+    parser.add_argument(
+        "-c",
+        "--compact",
+        action="store_true",
+        help='don\'t add unnecessary whitespace after "," and ":"',
     )
-    group.add_argument(
-        "--indent-tab", action="store_const", const="\t", dest="indent",
-        help="indent using tabs",
-    )
-    group2 = parser.add_mutually_exclusive_group()
-    group2.add_argument(
+    comma_group = parser.add_mutually_exclusive_group()
+    comma_group.add_argument(
+        "-C",
         "--no-commas",
         action="store_true",
-        help="separate items by whitespace",
+        help="separate items by whitespace instead of comma's",
     )
-    group2.add_argument(
+    parser.add_argument(
+        "-d",
+        "--use-decimal",
+        action="store_true",
+        help="use decimal instead of float",
+    )
+    indent_group = parser.add_mutually_exclusive_group()
+    indent_group.add_argument(
+        "-i",
+        "--indent",
+        type=int,
+        metavar="SPACES",
+        help="indent using spaces",
+    )
+    parser.add_argument(
+        "-s",
+        "--sort-keys",
+        action="store_true",
+        help="sort the keys of objects",
+    )
+    parser.add_argument(
+        "-S",
+        "--nonstrict",
+        action="store_true",
+        help="allow all JSON deviations",
+    )
+    comma_group.add_argument(
+        "-t",
         "--trailing-comma",
         action="store_true",
         help="add a trailing comma if indented",
     )
-    parser.add_argument(
-        "--nonstrict", action="store_true", help="allow all JSON deviations",
-    )
-    parser.add_argument(
-        "--sort-keys", action="store_true", help="sort the keys of objects",
-    )
-    parser.add_argument(
-        "--use-decimal",
-        action="store_true",
-        help="use decimal instead of float",
+    indent_group.add_argument(
+        "-T",
+        "--indent-tab",
+        action="store_const",
+        const="\t",
+        dest="indent",
+        help="indent using tabs",
     )
 
 
