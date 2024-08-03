@@ -71,15 +71,15 @@ Using Decimal instead of float::
     >>> json.dump(Decimal("1.1"))
     '1.1'
 
-Using :mod:`jsonyx.tool` from the shell to validate and pretty-print:
+Using :mod:`jsonyx` from the shell to validate and pretty-print:
 
 .. code-block:: shell-session
 
-    $ echo '{"json": "obj"}' | python -m jsonyx.tool --indent 4
+    $ echo '{"json": "obj"}' | python -m jsonyx --indent 4
     {
         "json": "obj"
     }
-    $ echo '{1.2: 3.4}' | python -m jsonyx.tool
+    $ echo '{1.2: 3.4}' | python -m jsonyx
       File "<stdin>", line 1, column 2
         {1.2: 3.4}
          ^
@@ -211,12 +211,12 @@ Exceptions
 .. autoexception:: jsonyx.JSONSyntaxError
 
 .. _json-commandline:
-.. program:: jsonyx.tool
+.. program:: jsonyx
 
 Command Line Interface
 ----------------------
 
-The :mod:`jsonyx.tool` module provides a simple command line interface to
+The :mod:`jsonyx` module provides a simple command line interface to
 validate and pretty-print JSON objects.
 
 If the optional ``filename`` argument is not specified, :data:`sys.stdin` will 
@@ -224,11 +224,11 @@ be used:
 
 .. code-block:: shell-session
 
-    $ echo '{"json": "obj"}' | python -m jsonyx.tool --indent 4
+    $ echo '{"json": "obj"}' | python -m jsonyx --indent 4
     {
         "json": "obj"
     }
-    $ echo '{1.2: 3.4}' | python -m jsonyx.tool
+    $ echo '{1.2: 3.4}' | python -m jsonyx
       File "<stdin>", line 1, column 2
         {1.2: 3.4}
          ^
@@ -243,7 +243,7 @@ Command line options
 
    .. code-block:: shell-session
 
-        $ python -m jsonyx.tool mp_films.json
+        $ python -m jsonyx mp_films.json
         [
             {
                 "title": "And Now for Something Completely Different",
