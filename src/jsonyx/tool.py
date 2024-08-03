@@ -5,11 +5,10 @@ from __future__ import annotations
 __all__: list[str] = ["JSONNamespace", "register", "run"]
 
 import sys
-from pathlib import Path
 from sys import stderr, stdin
 from typing import TYPE_CHECKING
 
-from jsonyx import JSONSyntaxError, dump, format_syntax_error, loads
+from jsonyx import Decoder, JSONSyntaxError, dump, format_syntax_error
 from jsonyx.allow import EVERYTHING, NOTHING, SURROGATES
 
 if TYPE_CHECKING:
@@ -37,11 +36,6 @@ def register(parser: ArgumentParser) -> None:
     :param parser: an argument parser
     :type parser: ArgumentParser
     """
-    parser.add_argument(
-        "filename",
-        nargs="?",
-        help="the JSON file to be validated or pretty-printed",
-    )
     parser.add_argument(
         "-a",
         "--ensure-ascii",
@@ -101,6 +95,11 @@ def register(parser: ArgumentParser) -> None:
         dest="indent",
         help="indent using tabs",
     )
+    parser.add_argument(
+        "filename",
+        nargs="?",
+        help="the JSON file to be validated or pretty-printed",
+    )
 
 
 def run(args: JSONNamespace) -> None:
@@ -109,22 +108,17 @@ def run(args: JSONNamespace) -> None:
     :param args: the commandline arguments
     :type args: JSONNamespace
     """
-    if args.filename:
-        filename: str = args.filename
-        s: bytes | str = Path(filename).read_bytes()
-    else:
-        filename = "<stdin>"
-        s = "\n".join(
-            iter(input, ""),
-        ) if stdin.isatty() else stdin.buffer.read()
-
+    decoder: Decoder = Decoder(
+        allow=EVERYTHING - SURROGATES if args.nonstrict else NOTHING,
+        use_decimal=args.use_decimal,
+    )
     try:
-        obj: object = loads(
-            s,
-            allow=EVERYTHING - SURROGATES if args.nonstrict else NOTHING,
-            filename=filename,
-            use_decimal=args.use_decimal,
-        )
+        if args.filename:
+            obj: object = decoder.read(args.filename)
+        elif stdin.isatty():
+            obj = decoder.loads("\n".join(iter(input, "")), filename="<stdin>")
+        else:
+            obj = decoder.load(stdin)
     except JSONSyntaxError as exc:
         stderr.write("".join(format_syntax_error(exc)))
         sys.exit(1)
