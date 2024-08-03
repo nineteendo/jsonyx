@@ -10,7 +10,7 @@ Key Features:
 
 - Dedicated functions for reading and writing files
 - Detailed error messages:
-    ```pytb
+    ```none
       File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
          "path": "c:\users"
                       ^^^^
