@@ -18,7 +18,6 @@ Quick start
 Encoding basic Python object hierarchies::
 
     >>> import jsonyx as json
-    >>> import jsonyx.allow
     >>> json.dumps({"foo": ["bar", None, 1.0, 2]})
     '{"foo": ["bar", null, 1.0, 2]}\n'
     >>> json.dump('"foo\bar')
@@ -54,7 +53,6 @@ Pretty printing::
 Decoding JSON::
 
     >>> import jsonyx as json
-    >>> import jsonyx.allow
     >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
     {'foo': ['bar', None, 1.0, 2]}
     >>> json.loads('"\\"foo\\bar"')
