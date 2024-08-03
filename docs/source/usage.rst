@@ -239,6 +239,8 @@ Command line options
     The path to the output JSON file. If not specified, write to
     :data:`sys.stdout`.
 
+    .. versionadded:: 1.2
+
 .. option:: -h, --help
 
     Show the help message and exit.
