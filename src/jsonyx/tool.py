@@ -8,8 +8,8 @@ import sys
 from sys import stderr, stdin
 from typing import TYPE_CHECKING
 
-from jsonyx import Decoder, JSONSyntaxError, dump, format_syntax_error
-from jsonyx.allow import EVERYTHING, NOTHING, SURROGATES
+from jsonyx import Decoder, Encoder, JSONSyntaxError, format_syntax_error
+from jsonyx.allow import EVERYTHING, NOTHING
 
 if TYPE_CHECKING:
     from argparse import ArgumentParser
@@ -22,9 +22,10 @@ class JSONNamespace:
     compact: bool
     ensure_ascii: bool
     indent: int | str | None
-    filename: str | None
+    input_filename: str | None
     no_commas: bool
     nonstrict: bool
+    output_filename: str | None
     sort_keys: bool
     trailing_comma: bool
     use_decimal: bool
@@ -96,9 +97,14 @@ def register(parser: ArgumentParser) -> None:
         help="indent using tabs",
     )
     parser.add_argument(
-        "filename",
+        "input_filename",
         nargs="?",
-        help="the JSON file to be validated or pretty-printed",
+        help='the path to the input JSON file, or "-" for standard input',
+    )
+    parser.add_argument(
+        "output_filename",
+        nargs="?",
+        help="the path to the output JSON file",
     )
 
 
@@ -109,23 +115,11 @@ def run(args: JSONNamespace) -> None:
     :type args: JSONNamespace
     """
     decoder: Decoder = Decoder(
-        allow=EVERYTHING - SURROGATES if args.nonstrict else NOTHING,
+        allow=EVERYTHING if args.nonstrict else NOTHING,
         use_decimal=args.use_decimal,
     )
-    try:
-        if args.filename:
-            obj: object = decoder.read(args.filename)
-        elif stdin.isatty():
-            obj = decoder.loads("\n".join(iter(input, "")), filename="<stdin>")
-        else:
-            obj = decoder.load(stdin)
-    except JSONSyntaxError as exc:
-        stderr.write("".join(format_syntax_error(exc)))
-        sys.exit(1)
-
-    dump(
-        obj,
-        allow=EVERYTHING - SURROGATES if args.nonstrict else NOTHING,
+    encoder: Encoder = Encoder(
+        allow=EVERYTHING if args.nonstrict else NOTHING,
         ensure_ascii=args.ensure_ascii,
         indent=args.indent,
         item_separator=" " if args.no_commas else (
@@ -135,3 +129,18 @@ def run(args: JSONNamespace) -> None:
         sort_keys=args.sort_keys,
         trailing_comma=args.trailing_comma,
     )
+    try:
+        if args.input_filename and args.input_filename != "-":
+            obj: object = decoder.read(args.input_filename)
+        elif stdin.isatty():
+            obj = decoder.loads("\n".join(iter(input, "")), filename="<stdin>")
+        else:
+            obj = decoder.load(stdin)
+    except JSONSyntaxError as exc:
+        stderr.write("".join(format_syntax_error(exc)))
+        sys.exit(1)
+
+    if args.output_filename:
+        encoder.write(obj, args.output_filename)
+    else:
+        encoder.dump(obj)

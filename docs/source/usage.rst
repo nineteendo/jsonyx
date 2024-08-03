@@ -69,7 +69,7 @@ Using Decimal instead of float::
     >>> json.loads("1.1", use_decimal=True)
     Decimal('1.1')
     >>> json.dump(Decimal("1.1"))
-    '1.1'
+    1.1
 
 Using :mod:`jsonyx` from the shell to validate and pretty-print:
 
@@ -219,31 +219,19 @@ Command Line Interface
 The :mod:`jsonyx` module provides a simple command line interface to
 validate and pretty-print JSON objects.
 
-If the optional ``filename`` argument is not specified, :data:`sys.stdin` will
-be used:
-
-.. code-block:: shell-session
-
-    $ echo '{"json": "obj"}' | python -m jsonyx --indent 4
-    {
-        "json": "obj"
-    }
-    $ echo '{1.2: 3.4}' | python -m jsonyx
-      File "<stdin>", line 1, column 2
-        {1.2: 3.4}
-         ^
-    jsonyx._decoder.JSONSyntaxError: Expecting string
+If the optional ``input_filename`` and ``output_filename`` arguments are not
+specified, :data:`sys.stdin` and :data:`sys.stdout` will be used respectively.
 
 Command line options
 ^^^^^^^^^^^^^^^^^^^^
 
-.. option:: filename
+.. option:: input_filename
 
-   The JSON file to be validated or pretty-printed:
+   The path to the input JSON file, or "-" for standard input.
 
    .. code-block:: shell-session
 
-        $ python -m jsonyx mp_films.json
+        $ python -m jsonyx mp_films.json --indent 4
         [
             {
                 "title": "And Now for Something Completely Different",
@@ -255,7 +243,9 @@ Command line options
             }
         ]
 
-   If *filename* is not specified, read from :data:`sys.stdin`.
+.. option:: output_filename
+
+    The path to the output JSON file.
 
 .. option:: -h, --help
 
