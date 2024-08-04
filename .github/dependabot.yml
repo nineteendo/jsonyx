@@ -1,7 +1,9 @@
 version: 2
 updates:
   - package-ecosystem: pip
-    directory: /
+    directories:
+    - /.github
+    - /docs
     schedule:
       interval: weekly
   - package-ecosystem: github-actions
