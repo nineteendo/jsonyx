@@ -2,7 +2,7 @@
 """JSON tool."""
 from __future__ import annotations
 
-__all__: list[str] = ["Namespace", "register", "run"]
+__all__: list[str] = ["JSONNamespace", "register", "run"]
 
 import sys
 from sys import stderr, stdin
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 # pylint: disable-next=R0903
-class Namespace:
+class JSONNamespace:
     """JSON namespace."""
 
     compact: bool
@@ -108,11 +108,11 @@ def register(parser: ArgumentParser) -> None:
     )
 
 
-def run(args: Namespace) -> None:
+def run(args: JSONNamespace) -> None:
     """Run JSON tool.
 
     :param args: the commandline arguments
-    :type args: Namespace
+    :type args: JSONNamespace
     """
     decoder: Decoder = Decoder(
         allow=EVERYTHING if args.nonstrict else NOTHING,

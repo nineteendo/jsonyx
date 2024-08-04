@@ -8,7 +8,7 @@ __all__: list[str] = []
 import sys
 from argparse import ArgumentParser
 
-from jsonyx.tool import Namespace, register, run
+from jsonyx.tool import JSONNamespace, register, run
 
 
 def _main() -> None:
@@ -18,7 +18,7 @@ def _main() -> None:
     )
     register(parser)
     try:
-        run(parser.parse_args(namespace=Namespace()))
+        run(parser.parse_args(namespace=JSONNamespace()))
     except BrokenPipeError as exc:
         sys.exit(exc.errno)
 
