@@ -96,7 +96,7 @@ Constants
 
 .. autoattribute:: jsonyx.allow.COMMENTS
 
-    Example::
+    .. code-block::
 
         >>> import jsonyx as json
         >>> import jsonyx.allow
@@ -105,7 +105,7 @@ Constants
 
 .. autoattribute:: jsonyx.allow.DUPLICATE_KEYS
 
-    Example::
+    .. code-block::
 
         >>> import jsonyx as json
         >>> import jsonyx.allow
@@ -118,7 +118,7 @@ Constants
 
 .. autoattribute:: jsonyx.allow.MISSING_COMMAS
 
-    Example::
+    .. code-block::
 
         >>> import jsonyx as json
         >>> import jsonyx.allow
@@ -130,7 +130,7 @@ Constants
 
 .. autoattribute:: jsonyx.allow.NAN_AND_INFINITY
 
-    Example::
+    .. code-block::
 
         >>> import jsonyx as json
         >>> import jsonyx.allow
@@ -144,7 +144,7 @@ Constants
 
 .. autoattribute:: jsonyx.allow.TRAILING_COMMA
 
-    Example::
+    .. code-block::
 
         >>> import jsonyx as json
         >>> import jsonyx.allow
@@ -153,7 +153,7 @@ Constants
 
 .. autoattribute:: jsonyx.allow.SURROGATES
 
-    Example::
+    .. code-block::
 
         >>> import jsonyx as json
         >>> import jsonyx.allow
@@ -193,7 +193,7 @@ Classes
 
 .. autoclass:: jsonyx.DuplicateKey
 
-    Example::
+    .. code-block::
 
         >>> import jsonyx as json
         >>> {"key": "value 1", json.DuplicateKey("key"): "value 2"}
