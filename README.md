@@ -3,7 +3,7 @@
 [![pytest](https://github.com/nineteendo/jsonyx/actions/workflows/pytest.yml/badge.svg)](https://github.com/nineteendo/jsonyx/actions/workflows/pytest.yml)
 [![docs](https://readthedocs.org/projects/jsonyx/badge/?version=stable)](https://jsonyx.readthedocs.io/en/stable/?badge=stable)
 
-**jsonyx** is a robust [JSON](http://json.org) encoder and decoder for Python
+`jsonyx` is a robust [JSON](http://json.org) encoder and decoder for Python
 3.10+. It is written in pure Python with an optional C extension for better
 performance and no dependencies
 
@@ -30,5 +30,5 @@ Key Features:
     }
     ```
 
-The latest documentation for jsonyx is available online at:
+The latest documentation for `jsonyx` is available online at:
 https://jsonyx.readthedocs.io/en/stable/usage.html

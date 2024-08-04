@@ -6,7 +6,7 @@ Usage
 Installation
 ------------
 
-To use jsonyx, first install it using pip:
+To use :mod:`jsonyx`, first install it using pip:
 
 .. code-block:: console
 
@@ -62,7 +62,7 @@ Decoding JSON::
     >>> json.load(io)
     ['streaming API']
 
-Using Decimal instead of float::
+Using :class:`decimal.Decimal` instead of :class:`float`::
 
     >>> import jsonyx as json
     >>> from decimal import Decimal

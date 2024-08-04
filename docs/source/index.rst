@@ -9,9 +9,9 @@ Welcome to jsonyx's documentation!
     :target: https://jsonyx.readthedocs.io/en/stable/?badge=stable
     :alt: docs
 
-**jsonyx** is a robust `JSON <http://json.org>`_ encoder and decoder for Python
-3.10+. It is written in pure Python with an optional C extension for better
-performance and no dependencies.
+:mod:`jsonyx` is a robust `JSON <http://json.org>`_ encoder and decoder for
+Python 3.10+. It is written in pure Python with an optional C extension for
+better performance and no dependencies.
 
 Key Features:
 
