@@ -361,7 +361,7 @@ except ImportError:
                     msg = "Expecting comma"
                     raise _errmsg(msg, filename, s, comma_idx)
                 elif not allow_missing_commas:
-                    msg = "Missing comma's are not allowed"
+                    msg = "Missing commas are not allowed"
                     raise _errmsg(msg, filename, s, comma_idx)
 
                 try:
@@ -419,7 +419,7 @@ except ImportError:
                     msg = "Expecting comma"
                     raise _errmsg(msg, filename, s, comma_idx)
                 elif not allow_missing_commas:
-                    msg = "Missing comma's are not allowed"
+                    msg = "Missing commas are not allowed"
                     raise _errmsg(msg, filename, s, comma_idx)
 
                 try:

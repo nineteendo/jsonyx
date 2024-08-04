@@ -10,7 +10,7 @@ copyright: str = "2024, Nice Zombies"  # noqa: A001
 author: str = "Nice Zombies"
 
 release: str = "1.2"
-version: str = "1.2.1"
+version: str = "1.2.2"
 
 # -- General configuration
 

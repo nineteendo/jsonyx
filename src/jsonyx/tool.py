@@ -54,7 +54,7 @@ def register(parser: ArgumentParser) -> None:
         "-C",
         "--no-commas",
         action="store_true",
-        help="separate items by whitespace instead of comma's",
+        help="separate items by whitespace instead of commas",
     )
     parser.add_argument(
         "-d",

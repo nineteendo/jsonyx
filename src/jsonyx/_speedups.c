@@ -717,7 +717,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
                 goto bail;
             }
             else if (!s->allow_missing_commas) {
-                raise_errmsg("Missing comma's are not allowed", pyfilename, pystr, comma_idx, 0);
+                raise_errmsg("Missing commas are not allowed", pyfilename, pystr, comma_idx, 0);
                 goto bail;
             }
 
@@ -820,7 +820,7 @@ _parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, P
                 goto bail;
             }
             else if (!s->allow_missing_commas) {
-                raise_errmsg("Missing comma's are not allowed", pyfilename, pystr, comma_idx, 0);
+                raise_errmsg("Missing commas are not allowed", pyfilename, pystr, comma_idx, 0);
                 goto bail;
             }
 

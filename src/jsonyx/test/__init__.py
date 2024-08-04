@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 __all__: list[str] = ["get_json"]
-__version__: str = "1.2.1"
+__version__: str = "1.2.2"
 
 from test.support.import_helper import import_fresh_module  # type: ignore
 from typing import TYPE_CHECKING

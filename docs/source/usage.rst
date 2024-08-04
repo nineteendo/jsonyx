@@ -255,7 +255,7 @@ Command line options
 
 .. option:: -C, --no-commas
 
-    Separate items by whitespace instead of comma's.
+    Separate items by whitespace instead of commas.
 
 .. option:: -d, --use-decimal
 

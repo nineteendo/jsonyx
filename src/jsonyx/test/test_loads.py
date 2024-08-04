@@ -294,10 +294,10 @@ def test_array(json: ModuleType, s: str, expected: list[object]) -> None:
     # Before first element
     ("[ 1,2,3]", [1, 2, 3]),
 
-    # Before comma's
+    # Before commas
     ("[1 ,2 ,3]", [1, 2, 3]),
 
-    # After comma's
+    # After commas
     ("[1, 2, 3]", [1, 2, 3]),
 
     # After last element
@@ -317,10 +317,10 @@ def test_array_whitespace(
     # Before first element
     ("[/**/1,2,3]", [1, 2, 3]),
 
-    # Before comma's
+    # Before commas
     ("[1/**/,2/**/,3]", [1, 2, 3]),
 
-    # After comma's
+    # After commas
     ("[1,/**/2,/**/3]", [1, 2, 3]),
 
     # After last element
@@ -337,7 +337,7 @@ def test_array_comments(
     ("[", "Unterminated array", 1, 2),
     ("[0", "Unterminated array", 1, 3),
     ("[1-2-3]", "Expecting comma", 3, 0),
-    ("[1 2 3]", "Missing comma's are not allowed", 3, 0),
+    ("[1 2 3]", "Missing commas are not allowed", 3, 0),
     ("[0,", "Unterminated array", 1, 4),
     ("[0,]", "Trailing comma is not allowed", 3, 4),
 ])
@@ -431,7 +431,7 @@ def test_object_comments(
     ('{""}', "Expecting colon", 4, 0),
     ('{"": 0', "Unterminated object", 1, 7),
     ('{"a": 1"b": 2"c": 3}', "Expecting comma", 8, 0),
-    ('{"a": 1 "b": 2 "c": 3}', "Missing comma's are not allowed", 8, 0),
+    ('{"a": 1 "b": 2 "c": 3}', "Missing commas are not allowed", 8, 0),
     ('{"": 1, 2, 3}', "Expecting string", 9, 0),
     ('{"": 0,', "Unterminated object", 1, 8),
     ('{"": 0,}', "Trailing comma is not allowed", 7, 8),
@@ -477,7 +477,7 @@ def test_expecting_value(json: ModuleType, s: str) -> None:
 def test_missing_commas(
     json: ModuleType, s: str, expected: dict[str, object] | list[object],
 ) -> None:
-    """Test missing comma's."""
+    """Test missing commas."""
     assert json.loads(s, allow=MISSING_COMMAS) == expected
 
 

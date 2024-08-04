@@ -23,7 +23,7 @@ Key Features:
         /* Block */ // and line comments
         "Decimal numbers": [1.0000000000000001, 1e400],
         "Duplicate keys": {"key": "value 1", "key": "value 2"},
-        "Missing comma's": [1 2 3],
+        "Missing commas": [1 2 3],
         "NaN and infinity": [NaN, Infinity, -Infinity],
         "Trailing comma": [0,],
         "Surrogates": "\ud800"

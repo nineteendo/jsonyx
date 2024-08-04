@@ -19,7 +19,7 @@ NOTHING: frozenset[str] = frozenset()
 COMMENTS: frozenset[str] = frozenset({"comments"})
 #: Allow duplicate keys
 DUPLICATE_KEYS: frozenset[str] = frozenset({"duplicate_keys"})
-#: Allow missing comma's
+#: Allow missing commas
 MISSING_COMMAS: frozenset[str] = frozenset({"missing_commas"})
 #: Allow NaN and infinity
 NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
