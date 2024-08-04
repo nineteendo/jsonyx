@@ -112,7 +112,7 @@ def run(args: Namespace) -> None:
     """Run JSON tool.
 
     :param args: the commandline arguments
-    :type args: JSONNamespace
+    :type args: Namespace
     """
     decoder: Decoder = Decoder(
         allow=EVERYTHING if args.nonstrict else NOTHING,
