@@ -27,7 +27,7 @@ Key Features:
 
 - Optionally supports these JSON deviations
 
-    .. code-block:: none
+    .. code-block:: javascript
 
         {
             /* Block */ // and line comments

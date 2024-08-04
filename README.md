@@ -18,7 +18,7 @@ Key Features:
     jsonyx._decoder.JSONSyntaxError: Expecting 4 hex digits
     ```
 - Optionally supports these JSON deviations:
-    ```json
+    ```javascript
     {
         /* Block */ // and line comments
         "Decimal numbers": [1.0000000000000001, 1e400],
