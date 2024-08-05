@@ -13,6 +13,7 @@ __all__: list[str] = [
     "format_syntax_error",
     "load",
     "loads",
+    "patch",
     "read",
     "write",
 ]
@@ -30,6 +31,7 @@ from typing import TYPE_CHECKING, Any, Literal
 
 from jsonyx._decoder import DuplicateKey, JSONSyntaxError, make_scanner
 from jsonyx._encoder import make_encoder
+from jsonyx._patcher import patch
 from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:

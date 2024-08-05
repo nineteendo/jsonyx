@@ -180,6 +180,10 @@ Functions
 .. autofunction:: jsonyx.format_syntax_error
 .. autofunction:: jsonyx.load
 .. autofunction:: jsonyx.loads
+.. autofunction:: jsonyx.patch
+
+    .. versionadded:: 1.3
+
 .. autofunction:: jsonyx.read
 .. autofunction:: jsonyx.write
 .. autofunction:: jsonyx.tool.register
@@ -204,6 +208,9 @@ Classes
 
 .. autoclass:: jsonyx.tool.Namespace
     :members:
+
+    .. versionchanged:: 1.3
+        Renamed from ``JSONNamespace``.
 
 Exceptions
 ----------
@@ -236,10 +243,16 @@ Command line options
 
 .. option:: output_filename
 
-    The path to the output JSON file. If not specified, write to
-    :data:`sys.stdout`.
+    The path to the output JSON file, or "-" for standard output. If not
+    specified, write to :data:`sys.stdout`.
 
     .. versionadded:: 1.2
+
+.. option:: patch_filename
+
+    The path to the patch JSON file.
+
+    .. versionadded:: 1.3
 
 .. option:: -h, --help
 
