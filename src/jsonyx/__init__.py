@@ -16,6 +16,7 @@ __all__: list[str] = [
     "read",
     "write",
 ]
+__version__: str = "1.3.0"
 
 from codecs import (
     BOM_UTF8, BOM_UTF16_BE, BOM_UTF16_LE, BOM_UTF32_BE, BOM_UTF32_LE,

@@ -9,8 +9,8 @@ project: str = "jsonyx"
 copyright: str = "2024, Nice Zombies"  # noqa: A001
 author: str = "Nice Zombies"
 
-release: str = "1.2"
-version: str = "1.2.2"
+release: str = "1.3"
+version: str = "1.3.0"
 
 # -- General configuration
 

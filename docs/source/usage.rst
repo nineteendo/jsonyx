@@ -202,7 +202,7 @@ Classes
 .. autoclass:: jsonyx.Encoder
     :members:
 
-.. autoclass:: jsonyx.tool.JSONNamespace
+.. autoclass:: jsonyx.tool.Namespace
     :members:
 
 Exceptions
