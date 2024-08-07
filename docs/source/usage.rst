@@ -239,8 +239,8 @@ Command line options
 
 .. option:: output_filename
 
-    The path to the output JSON file. If not
-    specified, write to :data:`sys.stdout`.
+    The path to the output JSON file. If not specified, write to
+   :data:`sys.stdout`.
 
     .. versionadded:: 1.2
 
