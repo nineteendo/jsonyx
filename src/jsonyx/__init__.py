@@ -44,6 +44,8 @@ if TYPE_CHECKING:
         "surrogates", "trailing_comma",
     ] | str]
 
+JSONSyntaxError.__module__ = __name__
+
 
 class Decoder:
     """JSON decoder."""
