@@ -447,59 +447,59 @@ except ImportError:
                 msg: str = "Expecting value"
                 raise _errmsg(msg, filename, s, idx) from None
 
-            result: Any
+            value: Any
             if nextchar == '"':
-                result, end = scan_string(filename, s, idx + 1)
+                value, end = scan_string(filename, s, idx + 1)
             elif nextchar == "{":
-                result, end = scan_object(filename, s, idx + 1)
+                value, end = scan_object(filename, s, idx + 1)
             elif nextchar == "[":
-                result, end = scan_array(filename, s, idx + 1)
+                value, end = scan_array(filename, s, idx + 1)
             elif nextchar == "n" and s[idx:idx + 4] == "null":
-                result, end = None, idx + 4
+                value, end = None, idx + 4
             elif nextchar == "t" and s[idx:idx + 4] == "true":
-                result, end = True, idx + 4
+                value, end = True, idx + 4
             elif nextchar == "f" and s[idx:idx + 5] == "false":
-                result, end = False, idx + 5
+                value, end = False, idx + 5
             elif number := _match_number(s, idx):
                 integer, frac, exp = number.groups()
                 end = number.end()
                 if frac or exp:
                     try:
-                        result = parse_float(
+                        value = parse_float(
                             integer + (frac or "") + (exp or ""),
                         )
                     except InvalidOperation:
                         msg = "Number is too big"
                         raise _errmsg(msg, filename, s, idx, end) from None
 
-                    if not use_decimal and isinf(result):
+                    if not use_decimal and isinf(value):
                         msg = "Big numbers require decimal"
                         raise _errmsg(msg, filename, s, idx, end)
                 else:
-                    result = int(integer)
+                    value = int(integer)
             elif nextchar == "N" and s[idx:idx + 3] == "NaN":
                 if not allow_nan_and_infinity:
                     msg = "NaN is not allowed"
                     raise _errmsg(msg, filename, s, idx, idx + 3)
 
-                result, end = parse_float("NaN"), idx + 3
+                value, end = parse_float("NaN"), idx + 3
             elif nextchar == "I" and s[idx:idx + 8] == "Infinity":
                 if not allow_nan_and_infinity:
                     msg = "Infinity is not allowed"
                     raise _errmsg(msg, filename, s, idx, idx + 8)
 
-                result, end = parse_float("Infinity"), idx + 8
+                value, end = parse_float("Infinity"), idx + 8
             elif nextchar == "-" and s[idx:idx + 9] == "-Infinity":
                 if not allow_nan_and_infinity:
                     msg = "-Infinity is not allowed"
                     raise _errmsg(msg, filename, s, idx, idx + 9)
 
-                result, end = parse_float("-Infinity"), idx + 9
+                value, end = parse_float("-Infinity"), idx + 9
             else:
                 msg = "Expecting value"
                 raise _errmsg(msg, filename, s, idx)
 
-            return result, end
+            return value, end
 
         def scanner(filename: str, s: str) -> Any:
             end: int = skip_comments(filename, s, 0)
