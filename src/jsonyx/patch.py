@@ -107,7 +107,7 @@ def _get_idx(match: Match[str]) -> tuple[int, int]:
     if (group := match.group()) == "end":
         idx: int = maxsize
     elif group == "start":
-        idx = -maxsize
+        idx = -maxsize - 1
     else:
         idx = int(group)
 
