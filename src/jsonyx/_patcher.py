@@ -1,15 +1,13 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON patcher."""
 # TODO(Nice Zombies): add error messages
-# TODO(Nice Zombies): export API
 # TODO(Nice Zombies): raise JSONSyntaxError
-# TODO(Nice Zombies): remove executable code
 # TODO(Nice Zombies): update command line options
 # TODO(Nice Zombies): write documentation
 # TODO(Nice Zombies): write tests
 from __future__ import annotations
 
-__all__: list[str] = ["patch"]
+__all__: list[str] = ["patcher"]
 
 import re
 from math import isinf
@@ -18,17 +16,9 @@ from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from sys import maxsize
 from typing import TYPE_CHECKING, Any
 
-from jsonyx import dump
-
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-input_json: Any = []
-patch_json: dict[str, Any] | list[dict[str, Any]] = {
-    "op": "assert",
-    "expr": "!@",
-    "path": "$[0]"
-}
 
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
@@ -349,25 +339,13 @@ def _traverser(
 
 
 # pylint: disable-next=R0912
-def patch(  # noqa: C901, PLR0912
-    obj: Any, operations: dict[str, Any] | list[dict[str, Any]],
-) -> Any:
-    """Patch a Python object with an operation or a list of operations.
-
-    :param obj: a Python object
-    :type obj: Any
-    :param operations: an operation or a list of operations
-    :type operations: dict[str, Any] | list[dict[str, Any]]
-    :return: the patched Python object
-    :rtype: Any
-    """
-    root: list[Any] = [obj]
+def patcher(  # noqa: C901, PLR0912
+    root: list[Any], operations: list[dict[str, Any]],
+) -> None:
+    """Patch a Python object with a list of operations."""
     nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]] = [
         (root, 0),
     ]
-    if isinstance(operations, dict):
-        operations = [operations]
-
     for operation in operations:
         op: str = operation["op"]
         path: str = operation["path"]
@@ -425,8 +403,3 @@ def patch(  # noqa: C901, PLR0912
                 dict.update(target[key], value)  # type: ignore
         else:
             raise ValueError
-
-    return root[0]
-
-
-dump(patch(input_json, patch_json), indent=4)

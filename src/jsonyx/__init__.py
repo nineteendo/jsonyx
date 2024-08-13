@@ -13,6 +13,7 @@ __all__: list[str] = [
     "format_syntax_error",
     "load",
     "loads",
+    "patch",
     "read",
     "write",
 ]
@@ -30,6 +31,7 @@ from typing import TYPE_CHECKING, Any, Literal
 
 from jsonyx._decoder import DuplicateKey, JSONSyntaxError, make_scanner
 from jsonyx._encoder import make_encoder
+from jsonyx._patcher import patcher
 from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
@@ -366,6 +368,24 @@ def loads(
     return Decoder(allow=allow, use_decimal=use_decimal).loads(
         s, filename=filename,
     )
+
+
+def patch(obj: Any, operations: dict[str, Any] | list[dict[str, Any]]) -> Any:
+    """Patch a Python object with an operation or a list of operations.
+
+    :param obj: a Python object
+    :type obj: Any
+    :param operations: an operation or a list of operations
+    :type operations: dict[str, Any] | list[dict[str, Any]]
+    :return: the patched Python object
+    :rtype: Any
+    """
+    root: list[Any] = [obj]
+    if isinstance(operations, dict):
+        operations = [operations]
+
+    patcher(root, operations)
+    return root[0]
 
 
 # pylint: disable-next=R0913
