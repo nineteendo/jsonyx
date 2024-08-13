@@ -23,17 +23,19 @@ from jsonyx import dump
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-input_json: Any = {"a": 1, "b": 2, "c": 3}
+input_json: Any = [0, 1, 2, 3, 4]
 patch_json: dict[str, Any] | list[dict[str, Any]] = {
-    "op": "update",
-    "path": "$",
-    "value": {"d": 4, "e": 5, "f": 6},
+    "op": "del",
+    "path": "$[start:end:2]",
 }
 
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
 _match_idx: Callable[[str, int], Match[str] | None] = re.compile(
-    r"end|-?(?:0|[1-9]\d*)", _FLAGS,
+    r"end|start|-?(?:0|[1-9]\d*)", _FLAGS,
+).match
+_match_int: Callable[[str, int], Match[str] | None] = re.compile(
+    r"-?(?:0|[1-9]\d*)", _FLAGS,
 ).match
 _match_key_chunk: Callable[[str, int], Match[str] | None] = re.compile(
     r"[^!&.<=>[\]~]*", _FLAGS,
@@ -104,6 +106,8 @@ def _get_targets(
 def _get_idx(match: Match[str]) -> tuple[int, int]:
     if (group := match.group()) == "end":
         idx: int = maxsize
+    elif group == "start":
+        idx = -maxsize
     else:
         idx = int(group)
 
@@ -291,7 +295,13 @@ def _traverse(  # noqa: C901, PLR0912
                     raise SyntaxError
                 elif match := _match_idx(s, end + 1):
                     idx2, end = _get_idx(match)
-                    key = slice(idx, idx2)
+                    if s[end:end + 1] != ":":
+                        key = slice(idx, idx2)
+                    elif match := _match_int(s, end + 1):
+                        step, end = int(match.group()), match.end()
+                        key = slice(idx, idx2, step)
+                    else:
+                        raise SyntaxError
                 else:
                     raise SyntaxError
 
