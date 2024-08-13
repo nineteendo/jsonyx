@@ -1,0 +1,37 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://raw.githubusercontent.com/nineteendo/jsonyx/v1.3.x/json-patch.schema.json",
+    "definitions": {
+        "operation": {
+            "description": "A JSON patch operation.",
+            "type": "object",
+            "properties": {
+                "op": {
+                    "description": "The operation to perform.",
+                    "type": "string",
+                    "enum": ["del", "insert", "set"]
+                },
+                "path": {
+                    "description": "The target location.",
+                    "type": "string"
+                }
+            },
+            "required": ["op", "path"],
+            "if": {"properties": {"op": {"enum": ["insert", "set"]}}},
+            "then": {
+                "properties": {"value": {"description": "The value to insert or set."}},
+                "required": ["value"]
+            },
+            "additionalProperties": false
+        }
+    },
+    "anyOf": [
+        {
+            "$ref": "#/definitions/operation"
+        },
+        {
+            "type": "array",
+            "items": {"$ref": "#/definitions/operation"}
+        }
+    ]
+}

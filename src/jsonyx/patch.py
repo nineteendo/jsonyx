@@ -33,12 +33,10 @@ input_json: Any = [
         "price": 1,
     },
 ]
-patch_json: list[dict[str, Any]] = [
-    {
-        "op": "del",
-        "path": "$[@.price<@.cost]",
-    },
-]
+patch_json: dict[str, Any] | list[dict[str, Any]] = {
+    "op": "del",
+    "path": "$[@.price<@.cost]",
+}
 
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
@@ -345,14 +343,14 @@ def _traverser(
 
 # pylint: disable-next=R0912
 def patch(  # noqa: C901, PLR0912
-    obj: Any, operations: list[dict[str, Any]],
+    obj: Any, operations: dict[str, Any] | list[dict[str, Any]],
 ) -> Any:
-    """Patch a Python object with a list of operations.
+    """Patch a Python object with an operation or a list of operations.
 
     :param obj: a Python object
     :type obj: Any
-    :param operations: a list of operations
-    :type operations: list[dict[str, Any]]
+    :param operations: an operation or a list of operations
+    :type operations: dict[str, Any] | list[dict[str, Any]]
     :return: the patched Python object
     :rtype: Any
     """
@@ -360,6 +358,9 @@ def patch(  # noqa: C901, PLR0912
     nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]] = [
         (root, 0),
     ]
+    if isinstance(operations, dict):
+        operations = [operations]
+
     for operation in operations:
         op: str = operation["op"]
         path: str = operation["path"]
