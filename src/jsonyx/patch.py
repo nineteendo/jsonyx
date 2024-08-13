@@ -23,19 +23,11 @@ from jsonyx import dump
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-input_json: Any = [
-    {
-        "cost": 1,
-        "price": 2,
-    },
-    {
-        "cost": 2,
-        "price": 1,
-    },
-]
+input_json: Any = {"a": 1, "b": 2, "c": 3}
 patch_json: dict[str, Any] | list[dict[str, Any]] = {
-    "op": "del",
-    "path": "$[@.price<@.cost]",
+    "op": "update",
+    "path": "$",
+    "value": {"d": 4, "e": 5, "f": 6},
 }
 
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
@@ -52,6 +44,21 @@ _match_number: Callable[[str, int], Match[str] | None] = re.compile(
 _match_str_chunk: Callable[[str, int], Match[str] | None] = re.compile(
     r"[^'~]*", _FLAGS,
 ).match
+
+
+def _check_key(
+    target: dict[Any, Any] | list[Any], key: int | slice | str,
+    *, allow_slice: bool = False,
+) -> None:
+    if isinstance(target, dict) and not isinstance(key, str):
+        raise TypeError
+
+    if isinstance(target, list):
+        if allow_slice and isinstance(key, str):
+            raise TypeError
+
+        if not allow_slice and not isinstance(key, int):
+            raise TypeError
 
 
 def _get_key(s: str, end: int = 0) -> tuple[str, int]:
@@ -82,12 +89,7 @@ def _get_targets(
     node: tuple[dict[Any, Any] | list[Any], int | slice | str],
 ) -> list[dict[Any, Any] | list[Any]]:
     target, key = node
-    if isinstance(target, dict) and not isinstance(key, str):
-        raise TypeError
-
-    if isinstance(target, list) and isinstance(key, str):
-        raise TypeError
-
+    _check_key(target, key, allow_slice=True)
     if isinstance(key, slice):
         targets: list[Any] = target[key]
     else:
@@ -194,8 +196,7 @@ def _get_value(s: str, idx: int) -> tuple[Any, int]:  # noqa: C901
     return value, end
 
 
-# pylint: disable-next=R0912
-def _run_query(  # noqa: C901, PLR0912
+def _run_query(
     nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]],
     s: str,
     end: int,
@@ -224,21 +225,15 @@ def _run_query(  # noqa: C901, PLR0912
         filter_nodes, end = _traverse(nodes, s, end, single=True)
         pairs: list[
             tuple[tuple[dict[Any, Any] | list[Any], int | slice | str], Any]
-        ] = []
-        for node, (target, key) in zip(nodes, filter_nodes):
-            if isinstance(target, dict) and not isinstance(key, str):
-                raise TypeError
-
-            if isinstance(target, list) and isinstance(key, str):
-                raise TypeError
-
+        ] = [
+            (node, target[key])  # type: ignore
+            for node, (target, key) in zip(nodes, filter_nodes)
             if (
                 key in target
                 if isinstance(target, dict) else
                 -len(target) <= key < len(target)  # type: ignore
-            ) != negate_filter:
-                pairs.append((node, target[key]))  # type: ignore
-
+            ) != negate_filter
+        ]
         operator, end = _get_operator(s, end)
         if operator is None:
             nodes = [node for node, _target in pairs]
@@ -253,20 +248,15 @@ def _run_query(  # noqa: C901, PLR0912
                 raise SyntaxError
 
             filter2_nodes, end = _traverse(nodes, s, end, single=True)
-            nodes = []
-            for (node, target), (target2, key) in zip(pairs, filter2_nodes):
-                if isinstance(target2, dict) and not isinstance(key, str):
-                    raise TypeError
-
-                if isinstance(target2, list) and isinstance(key, str):
-                    raise TypeError
-
+            nodes = [
+                node
+                for (node, target), (target2, key) in zip(pairs, filter2_nodes)
                 if (
                     key in target2
                     if isinstance(target2, dict) else
                     -len(target2) <= key < len(target2)  # type: ignore
-                ) and operator(target, target2[key]):  # type: ignore
-                    nodes.append(node)
+                ) and operator(target, target2[key])  # type: ignore
+            ]
 
         if s[end:end + 2] != "&&":
             return nodes, end
@@ -280,6 +270,7 @@ def _traverse(  # noqa: C901, PLR0912
     s: str,
     end: int,
     *,
+    allow_slice: bool = False,
     single: bool = False,
 ) -> tuple[list[tuple[dict[Any, Any] | list[Any], int | slice | str]], int]:
     while True:
@@ -324,17 +315,23 @@ def _traverse(  # noqa: C901, PLR0912
 
             end += 1
         else:
+            for target, key in nodes:
+                _check_key(target, key, allow_slice=allow_slice)
+
             return nodes, end
 
 
 def _traverser(
-    nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]], s: str,
+    nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]],
+    s: str,
+    *,
+    allow_slice: bool = False,
 ) -> list[tuple[dict[Any, Any] | list[Any], int | slice | str]]:
     key, end = _get_key(s)
     if key != "$":
         raise SyntaxError
 
-    nodes, end = _traverse(nodes, s, end)
+    nodes, end = _traverse(nodes, s, end, allow_slice=allow_slice)
     if end < len(s):
         raise SyntaxError
 
@@ -364,43 +361,47 @@ def patch(  # noqa: C901, PLR0912
     for operation in operations:
         op: str = operation["op"]
         path: str = operation["path"]
-        if op == "del":
+        if op == "append":
+            value: Any = operation["value"]
+            for target, key in _traverser(nodes, path):
+                list.append(target[key], value)  # type: ignore
+        elif op == "clear":
+            for target, key in _traverser(nodes, path):
+                new_target: Any = target[key]  # type: ignore
+                if not isinstance(new_target, (dict, list)):
+                    raise TypeError
+
+                new_target.clear()
+        elif op == "del":
             # Reverse to preserve indices for queries
-            for target, key in reversed(_traverser(nodes, path)):
+            for target, key in _traverser(nodes, path, allow_slice=True)[::-1]:
                 if target is root:
                     raise ValueError
-
-                if isinstance(target, dict) and not isinstance(key, str):
-                    raise TypeError
-
-                if isinstance(target, list) and isinstance(key, str):
-                    raise TypeError
 
                 del target[key]  # type: ignore
+        elif op == "extend":
+            value = operation["value"]
+            for target, key in _traverser(nodes, path):
+                list.extend(target[key], value)  # type: ignore
         elif op == "insert":
-            value: Any = operation["value"]
+            value = operation["value"]
             # Reverse to preserve indices for queries
-            for target, key in reversed(_traverser(nodes, path)):
+            for target, key in _traverser(nodes, path)[::-1]:
                 if target is root:
                     raise ValueError
 
-                if isinstance(target, dict):
-                    raise TypeError
-
-                if not isinstance(key, int):
-                    raise TypeError
-
-                target.insert(key, value)
+                list.insert(target, key, value)  # type: ignore
+        elif op == "reverse":
+            for target, key in _traverser(nodes, path):
+                list.reverse(target[key])  # type: ignore
         elif op == "set":
             value = operation["value"]
-            for target, key in _traverser(nodes, path):
-                if isinstance(target, dict) and not isinstance(key, str):
-                    raise TypeError
-
-                if isinstance(target, list) and isinstance(key, str):
-                    raise TypeError
-
+            for target, key in _traverser(nodes, path, allow_slice=True):
                 target[key] = value  # type: ignore
+        elif op == "update":
+            value = operation["value"]
+            for target, key in _traverser(nodes, path):
+                dict.update(target[key], value)  # type: ignore
         else:
             raise ValueError
 

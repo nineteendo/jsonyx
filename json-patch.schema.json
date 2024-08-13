@@ -9,7 +9,7 @@
                 "op": {
                     "description": "The operation to perform.",
                     "type": "string",
-                    "enum": ["del", "insert", "set"]
+                    "enum": ["append", "clear", "del", "extend", "insert", "reverse", "set", "update"]
                 },
                 "path": {
                     "description": "The target location.",
@@ -17,12 +17,12 @@
                 }
             },
             "required": ["op", "path"],
-            "if": {"properties": {"op": {"enum": ["insert", "set"]}}},
+            "if": {"properties": {"op": {"enum": ["append", "extend", "insert", "set", "update"]}}},
             "then": {
-                "properties": {"value": {"description": "The value to insert or set."}},
+                "properties": {"value": {"description": "The value to use."}},
                 "required": ["value"]
             },
-            "additionalProperties": false
+            "unevaluatedProperties": false
         }
     },
     "anyOf": [

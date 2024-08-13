@@ -386,7 +386,7 @@ except ImportError:
                 return [], end + 1
 
             values: list[Any] = []
-            append_value: Callable[[object], None] = values.append
+            append_value: Callable[[Any], None] = values.append
             while True:
                 value, end = scan_value(filename, s, end)
                 append_value(value)
