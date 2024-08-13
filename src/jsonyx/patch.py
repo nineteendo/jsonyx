@@ -23,12 +23,20 @@ from jsonyx import dump
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-input_json: Any = []
+input_json: Any = [
+    {
+        "cost": 1,
+        "price": 2,
+    },
+    {
+        "cost": 2,
+        "price": 1,
+    },
+]
 patch_json: list[dict[str, Any]] = [
     {
-        "op": "insert",
-        "path": "$[0]",
-        "value": "value",
+        "op": "del",
+        "path": "$[@.price<@.cost]",
     },
 ]
 
@@ -154,8 +162,7 @@ def _get_str(s: str, end: int) -> tuple[str, int]:
 
 # TODO(Nice Zombies): allow_nan_and_infinity=False
 # TODO(Nice Zombies): use_decimal=True
-# pylint: disable-next=R0912
-def _get_value(s: str, idx: int) -> tuple[Any, int]:  # noqa: C901, PLR0912
+def _get_value(s: str, idx: int) -> tuple[Any, int]:  # noqa: C901
     try:
         nextchar: str = s[idx]
     except IndexError:
@@ -179,8 +186,6 @@ def _get_value(s: str, idx: int) -> tuple[Any, int]:  # noqa: C901, PLR0912
                 raise SyntaxError
         else:
             value = int(integer)
-    elif nextchar == "N" and s[idx:idx + 3] == "NaN":
-        value, end = float("NaN"), idx + 3
     elif nextchar == "I" and s[idx:idx + 8] == "Infinity":
         value, end = float("Infinity"), idx + 8
     elif nextchar == "-" and s[idx:idx + 9] == "-Infinity":
@@ -191,7 +196,8 @@ def _get_value(s: str, idx: int) -> tuple[Any, int]:  # noqa: C901, PLR0912
     return value, end
 
 
-def _run_query(  # noqa: C901
+# pylint: disable-next=R0912
+def _run_query(  # noqa: C901, PLR0912
     nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]],
     s: str,
     end: int,
@@ -208,13 +214,13 @@ def _run_query(  # noqa: C901
     ]
 
     while True:
+        negate_filter: bool = s[end:end + 1] == "!"
+        if negate_filter:
+            end += 1
+
         key: int | slice | str
         key, end = _get_key(s, end)
-        if key == "?":
-            negate_filter: bool = False
-        elif key == "!":
-            negate_filter = True
-        else:
+        if key != "@":
             raise SyntaxError
 
         filter_nodes, end = _traverse(nodes, s, end, single=True)
@@ -240,9 +246,29 @@ def _run_query(  # noqa: C901
             nodes = [node for node, _target in pairs]
         elif negate_filter:
             raise SyntaxError
-        else:
+        elif s[end:end + 1] != "@":
             value, end = _get_value(s, end)
             nodes = [node for node, target in pairs if operator(target, value)]
+        else:
+            key, end = _get_key(s, end)
+            if key != "@":
+                raise SyntaxError
+
+            filter2_nodes, end = _traverse(nodes, s, end, single=True)
+            nodes = []
+            for (node, target), (target2, key) in zip(pairs, filter2_nodes):
+                if isinstance(target2, dict) and not isinstance(key, str):
+                    raise TypeError
+
+                if isinstance(target2, list) and isinstance(key, str):
+                    raise TypeError
+
+                if (
+                    key in target2
+                    if isinstance(target2, dict) else
+                    -len(target2) <= key < len(target2)  # type: ignore
+                ) and operator(target, target2[key]):  # type: ignore
+                    nodes.append(node)
 
         if s[end:end + 2] != "&&":
             return nodes, end
