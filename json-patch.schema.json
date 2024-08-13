@@ -13,11 +13,15 @@
                 },
                 "path": {
                     "description": "The target location.",
-                    "type": "string"
+                    "type": "string",
+                    "default": "$"
                 }
             },
             "required": ["op", "path"],
-            "if": {"properties": {"op": {"enum": ["append", "extend", "insert", "set", "update"]}}},
+            "if": {
+                "properties": {"op": {"enum": ["append", "extend", "insert", "set", "update"]}},
+                "required": ["op"]
+            },
             "then": {
                 "properties": {"value": {"description": "The value to use."}},
                 "required": ["value"]
