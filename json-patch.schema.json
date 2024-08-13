@@ -9,23 +9,43 @@
                 "op": {
                     "description": "The operation to perform.",
                     "type": "string",
-                    "enum": ["append", "clear", "del", "extend", "insert", "reverse", "set", "update"]
+                    "enum": ["append", "assert", "clear", "del", "extend", "insert", "reverse", "set", "update"]
                 },
                 "path": {
-                    "description": "The target location.",
+                    "description": "A path expression.",
                     "type": "string",
                     "default": "$"
                 }
             },
             "required": ["op", "path"],
-            "if": {
-                "properties": {"op": {"enum": ["append", "extend", "insert", "set", "update"]}},
-                "required": ["op"]
-            },
-            "then": {
-                "properties": {"value": {"description": "The value to use."}},
-                "required": ["value"]
-            },
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {"op": {"enum": ["append", "extend", "insert", "set", "update"]}},
+                        "required": ["op"]
+                    },
+                    "then": {
+                        "properties": {"value": {"description": "The value to use."}},
+                        "required": ["value"]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {"op": {"const": "assert"}},
+                        "required": ["op"]
+                    },
+                    "then": {
+                        "properties": {
+                            "expr": {
+                                "description": "The expression to validate.",
+                                "type": "string",
+                                "default": "@"
+                            }
+                        },
+                        "required": ["expr"]
+                    }
+                }
+            ],
             "unevaluatedProperties": false
         }
     },

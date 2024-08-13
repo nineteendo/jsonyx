@@ -23,10 +23,11 @@ from jsonyx import dump
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-input_json: Any = [0, 1, 2, 3, 4]
+input_json: Any = []
 patch_json: dict[str, Any] | list[dict[str, Any]] = {
-    "op": "del",
-    "path": "$[start:end:2]",
+    "op": "assert",
+    "expr": "!@",
+    "path": "$[0]"
 }
 
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
@@ -200,22 +201,11 @@ def _get_value(s: str, idx: int) -> tuple[Any, int]:  # noqa: C901
     return value, end
 
 
-def _run_query(
+def _filter_nodes(
     nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]],
     s: str,
     end: int,
 ) -> tuple[list[tuple[dict[Any, Any] | list[Any], int | slice | str]], int]:
-    nodes = [
-        (target, key)
-        for node in nodes
-        for target in _get_targets(node)
-        for key in (
-            target.keys()
-            if isinstance(target, dict) else
-            range(len(target))
-        )
-    ]
-
     while True:
         negate_filter: bool = s[end:end + 1] == "!"
         if negate_filter:
@@ -313,7 +303,17 @@ def _traverse(  # noqa: C901, PLR0912
             elif single:
                 raise SyntaxError
             else:
-                nodes, end = _run_query(nodes, s, end + 1)
+                nodes = [
+                    (target, key)
+                    for node in nodes
+                    for target in _get_targets(node)
+                    for key in (
+                        target.keys()
+                        if isinstance(target, dict) else
+                        range(len(target))
+                    )
+                ]
+                nodes, end = _filter_nodes(nodes, s, end + 1)
 
             try:
                 terminator = s[end]
@@ -375,6 +375,17 @@ def patch(  # noqa: C901, PLR0912
             value: Any = operation["value"]
             for target, key in _traverser(nodes, path):
                 list.append(target[key], value)  # type: ignore
+        elif op == "assert":
+            expr: str = operation["expr"]
+            new_nodes: list[
+                tuple[dict[Any, Any] | list[Any], int | slice | str]
+            ] = _traverser(nodes, path)
+            filtered_nodes, end = _filter_nodes(nodes, expr, 0)
+            if end < len(expr):
+                raise SyntaxError
+
+            if new_nodes != filtered_nodes:
+                raise ValueError
         elif op == "clear":
             for target, key in _traverser(nodes, path):
                 new_target: Any = target[key]  # type: ignore
