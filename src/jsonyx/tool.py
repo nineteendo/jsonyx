@@ -8,7 +8,9 @@ import sys
 from sys import stderr, stdin
 from typing import TYPE_CHECKING
 
-from jsonyx import Decoder, Encoder, JSONSyntaxError, format_syntax_error
+from jsonyx import (
+    Decoder, Encoder, JSONSyntaxError, format_syntax_error, patch,
+)
 from jsonyx.allow import EVERYTHING, NOTHING
 
 if TYPE_CHECKING:
@@ -26,6 +28,7 @@ class Namespace:
     no_commas: bool
     nonstrict: bool
     output_filename: str | None
+    patch_filename: str | None
     sort_keys: bool
     trailing_comma: bool
     use_decimal: bool
@@ -106,6 +109,11 @@ def register(parser: ArgumentParser) -> None:
         nargs="?",
         help="the path to the output JSON file",
     )
+    parser.add_argument(
+        "patch_filename",
+        nargs="?",
+        help="the path to the patch JSON file",
+    )
 
 
 def run(args: Namespace) -> None:
@@ -136,11 +144,14 @@ def run(args: Namespace) -> None:
             obj = decoder.loads("\n".join(iter(input, "")), filename="<stdin>")
         else:
             obj = decoder.load(stdin)
+
+        if args.patch_filename:
+            obj = patch(obj, decoder.read(args.patch_filename))
     except JSONSyntaxError as exc:
         stderr.write("".join(format_syntax_error(exc)))
         sys.exit(1)
 
-    if args.output_filename:
+    if args.output_filename and args.output_filename != "-":
         encoder.write(obj, args.output_filename)
     else:
         encoder.dump(obj)

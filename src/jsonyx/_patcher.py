@@ -2,8 +2,8 @@
 """JSON patcher."""
 # TODO(Nice Zombies): add error messages
 # TODO(Nice Zombies): raise JSONSyntaxError
-# TODO(Nice Zombies): update command line options
 # TODO(Nice Zombies): write documentation
+# TODO(Nice Zombies): write specification
 # TODO(Nice Zombies): write tests
 from __future__ import annotations
 
