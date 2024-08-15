@@ -1,5 +1,6 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON decoder."""
+# TODO(Nice Zombies): add specification
 from __future__ import annotations
 
 __all__: list[str] = ["DuplicateKey", "JSONSyntaxError", "make_scanner"]

@@ -1,5 +1,6 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON tool."""
+# TODO(Nice Zombies): move to __main__
 from __future__ import annotations
 
 __all__: list[str] = ["Namespace", "register", "run"]
@@ -126,6 +127,7 @@ def run(args: Namespace) -> None:
         allow=EVERYTHING if args.nonstrict else NOTHING,
         use_decimal=args.use_decimal,
     )
+    # TODO(Nice Zombies): only add newline at EOF when writing to stdout
     encoder: Encoder = Encoder(
         allow=EVERYTHING if args.nonstrict else NOTHING,
         ensure_ascii=args.ensure_ascii,

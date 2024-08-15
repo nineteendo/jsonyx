@@ -1,5 +1,6 @@
 # Copyright (C) 2024 Nice Zombies
 """jsonyx module for JSON (de)serialization."""
+# TODO(Nice Zombies): add Patcher
 from __future__ import annotations
 
 __all__: list[str] = [
@@ -31,7 +32,7 @@ from typing import TYPE_CHECKING, Any, Literal
 
 from jsonyx._decoder import DuplicateKey, JSONSyntaxError, make_scanner
 from jsonyx._encoder import make_encoder
-from jsonyx._patcher import patcher
+from jsonyx._patcher import make_patcher
 from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
@@ -370,6 +371,8 @@ def loads(
     )
 
 
+# TODO(Nice Zombies): move to Patcher
+# TODO(Nice Zombies): rename to apply_patch
 def patch(obj: Any, operations: dict[str, Any] | list[dict[str, Any]]) -> Any:
     """Patch a Python object with an operation or a list of operations.
 
@@ -384,7 +387,7 @@ def patch(obj: Any, operations: dict[str, Any] | list[dict[str, Any]]) -> Any:
     if isinstance(operations, dict):
         operations = [operations]
 
-    patcher(root, operations)
+    make_patcher()(root, operations)
     return root[0]
 
 
