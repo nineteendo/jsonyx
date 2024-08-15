@@ -350,7 +350,6 @@ def make_patcher() -> Callable[  # noqa: C901, PLR0915
     def patcher(  # noqa: C901, PLR0912
         root: list[Any], operations: list[dict[str, Any]],
     ) -> None:
-        """Patch a Python object with a list of operations."""
         nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]] = [
             (root, 0),
         ]

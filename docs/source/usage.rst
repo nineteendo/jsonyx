@@ -180,7 +180,7 @@ Functions
 .. autofunction:: jsonyx.format_syntax_error
 .. autofunction:: jsonyx.load
 .. autofunction:: jsonyx.loads
-.. autofunction:: jsonyx.patch
+.. autofunction:: jsonyx.apply_patch
 
     .. versionadded:: 1.3
 

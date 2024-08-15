@@ -8,13 +8,13 @@ __all__: list[str] = [
     "DuplicateKey",
     "Encoder",
     "JSONSyntaxError",
+    "apply_patch",
     "detect_encoding",
     "dump",
     "dumps",
     "format_syntax_error",
     "load",
     "loads",
-    "patch",
     "read",
     "write",
 ]
@@ -372,22 +372,21 @@ def loads(
 
 
 # TODO(Nice Zombies): move to Patcher
-# TODO(Nice Zombies): rename to apply_patch
-def patch(obj: Any, operations: dict[str, Any] | list[dict[str, Any]]) -> Any:
-    """Patch a Python object with an operation or a list of operations.
+def apply_patch(obj: Any, patch: dict[str, Any] | list[dict[str, Any]]) -> Any:
+    """Apply a JSON patch to a Python object.
 
     :param obj: a Python object
     :type obj: Any
-    :param operations: an operation or a list of operations
+    :param operations: a JSON patch
     :type operations: dict[str, Any] | list[dict[str, Any]]
     :return: the patched Python object
     :rtype: Any
     """
     root: list[Any] = [obj]
-    if isinstance(operations, dict):
-        operations = [operations]
+    if isinstance(patch, dict):
+        patch = [patch]
 
-    make_patcher()(root, operations)
+    make_patcher()(root, patch)
     return root[0]
 
 
