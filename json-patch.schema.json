@@ -17,7 +17,7 @@
                     "default": "$"
                 }
             },
-            "required": ["op", "path"],
+            "required": ["op"],
             "allOf": [
                 {
                     "if": {
@@ -43,6 +43,15 @@
                             }
                         },
                         "required": ["expr"]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {"op": {"enum": ["del", "insert"]}},
+                        "required": ["op"]
+                    },
+                    "then": {
+                        "required": ["path"]
                     }
                 }
             ],

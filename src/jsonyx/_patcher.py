@@ -356,17 +356,16 @@ def make_patcher() -> Callable[  # noqa: C901, PLR0915
         for operation in operations:
             op: str = operation["op"]
 
-            # TODO(Nice Zombies): make path optional
-            path: str = operation["path"]
-
             # TODO(Nice Zombies): add copy operation
             # TODO(Nice Zombies): add move operation
             # TODO(Nice Zombies): add sort operation
             if op == "append":
+                path: str = operation.get("path", "$")
                 value: Any = operation["value"]
                 for target, key in traverser(nodes, path):
                     list.append(target[key], value)  # type: ignore
             elif op == "assert":
+                path = operation.get("path", "$")
                 expr: str = operation["expr"]
                 new_nodes: list[
                     tuple[dict[Any, Any] | list[Any], int | slice | str]
@@ -378,6 +377,7 @@ def make_patcher() -> Callable[  # noqa: C901, PLR0915
                 if new_nodes != filtered_nodes:
                     raise ValueError
             elif op == "clear":
+                path = operation.get("path", "$")
                 for target, key in traverser(nodes, path):
                     new_target: Any = target[key]  # type: ignore
                     if not isinstance(new_target, (dict, list)):
@@ -385,6 +385,8 @@ def make_patcher() -> Callable[  # noqa: C901, PLR0915
 
                     new_target.clear()
             elif op == "del":
+                path = operation["path"]
+
                 # Reverse to preserve indices for queries
                 for target, key in traverser(
                     nodes, path, allow_slice=True,
@@ -394,11 +396,14 @@ def make_patcher() -> Callable[  # noqa: C901, PLR0915
 
                     del target[key]  # type: ignore
             elif op == "extend":
+                path = operation.get("path", "$")
                 value = operation["value"]
                 for target, key in traverser(nodes, path):
                     list.extend(target[key], value)  # type: ignore
             elif op == "insert":
+                path = operation["path"]
                 value = operation["value"]
+
                 # Reverse to preserve indices for queries
                 for target, key in traverser(nodes, path)[::-1]:
                     if target is root:
@@ -406,13 +411,16 @@ def make_patcher() -> Callable[  # noqa: C901, PLR0915
 
                     list.insert(target, key, value)  # type: ignore
             elif op == "reverse":
+                path = operation.get("path", "$")
                 for target, key in traverser(nodes, path):
                     list.reverse(target[key])  # type: ignore
             elif op == "set":
+                path = operation.get("path", "$")
                 value = operation["value"]
                 for target, key in traverser(nodes, path, allow_slice=True):
                     target[key] = value  # type: ignore
             elif op == "update":
+                path = operation.get("path", "$")
                 value = operation["value"]
                 for target, key in traverser(nodes, path):
                     dict.update(target[key], value)  # type: ignore

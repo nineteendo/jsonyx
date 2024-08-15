@@ -112,13 +112,14 @@ def _run(args: _Namespace) -> None:
         allow=EVERYTHING if args.nonstrict else NOTHING,
         use_decimal=args.use_decimal,
     )
-    # TODO(Nice Zombies): only add newline at EOF when writing to stdout
     encoder: Encoder = Encoder(
         allow=EVERYTHING if args.nonstrict else NOTHING,
         ensure_ascii=args.ensure_ascii,
         indent=args.indent,
-        item_separator=" " if args.no_commas else (
-            "," if args.compact else ", "
+        item_separator=(
+            " " if args.no_commas else
+            "," if args.compact else
+            ", "
         ),
         key_separator=":" if args.compact else ": ",
         sort_keys=args.sort_keys,
