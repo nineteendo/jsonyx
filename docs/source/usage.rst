@@ -186,8 +186,6 @@ Functions
 
 .. autofunction:: jsonyx.read
 .. autofunction:: jsonyx.write
-.. autofunction:: jsonyx.tool.register
-.. autofunction:: jsonyx.tool.run
 
 Classes
 -------
@@ -208,12 +206,6 @@ Classes
 
 .. autoclass:: jsonyx.Patcher
     :members:
-
-.. autoclass:: jsonyx.tool.Namespace
-    :members:
-
-    .. versionchanged:: 1.3
-        Renamed from ``JSONNamespace``.
 
 Exceptions
 ----------

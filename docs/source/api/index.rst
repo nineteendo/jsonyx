@@ -6,4 +6,3 @@ API
 
    jsonyx
    jsonyx.allow
-   jsonyx.tool
