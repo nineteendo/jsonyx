@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """jsonyx module for JSON (de)serialization."""
-# TODO(Nice Zombies): add Patcher
 from __future__ import annotations
 
 __all__: list[str] = [
@@ -8,6 +7,7 @@ __all__: list[str] = [
     "DuplicateKey",
     "Encoder",
     "JSONSyntaxError",
+    "Patcher",
     "apply_patch",
     "detect_encoding",
     "dump",
@@ -124,6 +124,36 @@ class Decoder:
             raise JSONSyntaxError(msg, filename, s, 0)
 
         return self._scanner(filename, s)
+
+
+# pylint: disable-next=R0903
+class Patcher:
+    """JSON patcher."""
+
+    def __init__(self) -> None:
+        """Create a new JSON patcher."""
+        self._patcher: Callable[
+            [list[Any], list[dict[str, Any]]], None,
+        ] = make_patcher()
+
+    def apply_patch(
+        self, obj: Any, patch: dict[str, Any] | list[dict[str, Any]],
+    ) -> Any:
+        """Apply a JSON patch to a Python object.
+
+        :param obj: a Python object
+        :type obj: Any
+        :param patch: a JSON patch
+        :type patch: dict[str, Any] | list[dict[str, Any]]
+        :return: the patched Python object
+        :rtype: Any
+        """
+        root: list[Any] = [obj]
+        if isinstance(patch, dict):
+            patch = [patch]
+
+        self._patcher(root, patch)
+        return root[0]
 
 
 class Encoder:
@@ -371,23 +401,17 @@ def loads(
     )
 
 
-# TODO(Nice Zombies): move to Patcher
 def apply_patch(obj: Any, patch: dict[str, Any] | list[dict[str, Any]]) -> Any:
     """Apply a JSON patch to a Python object.
 
     :param obj: a Python object
     :type obj: Any
-    :param operations: a JSON patch
-    :type operations: dict[str, Any] | list[dict[str, Any]]
+    :param patch: a JSON patch
+    :type patch: dict[str, Any] | list[dict[str, Any]]
     :return: the patched Python object
     :rtype: Any
     """
-    root: list[Any] = [obj]
-    if isinstance(patch, dict):
-        patch = [patch]
-
-    make_patcher()(root, patch)
-    return root[0]
+    return Patcher().apply_patch(obj, patch)
 
 
 # pylint: disable-next=R0913

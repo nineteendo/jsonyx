@@ -206,6 +206,9 @@ Classes
 .. autoclass:: jsonyx.Encoder
     :members:
 
+.. autoclass:: jsonyx.Patcher
+    :members:
+
 .. autoclass:: jsonyx.tool.Namespace
     :members:
 
