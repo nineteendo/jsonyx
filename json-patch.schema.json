@@ -9,7 +9,7 @@
                 "op": {
                     "description": "The operation to perform.",
                     "type": "string",
-                    "enum": ["append", "assert", "clear", "del", "extend", "insert", "reverse", "set", "update"]
+                    "enum": ["append", "assert", "clear", "del", "extend", "insert", "reverse", "set", "sort", "update"]
                 },
                 "path": {
                     "description": "A path expression.",
@@ -52,6 +52,21 @@
                     },
                     "then": {
                         "required": ["path"]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {"op": {"const": "sort"}},
+                        "required": ["op"]
+                    },
+                    "then": {
+                        "properties": {
+                            "reverse": {
+                                "description": "Sort in descending order.",
+                                "type": "boolean",
+                                "default": false
+                            }
+                        }
                     }
                 }
             ],

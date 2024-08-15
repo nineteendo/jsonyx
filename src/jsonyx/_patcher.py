@@ -350,8 +350,8 @@ def make_patcher() -> Callable[  # noqa: C901, PLR0915
 
         return nodes
 
-    # pylint: disable-next=R0912
-    def patcher(  # noqa: C901, PLR0912
+    # pylint: disable-next=R0912, R0915
+    def patcher(  # noqa: C901, PLR0912, PLR0915
         root: list[Any], operations: list[dict[str, Any]],
     ) -> None:
         nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]] = [
@@ -362,7 +362,6 @@ def make_patcher() -> Callable[  # noqa: C901, PLR0915
 
             # TODO(Nice Zombies): add copy operation
             # TODO(Nice Zombies): add move operation
-            # TODO(Nice Zombies): add sort operation
             if op == "append":
                 path: str = operation.get("path", "$")
                 value: Any = operation["value"]
@@ -423,6 +422,11 @@ def make_patcher() -> Callable[  # noqa: C901, PLR0915
                 value = operation["value"]
                 for target, key in traverser(nodes, path, allow_slice=True):
                     target[key] = value  # type: ignore
+            elif op == "sort":
+                path = operation.get("path", "$")
+                reverse: bool = operation.get("reverse", False)
+                for target, key in traverser(nodes, path, allow_slice=True):
+                    list.sort(target[key], reverse=reverse)  # type: ignore
             elif op == "update":
                 path = operation.get("path", "$")
                 value = operation["value"]
