@@ -28,7 +28,7 @@ _match_int: Callable[[str, int], Match[str] | None] = re.compile(
     r"-?(?:0|[1-9]\d*)", _FLAGS,
 ).match
 _match_key_chunk: Callable[[str, int], Match[str] | None] = re.compile(
-    r"[^!&.<=>[\]~]*", _FLAGS,
+    r"[^!&.<=>?[\]~]*", _FLAGS,
 ).match
 _match_number: Callable[[str, int], Match[str] | None] = re.compile(
     r"(-?(?:0|[1-9]\d*))(\.\d+)?([eE][-+]?\d+)?", _FLAGS,
@@ -79,7 +79,7 @@ def make_patcher() -> Callable[  # noqa: C901, PLR0915
             except IndexError:
                 raise SyntaxError from None
 
-            if esc not in {"!", "&", ".", "<", "=", ">", "[", "]", "~"}:
+            if esc not in {"!", "&", ".", "<", "=", ">", "?", "[", "]", "~"}:
                 raise SyntaxError
 
             end += 1
@@ -329,7 +329,6 @@ def make_patcher() -> Callable[  # noqa: C901, PLR0915
 
     # TODO(Nice Zombies): add relative=False
     # TODO(Nice Zombies): add single=False
-    # TODO(Nice Zombies): raise error for no matches
     def traverser(
         nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]],
         s: str,
@@ -341,6 +340,11 @@ def make_patcher() -> Callable[  # noqa: C901, PLR0915
             raise SyntaxError
 
         nodes, end = traverse(nodes, s, end, allow_slice=allow_slice)
+        if s[end:end + 1] == "?":
+            end += 1
+        elif not nodes:
+            raise ValueError
+
         if end < len(s):
             raise SyntaxError
 
