@@ -424,12 +424,15 @@ def run_filter_query(
     )
 
 
-def run_select_query(
+# pylint: disable-next=R0913
+def run_select_query(  # noqa: PLR0913
     nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]],
     query: str,
     *,
     allow: _AllowList = NOTHING,
     allow_slice: bool = False,
+    mapping: bool = False,
+    relative: bool = False,
     use_decimal: bool = False,
 ) -> list[tuple[dict[Any, Any] | list[Any], int | slice | str]]:
     """Run a JSON select query on a list of nodes.
@@ -450,7 +453,11 @@ def run_select_query(
     :rtype: list[tuple[dict[Any, Any] | list[Any], int | slice | str]]
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).run_select_query(
-        nodes, query, allow_slice=allow_slice,
+        nodes,
+        query,
+        allow_slice=allow_slice,
+        mapping=mapping,
+        relative=relative,
     )
 
 

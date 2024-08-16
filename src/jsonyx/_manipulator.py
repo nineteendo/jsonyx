@@ -64,13 +64,17 @@ def _check_query_key(
 
 def _get_query_targets(
     node: tuple[dict[Any, Any] | list[Any], int | slice | str],
+    *,
+    mapping: bool = False,
 ) -> list[dict[Any, Any] | list[Any]]:
     target, key = node
     _check_query_key(target, key, allow_slice=True)
-    if isinstance(key, slice):
-        targets: list[Any] = target[key]
+    if not isinstance(key, slice):
+        targets: list[Any] = [target[key]]  # type: ignore
+    elif mapping:
+        raise ValueError
     else:
-        targets = [target[key]]  # type: ignore
+        targets = target[key]
 
     if not all(isinstance(target, (dict, list)) for target in targets):
         raise TypeError
@@ -248,7 +252,7 @@ class Manipulator:
                 end += 1
 
             filter_nodes, end = self._run_select_query(
-                nodes, query, end, relative=True, single=True,
+                nodes, query, end, mapping=True, relative=True,
             )
             pairs: list[tuple[
                 tuple[dict[Any, Any] | list[Any], int | slice | str], Any,
@@ -272,12 +276,9 @@ class Manipulator:
                     node for node, target in pairs if operator(target, value)
                 ]
             else:
-                key, end = _scan_query_key(query, end)
-                if key != "@":
-                    raise SyntaxError
-
                 filter2_nodes, end = self._run_select_query(
-                    nodes, query, end, single=True)
+                    nodes, query, end, mapping=True, relative=True,
+                )
                 nodes = [
                     node
                     for (node, target), (target2, key) in zip(
@@ -304,7 +305,7 @@ class Manipulator:
         *,
         allow_slice: bool = False,
         relative: bool = False,
-        single: bool = False,
+        mapping: bool = False,
     ) -> tuple[
         list[tuple[dict[Any, Any] | list[Any], int | slice | str]], int,
     ]:
@@ -322,15 +323,13 @@ class Manipulator:
                 nodes = [
                     (target, key)
                     for node in nodes
-                    for target in _get_query_targets(node)
+                    for target in _get_query_targets(node, mapping=mapping)
                 ]
             elif terminator == "[":
                 if match := _match_idx(query, end + 1):
                     idx, end = _get_query_idx(match)
                     if query[end:end + 1] != ":":
                         key = idx
-                    elif single:
-                        raise SyntaxError
                     elif match := _match_idx(query, end + 1):
                         idx2, end = _get_query_idx(match)
                         if query[end:end + 1] != ":":
@@ -346,15 +345,15 @@ class Manipulator:
                     nodes = [
                         (target, key)
                         for node in nodes
-                        for target in _get_query_targets(node)
+                        for target in _get_query_targets(node, mapping=mapping)
                     ]
-                elif single:
+                elif mapping:
                     raise SyntaxError
                 else:
                     nodes = [
                         (target, key)
                         for node in nodes
-                        for target in _get_query_targets(node)
+                        for target in _get_query_targets(node, mapping=True)
                         for key in (
                             target.keys()
                             if isinstance(target, dict) else
@@ -500,14 +499,15 @@ class Manipulator:
 
         return nodes
 
-    # TODO(Nice Zombies): add relative=False
-    # TODO(Nice Zombies): add single=False
+    # pylint: disable-next=R0913
     def run_select_query(
         self,
         nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]],
         query: str,
         *,
         allow_slice: bool = False,
+        mapping: bool = False,
+        relative: bool = False,
     ) -> list[tuple[dict[Any, Any] | list[Any], int | slice | str]]:
         """Run a JSON select query on a list of nodes.
 
@@ -517,13 +517,23 @@ class Manipulator:
         :type query: str
         :param allow_slice: allow slice, defaults to False
         :type allow_slice: bool, optional
+        :param mapping: map every input node to a single output node, defaults
+                        to False
+        :type mapping: bool, optional
+        :param relative: query must start with "@" instead of "$", defaults to
+                         False
+        :type relative: bool, optional
         :raises SyntaxError: if the select query is invalid
         :raises ValueError: if a value is invalid
         :return: the selected list of nodes
         :rtype: list[tuple[dict[Any, Any] | list[Any], int | slice | str]]
         """
         nodes, end = self._run_select_query(
-            nodes, query, allow_slice=allow_slice,
+            nodes,
+            query,
+            allow_slice=allow_slice,
+            relative=relative,
+            mapping=mapping,
         )
         if query[end:end + 1] == "?":
             end += 1
