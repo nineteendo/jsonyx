@@ -174,17 +174,30 @@ Constants
 Functions
 ---------
 
+.. autofunction:: jsonyx.apply_patch
+
+    .. versionadded:: 1.3
+
 .. autofunction:: jsonyx.detect_encoding
 .. autofunction:: jsonyx.dump
 .. autofunction:: jsonyx.dumps
 .. autofunction:: jsonyx.format_syntax_error
 .. autofunction:: jsonyx.load
-.. autofunction:: jsonyx.loads
-.. autofunction:: jsonyx.apply_patch
+.. autofunction:: jsonyx.load_query_value
 
     .. versionadded:: 1.3
 
+.. autofunction:: jsonyx.loads
 .. autofunction:: jsonyx.read
+
+.. autofunction:: jsonyx.run_filter_query
+
+    .. versionadded:: 1.3
+
+.. autofunction:: jsonyx.run_select_query
+
+    .. versionadded:: 1.3
+
 .. autofunction:: jsonyx.write
 
 Classes

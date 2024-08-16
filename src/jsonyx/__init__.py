@@ -14,8 +14,11 @@ __all__: list[str] = [
     "dumps",
     "format_syntax_error",
     "load",
+    "load_query_value",
     "loads",
     "read",
+    "run_filter_query",
+    "run_select_query",
     "write",
 ]
 __version__: str = "1.3.0"
@@ -369,6 +372,85 @@ def loads(
     """
     return Decoder(allow=allow, use_decimal=use_decimal).loads(
         s, filename=filename,
+    )
+
+
+def load_query_value(
+    s: str,
+    *,
+    allow: _AllowList = NOTHING,
+    use_decimal: bool = False,
+) -> Any:
+    """Deserialize a JSON file to a Python object.
+
+    :param s: a JSON query value
+    :type s: str
+    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :type allow: Container[str], optional
+    :param use_decimal: use decimal instead of float, defaults to False
+    :type use_decimal: bool, optional
+    :raises SyntaxError: if the query value is invalid
+    :return: a Python object
+    :rtype: Any
+    """
+    return Manipulator(allow=allow, use_decimal=use_decimal).load_query_value(
+        s,
+    )
+
+
+def run_filter_query(
+    nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]],
+    query: str,
+    *,
+    allow: _AllowList = NOTHING,
+    use_decimal: bool = False,
+) -> list[tuple[dict[Any, Any] | list[Any], int | slice | str]]:
+    """Run a JSON filter query on a list of nodes.
+
+    :param nodes: a list of nodes
+    :type nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]]
+    :param query: a JSON filter query
+    :type query: str
+    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :type allow: Container[str], optional
+    :param use_decimal: use decimal instead of float, defaults to False
+    :type use_decimal: bool, optional
+    :raises SyntaxError: if the filter query is invalid
+    :return: the filtered list of nodes
+    :rtype: list[tuple[dict[Any, Any] | list[Any], int | slice | str]]
+    """
+    return Manipulator(allow=allow, use_decimal=use_decimal).run_filter_query(
+        nodes, query,
+    )
+
+
+def run_select_query(
+    nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]],
+    query: str,
+    *,
+    allow: _AllowList = NOTHING,
+    allow_slice: bool = False,
+    use_decimal: bool = False,
+) -> list[tuple[dict[Any, Any] | list[Any], int | slice | str]]:
+    """Run a JSON select query on a list of nodes.
+
+    :param nodes: a list of nodes
+    :type nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]]
+    :param query: a JSON select query
+    :type query: str
+    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :type allow: Container[str], optional
+    :param allow_slice: allow slice, defaults to False
+    :type allow_slice: bool, optional
+    :param use_decimal: use decimal instead of float, defaults to False
+    :type use_decimal: bool, optional
+    :raises SyntaxError: if the select query is invalid
+    :raises ValueError: if a value is invalid
+    :return: the selected list of nodes
+    :rtype: list[tuple[dict[Any, Any] | list[Any], int | slice | str]]
+    """
+    return Manipulator(allow=allow, use_decimal=use_decimal).run_select_query(
+        nodes, query, allow_slice=allow_slice,
     )
 
 
