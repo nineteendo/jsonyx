@@ -204,8 +204,10 @@ Classes
 .. autoclass:: jsonyx.Encoder
     :members:
 
-.. autoclass:: jsonyx.Patcher
+.. autoclass:: jsonyx.Manipulator
     :members:
+
+    .. versionadded:: 1.3
 
 Exceptions
 ----------

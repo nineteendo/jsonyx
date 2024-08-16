@@ -7,7 +7,7 @@ __all__: list[str] = [
     "DuplicateKey",
     "Encoder",
     "JSONSyntaxError",
-    "Patcher",
+    "Manipulator",
     "apply_patch",
     "detect_encoding",
     "dump",
@@ -32,7 +32,7 @@ from typing import TYPE_CHECKING, Any, Literal
 
 from jsonyx._decoder import DuplicateKey, JSONSyntaxError, make_scanner
 from jsonyx._encoder import make_encoder
-from jsonyx._patcher import make_patcher
+from jsonyx._manipulator import Manipulator
 from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
@@ -124,36 +124,6 @@ class Decoder:
             raise JSONSyntaxError(msg, filename, s, 0)
 
         return self._scanner(filename, s)
-
-
-# pylint: disable-next=R0903
-class Patcher:
-    """JSON patcher."""
-
-    def __init__(self) -> None:
-        """Create a new JSON patcher."""
-        self._patcher: Callable[
-            [list[Any], list[dict[str, Any]]], None,
-        ] = make_patcher()
-
-    def apply_patch(
-        self, obj: Any, patch: dict[str, Any] | list[dict[str, Any]],
-    ) -> Any:
-        """Apply a JSON patch to a Python object.
-
-        :param obj: a Python object
-        :type obj: Any
-        :param patch: a JSON patch
-        :type patch: dict[str, Any] | list[dict[str, Any]]
-        :return: the patched Python object
-        :rtype: Any
-        """
-        root: list[Any] = [obj]
-        if isinstance(patch, dict):
-            patch = [patch]
-
-        self._patcher(root, patch)
-        return root[0]
 
 
 class Encoder:
@@ -411,7 +381,7 @@ def apply_patch(obj: Any, patch: dict[str, Any] | list[dict[str, Any]]) -> Any:
     :return: the patched Python object
     :rtype: Any
     """
-    return Patcher().apply_patch(obj, patch)
+    return Manipulator().apply_patch(obj, patch)
 
 
 # pylint: disable-next=R0913
