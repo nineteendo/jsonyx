@@ -1,6 +1,7 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON manipulator."""
 # TODO(Nice Zombies): generate patch
+# TODO(Nice Zombies): raise JSONSyntaxError
 # TODO(Nice Zombies): update schema
 # TODO(Nice Zombies): write documentation
 # TODO(Nice Zombies): write specification
@@ -169,7 +170,6 @@ def _scan_query_string(s: str, end: int) -> tuple[str, int]:
 
 # TODO(Nice Zombies): add error messages
 # TODO(Nice Zombies): add paste
-# TODO(Nice Zombies): raise JSONSyntaxError
 # pylint: disable-next=R0915
 class Manipulator:
     """JSON manipulator."""
