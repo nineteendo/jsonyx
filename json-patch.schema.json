@@ -9,10 +9,10 @@
                 "op": {
                     "description": "The operation to perform.",
                     "type": "string",
-                    "enum": ["append", "assert", "clear", "del", "extend", "insert", "reverse", "set", "sort", "update"]
+                    "enum": ["append", "assert", "clear", "copy", "del", "extend", "insert", "move", "reverse", "set", "sort", "update"]
                 },
                 "path": {
-                    "description": "A path expression.",
+                    "description": "A JSON path.",
                     "type": "string",
                     "default": "$"
                 }
@@ -37,12 +37,33 @@
                     "then": {
                         "properties": {
                             "expr": {
-                                "description": "The expression to validate.",
+                                "description": "A JSON expression.",
                                 "type": "string",
                                 "default": "@"
                             }
                         },
                         "required": ["expr"]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {"op": {"enum": ["copy", "from"]}},
+                        "required": ["op"]
+                    },
+                    "then": {
+                        "properties": {
+                            "from": {
+                                "description": "The source JSON path.",
+                                "type": "string",
+                                "default": "@"
+                            },
+                            "to": {
+                                "description": "The destination JSON path.",
+                                "type": "string",
+                                "default": "@"
+                            }
+                        },
+                        "required": ["from", "to"]
                     }
                 },
                 {

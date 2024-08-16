@@ -10,6 +10,7 @@ from __future__ import annotations
 __all__: list[str] = ["Manipulator"]
 
 import re
+from copy import deepcopy
 from decimal import Decimal, InvalidOperation
 from math import isinf
 from operator import eq, ge, gt, le, lt, ne
@@ -82,7 +83,7 @@ def _get_query_targets(
     return targets
 
 
-def _scan_query_key(query: str, end: int = 0) -> tuple[str, int]:
+def _scan_query_key(query: str, end: int) -> tuple[str, int]:
     chunks: list[str] = []
     append_chunk: Callable[[str], None] = chunks.append
     while True:
@@ -246,7 +247,9 @@ class Manipulator:
                 tuple[dict[Any, Any] | list[Any], int | slice | str], Any,
             ]] = [
                 (node, target[key])  # type: ignore
-                for node, (target, key) in zip(nodes, filter_nodes)
+                for node, (target, key) in zip(
+                    nodes, filter_nodes, strict=True,
+                )
                 if (
                     key in target
                     if isinstance(target, dict) else
@@ -270,7 +273,7 @@ class Manipulator:
                 nodes = [
                     node
                     for (node, target), (target2, key) in zip(
-                        pairs, filter2_nodes,
+                        pairs, filter2_nodes, strict=True,
                     )
                     if (
                         key in target2
@@ -298,7 +301,7 @@ class Manipulator:
         list[tuple[dict[Any, Any] | list[Any], int | slice | str]], int,
     ]:
         key: int | slice | str
-        key, end = _scan_query_key(query)
+        key, end = _scan_query_key(query, end)
         if relative and key != "@":
             raise SyntaxError
 
@@ -363,8 +366,9 @@ class Manipulator:
 
                 return nodes, end
 
+    # TODO(Nice Zombies): support copy and move mode
     # pylint: disable-next=R0912, R0915, R0914
-    def _apply_patch(  # noqa: C901, PLR0912
+    def _apply_patch(  # noqa: C901, PLR0912, PLR0915
         self,
         root: list[Any], operations: list[dict[str, Any]],
     ) -> None:
@@ -374,8 +378,6 @@ class Manipulator:
         for operation in operations:
             op: str = operation["op"]
 
-            # TODO(Nice Zombies): add copy operation
-            # TODO(Nice Zombies): add move operation
             if op == "append":
                 path: str = operation.get("path", "$")
                 value: Any = operation["value"]
@@ -397,6 +399,36 @@ class Manipulator:
                         raise TypeError
 
                     new_target.clear()
+            elif op == "copy":
+                path = operation.get("path", "$")
+                src: str = operation["from"]
+                dst: str = operation["to"]
+                new_nodes = self.run_select_query(nodes, path)
+                src_targets: list[
+                    tuple[dict[Any, Any] | list[Any], int | slice | str]
+                ] = [
+                    deepcopy(target[key])  # type: ignore
+                    for target, key in self.run_select_query(
+                        new_nodes,
+                        src,
+                        allow_slice=True,
+                        mapping=True,
+                        relative=True,
+                    )
+                ]
+                dst_nodes: list[
+                    tuple[dict[Any, Any] | list[Any], int | slice | str]
+                ] = self.run_select_query(
+                    new_nodes,
+                    dst,
+                    allow_slice=True,
+                    mapping=True,
+                    relative=True,
+                )
+                for src_target, (target, key) in zip(
+                    src_targets, dst_nodes, strict=True,
+                ):
+                    target[key] = src_target  # type: ignore
             elif op == "del":
                 path = operation["path"]
 
@@ -423,6 +455,45 @@ class Manipulator:
                         raise ValueError
 
                     list.insert(target, key, value)  # type: ignore
+            elif op == "move":
+                path = operation.get("path", "$")
+                src = operation["from"]
+                dst = operation["to"]
+                new_nodes = self.run_select_query(nodes, path)
+                src_nodes: list[
+                    tuple[dict[Any, Any] | list[Any], int | slice | str]
+                ] = self.run_select_query(
+                    new_nodes,
+                    src,
+                    allow_slice=True,
+                    mapping=True,
+                    relative=True,
+                )
+                src_targets = []
+
+                # Reverse to preserve indices for queries
+                for (new_target, _new_key), (target, key) in zip(
+                    new_nodes[::-1], src_nodes[::-1], strict=True,
+                ):
+                    if target is new_target:
+                        raise ValueError
+
+                    src_targets.append(target[key])  # type: ignore
+                    del target[key]  # type: ignore
+
+                # Undo reverse
+                src_targets.reverse()
+                dst_nodes = self.run_select_query(
+                    new_nodes,
+                    dst,
+                    allow_slice=True,
+                    mapping=True,
+                    relative=True,
+                )
+                for src_target, (target, key) in zip(
+                    src_targets, dst_nodes, strict=True,
+                ):
+                    target[key] = src_target  # type: ignore
             elif op == "reverse":
                 path = operation.get("path", "$")
                 for target, key in self.run_select_query(nodes, path):
