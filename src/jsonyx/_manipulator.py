@@ -2,7 +2,6 @@
 """JSON manipulator."""
 # TODO(Nice Zombies): generate patch
 # TODO(Nice Zombies): raise JSONSyntaxError
-# TODO(Nice Zombies): update schema
 # TODO(Nice Zombies): write documentation
 # TODO(Nice Zombies): write specification
 from __future__ import annotations
@@ -48,7 +47,8 @@ _match_str_chunk: Callable[[str, int], Match[str] | None] = re.compile(
 
 
 def _check_query_key(
-    target: dict[Any, Any] | list[Any], key: int | slice | str,
+    target: dict[Any, Any] | list[Any],
+    key: int | slice | str,
     *,
     allow_slice: bool = False,
 ) -> None:
@@ -81,6 +81,15 @@ def _get_query_targets(
         raise TypeError
 
     return targets
+
+
+def _has_key(
+    target: dict[Any, Any] | list[Any], key: int | slice | str,
+) -> bool:
+    if isinstance(target, dict):
+        return key in target
+
+    return -len(target) <= key < len(target)  # type: ignore
 
 
 def _scan_query_key(query: str, end: int) -> tuple[str, int]:
@@ -158,7 +167,6 @@ def _scan_query_string(s: str, end: int) -> tuple[str, int]:
 
 
 # TODO(Nice Zombies): add error messages
-# TODO(Nice Zombies): add paste
 # pylint: disable-next=R0915
 class Manipulator:
     """JSON manipulator."""
@@ -243,28 +251,26 @@ class Manipulator:
             filter_nodes, end = self._run_select_query(
                 nodes, query, end, mapping=True, relative=True,
             )
-            pairs: list[tuple[
+            filtered_pairs: list[tuple[
                 tuple[dict[Any, Any] | list[Any], int | slice | str], Any,
             ]] = [
-                (node, target[key])  # type: ignore
-                for node, (target, key) in zip(
+                (node, filter_target[filter_key])  # type: ignore
+                for node, (filter_target, filter_key) in zip(
                     nodes, filter_nodes, strict=True,
                 )
-                if (
-                    key in target
-                    if isinstance(target, dict) else
-                    -len(target) <= key < len(target)  # type: ignore
-                ) != negate_filter
+                if _has_key(filter_target, filter_key) != negate_filter
             ]
             operator, end = _scan_query_operator(query, end)
             if operator is None:
-                nodes = [node for node, _target in pairs]
+                nodes = [node for node, _target in filtered_pairs]
             elif negate_filter:
                 raise SyntaxError
             elif query[end:end + 1] != "@":
                 value, end = self._scan_query_value(query, end)
                 nodes = [
-                    node for node, target in pairs if operator(target, value)
+                    node
+                    for node, filter_target in filtered_pairs
+                    if operator(filter_target, value)
                 ]
             else:
                 filter2_nodes, end = self._run_select_query(
@@ -272,14 +278,13 @@ class Manipulator:
                 )
                 nodes = [
                     node
-                    for (node, target), (target2, key) in zip(
-                        pairs, filter2_nodes, strict=True,
+                    for (
+                        (node, filter_target), (filter2_target, filter2_key),
+                    ) in zip(filtered_pairs, filter2_nodes, strict=True)
+                    if _has_key(filter2_target, filter2_key) and operator(
+                        filter_target,
+                        filter2_target[filter2_key],  # type: ignore
                     )
-                    if (
-                        key in target2
-                        if isinstance(target2, dict) else
-                        -len(target2) <= key < len(target2)  # type: ignore
-                    ) and operator(target, target2[key])  # type: ignore
                 ]
 
             if query[end:end + 2] != "&&":
@@ -366,7 +371,61 @@ class Manipulator:
 
                 return nodes, end
 
-    # TODO(Nice Zombies): support copy and move mode
+    def _paste_values(  # noqa: C901
+        self,
+        current_nodes: list[
+            tuple[dict[Any, Any] | list[Any], int | slice | str]
+        ],
+        operation: dict[str, Any],
+        values: list[Any],
+    ) -> None:
+        dst: str = operation["to"]
+        if (mode := operation["mode"]) == "append":
+            dst_nodes: list[
+                tuple[dict[Any, Any] | list[Any], int | slice | str]
+            ] = self.run_select_query(
+                current_nodes, dst, mapping=True, relative=True,
+            )
+            for (target, key), value in zip(dst_nodes, values, strict=True):
+                list.append(target[key], value)  # type: ignore
+        elif mode == "extend":
+            dst_nodes = self.run_select_query(
+                current_nodes, dst, mapping=True, relative=True,
+            )
+            for (target, key), value in zip(dst_nodes, values, strict=True):
+                list.extend(target[key], value)  # type: ignore
+        elif mode == "insert":
+            dst_nodes = self.run_select_query(
+                current_nodes, dst, mapping=True, relative=True,
+            )
+
+            # Reverse to preserve indices for queries
+            for (current_target, _current_key), (target, key), value in zip(
+                current_nodes, dst_nodes[::-1], values[::-1], strict=True,
+            ):
+                if target is current_target:
+                    raise ValueError
+
+                list.insert(target, key, value)  # type: ignore
+        elif mode == "set":
+            dst_nodes = self.run_select_query(
+                current_nodes,
+                dst,
+                allow_slice=True,
+                mapping=True,
+                relative=True,
+            )
+            for (target, key), value in zip(dst_nodes, values, strict=True):
+                target[key] = value  # type: ignore
+        elif mode == "update":
+            dst_nodes = self.run_select_query(
+                current_nodes, dst, mapping=True, relative=True,
+            )
+            for (target, key), value in zip(dst_nodes, values, strict=True):
+                dict.update(target[key], value)  # type: ignore
+        else:
+            raise ValueError
+
     # pylint: disable-next=R0912, R0915, R0914
     def _apply_patch(  # noqa: C901, PLR0912, PLR0915
         self,
@@ -376,9 +435,7 @@ class Manipulator:
             (root, 0),
         ]
         for operation in operations:
-            op: str = operation["op"]
-
-            if op == "append":
+            if (op := operation["op"]) == "append":
                 path: str = operation.get("path", "$")
                 value: Any = operation["value"]
                 for target, key in self.run_select_query(nodes, path):
@@ -386,10 +443,10 @@ class Manipulator:
             elif op == "assert":
                 path = operation.get("path", "$")
                 expr: str = operation["expr"]
-                new_nodes: list[
+                current_nodes: list[
                     tuple[dict[Any, Any] | list[Any], int | slice | str]
                 ] = self.run_select_query(nodes, path)
-                if new_nodes != self.run_filter_query(nodes, expr):
+                if current_nodes != self.run_filter_query(nodes, expr):
                     raise ValueError
             elif op == "clear":
                 path = operation.get("path", "$")
@@ -402,33 +459,18 @@ class Manipulator:
             elif op == "copy":
                 path = operation.get("path", "$")
                 src: str = operation["from"]
-                dst: str = operation["to"]
-                new_nodes = self.run_select_query(nodes, path)
-                src_targets: list[
-                    tuple[dict[Any, Any] | list[Any], int | slice | str]
-                ] = [
+                current_nodes = self.run_select_query(nodes, path)
+                values: list[Any] = [
                     deepcopy(target[key])  # type: ignore
                     for target, key in self.run_select_query(
-                        new_nodes,
+                        current_nodes,
                         src,
                         allow_slice=True,
                         mapping=True,
                         relative=True,
                     )
                 ]
-                dst_nodes: list[
-                    tuple[dict[Any, Any] | list[Any], int | slice | str]
-                ] = self.run_select_query(
-                    new_nodes,
-                    dst,
-                    allow_slice=True,
-                    mapping=True,
-                    relative=True,
-                )
-                for src_target, (target, key) in zip(
-                    src_targets, dst_nodes, strict=True,
-                ):
-                    target[key] = src_target  # type: ignore
+                self._paste_values(current_nodes, operation, values)
             elif op == "del":
                 path = operation["path"]
 
@@ -458,42 +500,30 @@ class Manipulator:
             elif op == "move":
                 path = operation.get("path", "$")
                 src = operation["from"]
-                dst = operation["to"]
-                new_nodes = self.run_select_query(nodes, path)
+                current_nodes = self.run_select_query(nodes, path)
                 src_nodes: list[
                     tuple[dict[Any, Any] | list[Any], int | slice | str]
                 ] = self.run_select_query(
-                    new_nodes,
+                    current_nodes,
                     src,
                     allow_slice=True,
                     mapping=True,
                     relative=True,
                 )
-                src_targets = []
+                values = []
 
                 # Reverse to preserve indices for queries
-                for (new_target, _new_key), (target, key) in zip(
-                    new_nodes[::-1], src_nodes[::-1], strict=True,
+                for (current_target, _current_key), (target, key) in zip(
+                    current_nodes[::-1], src_nodes[::-1], strict=True,
                 ):
-                    if target is new_target:
+                    if target is current_target:
                         raise ValueError
 
-                    src_targets.append(target[key])  # type: ignore
+                    values.append(target[key])  # type: ignore
                     del target[key]  # type: ignore
 
                 # Undo reverse
-                src_targets.reverse()
-                dst_nodes = self.run_select_query(
-                    new_nodes,
-                    dst,
-                    allow_slice=True,
-                    mapping=True,
-                    relative=True,
-                )
-                for src_target, (target, key) in zip(
-                    src_targets, dst_nodes, strict=True,
-                ):
-                    target[key] = src_target  # type: ignore
+                self._paste_values(current_nodes, operation, values[::-1])
             elif op == "reverse":
                 path = operation.get("path", "$")
                 for target, key in self.run_select_query(nodes, path):

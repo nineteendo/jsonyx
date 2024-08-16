@@ -52,6 +52,11 @@
                     },
                     "then": {
                         "properties": {
+                            "mode": {
+                                "description": "The paste mode.",
+                                "type": "string",
+                                "enum": ["append", "extend", "insert", "set", "update"]
+                            },
                             "from": {
                                 "description": "The source JSON path.",
                                 "type": "string",
@@ -63,7 +68,7 @@
                                 "default": "@"
                             }
                         },
-                        "required": ["from", "to"]
+                        "required": ["mode", "from", "to"]
                     }
                 },
                 {
