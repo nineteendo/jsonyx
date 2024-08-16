@@ -14,7 +14,6 @@ from decimal import Decimal, InvalidOperation
 from math import isinf
 from operator import eq, ge, gt, le, lt, ne
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
-from sys import maxsize
 from typing import TYPE_CHECKING, Any, Literal
 
 from jsonyx.allow import NOTHING
@@ -31,16 +30,16 @@ if TYPE_CHECKING:
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
 _match_idx: Callable[[str, int], Match[str] | None] = re.compile(
-    r"end|start|-?(?:0|[1-9]\d*)", _FLAGS,
-).match
-_match_int: Callable[[str, int], Match[str] | None] = re.compile(
-    r"-?(?:0|[1-9]\d*)", _FLAGS,
+    r"0|-?[1-9]\d*", _FLAGS,
 ).match
 _match_key_chunk: Callable[[str, int], Match[str] | None] = re.compile(
     r"[^!&.<=>?[\]~]*", _FLAGS,
 ).match
 _match_number: Callable[[str, int], Match[str] | None] = re.compile(
-    r"(-?(?:0|[1-9]\d*))(\.\d+)?([eE][-+]?\d+)?", _FLAGS,
+    r"(-?0|-?[1-9]\d*)(\.\d+)?([eE][-+]?\d+)?", _FLAGS,
+).match
+_match_slice: Callable[[str, int], Match[str] | None] = re.compile(
+    r"(0|-?[1-9]\d*)?:(0|-?[1-9]\d*)?(?::(-?[1-9]\d*))?", _FLAGS,
 ).match
 _match_str_chunk: Callable[[str, int], Match[str] | None] = re.compile(
     r"[^'~]*", _FLAGS,
@@ -81,17 +80,6 @@ def _get_query_targets(
         raise TypeError
 
     return targets
-
-
-def _get_query_idx(match: Match[str]) -> tuple[int, int]:
-    if (group := match.group()) == "end":
-        idx: int = maxsize
-    elif group == "start":
-        idx = -maxsize - 1
-    else:
-        idx = int(group)
-
-    return idx, match.end()
 
 
 def _scan_query_key(query: str, end: int = 0) -> tuple[str, int]:
@@ -326,22 +314,20 @@ class Manipulator:
                     for target in _get_query_targets(node, mapping=mapping)
                 ]
             elif terminator == "[":
-                if match := _match_idx(query, end + 1):
-                    idx, end = _get_query_idx(match)
-                    if query[end:end + 1] != ":":
-                        key = idx
-                    elif match := _match_idx(query, end + 1):
-                        idx2, end = _get_query_idx(match)
-                        if query[end:end + 1] != ":":
-                            key = slice(idx, idx2)
-                        elif match := _match_int(query, end + 1):
-                            step, end = int(match.group()), match.end()
-                            key = slice(idx, idx2, step)
-                        else:
-                            raise SyntaxError
-                    else:
-                        raise SyntaxError
-
+                if match := _match_slice(query, end + 1):
+                    end = match.end()
+                    start, stop, step = match.groups()
+                    key = slice(
+                        start and int(start), stop and int(stop),
+                        step and int(step),
+                    )
+                    nodes = [
+                        (target, key)
+                        for node in nodes
+                        for target in _get_query_targets(node, mapping=mapping)
+                    ]
+                elif match := _match_idx(query, end + 1):
+                    key, end = int(match.group()), match.end()
                     nodes = [
                         (target, key)
                         for node in nodes
