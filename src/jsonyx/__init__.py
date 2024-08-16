@@ -46,6 +46,7 @@ if TYPE_CHECKING:
     ] | str]
 
 JSONSyntaxError.__module__ = __name__
+Manipulator.__module__ = __name__
 
 
 class Decoder:
@@ -202,8 +203,8 @@ class Encoder:
         :type obj: object
         :param filename: the path to the JSON file
         :type filename: StrPath
-        :raises ValueError: for invalid values
         :raises TypeError: for unserializable values
+        :raises ValueError: for invalid values
         """
         Path(filename).write_text(self._encoder(obj), "utf_8", self._errors)
 
@@ -214,8 +215,8 @@ class Encoder:
         :type obj: object
         :param fp: an open JSON file, defaults to stdout
         :type fp: SupportsWrite[str], optional
-        :raises ValueError: for invalid values
         :raises TypeError: for unserializable values
+        :raises ValueError: for invalid values
         """
         fp.write(self._encoder(obj))
 
@@ -224,8 +225,8 @@ class Encoder:
 
         :param obj: a Python object
         :type obj: object
-        :raises ValueError: for invalid values
         :raises TypeError: for unserializable values
+        :raises ValueError: for invalid values
         :return: a JSON string
         :rtype: str
         """
@@ -371,17 +372,31 @@ def loads(
     )
 
 
-def apply_patch(obj: Any, patch: dict[str, Any] | list[dict[str, Any]]) -> Any:
+def apply_patch(
+    obj: Any,
+    patch: dict[str, Any] | list[dict[str, Any]],
+    *,
+    allow: _AllowList = NOTHING,
+    use_decimal: bool = False,
+) -> Any:
     """Apply a JSON patch to a Python object.
 
     :param obj: a Python object
     :type obj: Any
     :param patch: a JSON patch
     :type patch: dict[str, Any] | list[dict[str, Any]]
+    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :type allow: Container[str], optional
+    :param use_decimal: use decimal instead of float, defaults to False
+    :type use_decimal: bool, optional
+    :raises TypeError: if a value has the wrong type
+    :raises ValueError: if a value is invalid
     :return: the patched Python object
     :rtype: Any
     """
-    return Manipulator().apply_patch(obj, patch)
+    return Manipulator(allow=allow, use_decimal=use_decimal).apply_patch(
+        obj, patch,
+    )
 
 
 # pylint: disable-next=R0913
@@ -421,8 +436,8 @@ def write(  # noqa: PLR0913
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma if indented, defaults to False
     :type trailing_comma: bool, optional
-    :raises ValueError: for invalid values
     :raises TypeError: for unserializable values
+    :raises ValueError: for invalid values
     """
     return Encoder(
         allow=allow,
@@ -473,8 +488,8 @@ def dump(  # noqa: PLR0913
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma if indented, defaults to False
     :type trailing_comma: bool, optional
-    :raises ValueError: for invalid values
     :raises TypeError: for unserializable values
+    :raises ValueError: for invalid values
     """
     Encoder(
         allow=allow,
@@ -522,8 +537,8 @@ def dumps(  # noqa: PLR0913
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma if indented, defaults to False
     :type trailing_comma: bool, optional
-    :raises ValueError: for invalid values
     :raises TypeError: for unserializable values
+    :raises ValueError: for invalid values
     :return: a JSON string
     :rtype: str
     """
