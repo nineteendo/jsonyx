@@ -1,5 +1,6 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON manipulator."""
+# TODO(Nice Zombies): add error messages
 # TODO(Nice Zombies): generate patch
 # TODO(Nice Zombies): raise JSONSyntaxError
 # TODO(Nice Zombies): write documentation
@@ -30,7 +31,7 @@ if TYPE_CHECKING:
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
 _match_idx: Callable[[str, int], Match[str] | None] = re.compile(
-    r"0|-?[1-9]\d*", _FLAGS,
+    r"-?0|-?[1-9]\d*", _FLAGS,
 ).match
 _match_key_chunk: Callable[[str, int], Match[str] | None] = re.compile(
     r"[^!&.<=>?[\]~]*", _FLAGS,
@@ -39,7 +40,7 @@ _match_number: Callable[[str, int], Match[str] | None] = re.compile(
     r"(-?0|-?[1-9]\d*)(\.\d+)?([eE][-+]?\d+)?", _FLAGS,
 ).match
 _match_slice: Callable[[str, int], Match[str] | None] = re.compile(
-    r"(0|-?[1-9]\d*)?:(0|-?[1-9]\d*)?(?::(-?[1-9]\d*))?", _FLAGS,
+    r"(-?0|-?[1-9]\d*)?:(-?0|-?[1-9]\d*)?(?::(-?[1-9]\d*))?", _FLAGS,
 ).match
 _match_str_chunk: Callable[[str, int], Match[str] | None] = re.compile(
     r"[^'~]*", _FLAGS,
@@ -166,7 +167,6 @@ def _scan_query_string(s: str, end: int) -> tuple[str, int]:
         append_chunk(esc)
 
 
-# TODO(Nice Zombies): add error messages
 # pylint: disable-next=R0915
 class Manipulator:
     """JSON manipulator."""
