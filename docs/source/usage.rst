@@ -176,7 +176,7 @@ Functions
 
 .. autofunction:: jsonyx.apply_patch
 
-    .. versionadded:: 1.3
+    .. versionadded:: 2.0
 
 .. autofunction:: jsonyx.detect_encoding
 .. autofunction:: jsonyx.dump
@@ -185,18 +185,18 @@ Functions
 .. autofunction:: jsonyx.load
 .. autofunction:: jsonyx.load_query_value
 
-    .. versionadded:: 1.3
+    .. versionadded:: 2.0
 
 .. autofunction:: jsonyx.loads
 .. autofunction:: jsonyx.read
 
 .. autofunction:: jsonyx.run_filter_query
 
-    .. versionadded:: 1.3
+    .. versionadded:: 2.0
 
 .. autofunction:: jsonyx.run_select_query
 
-    .. versionadded:: 1.3
+    .. versionadded:: 2.0
 
 .. autofunction:: jsonyx.write
 
@@ -220,7 +220,7 @@ Classes
 .. autoclass:: jsonyx.Manipulator
     :members:
 
-    .. versionadded:: 1.3
+    .. versionadded:: 2.0
 
 Exceptions
 ----------
@@ -262,7 +262,7 @@ Command line options
 
     The path to the patch JSON file.
 
-    .. versionadded:: 1.3
+    .. versionadded:: 2.0
 
 .. option:: -h, --help
 
