@@ -47,7 +47,7 @@
                 },
                 {
                     "if": {
-                        "properties": {"op": {"enum": ["copy", "from"]}},
+                        "properties": {"op": {"enum": ["copy", "move"]}},
                         "required": ["op"]
                     },
                     "then": {
