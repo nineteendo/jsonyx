@@ -68,7 +68,14 @@
                                 "default": "@"
                             }
                         },
-                        "required": ["mode", "from", "to"]
+                        "required": ["mode", "from"],
+                        "if": {
+                            "properties": {"mode": {"const": "insert"}},
+                            "required": ["mode"]
+                        },
+                        "then": {
+                            "required": ["to"]
+                        }
                     }
                 },
                 {

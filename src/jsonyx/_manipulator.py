@@ -379,8 +379,8 @@ class Manipulator:
         operation: dict[str, Any],
         values: list[Any],
     ) -> None:
-        dst: str = operation["to"]
         if (mode := operation["mode"]) == "append":
+            dst: str = operation.get("to", "@")
             dst_nodes: list[
                 tuple[dict[Any, Any] | list[Any], int | slice | str]
             ] = self.run_select_query(
@@ -389,25 +389,31 @@ class Manipulator:
             for (target, key), value in zip(dst_nodes, values, strict=True):
                 list.append(target[key], value)  # type: ignore
         elif mode == "extend":
+            dst = operation.get("to", "@")
             dst_nodes = self.run_select_query(
                 current_nodes, dst, mapping=True, relative=True,
             )
             for (target, key), value in zip(dst_nodes, values, strict=True):
                 list.extend(target[key], value)  # type: ignore
         elif mode == "insert":
+            dst = operation["to"]
             dst_nodes = self.run_select_query(
                 current_nodes, dst, mapping=True, relative=True,
             )
 
             # Reverse to preserve indices for queries
             for (current_target, _current_key), (target, key), value in zip(
-                current_nodes, dst_nodes[::-1], values[::-1], strict=True,
+                current_nodes[::-1],
+                dst_nodes[::-1],
+                values[::-1],
+                strict=True,
             ):
                 if target is current_target:
                     raise ValueError
 
                 list.insert(target, key, value)  # type: ignore
         elif mode == "set":
+            dst = operation.get("to", "@")
             dst_nodes = self.run_select_query(
                 current_nodes,
                 dst,
@@ -418,6 +424,7 @@ class Manipulator:
             for (target, key), value in zip(dst_nodes, values, strict=True):
                 target[key] = value  # type: ignore
         elif mode == "update":
+            dst = operation.get("to", "@")
             dst_nodes = self.run_select_query(
                 current_nodes, dst, mapping=True, relative=True,
             )
