@@ -47,6 +47,7 @@ if TYPE_CHECKING:
         "comments", "duplicate_keys", "missing_commas", "nan_and_infinity",
         "surrogates", "trailing_comma",
     ] | str]
+    _Node = tuple[dict[Any, Any] | list[Any], int | slice | str]
 
 JSONSyntaxError.__module__ = __name__
 Manipulator.__module__ = __name__
@@ -381,7 +382,7 @@ def load_query_value(
     allow: _AllowList = NOTHING,
     use_decimal: bool = False,
 ) -> Any:
-    """Deserialize a JSON file to a Python object.
+    """Deserialize a JSON query value to a Python object.
 
     :param s: a JSON query value
     :type s: str
@@ -399,16 +400,16 @@ def load_query_value(
 
 
 def run_filter_query(
-    nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]],
+    nodes: _Node | list[_Node],
     query: str,
     *,
     allow: _AllowList = NOTHING,
     use_decimal: bool = False,
-) -> list[tuple[dict[Any, Any] | list[Any], int | slice | str]]:
-    """Run a JSON filter query on a list of nodes.
+) -> list[_Node]:
+    """Run a JSON filter query on a node or a list of nodes.
 
-    :param nodes: a list of nodes
-    :type nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]]
+    :param nodes: a node or a list of nodes
+    :type nodes: _Node | list[_Node]
     :param query: a JSON filter query
     :type query: str
     :param allow: the allowed JSON deviations, defaults to NOTHING
@@ -417,7 +418,7 @@ def run_filter_query(
     :type use_decimal: bool, optional
     :raises SyntaxError: if the filter query is invalid
     :return: the filtered list of nodes
-    :rtype: list[tuple[dict[Any, Any] | list[Any], int | slice | str]]
+    :rtype: list[_Node]
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).run_filter_query(
         nodes, query,
@@ -426,7 +427,7 @@ def run_filter_query(
 
 # pylint: disable-next=R0913
 def run_select_query(  # noqa: PLR0913
-    nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]],
+    nodes: _Node | list[_Node],
     query: str,
     *,
     allow: _AllowList = NOTHING,
@@ -434,11 +435,11 @@ def run_select_query(  # noqa: PLR0913
     mapping: bool = False,
     relative: bool = False,
     use_decimal: bool = False,
-) -> list[tuple[dict[Any, Any] | list[Any], int | slice | str]]:
-    """Run a JSON select query on a list of nodes.
+) -> list[_Node]:
+    """Run a JSON select query on a node or a list of nodes.
 
-    :param nodes: a list of nodes
-    :type nodes: list[tuple[dict[Any, Any] | list[Any], int | slice | str]]
+    :param nodes: a node or a list of nodes
+    :type nodes: _Node | list[_Node]
     :param query: a JSON select query
     :type query: str
     :param allow: the allowed JSON deviations, defaults to NOTHING
@@ -450,7 +451,7 @@ def run_select_query(  # noqa: PLR0913
     :raises SyntaxError: if the select query is invalid
     :raises ValueError: if a value is invalid
     :return: the selected list of nodes
-    :rtype: list[tuple[dict[Any, Any] | list[Any], int | slice | str]]
+    :rtype: list[_Node]
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).run_select_query(
         nodes,

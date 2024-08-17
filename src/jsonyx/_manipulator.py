@@ -536,7 +536,7 @@ class Manipulator:
                 raise ValueError
 
     def load_query_value(self, s: str) -> Any:
-        """Deserialize a JSON file to a Python object.
+        """Deserialize a JSON query value to a Python object.
 
         :param s: a JSON query value
         :type s: str
