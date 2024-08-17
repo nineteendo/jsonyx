@@ -9,22 +9,13 @@ Welcome to jsonyx's documentation!
     :target: https://jsonyx.readthedocs.io/en/stable/?badge=stable
     :alt: docs
 
-:mod:`jsonyx` is a robust `JSON <http://json.org>`_ encoder and decoder for
-Python 3.10+. It is written in pure Python with an optional C extension for
-better performance and no dependencies.
+:mod:`jsonyx` is a robust `JSON <http://json.org>`_ manipulator for Python
+3.10+. It is written in pure Python with an optional C extension for better
+performance and no dependencies.
 
 Key Features:
 
-- Dedicated functions for reading and writing files
-- Detailed error messages
-
-    .. code-block:: pytb
-
-        File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
-            "path": "c:\users"
-                        ^^^^
-        jsonyx._decoder.JSONSyntaxError: Expecting 4 hex digits
-
+- JSON decoding, encoding, patching and querying
 - Optionally supports these JSON deviations
 
     .. code-block:: javascript
@@ -38,6 +29,17 @@ Key Features:
             "Trailing comma": [0,],
             "Surrogates": "\ud800"
         }
+
+- Detailed error messages
+
+    .. code-block:: pytb
+
+        File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
+            "path": "c:\users"
+                        ^^^^
+        jsonyx.JSONSyntaxError: Expecting 4 hex digits
+
+- Dedicated functions for reading and writing files and pretty printing
 
 Check out the :doc:`usage` section for further information, including how to
 :ref:`installation` the project.

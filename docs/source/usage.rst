@@ -62,6 +62,23 @@ Decoding JSON::
     >>> json.load(io)
     ['streaming API']
 
+Applying a patch::
+
+    >>> import jsonyx as json
+    >>> json.apply_patch([0, 1, 2, 3, 4, 5], {"op": "del", "path": "$[::2]"})
+    [1, 3, 5]
+
+Running queries::
+
+    >>> import jsonyx as json
+    >>> root = [[0, 1, 2, 3, 4, 5]]
+    >>> node = root, 0
+    >>> for target, key in json.run_select_query(node, "$[@>=3]"):
+    ...     target[key] = None
+    ...
+    >>> root[0]
+    [0, 1, 2, None, None, None]
+
 Using :class:`decimal.Decimal` instead of :class:`float`::
 
     >>> import jsonyx as json
@@ -83,7 +100,7 @@ Using :mod:`jsonyx` from the shell to validate and pretty-print:
       File "<stdin>", line 1, column 2
         {1.2: 3.4}
          ^
-    jsonyx._decoder.JSONSyntaxError: Expecting string
+    jsonyx.JSONSyntaxError: Expecting string
 
 See :ref:`command_line_options` for more details.
 
@@ -96,7 +113,7 @@ Constants
 
 .. autoattribute:: jsonyx.allow.COMMENTS
 
-    .. code-block::
+    ::
 
         >>> import jsonyx as json
         >>> import jsonyx.allow
@@ -105,7 +122,7 @@ Constants
 
 .. autoattribute:: jsonyx.allow.DUPLICATE_KEYS
 
-    .. code-block::
+    ::
 
         >>> import jsonyx as json
         >>> import jsonyx.allow
@@ -118,7 +135,7 @@ Constants
 
 .. autoattribute:: jsonyx.allow.MISSING_COMMAS
 
-    .. code-block::
+    ::
 
         >>> import jsonyx as json
         >>> import jsonyx.allow
@@ -130,7 +147,7 @@ Constants
 
 .. autoattribute:: jsonyx.allow.NAN_AND_INFINITY
 
-    .. code-block::
+    ::
 
         >>> import jsonyx as json
         >>> import jsonyx.allow
@@ -144,7 +161,7 @@ Constants
 
 .. autoattribute:: jsonyx.allow.TRAILING_COMMA
 
-    .. code-block::
+    ::
 
         >>> import jsonyx as json
         >>> import jsonyx.allow
@@ -153,7 +170,7 @@ Constants
 
 .. autoattribute:: jsonyx.allow.SURROGATES
 
-    .. code-block::
+    ::
 
         >>> import jsonyx as json
         >>> import jsonyx.allow
@@ -208,7 +225,7 @@ Classes
 
 .. autoclass:: jsonyx.DuplicateKey
 
-    .. code-block::
+    ::
 
         >>> import jsonyx as json
         >>> {"key": "value 1", json.DuplicateKey("key"): "value 2"}

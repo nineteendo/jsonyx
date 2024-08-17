@@ -3,20 +3,13 @@
 [![pytest](https://github.com/nineteendo/jsonyx/actions/workflows/pytest.yml/badge.svg)](https://github.com/nineteendo/jsonyx/actions/workflows/pytest.yml)
 [![docs](https://readthedocs.org/projects/jsonyx/badge/?version=stable)](https://jsonyx.readthedocs.io/en/stable/?badge=stable)
 
-`jsonyx` is a robust [JSON](http://json.org) encoder and decoder for Python
-3.10+. It is written in pure Python with an optional C extension for better
-performance and no dependencies
+`jsonyx` is a robust [JSON](http://json.org) manipulator for Python 3.10+. It
+is written in pure Python with an optional C extension for better performance
+and no dependencies
 
 Key Features:
 
-- Dedicated functions for reading and writing files
-- Detailed error messages:
-    ```none
-      File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
-         "path": "c:\users"
-                      ^^^^
-    jsonyx._decoder.JSONSyntaxError: Expecting 4 hex digits
-    ```
+- JSON decoding, encoding, patching and querying
 - Optionally supports these JSON deviations:
     ```javascript
     {
@@ -29,6 +22,14 @@ Key Features:
         "Surrogates": "\ud800"
     }
     ```
+- Detailed error messages:
+    ```none
+      File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
+         "path": "c:\users"
+                      ^^^^
+    jsonyx.JSONSyntaxError: Expecting 4 hex digits
+    ```
+- Dedicated functions for reading and writing files and pretty printing
 
-The latest documentation for `jsonyx` is available online at:
+The documentation for `jsonyx` is available online at:
 https://jsonyx.readthedocs.io/en/stable/usage.html
