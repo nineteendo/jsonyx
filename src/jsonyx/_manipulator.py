@@ -40,7 +40,7 @@ _match_number: Callable[[str, int], Match[str] | None] = re.compile(
     r"(-?0|-?[1-9]\d*)(\.\d+)?([eE][-+]?\d+)?", _FLAGS,
 ).match
 _match_slice: Callable[[str, int], Match[str] | None] = re.compile(
-    r"(-?0|-?[1-9]\d*)?:(-?0|-?[1-9]\d*)?(?::(-?[1-9]\d*))?", _FLAGS,
+    r"(-?0|-?[1-9]\d*)?:(-?0|-?[1-9]\d*)?(?::(-?0|-?[1-9]\d*)?)?", _FLAGS,
 ).match
 _match_str_chunk: Callable[[str, int], Match[str] | None] = re.compile(
     r"[^'~]*", _FLAGS,

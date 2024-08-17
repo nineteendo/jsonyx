@@ -479,6 +479,7 @@ def apply_patch(
     :type allow: Container[str], optional
     :param use_decimal: use decimal instead of float, defaults to False
     :type use_decimal: bool, optional
+    :raises SyntaxError: if the patch is invalid
     :raises TypeError: if a value has the wrong type
     :raises ValueError: if a value is invalid
     :return: the patched Python object
