@@ -81,8 +81,14 @@ class Decoder:
         :rtype: Any
 
         >>> import jsonyx as json
-        >>> json.Decoder().read("file.json")
-        {"foo": ["bar", None, 1.0, 2]}
+        >>> from pathlib import Path
+        >>> from tempfile import TemporaryDirectory
+        >>> with TemporaryDirectory() as tmpdir:
+        ...     filename: Path = Path(tmpdir) / "file.json"
+        ...     _ = filename.write_text('["streaming API"]', "utf_8")
+        ...     json.Decoder().read(filename)
+        ...
+        ['streaming API']
         """
         return self.loads(Path(filename).read_bytes(), filename=filename)
 
@@ -208,7 +214,7 @@ class Encoder:
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 
     def write(self, obj: object, filename: StrPath) -> None:
-        """Serialize a Python object to a JSON file.
+        r"""Serialize a Python object to a JSON file.
 
         :param obj: a Python object
         :type obj: object
@@ -218,7 +224,14 @@ class Encoder:
         :raises ValueError: for invalid values
 
         >>> import jsonyx as json
-        >>> json.Encoder().write({"foo": ["bar", None, 1.0, 2]}, "file.json")
+        >>> from pathlib import Path
+        >>> from tempfile import TemporaryDirectory
+        >>> with TemporaryDirectory() as tmpdir:
+        ...     filename = Path(tmpdir) / "file.json"
+        ...     json.Encoder().write(["streaming API"], filename)
+        ...     filename.read_text("utf_8")
+        ...
+        '["streaming API"]\n'
         """
         Path(filename).write_text(self._encoder(obj), "utf_8", self._errors)
 
@@ -347,8 +360,14 @@ def read(
     :rtype: Any
 
     >>> import jsonyx as json
-    >>> json.read("file.json")
-    {"foo": ["bar", None, 1.0, 2]}
+    >>> from pathlib import Path
+    >>> from tempfile import TemporaryDirectory
+    >>> with TemporaryDirectory() as tmpdir:
+    ...     filename: Path = Path(tmpdir) / "file.json"
+    ...     _ = filename.write_text('["streaming API"]', "utf_8")
+    ...     json.Decoder().read(filename)
+    ...
+    ['streaming API']
     """
     return Decoder(allow=allow, use_decimal=use_decimal).read(filename)
 
@@ -453,7 +472,14 @@ def write(  # noqa: PLR0913
     :raises ValueError: for invalid values
 
     >>> import jsonyx as json
-    >>> json.write({"foo": ["bar", None, 1.0, 2]}, "file.json")
+    >>> from pathlib import Path
+    >>> from tempfile import TemporaryDirectory
+    >>> with TemporaryDirectory() as tmpdir:
+    ...     filename = Path(tmpdir) / "file.json"
+    ...     json.write(["streaming API"], filename)
+    ...     filename.read_text("utf_8")
+    ...
+    '["streaming API"]\n'
     """
     return Encoder(
         allow=allow,
