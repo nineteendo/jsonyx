@@ -84,7 +84,7 @@ class Decoder:
         >>> from pathlib import Path
         >>> from tempfile import TemporaryDirectory
         >>> with TemporaryDirectory() as tmpdir:
-        ...     filename: Path = Path(tmpdir) / "file.json"
+        ...     filename = Path(tmpdir) / "file.json"
         ...     _ = filename.write_text('["streaming API"]', "utf_8")
         ...     json.Decoder().read(filename)
         ...
@@ -363,7 +363,7 @@ def read(
     >>> from pathlib import Path
     >>> from tempfile import TemporaryDirectory
     >>> with TemporaryDirectory() as tmpdir:
-    ...     filename: Path = Path(tmpdir) / "file.json"
+    ...     filename = Path(tmpdir) / "file.json"
     ...     _ = filename.write_text('["streaming API"]', "utf_8")
     ...     json.Decoder().read(filename)
     ...
