@@ -98,7 +98,12 @@ try:
         from _jsonyx import DuplicateKey
 except ImportError:
     class DuplicateKey(str):
-        """Duplicate key."""
+        """Duplicate key.
+
+        >>> import jsonyx as json
+        >>> {"key": "value 1", json.DuplicateKey("key"): "value 2"}
+        {'key': 'value 1', 'key': 'value 2'}
+        """
 
         __slots__: tuple[()] = ()
 

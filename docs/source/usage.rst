@@ -104,63 +104,6 @@ Using :mod:`jsonyx` from the shell to validate and pretty-print:
 
 See :ref:`command_line_options` for more details.
 
-..
-    Functions
-    ---------
-
-    .. autofunction:: jsonyx.apply_patch
-
-        .. versionadded:: 2.0
-
-    .. autofunction:: jsonyx.detect_encoding
-    .. autofunction:: jsonyx.dump
-    .. autofunction:: jsonyx.dumps
-    .. autofunction:: jsonyx.format_syntax_error
-    .. autofunction:: jsonyx.load
-    .. autofunction:: jsonyx.load_query_value
-
-        .. versionadded:: 2.0
-
-    .. autofunction:: jsonyx.loads
-    .. autofunction:: jsonyx.read
-
-    .. autofunction:: jsonyx.run_filter_query
-
-        .. versionadded:: 2.0
-
-    .. autofunction:: jsonyx.run_select_query
-
-        .. versionadded:: 2.0
-
-    .. autofunction:: jsonyx.write
-
-    Classes
-    -------
-
-    .. autoclass:: jsonyx.Decoder
-        :members:
-
-    .. autoclass:: jsonyx.DuplicateKey
-
-        ::
-
-            >>> import jsonyx as json
-            >>> {"key": "value 1", json.DuplicateKey("key"): "value 2"}
-            {'key': 'value 1', 'key': 'value 2'}
-
-    .. autoclass:: jsonyx.Encoder
-        :members:
-
-    .. autoclass:: jsonyx.Manipulator
-        :members:
-
-        .. versionadded:: 2.0
-
-    Exceptions
-    ----------
-
-    .. autoexception:: jsonyx.JSONSyntaxError
-
 .. _command_line_options:
 
 Command line options

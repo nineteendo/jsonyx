@@ -166,6 +166,8 @@ class Manipulator:
     :type allow: Container[str], optional
     :param use_decimal: use decimal instead of float, defaults to False
     :type use_decimal: bool, optional
+
+    .. versionadded:: 2.0
     """
 
     def __init__(

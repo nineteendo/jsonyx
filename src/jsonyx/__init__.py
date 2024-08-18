@@ -549,6 +549,8 @@ def apply_patch(
     :raises ValueError: if a value is invalid
     :return: the patched Python object
     :rtype: Any
+
+    .. versionadded:: 2.0
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).apply_patch(
         obj, patch,
@@ -582,6 +584,8 @@ def run_select_query(  # noqa: PLR0913
     :raises ValueError: if a value is invalid
     :return: the selected list of nodes
     :rtype: list[_Node]
+
+    .. versionadded:: 2.0
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).run_select_query(
         nodes,
@@ -612,6 +616,8 @@ def run_filter_query(
     :raises SyntaxError: if the filter query is invalid
     :return: the filtered list of nodes
     :rtype: list[_Node]
+
+    .. versionadded:: 2.0
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).run_filter_query(
         nodes, query,
@@ -635,6 +641,8 @@ def load_query_value(
     :raises SyntaxError: if the query value is invalid
     :return: a Python object
     :rtype: Any
+
+    .. versionadded:: 2.0
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).load_query_value(
         s,
