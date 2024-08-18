@@ -15,12 +15,12 @@ version: str = "2.0.0"
 # -- General configuration
 
 extensions: list[str] = [
-    "python_docs_theme",
     "sphinx.ext.duration",
     "sphinx.ext.doctest",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
+    "sphinx_toggleprompt",
 ]
 
 intersphinx_mapping: dict[str, tuple[str, None]] = {
@@ -33,7 +33,7 @@ templates_path = ["_templates"]
 
 # -- Options for HTML output
 
-html_theme: str = "python_docs_theme"
+html_theme: str = "sphinx_rtd_theme"
 
 # -- Options for EPUB output
 epub_show_urls: str = "footnote"
