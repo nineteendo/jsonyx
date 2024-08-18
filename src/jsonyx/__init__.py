@@ -376,120 +376,6 @@ def loads(
     )
 
 
-def load_query_value(
-    s: str,
-    *,
-    allow: _AllowList = NOTHING,
-    use_decimal: bool = False,
-) -> Any:
-    """Deserialize a JSON query value to a Python object.
-
-    :param s: a JSON query value
-    :type s: str
-    :param allow: the allowed JSON deviations, defaults to NOTHING
-    :type allow: Container[str], optional
-    :param use_decimal: use decimal instead of float, defaults to False
-    :type use_decimal: bool, optional
-    :raises SyntaxError: if the query value is invalid
-    :return: a Python object
-    :rtype: Any
-    """
-    return Manipulator(allow=allow, use_decimal=use_decimal).load_query_value(
-        s,
-    )
-
-
-def run_filter_query(
-    nodes: _Node | list[_Node],
-    query: str,
-    *,
-    allow: _AllowList = NOTHING,
-    use_decimal: bool = False,
-) -> list[_Node]:
-    """Run a JSON filter query on a node or a list of nodes.
-
-    :param nodes: a node or a list of nodes
-    :type nodes: _Node | list[_Node]
-    :param query: a JSON filter query
-    :type query: str
-    :param allow: the allowed JSON deviations, defaults to NOTHING
-    :type allow: Container[str], optional
-    :param use_decimal: use decimal instead of float, defaults to False
-    :type use_decimal: bool, optional
-    :raises SyntaxError: if the filter query is invalid
-    :return: the filtered list of nodes
-    :rtype: list[_Node]
-    """
-    return Manipulator(allow=allow, use_decimal=use_decimal).run_filter_query(
-        nodes, query,
-    )
-
-
-# pylint: disable-next=R0913
-def run_select_query(  # noqa: PLR0913
-    nodes: _Node | list[_Node],
-    query: str,
-    *,
-    allow: _AllowList = NOTHING,
-    allow_slice: bool = False,
-    mapping: bool = False,
-    relative: bool = False,
-    use_decimal: bool = False,
-) -> list[_Node]:
-    """Run a JSON select query on a node or a list of nodes.
-
-    :param nodes: a node or a list of nodes
-    :type nodes: _Node | list[_Node]
-    :param query: a JSON select query
-    :type query: str
-    :param allow: the allowed JSON deviations, defaults to NOTHING
-    :type allow: Container[str], optional
-    :param allow_slice: allow slice, defaults to False
-    :type allow_slice: bool, optional
-    :param use_decimal: use decimal instead of float, defaults to False
-    :type use_decimal: bool, optional
-    :raises SyntaxError: if the select query is invalid
-    :raises ValueError: if a value is invalid
-    :return: the selected list of nodes
-    :rtype: list[_Node]
-    """
-    return Manipulator(allow=allow, use_decimal=use_decimal).run_select_query(
-        nodes,
-        query,
-        allow_slice=allow_slice,
-        mapping=mapping,
-        relative=relative,
-    )
-
-
-def apply_patch(
-    obj: Any,
-    patch: dict[str, Any] | list[dict[str, Any]],
-    *,
-    allow: _AllowList = NOTHING,
-    use_decimal: bool = False,
-) -> Any:
-    """Apply a JSON patch to a Python object.
-
-    :param obj: a Python object
-    :type obj: Any
-    :param patch: a JSON patch
-    :type patch: dict[str, Any] | list[dict[str, Any]]
-    :param allow: the allowed JSON deviations, defaults to NOTHING
-    :type allow: Container[str], optional
-    :param use_decimal: use decimal instead of float, defaults to False
-    :type use_decimal: bool, optional
-    :raises SyntaxError: if the patch is invalid
-    :raises TypeError: if a value has the wrong type
-    :raises ValueError: if a value is invalid
-    :return: the patched Python object
-    :rtype: Any
-    """
-    return Manipulator(allow=allow, use_decimal=use_decimal).apply_patch(
-        obj, patch,
-    )
-
-
 # pylint: disable-next=R0913
 def write(  # noqa: PLR0913
     obj: object,
@@ -643,3 +529,118 @@ def dumps(  # noqa: PLR0913
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
     ).dumps(obj)
+
+
+def apply_patch(
+    obj: Any,
+    patch: dict[str, Any] | list[dict[str, Any]],
+    *,
+    allow: _AllowList = NOTHING,
+    use_decimal: bool = False,
+) -> Any:
+    """Apply a JSON patch to a Python object.
+
+    :param obj: a Python object
+    :type obj: Any
+    :param patch: a JSON patch
+    :type patch: dict[str, Any] | list[dict[str, Any]]
+    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :type allow: Container[str], optional
+    :param use_decimal: use decimal instead of float, defaults to False
+    :type use_decimal: bool, optional
+    :raises AssertionError: if an assertion fails
+    :raises SyntaxError: if a query is invalid
+    :raises TypeError: if a value has the wrong type
+    :raises ValueError: if a value is invalid
+    :return: the patched Python object
+    :rtype: Any
+    """
+    return Manipulator(allow=allow, use_decimal=use_decimal).apply_patch(
+        obj, patch,
+    )
+
+
+# pylint: disable-next=R0913
+def run_select_query(  # noqa: PLR0913
+    nodes: _Node | list[_Node],
+    query: str,
+    *,
+    allow: _AllowList = NOTHING,
+    allow_slice: bool = False,
+    mapping: bool = False,
+    relative: bool = False,
+    use_decimal: bool = False,
+) -> list[_Node]:
+    """Run a JSON select query on a node or a list of nodes.
+
+    :param nodes: a node or a list of nodes
+    :type nodes: _Node | list[_Node]
+    :param query: a JSON select query
+    :type query: str
+    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :type allow: Container[str], optional
+    :param allow_slice: allow slice, defaults to False
+    :type allow_slice: bool, optional
+    :param use_decimal: use decimal instead of float, defaults to False
+    :type use_decimal: bool, optional
+    :raises SyntaxError: if the select query is invalid
+    :raises ValueError: if a value is invalid
+    :return: the selected list of nodes
+    :rtype: list[_Node]
+    """
+    return Manipulator(allow=allow, use_decimal=use_decimal).run_select_query(
+        nodes,
+        query,
+        allow_slice=allow_slice,
+        mapping=mapping,
+        relative=relative,
+    )
+
+
+def run_filter_query(
+    nodes: _Node | list[_Node],
+    query: str,
+    *,
+    allow: _AllowList = NOTHING,
+    use_decimal: bool = False,
+) -> list[_Node]:
+    """Run a JSON filter query on a node or a list of nodes.
+
+    :param nodes: a node or a list of nodes
+    :type nodes: _Node | list[_Node]
+    :param query: a JSON filter query
+    :type query: str
+    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :type allow: Container[str], optional
+    :param use_decimal: use decimal instead of float, defaults to False
+    :type use_decimal: bool, optional
+    :raises SyntaxError: if the filter query is invalid
+    :return: the filtered list of nodes
+    :rtype: list[_Node]
+    """
+    return Manipulator(allow=allow, use_decimal=use_decimal).run_filter_query(
+        nodes, query,
+    )
+
+
+def load_query_value(
+    s: str,
+    *,
+    allow: _AllowList = NOTHING,
+    use_decimal: bool = False,
+) -> Any:
+    """Deserialize a JSON query value to a Python object.
+
+    :param s: a JSON query value
+    :type s: str
+    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :type allow: Container[str], optional
+    :param use_decimal: use decimal instead of float, defaults to False
+    :type use_decimal: bool, optional
+    :raises SyntaxError: if the query value is invalid
+    :return: a Python object
+    :rtype: Any
+    """
+    return Manipulator(allow=allow, use_decimal=use_decimal).load_query_value(
+        s,
+    )

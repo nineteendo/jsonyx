@@ -25,7 +25,9 @@ if TYPE_CHECKING:
         "comments", "duplicate_keys", "missing_commas", "nan_and_infinity",
         "surrogates", "trailing_comma",
     ] | str]
-    _Node = tuple[dict[Any, Any] | list[Any], int | slice | str]
+    _Target = dict[Any, Any] | list[Any]
+    _Key = int | slice | str
+    _Node = tuple[_Target, _Key]
 
 
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
@@ -48,10 +50,7 @@ _match_str_chunk: Callable[[str, int], Match[str] | None] = re.compile(
 
 
 def _check_query_key(
-    target: dict[Any, Any] | list[Any],
-    key: int | slice | str,
-    *,
-    allow_slice: bool = False,
+    target: _Target, key: _Key, *, allow_slice: bool = False,
 ) -> None:
     if isinstance(target, dict) and not isinstance(key, str):
         raise TypeError
@@ -64,17 +63,13 @@ def _check_query_key(
             raise TypeError
 
 
-def _get_query_targets(
-    node: _Node, *, mapping: bool = False,
-) -> list[dict[Any, Any] | list[Any]]:
+def _get_query_targets(node: _Node, *, mapping: bool = False) -> list[_Target]:
     target, key = node
-    _check_query_key(target, key, allow_slice=True)
-    if not isinstance(key, slice):
-        targets: list[Any] = [target[key]]  # type: ignore
-    elif mapping:
-        raise ValueError
+    _check_query_key(target, key, allow_slice=not mapping)
+    if isinstance(key, slice):
+        targets: list[Any] = target[key]
     else:
-        targets = target[key]
+        targets = [target[key]]  # type: ignore
 
     if not all(isinstance(target, (dict, list)) for target in targets):
         raise TypeError
@@ -82,9 +77,7 @@ def _get_query_targets(
     return targets
 
 
-def _has_key(
-    target: dict[Any, Any] | list[Any], key: int | slice | str,
-) -> bool:
+def _has_key(target: _Target, key: _Key) -> bool:
     if isinstance(target, dict):
         return key in target
 
@@ -253,7 +246,7 @@ class Manipulator:
             ]
             operator, end = _scan_query_operator(query, end)
             if operator is None:
-                nodes = [node for node, _target in filtered_pairs]
+                nodes = [node for node, _filter_target in filtered_pairs]
             elif negate_filter:
                 raise SyntaxError
             elif query[end:end + 1] != "@":
@@ -294,7 +287,7 @@ class Manipulator:
         relative: bool = False,
         mapping: bool = False,
     ) -> tuple[list[_Node], int]:
-        key: int | slice | str
+        key: _Key
         key, end = _scan_query_key(query, end)
         if relative and key != "@":
             raise SyntaxError
@@ -434,7 +427,7 @@ class Manipulator:
                 expr: str = operation["expr"]
                 current_nodes: list[_Node] = self.run_select_query(node, path)
                 if current_nodes != self.run_filter_query(current_nodes, expr):
-                    raise ValueError
+                    raise AssertionError
             elif op == "clear":
                 path = operation.get("path", "$")
                 for target, key in self.run_select_query(node, path):
@@ -535,42 +528,28 @@ class Manipulator:
             else:
                 raise ValueError
 
-    def load_query_value(self, s: str) -> Any:
-        """Deserialize a JSON query value to a Python object.
+    def apply_patch(
+        self, obj: Any, patch: dict[str, Any] | list[dict[str, Any]],
+    ) -> Any:
+        """Apply a JSON patch to a Python object.
 
-        :param s: a JSON query value
-        :type s: str
-        :raises SyntaxError: if the query value is invalid
-        :return: a Python object
+        :param obj: a Python object
+        :type obj: Any
+        :param patch: a JSON patch
+        :type patch: dict[str, Any] | list[dict[str, Any]]
+        :raises AssertionError: if an assertion fails
+        :raises SyntaxError: if a query is invalid
+        :raises TypeError: if a value has the wrong type
+        :raises ValueError: if a value is invalid
+        :return: the patched Python object
         :rtype: Any
         """
-        obj, end = self._scan_query_value(s)
-        if end < len(s):
-            raise SyntaxError
+        root: list[Any] = [obj]
+        if isinstance(patch, dict):
+            patch = [patch]
 
-        return obj
-
-    def run_filter_query(
-        self, nodes: _Node | list[_Node], query: str,
-    ) -> list[_Node]:
-        """Run a JSON filter query on a node or a list of nodes.
-
-        :param nodes: a node or a list of nodes
-        :type nodes: _Node | list[_Node]
-        :param query: a JSON filter query
-        :type query: str
-        :raises SyntaxError: if the filter query is invalid
-        :return: the filtered list of nodes
-        :rtype: list[_Node]
-        """
-        if isinstance(nodes, tuple):
-            nodes = [nodes]
-
-        nodes, end = self._run_filter_query(nodes, query, 0)
-        if end < len(query):
-            raise SyntaxError
-
-        return nodes
+        self._apply_patch(root, patch)
+        return root[0]
 
     # pylint: disable-next=R0913
     def run_select_query(
@@ -621,24 +600,39 @@ class Manipulator:
 
         return nodes
 
-    def apply_patch(
-        self, obj: Any, patch: dict[str, Any] | list[dict[str, Any]],
-    ) -> Any:
-        """Apply a JSON patch to a Python object.
+    def run_filter_query(
+        self, nodes: _Node | list[_Node], query: str,
+    ) -> list[_Node]:
+        """Run a JSON filter query on a node or a list of nodes.
 
-        :param obj: a Python object
-        :type obj: Any
-        :param patch: a JSON patch
-        :type patch: dict[str, Any] | list[dict[str, Any]]
-        :raises SyntaxError: if the patch is invalid
-        :raises TypeError: if a value has the wrong type
-        :raises ValueError: if a value is invalid
-        :return: the patched Python object
+        :param nodes: a node or a list of nodes
+        :type nodes: _Node | list[_Node]
+        :param query: a JSON filter query
+        :type query: str
+        :raises SyntaxError: if the filter query is invalid
+        :return: the filtered list of nodes
+        :rtype: list[_Node]
+        """
+        if isinstance(nodes, tuple):
+            nodes = [nodes]
+
+        nodes, end = self._run_filter_query(nodes, query, 0)
+        if end < len(query):
+            raise SyntaxError
+
+        return nodes
+
+    def load_query_value(self, s: str) -> Any:
+        """Deserialize a JSON query value to a Python object.
+
+        :param s: a JSON query value
+        :type s: str
+        :raises SyntaxError: if the query value is invalid
+        :return: a Python object
         :rtype: Any
         """
-        root: list[Any] = [obj]
-        if isinstance(patch, dict):
-            patch = [patch]
+        obj, end = self._scan_query_value(s)
+        if end < len(s):
+            raise SyntaxError
 
-        self._apply_patch(root, patch)
-        return root[0]
+        return obj
