@@ -20,7 +20,6 @@ extensions: list[str] = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
-    "sphinx_toggleprompt",
 ]
 
 intersphinx_mapping: dict[str, tuple[str, None]] = {
