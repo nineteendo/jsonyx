@@ -545,6 +545,10 @@ class Manipulator:
         :raises ValueError: if a value is invalid
         :return: the patched Python object
         :rtype: Any
+
+        >>> import jsonyx as json
+        >>> json.Manipulator().apply_patch([0, 1, 2, 3, 4, 5], {"op": "clear"})
+        []
         """
         root: list[Any] = [obj]
         if isinstance(patch, dict):
@@ -581,6 +585,15 @@ class Manipulator:
         :raises ValueError: if a value is invalid
         :return: the selected list of nodes
         :rtype: list[_Node]
+
+        >>> import jsonyx as json
+        >>> root = [[0, 1, 2, 3, 4, 5]]
+        >>> node = root, 0
+        >>> for target, key in json.Manipulator().run_select_query(node, "$[@>=3]"):
+        ...     target[key] = None
+        ...
+        >>> root[0]
+        [0, 1, 2, None, None, None]
         """
         if isinstance(nodes, tuple):
             nodes = [nodes]
@@ -614,6 +627,10 @@ class Manipulator:
         :raises SyntaxError: if the filter query is invalid
         :return: the filtered list of nodes
         :rtype: list[_Node]
+
+        >>> import jsonyx as json
+        >>> node = [None], 0
+        >>> assert json.Manipulator().run_filter_query(node, "@==null")
         """
         if isinstance(nodes, tuple):
             nodes = [nodes]
@@ -632,6 +649,10 @@ class Manipulator:
         :raises SyntaxError: if the query value is invalid
         :return: a Python object
         :rtype: Any
+
+        >>> import jsonyx as json
+        >>> json.Manipulator().load_query_value("'~'foo'")
+        "'foo"
         """
         obj, end = self._scan_query_value(s)
         if end < len(s):

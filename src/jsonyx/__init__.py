@@ -99,6 +99,11 @@ class Decoder:
         :raises JSONSyntaxError: if the JSON file is invalid
         :return: a Python object
         :rtype: Any
+
+        >>> from io import StringIO
+        >>> io = StringIO('["streaming API"]')
+        >>> json.Decoder().load(io)
+        ['streaming API']
         """
         name: str | None
         if name := getattr(fp, "name", None):
@@ -118,6 +123,9 @@ class Decoder:
         :raises JSONSyntaxError: if the JSON string is invalid
         :return: a Python object
         :rtype: Any
+
+        >>> json.Decoder().loads('{"foo": ["bar", null, 1.0, 2]}')
+        {'foo': ['bar', None, 1.0, 2]}
         """
         filename = fspath(filename)
         if not filename.startswith("<") and not filename.endswith(">"):
@@ -208,11 +216,14 @@ class Encoder:
         :type filename: StrPath
         :raises TypeError: for unserializable values
         :raises ValueError: for invalid values
+
+        >>> import jsonyx as json
+        >>> json.Encoder().write({"foo": ["bar", None, 1.0, 2]}, "file.json")
         """
         Path(filename).write_text(self._encoder(obj), "utf_8", self._errors)
 
     def dump(self, obj: object, fp: SupportsWrite[str] = stdout) -> None:
-        """Serialize a Python object to an open JSON file.
+        r"""Serialize a Python object to an open JSON file.
 
         :param obj: a Python object
         :type obj: object
@@ -220,11 +231,21 @@ class Encoder:
         :type fp: SupportsWrite[str], optional
         :raises TypeError: for unserializable values
         :raises ValueError: for invalid values
+
+        >>> import jsonyx as json
+        >>> encoder = json.Encoder()
+        >>> encoder.dump({"foo": ["bar", None, 1.0, 2]})
+        {"foo": ["bar", null, 1.0, 2]}
+        >>> from io import StringIO
+        >>> io = StringIO()
+        >>> encoder.dump(["streaming API"], io)
+        >>> io.getvalue()
+        '["streaming API"]\n'
         """
         fp.write(self._encoder(obj))
 
     def dumps(self, obj: object) -> str:
-        """Serialize a Python object to a JSON string.
+        r"""Serialize a Python object to a JSON string.
 
         :param obj: a Python object
         :type obj: object
@@ -232,6 +253,10 @@ class Encoder:
         :raises ValueError: for invalid values
         :return: a JSON string
         :rtype: str
+
+        >>> import jsonyx as json
+        >>> json.Encoder().dumps({"foo": ["bar", None, 1.0, 2]})
+        '{"foo": ["bar", null, 1.0, 2]}\n'
         """
         return self._encoder(obj)
 
@@ -320,6 +345,10 @@ def read(
     :raises JSONSyntaxError: if the JSON file is invalid
     :return: a Python object.
     :rtype: Any
+
+    >>> import jsonyx as json
+    >>> json.read("file.json")
+    {"foo": ["bar", None, 1.0, 2]}
     """
     return Decoder(allow=allow, use_decimal=use_decimal).read(filename)
 
@@ -345,6 +374,11 @@ def load(
     :raises JSONSyntaxError: if the JSON file is invalid
     :return: a Python object
     :rtype: Any
+
+    >>> from io import StringIO
+    >>> io = StringIO('["streaming API"]')
+    >>> json.load(io)
+    ['streaming API']
     """
     return Decoder(allow=allow, use_decimal=use_decimal).load(fp, root=root)
 
@@ -369,6 +403,9 @@ def loads(
     :raises JSONSyntaxError: if the JSON string is invalid
     :return: a Python object
     :rtype: Any
+
+    >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
+    {'foo': ['bar', None, 1.0, 2]}
     """
     return Decoder(allow=allow, use_decimal=use_decimal).loads(
         s, filename=filename,
@@ -414,6 +451,9 @@ def write(  # noqa: PLR0913
     :type trailing_comma: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
+
+    >>> import jsonyx as json
+    >>> json.write({"foo": ["bar", None, 1.0, 2]}, "file.json")
     """
     return Encoder(
         allow=allow,
@@ -466,6 +506,15 @@ def dump(  # noqa: PLR0913
     :type trailing_comma: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
+
+    >>> import jsonyx as json
+    >>> json.dump({"foo": ["bar", None, 1.0, 2]})
+    {"foo": ["bar", null, 1.0, 2]}
+    >>> from io import StringIO
+    >>> io = StringIO()
+    >>> json.dump(["streaming API"], io)
+    >>> io.getvalue()
+    '["streaming API"]\n'
     """
     Encoder(
         allow=allow,
@@ -517,6 +566,10 @@ def dumps(  # noqa: PLR0913
     :raises ValueError: for invalid values
     :return: a JSON string
     :rtype: str
+
+    >>> import jsonyx as json
+    >>> json.dumps({"foo": ["bar", None, 1.0, 2]})
+    '{"foo": ["bar", null, 1.0, 2]}\n'
     """
     return Encoder(
         allow=allow,
@@ -555,8 +608,8 @@ def apply_patch(
     :rtype: Any
 
     >>> import jsonyx as json
-    >>> json.apply_patch([0, 1, 2, 3, 4, 5], {"op": "del", "path": "$[::2]"})
-    [1, 3, 5]
+    >>> json.apply_patch([0, 1, 2, 3, 4, 5], {"op": "clear"})
+    []
 
     .. versionadded:: 2.0
     """

@@ -65,8 +65,8 @@ Decoding JSON::
 Applying a patch::
 
     >>> import jsonyx as json
-    >>> json.apply_patch([0, 1, 2, 3, 4, 5], {"op": "del", "path": "$[::2]"})
-    [1, 3, 5]
+    >>> json.apply_patch([0, 1, 2, 3, 4, 5], {"op": "clear"})
+    []
 
 Using :class:`decimal.Decimal` instead of :class:`float`::
 
