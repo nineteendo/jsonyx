@@ -14,6 +14,11 @@ __all__: list[str] = [
 ]
 
 #: Allow nothing
+#:
+#: >>> import jsonyx as json
+#: >>> import jsonyx.allow
+#: >>> json.loads("0 // line comment", allow=jsonyx.allow.COMMENTS)
+#: 0
 NOTHING: frozenset[str] = frozenset()
 #: Allow comments
 COMMENTS: frozenset[str] = frozenset({"comments"})
