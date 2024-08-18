@@ -4,3 +4,5 @@
 
 .. autoclass:: {{ objname }}
    :members:
+
+   .. automethod:: __init__
