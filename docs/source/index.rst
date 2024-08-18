@@ -1,6 +1,12 @@
 Welcome to jsonyx's documentation!
 ===================================
 
+.. toctree::
+   :hidden:
+
+   usage
+   api/index
+
 .. image:: https://github.com/nineteendo/jsonyx/actions/workflows/pytest.yml/badge.svg
     :target: https://github.com/nineteendo/jsonyx/actions/workflows/pytest.yml
     :alt: pytest
@@ -43,12 +49,3 @@ Key Features:
 
 Check out the :doc:`usage` section for further information, including how to
 :ref:`installation` the project.
-
-Contents
---------
-
-.. toctree::
-   :hidden:
-
-   usage
-   api/index
