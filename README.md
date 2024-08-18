@@ -9,7 +9,7 @@ and no dependencies
 
 Key Features:
 
-- JSON decoding, encoding, patching and querying
+- JSON decoding, encoding and patching
 - Optionally supports these JSON deviations:
     ```javascript
     {

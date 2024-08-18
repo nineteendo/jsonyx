@@ -275,12 +275,17 @@ class Encoder:
 
 
 def detect_encoding(b: bytearray | bytes) -> str:
-    """Detect JSON encoding.
+    r"""Detect JSON encoding.
 
     :param b: a JSON string
     :type b: bytearray | bytes
     :return: the detected encoding
     :rtype: str
+
+    >>> import jsonyx as json
+    >>> b = b'\x00"\x00f\x00o\x00o\x00"'
+    >>> b.decode(json.detect_encoding(b))
+    '"foo"'
     """
     # JSON must start with ASCII character (not NULL)
     # Strings can't contain control characters (including NULL)
@@ -320,6 +325,17 @@ def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
     :type exc: JSONSyntaxError
     :return: a list of strings, each ending in a newline
     :rtype: list[str]
+
+    >>> import jsonyx as json
+    >>> try:
+    ...     json.loads("[,]")
+    ... except json.JSONSyntaxError as exc:
+    ...     print(end="".join(json.format_syntax_error(exc)))
+    ...
+      File "<string>", line 1, column 2
+        [,]
+         ^
+    jsonyx.JSONSyntaxError: Expecting value
     """
     if exc.end_lineno == exc.lineno:
         line_range: str = f"{exc.lineno:d}"
