@@ -62,6 +62,7 @@ class Decoder:
     def __init__(
         self, *, allow: _AllowList = NOTHING, use_decimal: bool = False,
     ) -> None:
+        """Create a new JSON decoder."""
         allow_surrogates: bool = "surrogates" in allow
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
         self._scanner: Callable[[str, str], tuple[Any]] = make_scanner(
@@ -162,6 +163,7 @@ class Encoder:
         sort_keys: bool = False,
         trailing_comma: bool = False,
     ) -> None:
+        """Create a new JSON encoder."""
         allow_nan_and_infinity: bool = "nan_and_infinity" in allow
         allow_surrogates: bool = "surrogates" in allow
         decimal_str: Callable[[Decimal], str] = Decimal.__str__

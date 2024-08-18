@@ -128,6 +128,7 @@ class JSONSyntaxError(SyntaxError):
     def __init__(
         self, msg: str, filename: str, doc: str, start: int, end: int = 0,
     ) -> None:
+        """Create a new JSON syntax error."""
         lineno: int = (
             doc.count("\n", 0, start)
             + doc.count("\r", 0, start)
