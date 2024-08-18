@@ -93,18 +93,21 @@ def _unescape_unicode(filename: str, s: str, end: int) -> int:
     raise _errmsg(msg, filename, s, end, -4)
 
 
+class DuplicateKey(str):
+    """Duplicate key."""
+
+    __slots__: tuple[()] = ()
+
+    def __hash__(self) -> int:
+        """Return hash."""
+        return id(self)
+
+
 try:
     if not TYPE_CHECKING:
-        from _jsonyx import DuplicateKey
+        from _jsonyx import DuplicateKey  # noqa: F811, PLC2701, RUF100
 except ImportError:
-    class DuplicateKey(str):
-        """Duplicate key."""
-
-        __slots__: tuple[()] = ()
-
-        def __hash__(self) -> int:
-            """Return hash."""
-            return id(self)
+    pass
 
 
 class JSONSyntaxError(SyntaxError):
