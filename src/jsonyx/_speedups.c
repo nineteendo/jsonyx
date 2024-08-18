@@ -51,7 +51,7 @@ static Py_hash_t duplicatekey_hash(PyUnicodeObject *self) {
 
 static PyTypeObject PyDuplicateKeyType = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "_jsonyx.DuplicateKey",
+    .tp_name = "jsonyx.DuplicateKey",
     .tp_doc = PyDoc_STR("Duplicate key"),
     .tp_hash = (hashfunc)duplicatekey_hash,
 };
