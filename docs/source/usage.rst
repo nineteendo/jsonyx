@@ -33,6 +33,14 @@ Encoding basic Python object hierarchies::
     >>> json.dump(["streaming API"], io)
     >>> io.getvalue()
     '["streaming API"]\n'
+    >>> from pathlib import Path
+    >>> from tempfile import TemporaryDirectory
+    >>> with TemporaryDirectory() as tmpdir:
+    ...     filename = Path(tmpdir) / "file.json"
+    ...     json.write(["streaming API"], filename)
+    ...     filename.read_text("utf_8")
+    ...
+    '["streaming API"]\n'
 
 Compact encoding::
 
@@ -60,6 +68,14 @@ Decoding JSON::
     >>> from io import StringIO
     >>> io = StringIO('["streaming API"]')
     >>> json.load(io)
+    ['streaming API']
+    >>> from pathlib import Path
+    >>> from tempfile import TemporaryDirectory
+    >>> with TemporaryDirectory() as tmpdir:
+    ...     filename = Path(tmpdir) / "file.json"
+    ...     _ = filename.write_text('["streaming API"]', "utf_8")
+    ...     json.Decoder().read(filename)
+    ...
     ['streaming API']
 
 Applying a patch::
