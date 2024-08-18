@@ -104,145 +104,146 @@ Using :mod:`jsonyx` from the shell to validate and pretty-print:
 
 See :ref:`command_line_options` for more details.
 
-Constants
----------
+..
+    Constants
+    ---------
 
-.. autoattribute:: jsonyx.allow.NOTHING
+    .. autoattribute:: jsonyx.allow.NOTHING
 
-    Raises an error for all JSON deviations.
+        Raises an error for all JSON deviations.
 
-.. autoattribute:: jsonyx.allow.COMMENTS
+    .. autoattribute:: jsonyx.allow.COMMENTS
 
-    ::
+        ::
 
-        >>> import jsonyx as json
-        >>> import jsonyx.allow
-        >>> json.loads("0 // line comment", allow=jsonyx.allow.COMMENTS)
-        0
+            >>> import jsonyx as json
+            >>> import jsonyx.allow
+            >>> json.loads("0 // line comment", allow=jsonyx.allow.COMMENTS)
+            0
 
-.. autoattribute:: jsonyx.allow.DUPLICATE_KEYS
+    .. autoattribute:: jsonyx.allow.DUPLICATE_KEYS
 
-    ::
+        ::
 
-        >>> import jsonyx as json
-        >>> import jsonyx.allow
-        >>> json.loads('{"key": "value 1", "key": "value 2"}', allow=jsonyx.allow.DUPLICATE_KEYS)
-        {'key': 'value 1', 'key': 'value 2'}
+            >>> import jsonyx as json
+            >>> import jsonyx.allow
+            >>> json.loads('{"key": "value 1", "key": "value 2"}', allow=jsonyx.allow.DUPLICATE_KEYS)
+            {'key': 'value 1', 'key': 'value 2'}
 
-    .. note::
-        To get access to the second value of "key", you need to iterate over
-        the items of the dictionary.
+        .. note::
+            To get access to the second value of "key", you need to iterate over
+            the items of the dictionary.
 
-.. autoattribute:: jsonyx.allow.MISSING_COMMAS
+    .. autoattribute:: jsonyx.allow.MISSING_COMMAS
 
-    ::
+        ::
 
-        >>> import jsonyx as json
-        >>> import jsonyx.allow
-        >>> json.loads("[1 2 3]", allow=jsonyx.allow.MISSING_COMMAS)
-        [1, 2, 3]
+            >>> import jsonyx as json
+            >>> import jsonyx.allow
+            >>> json.loads("[1 2 3]", allow=jsonyx.allow.MISSING_COMMAS)
+            [1, 2, 3]
 
-    .. note::
-        Whitespace or a comment must be present if the comma is missing.
+        .. note::
+            Whitespace or a comment must be present if the comma is missing.
 
-.. autoattribute:: jsonyx.allow.NAN_AND_INFINITY
+    .. autoattribute:: jsonyx.allow.NAN_AND_INFINITY
 
-    ::
+        ::
 
-        >>> import jsonyx as json
-        >>> import jsonyx.allow
-        >>> json.loads("NaN", allow=jsonyx.allow.NAN_AND_INFINITY)
-        nan
-        >>> json.dump(float("nan"), allow=jsonyx.allow.NAN_AND_INFINITY)
-        NaN
+            >>> import jsonyx as json
+            >>> import jsonyx.allow
+            >>> json.loads("NaN", allow=jsonyx.allow.NAN_AND_INFINITY)
+            nan
+            >>> json.dump(float("nan"), allow=jsonyx.allow.NAN_AND_INFINITY)
+            NaN
 
-    .. note::
-        ``Decimal("sNan")`` can't be (de)serialised this way.
+        .. note::
+            ``Decimal("sNan")`` can't be (de)serialised this way.
 
-.. autoattribute:: jsonyx.allow.TRAILING_COMMA
+    .. autoattribute:: jsonyx.allow.TRAILING_COMMA
 
-    ::
+        ::
 
-        >>> import jsonyx as json
-        >>> import jsonyx.allow
-        >>> json.loads('[0,]', allow=jsonyx.allow.TRAILING_COMMA)
-        [0]
+            >>> import jsonyx as json
+            >>> import jsonyx.allow
+            >>> json.loads('[0,]', allow=jsonyx.allow.TRAILING_COMMA)
+            [0]
 
-.. autoattribute:: jsonyx.allow.SURROGATES
+    .. autoattribute:: jsonyx.allow.SURROGATES
 
-    ::
+        ::
 
-        >>> import jsonyx as json
-        >>> import jsonyx.allow
-        >>> json.loads('"\ud800"', allow=jsonyx.allow.SURROGATES)
-        '\ud800'
-        >>> json.dump("\ud800", allow=jsonyx.allow.SURROGATES, ensure_ascii=True)
-        "\ud800"
+            >>> import jsonyx as json
+            >>> import jsonyx.allow
+            >>> json.loads('"\ud800"', allow=jsonyx.allow.SURROGATES)
+            '\ud800'
+            >>> json.dump("\ud800", allow=jsonyx.allow.SURROGATES, ensure_ascii=True)
+            "\ud800"
 
-    .. note::
-        If you're not using ``read()`` or ``write()``, you still need to set
-        the unicode error handler to "surrogatepass".
+        .. note::
+            If you're not using ``read()`` or ``write()``, you still need to set
+            the unicode error handler to "surrogatepass".
 
-.. autoattribute:: jsonyx.allow.EVERYTHING
+    .. autoattribute:: jsonyx.allow.EVERYTHING
 
-    Equivalent to ``COMMENTS | DUPLICATE_KEYS | MISSING_COMMAS |
-    NAN_AND_INFINITY | SURROGATES | TRAILING_COMMA``.
+        Equivalent to ``COMMENTS | DUPLICATE_KEYS | MISSING_COMMAS |
+        NAN_AND_INFINITY | SURROGATES | TRAILING_COMMA``.
 
-Functions
----------
+    Functions
+    ---------
 
-.. autofunction:: jsonyx.apply_patch
+    .. autofunction:: jsonyx.apply_patch
 
-    .. versionadded:: 2.0
+        .. versionadded:: 2.0
 
-.. autofunction:: jsonyx.detect_encoding
-.. autofunction:: jsonyx.dump
-.. autofunction:: jsonyx.dumps
-.. autofunction:: jsonyx.format_syntax_error
-.. autofunction:: jsonyx.load
-.. autofunction:: jsonyx.load_query_value
+    .. autofunction:: jsonyx.detect_encoding
+    .. autofunction:: jsonyx.dump
+    .. autofunction:: jsonyx.dumps
+    .. autofunction:: jsonyx.format_syntax_error
+    .. autofunction:: jsonyx.load
+    .. autofunction:: jsonyx.load_query_value
 
-    .. versionadded:: 2.0
+        .. versionadded:: 2.0
 
-.. autofunction:: jsonyx.loads
-.. autofunction:: jsonyx.read
+    .. autofunction:: jsonyx.loads
+    .. autofunction:: jsonyx.read
 
-.. autofunction:: jsonyx.run_filter_query
+    .. autofunction:: jsonyx.run_filter_query
 
-    .. versionadded:: 2.0
+        .. versionadded:: 2.0
 
-.. autofunction:: jsonyx.run_select_query
+    .. autofunction:: jsonyx.run_select_query
 
-    .. versionadded:: 2.0
+        .. versionadded:: 2.0
 
-.. autofunction:: jsonyx.write
+    .. autofunction:: jsonyx.write
 
-Classes
--------
+    Classes
+    -------
 
-.. autoclass:: jsonyx.Decoder
-    :members:
+    .. autoclass:: jsonyx.Decoder
+        :members:
 
-.. autoclass:: jsonyx.DuplicateKey
+    .. autoclass:: jsonyx.DuplicateKey
 
-    ::
+        ::
 
-        >>> import jsonyx as json
-        >>> {"key": "value 1", json.DuplicateKey("key"): "value 2"}
-        {'key': 'value 1', 'key': 'value 2'}
+            >>> import jsonyx as json
+            >>> {"key": "value 1", json.DuplicateKey("key"): "value 2"}
+            {'key': 'value 1', 'key': 'value 2'}
 
-.. autoclass:: jsonyx.Encoder
-    :members:
+    .. autoclass:: jsonyx.Encoder
+        :members:
 
-.. autoclass:: jsonyx.Manipulator
-    :members:
+    .. autoclass:: jsonyx.Manipulator
+        :members:
 
-    .. versionadded:: 2.0
+        .. versionadded:: 2.0
 
-Exceptions
-----------
+    Exceptions
+    ----------
 
-.. autoexception:: jsonyx.JSONSyntaxError
+    .. autoexception:: jsonyx.JSONSyntaxError
 
 .. _command_line_options:
 
