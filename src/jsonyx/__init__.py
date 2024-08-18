@@ -49,6 +49,7 @@ if TYPE_CHECKING:
     ] | str]
     _Node = tuple[dict[Any, Any] | list[Any], int | slice | str]
 
+DuplicateKey.__module__ = __name__
 JSONSyntaxError.__module__ = __name__
 Manipulator.__module__ = __name__
 
