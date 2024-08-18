@@ -108,7 +108,19 @@ except ImportError:
 
 
 class JSONSyntaxError(SyntaxError):
-    """Invalid JSON syntax."""
+    """Invalid JSON syntax.
+
+    :param msg: an error message
+    :type msg: str
+    :param filename: the path to the JSON file
+    :type filename: str
+    :param doc: a JSON string
+    :type doc: str
+    :param start: the start position
+    :type start: int
+    :param end: the end position, defaults to 0
+    :type end: int, optional
+    """
 
     # pylint: disable-next=R0913
     def __init__(
