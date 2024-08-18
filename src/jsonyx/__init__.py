@@ -49,9 +49,6 @@ if TYPE_CHECKING:
     ] | str]
     _Node = tuple[dict[Any, Any] | list[Any], int | slice | str]
 
-JSONSyntaxError.__module__ = __name__
-Manipulator.__module__ = __name__
-
 
 class Decoder:
     """JSON decoder.

@@ -48,6 +48,7 @@ Contents
 --------
 
 .. toctree::
+   :hidden:
 
    usage
    api/index

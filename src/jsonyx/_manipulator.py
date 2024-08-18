@@ -636,3 +636,6 @@ class Manipulator:
             raise SyntaxError
 
         return obj
+
+
+Manipulator.__module__ = "jsonyx"
