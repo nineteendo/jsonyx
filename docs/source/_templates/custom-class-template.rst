@@ -4,6 +4,8 @@
 
 .. autoclass:: {{ objname }}
 
+   {% block methods %}
+
    {% if methods %}
    .. rubric:: {{ _('Methods') }}
 
