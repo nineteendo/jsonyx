@@ -54,18 +54,18 @@ Manipulator.__module__ = __name__
 
 
 class Decoder:
-    """JSON decoder."""
+    """JSON decoder.
+
+    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :type allow: Container[str], optional
+    :param use_decimal: use decimal instead of float, defaults to False
+    :type use_decimal: bool, optional
+    """
 
     def __init__(
         self, *, allow: _AllowList = NOTHING, use_decimal: bool = False,
     ) -> None:
-        """Create a new JSON decoder.
-
-        :param allow: the allowed JSON deviations, defaults to NOTHING
-        :type allow: Container[str], optional
-        :param use_decimal: use decimal instead of float, defaults to False
-        :type use_decimal: bool, optional
-        """
+        """Create a new JSON decoder."""
         allow_surrogates: bool = "surrogates" in allow
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
         self._scanner: Callable[[str, str], tuple[Any]] = make_scanner(
@@ -132,7 +132,26 @@ class Decoder:
 
 
 class Encoder:
-    """JSON encoder."""
+    r"""JSON encoder.
+
+    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :type allow: Container[str], optional
+    :param end: the string to append at the end, defaults to "\\n"
+    :type end: str, optional
+    :param ensure_ascii: escape non-ASCII characters, defaults to False
+    :type ensure_ascii: bool, optional
+    :param indent: indentation, defaults to None
+    :type indent: int | str | None, optional
+    :param item_separator: the separator between two items, defaults to ", "
+    :type item_separator: str, optional
+    :param key_separator: the separator between a key and a value, defaults to
+                          ": "
+    :type key_separator: str, optional
+    :param sort_keys: sort the keys of objects, defaults to False
+    :type sort_keys: bool, optional
+    :param trailing_comma: add a trailing comma if indented, defaults to False
+    :type trailing_comma: bool, optional
+    """
 
     # pylint: disable-next=R0913
     def __init__(  # noqa: PLR0913
@@ -147,28 +166,7 @@ class Encoder:
         sort_keys: bool = False,
         trailing_comma: bool = False,
     ) -> None:
-        r"""Create a new JSON encoder.
-
-        :param allow: the allowed JSON deviations, defaults to NOTHING
-        :type allow: Container[str], optional
-        :param end: the string to append at the end, defaults to "\\n"
-        :type end: str, optional
-        :param ensure_ascii: escape non-ASCII characters, defaults to False
-        :type ensure_ascii: bool, optional
-        :param indent: indentation, defaults to None
-        :type indent: int | str | None, optional
-        :param item_separator: the separator between two items, defaults to
-                               ", "
-        :type item_separator: str, optional
-        :param key_separator: the separator between a key and a value, defaults
-                              to ": "
-        :type key_separator: str, optional
-        :param sort_keys: sort the keys of objects, defaults to False
-        :type sort_keys: bool, optional
-        :param trailing_comma: add a trailing comma if indented, defaults to
-                               False
-        :type trailing_comma: bool, optional
-        """
+        """Create a new JSON encoder."""
         allow_nan_and_infinity: bool = "nan_and_infinity" in allow
         allow_surrogates: bool = "surrogates" in allow
         decimal_str: Callable[[Decimal], str] = Decimal.__str__

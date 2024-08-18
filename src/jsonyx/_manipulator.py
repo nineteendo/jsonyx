@@ -160,18 +160,18 @@ def _scan_query_string(s: str, end: int) -> tuple[str, int]:
 
 # pylint: disable-next=R0915
 class Manipulator:
-    """JSON manipulator."""
+    """JSON manipulator.
+
+    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :type allow: Container[str], optional
+    :param use_decimal: use decimal instead of float, defaults to False
+    :type use_decimal: bool, optional
+    """
 
     def __init__(
         self, *, allow: _AllowList = NOTHING, use_decimal: bool = False,
     ) -> None:
-        """Create a new JSON manipulator.
-
-        :param allow: the allowed JSON deviations, defaults to NOTHING
-        :type allow: Container[str], optional
-        :param use_decimal: use decimal instead of float, defaults to False
-        :type use_decimal: bool, optional
-        """
+        """Create a new JSON manipulator."""
         self._allow_nan_and_infinity: bool = "nan_and_infinity" in allow
         self._parse_float: Callable[
             [str], Decimal | float,
