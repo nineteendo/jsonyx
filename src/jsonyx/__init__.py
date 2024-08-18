@@ -79,6 +79,10 @@ class Decoder:
         :raises JSONSyntaxError: if the JSON file is invalid
         :return: a Python object
         :rtype: Any
+
+        >>> import jsonyx as json
+        >>> json.Decoder().read("file.json")
+        {"foo": ["bar", None, 1.0, 2]}
         """
         return self.loads(Path(filename).read_bytes(), filename=filename)
 
