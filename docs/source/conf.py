@@ -15,6 +15,7 @@ version: str = "2.0.0"
 # -- General configuration
 
 extensions: list[str] = [
+    "python_docs_theme",
     "sphinx.ext.duration",
     "sphinx.ext.doctest",
     "sphinx.ext.autodoc",
