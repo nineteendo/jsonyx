@@ -550,6 +550,10 @@ def apply_patch(
     :return: the patched Python object
     :rtype: Any
 
+    >>> import jsonyx as json
+    >>> json.apply_patch([0, 1, 2, 3, 4, 5], {"op": "del", "path": "$[::2]"})
+    [1, 3, 5]
+
     .. versionadded:: 2.0
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).apply_patch(
@@ -585,6 +589,15 @@ def run_select_query(  # noqa: PLR0913
     :return: the selected list of nodes
     :rtype: list[_Node]
 
+    >>> import jsonyx as json
+    >>> root = [[0, 1, 2, 3, 4, 5]]
+    >>> node = root, 0
+    >>> for target, key in json.run_select_query(node, "$[@>=3]"):
+    ...     target[key] = None
+    ...
+    >>> root[0]
+    [0, 1, 2, None, None, None]
+
     .. versionadded:: 2.0
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).run_select_query(
@@ -617,6 +630,10 @@ def run_filter_query(
     :return: the filtered list of nodes
     :rtype: list[_Node]
 
+    >>> import jsonyx as json
+    >>> node = [None], 0
+    >>> assert json.run_filter_query(node, "@==null")
+
     .. versionadded:: 2.0
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).run_filter_query(
@@ -641,6 +658,10 @@ def load_query_value(
     :raises SyntaxError: if the query value is invalid
     :return: a Python object
     :rtype: Any
+
+    >>> import jsonyx as json
+    >>> json.load_query_value("'~'foo'")
+    "'foo"
 
     .. versionadded:: 2.0
     """

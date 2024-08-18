@@ -55,7 +55,7 @@ Decoding JSON::
     >>> import jsonyx as json
     >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
     {'foo': ['bar', None, 1.0, 2]}
-    >>> json.loads('"\\"foo\\bar"')
+    >>> json.loads(r'"\"foo\bar"')
     '"foo\x08ar'
     >>> from io import StringIO
     >>> io = StringIO('["streaming API"]')
@@ -67,17 +67,6 @@ Applying a patch::
     >>> import jsonyx as json
     >>> json.apply_patch([0, 1, 2, 3, 4, 5], {"op": "del", "path": "$[::2]"})
     [1, 3, 5]
-
-Running queries::
-
-    >>> import jsonyx as json
-    >>> root = [[0, 1, 2, 3, 4, 5]]
-    >>> node = root, 0
-    >>> for target, key in json.run_select_query(node, "$[@>=3]"):
-    ...     target[key] = None
-    ...
-    >>> root[0]
-    [0, 1, 2, None, None, None]
 
 Using :class:`decimal.Decimal` instead of :class:`float`::
 
