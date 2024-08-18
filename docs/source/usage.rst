@@ -277,7 +277,7 @@ Command line options
 
 .. option:: patch_filename
 
-    The path to the patch JSON file.
+    The path to the JSON patch file.
 
     .. versionadded:: 2.0
 

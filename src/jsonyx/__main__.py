@@ -103,7 +103,7 @@ def _register(parser: ArgumentParser) -> None:
     parser.add_argument(
         "patch_filename",
         nargs="?",
-        help="the path to the patch JSON file",
+        help="the path to the JSON patch file",
     )
 
 
