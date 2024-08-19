@@ -86,10 +86,10 @@ class Decoder:
         >>> from tempfile import TemporaryDirectory
         >>> with TemporaryDirectory() as tmpdir:
         ...     filename = Path(tmpdir) / "file.json"
-        ...     _ = filename.write_text('["streaming API"]', "utf_8")
+        ...     _ = filename.write_text('["filesystem API"]', "utf_8")
         ...     json.Decoder().read(filename)
         ...
-        ['streaming API']
+        ['filesystem API']
         """
         return self.loads(Path(filename).read_bytes(), filename=filename)
 
@@ -229,10 +229,10 @@ class Encoder:
         >>> from tempfile import TemporaryDirectory
         >>> with TemporaryDirectory() as tmpdir:
         ...     filename = Path(tmpdir) / "file.json"
-        ...     json.Encoder().write(["streaming API"], filename)
+        ...     json.Encoder().write(["filesystem API"], filename)
         ...     filename.read_text("utf_8")
         ...
-        '["streaming API"]\n'
+        '["filesystem API"]\n'
         """
         Path(filename).write_text(self._encoder(obj), "utf_8", self._errors)
 
@@ -381,10 +381,10 @@ def read(
     >>> from tempfile import TemporaryDirectory
     >>> with TemporaryDirectory() as tmpdir:
     ...     filename = Path(tmpdir) / "file.json"
-    ...     _ = filename.write_text('["streaming API"]', "utf_8")
+    ...     _ = filename.write_text('["filesystem API"]', "utf_8")
     ...     json.Decoder().read(filename)
     ...
-    ['streaming API']
+    ['filesystem API']
     """
     return Decoder(allow=allow, use_decimal=use_decimal).read(filename)
 
@@ -493,10 +493,10 @@ def write(  # noqa: PLR0913
     >>> from tempfile import TemporaryDirectory
     >>> with TemporaryDirectory() as tmpdir:
     ...     filename = Path(tmpdir) / "file.json"
-    ...     json.write(["streaming API"], filename)
+    ...     json.write(["filesystem API"], filename)
     ...     filename.read_text("utf_8")
     ...
-    '["streaming API"]\n'
+    '["filesystem API"]\n'
     """
     return Encoder(
         allow=allow,

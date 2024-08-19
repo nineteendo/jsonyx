@@ -37,10 +37,10 @@ Encoding basic Python object hierarchies::
     >>> from tempfile import TemporaryDirectory
     >>> with TemporaryDirectory() as tmpdir:
     ...     filename = Path(tmpdir) / "file.json"
-    ...     json.write(["streaming API"], filename)
+    ...     json.write(["filesystem API"], filename)
     ...     filename.read_text("utf_8")
     ...
-    '["streaming API"]\n'
+    '["filesystem API"]\n'
 
 Compact encoding::
 
@@ -73,10 +73,10 @@ Decoding JSON::
     >>> from tempfile import TemporaryDirectory
     >>> with TemporaryDirectory() as tmpdir:
     ...     filename = Path(tmpdir) / "file.json"
-    ...     _ = filename.write_text('["streaming API"]', "utf_8")
+    ...     _ = filename.write_text('["filesystem API"]', "utf_8")
     ...     json.Decoder().read(filename)
     ...
-    ['streaming API']
+    ['filesystem API']
 
 Applying a patch::
 
