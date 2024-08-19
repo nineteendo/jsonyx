@@ -128,20 +128,6 @@ Command line options
     The path to the input JSON file, or "-" for standard input. If not
     specified, read from :data:`sys.stdin`.
 
-    .. code-block:: shell-session
-
-        $ python -m jsonyx mp_films.json --indent 4
-        [
-            {
-                "title": "And Now for Something Completely Different",
-                "year": 1971
-            },
-            {
-                "title": "Monty Python and the Holy Grail",
-                "year": 1975
-            }
-        ]
-
 .. option:: output_filename
 
     The path to the output JSON file, or "-" for standard output. If not

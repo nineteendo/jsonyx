@@ -331,8 +331,10 @@ def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
     >>> try:
     ...     json.loads("[,]")
     ... except json.JSONSyntaxError as exc:
+    ...     print("Traceback:")
     ...     print(end="".join(json.format_syntax_error(exc)))
     ...
+    Traceback:
       File "<string>", line 1, column 2
         [,]
          ^
