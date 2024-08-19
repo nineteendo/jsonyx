@@ -81,7 +81,7 @@ Decoding JSON::
 Applying a patch::
 
     >>> import jsonyx as json
-    >>> json.apply_patch([0, 1, 2, 3, 4, 5], {"op": "clear"})
+    >>> json.apply_patch([1, 2, 3], {"op": "clear"})
     []
 
 Allow NaN and infinity::
