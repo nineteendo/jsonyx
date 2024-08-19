@@ -84,6 +84,15 @@ Applying a patch::
     >>> json.apply_patch([0, 1, 2, 3, 4, 5], {"op": "clear"})
     []
 
+Allow NaN and infinity::
+
+    >>> import jsonyx as json
+    >>> import jsonyx.allow
+    >>> json.loads("NaN", allow=jsonyx.allow.NAN_AND_INFINITY)
+    nan
+    >>> json.dump(float("nan"), allow=jsonyx.allow.NAN_AND_INFINITY)
+    NaN
+
 Using :class:`decimal.Decimal` instead of :class:`float`::
 
     >>> import jsonyx as json
