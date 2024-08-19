@@ -653,7 +653,7 @@ def apply_patch(
     :rtype: Any
 
     >>> import jsonyx as json
-    >>> json.apply_patch([0, 1, 2, 3, 4, 5], {"op": "clear"})
+    >>> json.apply_patch([1, 2, 3], {"op": "clear"})
     []
 
     .. versionadded:: 2.0
@@ -692,13 +692,13 @@ def run_select_query(  # noqa: PLR0913
     :rtype: list[_Node]
 
     >>> import jsonyx as json
-    >>> root = [[0, 1, 2, 3, 4, 5]]
+    >>> root = [[1, 2, 3, 4, 5, 6]]
     >>> node = root, 0
-    >>> for target, key in json.run_select_query(node, "$[@>=3]"):
+    >>> for target, key in json.run_select_query(node, "$[@>3]"):
     ...     target[key] = None
     ...
     >>> root[0]
-    [0, 1, 2, None, None, None]
+    [1, 2, 3, None, None, None]
 
     .. versionadded:: 2.0
     """
