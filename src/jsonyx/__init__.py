@@ -1,4 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
+# TODO(Nice Zombies): add changelog
 """jsonyx module for JSON manipulation."""
 from __future__ import annotations
 
