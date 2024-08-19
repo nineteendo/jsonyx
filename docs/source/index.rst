@@ -47,5 +47,7 @@ Key Features:
 
 - Dedicated functions for reading and writing files and pretty printing
 
+Development of jsonyx happens on Github: http://github.com/nineteendo/jsonyx.
+
 Check out the :doc:`usage` section for further information, including how to
 :ref:`installation` the project.
