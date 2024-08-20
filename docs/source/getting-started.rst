@@ -122,4 +122,4 @@ Using :mod:`jsonyx` from the shell to validate and pretty-print:
          ^
     jsonyx.JSONSyntaxError: Expecting string
 
-See :doc:`api` and :doc:`cli` for more details.
+See :doc:`api/index` and :doc:`cli` for more details.
