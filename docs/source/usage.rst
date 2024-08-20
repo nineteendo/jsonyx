@@ -96,10 +96,10 @@ Using :class:`decimal.Decimal` instead of :class:`float`::
     >>> json.dump(Decimal("1.1"))
     1.1
 
-Making a patch::
+Comparing two Python objects::
 
     >>> import jsonyx as json
-    >>> json.make_patch([1, 2, 3, 5], [1, 3, 4, 5])
+    >>> json.diff([1, 2, 3, 5], [1, 3, 4, 5])
     [{'op': 'del', 'path': '$[1]'}, {'op': 'insert', 'path': '$[2]', 'value': 4}]
 
 Applying a patch::

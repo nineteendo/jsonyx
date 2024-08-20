@@ -1,7 +1,7 @@
 # Copyright (C) 2024 Nice Zombies
 # TODO(Nice Zombies): test apply_patch
+# TODO(Nice Zombies): test diff
 # TODO(Nice Zombies): test load query value
-# TODO(Nice Zombies): test make_patch
 # TODO(Nice Zombies): test run_filter_query
 # TODO(Nice Zombies): test run_select_query
 # TODO(Nice Zombies): test schema

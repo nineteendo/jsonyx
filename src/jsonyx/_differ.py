@@ -119,7 +119,7 @@ def _diff(  # noqa: C901
 
 
 def diff(old: Any, new: Any) -> list[dict[str, Any]]:
-    """Make a JSON patch from two Python objects.
+    """Compare two Python objects and generate a diff in JSON patch format.
 
     :param old: the old Python object
     :type old: Any
@@ -129,7 +129,7 @@ def diff(old: Any, new: Any) -> list[dict[str, Any]]:
     :rtype: list[dict[str, Any]]
 
     >>> import jsonyx as json
-    >>> json.make_patch([1, 2, 3, 5], [1, 3, 4, 5])
+    >>> json.diff([1, 2, 3, 5], [1, 3, 4, 5])
     [{'op': 'del', 'path': '$[1]'}, {'op': 'insert', 'path': '$[2]', 'value': 4}]
 
     .. versionadded:: 2.0
