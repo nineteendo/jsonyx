@@ -58,7 +58,7 @@ def _check_query_key(
         if allow_slice and isinstance(key, str):
             raise TypeError
 
-        if not allow_slice and not isinstance(key, int):
+        if not (allow_slice or isinstance(key, int)):
             raise TypeError
 
 
@@ -597,7 +597,7 @@ class Manipulator:
         if isinstance(nodes, tuple):
             nodes = [nodes]
 
-        nodes, end = self._run_select_query(
+        selected_nodes, end = self._run_select_query(
             nodes,
             query,
             allow_slice=allow_slice,
@@ -606,13 +606,13 @@ class Manipulator:
         )
         if query[end:end + 1] == "?":
             end += 1
-        elif not nodes:
+        elif not selected_nodes and nodes:
             raise ValueError
 
         if end < len(query):
             raise SyntaxError
 
-        return nodes
+        return selected_nodes
 
     def run_filter_query(
         self, nodes: _Node | list[_Node], query: str,
