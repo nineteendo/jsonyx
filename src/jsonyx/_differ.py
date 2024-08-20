@@ -119,7 +119,7 @@ def _make_patch(  # noqa: C901
 
 
 def make_patch(old: Any, new: Any) -> list[dict[str, Any]]:
-    """Make a JSON patch from an old and new Python object.
+    """Make a JSON patch from two Python objects.
 
     :param old: the old Python object
     :type old: Any

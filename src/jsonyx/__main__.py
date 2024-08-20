@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # Copyright (C) 2024 Nice Zombies
-"""A command line utility to validate and pretty-print JSON objects."""
-# TODO(Nice Zombies): diff
+"""A command line utility to manipulate JSON files."""
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -9,15 +8,19 @@ __all__: list[str] = []
 import sys
 from argparse import ArgumentParser
 from sys import stderr, stdin
+from traceback import format_exception_only
+from typing import Any, Literal, cast
 
 from jsonyx import (
-    Decoder, Encoder, JSONSyntaxError, apply_patch, format_syntax_error,
+    Decoder, Encoder, JSONSyntaxError, Manipulator, format_syntax_error,
+    make_patch,
 )
 from jsonyx.allow import EVERYTHING, NOTHING
 
 
 # pylint: disable-next=R0903
 class _Namespace:
+    command: Literal["format", "patch", "diff"]
     compact: bool
     ensure_ascii: bool
     indent: int | str | None
@@ -25,53 +28,63 @@ class _Namespace:
     no_commas: bool
     nonstrict: bool
     output_filename: str | None
-    patch_filename: str | None
     sort_keys: bool
     trailing_comma: bool
     use_decimal: bool
 
 
+# pylint: disable-next=R0903
+class _DiffNameSpace(_Namespace):
+    old_input_filename: str
+
+
+# pylint: disable-next=R0903
+class _PatchNameSpace(_Namespace):
+    patch_filename: str
+
+
 def _register(parser: ArgumentParser) -> None:
-    parser.add_argument(
+    parent_parser: ArgumentParser = ArgumentParser(add_help=False)
+    parent_parser.add_argument(
         "-a",
         "--ensure-ascii",
         action="store_true",
-        help="escape non-ascii characters",
+        help="escape non-ASCII characters",
     )
-    parser.add_argument(
+    parent_parser.add_argument(
         "-c",
         "--compact",
         action="store_true",
-        help='don\'t add unnecessary whitespace after "," and ":"',
+        help='avoid unnecessary whitespace after "," and ":"',
     )
-    comma_group = parser.add_mutually_exclusive_group()
+    comma_group = parent_parser.add_mutually_exclusive_group()
     comma_group.add_argument(
         "-C",
         "--no-commas",
         action="store_true",
         help="separate items by whitespace instead of commas",
     )
-    parser.add_argument(
+    parent_parser.add_argument(
         "-d",
         "--use-decimal",
         action="store_true",
         help="use decimal instead of float",
     )
-    indent_group = parser.add_mutually_exclusive_group()
+    indent_group = parent_parser.add_mutually_exclusive_group()
     indent_group.add_argument(
         "-i",
         "--indent",
         type=int,
         metavar="SPACES",
-        help="indent using spaces",
+        help="indent using the specified number of spaces",
     )
-    parser.add_argument(
+    parent_parser.add_argument(
         "-s",
         "--sort-keys",
         action="store_true",
         help="sort the keys of objects",
     )
-    parser.add_argument(
+    parent_parser.add_argument(
         "-S",
         "--nonstrict",
         action="store_true",
@@ -91,20 +104,63 @@ def _register(parser: ArgumentParser) -> None:
         dest="indent",
         help="indent using tabs",
     )
-    parser.add_argument(
+    commands = parser.add_subparsers(dest="command", required=True)
+
+    diff_parser = commands.add_parser(
+        "diff",
+        help="make a JSON patch from two JSON files.",
+        description="make a JSON patch from two JSON files.",
+        parents=[parent_parser],
+    )
+    diff_parser.add_argument(
+        "old_input_filename", help="the path to the old input JSON file",
+    )
+    diff_parser.add_argument(
         "input_filename",
         nargs="?",
         help='the path to the input JSON file, or "-" for standard input',
     )
-    parser.add_argument(
+    diff_parser.add_argument(
         "output_filename",
         nargs="?",
         help="the path to the output JSON file",
     )
-    parser.add_argument(
-        "patch_filename",
+
+    format_parser = commands.add_parser(
+        "format",
+        help="re-format a JSON file",
+        description="re-format a JSON file",
+        parents=[parent_parser],
+    )
+    format_parser.add_argument(
+        "input_filename",
         nargs="?",
-        help="the path to the JSON patch file",
+        help='the path to the input JSON file, or "-" for standard input',
+    )
+    format_parser.add_argument(
+        "output_filename",
+        nargs="?",
+        help="the path to the output JSON file",
+    )
+
+    patch_parser = commands.add_parser(
+        "patch",
+        help="apply a JSON patch to the input file.",
+        description="apply a JSON patch to the input file.",
+        parents=[parent_parser],
+    )
+    patch_parser.add_argument(
+        "patch_filename", help="the path to the JSON patch file",
+    )
+    patch_parser.add_argument(
+        "input_filename",
+        nargs="?",
+        help='the path to the input JSON file, or "-" for standard input',
+    )
+    patch_parser.add_argument(
+        "output_filename",
+        nargs="?",
+        help="the path to the output JSON file",
     )
 
 
@@ -126,30 +182,46 @@ def _run(args: _Namespace) -> None:
         sort_keys=args.sort_keys,
         trailing_comma=args.trailing_comma,
     )
+    manipulator: Manipulator = Manipulator(
+        allow=EVERYTHING if args.nonstrict else NOTHING,
+        use_decimal=args.use_decimal,
+    )
     try:
         if args.input_filename and args.input_filename != "-":
-            obj: object = decoder.read(args.input_filename)
+            input_obj: object = decoder.read(args.input_filename)
         elif stdin.isatty():
-            obj = decoder.loads("\n".join(iter(input, "")), filename="<stdin>")
+            input_obj = decoder.loads(
+                "\n".join(iter(input, "")), filename="<stdin>",
+            )
         else:
-            obj = decoder.load(stdin)
+            input_obj = decoder.load(stdin)
 
-        if args.patch_filename:
-            obj = apply_patch(obj, decoder.read(args.patch_filename))
+        if args.command == "diff":
+            args = cast(_DiffNameSpace, args)
+            old_input_obj: object = decoder.read(args.old_input_filename)
+            output_obj: object = make_patch(old_input_obj, input_obj)
+        elif args.command == "format":
+            output_obj = input_obj
+        else:
+            args = cast(_PatchNameSpace, args)
+            patch: Any = decoder.read(args.patch_filename)
+            output_obj = manipulator.apply_patch(input_obj, patch)
+    except (AssertionError, TypeError, ValueError) as exc:
+        stderr.write("".join(format_exception_only(exc)))
+        sys.exit(1)
     except JSONSyntaxError as exc:
         stderr.write("".join(format_syntax_error(exc)))
         sys.exit(1)
 
     if args.output_filename and args.output_filename != "-":
-        encoder.write(obj, args.output_filename)
+        encoder.write(output_obj, args.output_filename)
     else:
-        encoder.dump(obj)
+        encoder.dump(output_obj)
 
 
 def _main() -> None:
     parser: ArgumentParser = ArgumentParser(
-        description="a command line utility to validate and pretty-print JSON "
-                    "objects.",
+        description="a command line utility to manipulate JSON files.",
     )
     _register(parser)
     try:

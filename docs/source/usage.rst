@@ -112,11 +112,11 @@ Using :mod:`jsonyx` from the shell to validate and pretty-print:
 
 .. code-block:: shell-session
 
-    $ echo '{"json": "obj"}' | python -m jsonyx --indent 4
+    $ echo '{"json": "obj"}' | python -m jsonyx format --indent 4
     {
         "json": "obj"
     }
-    $ echo '{1.2: 3.4}' | python -m jsonyx
+    $ echo '{1.2: 3.4}' | python -m jsonyx format
       File "<stdin>", line 1, column 2
         {1.2: 3.4}
          ^
@@ -128,6 +128,26 @@ See :ref:`command_line_options` for more details.
 
 Command line options
 --------------------
+
+.. option:: command
+
+    - diff: generate a JSON patch from two JSON files.
+    - format: re-format a JSON file.
+    - patch: apply a JSON patch to the input file.
+
+    .. versionadded:: 2.0
+
+.. option:: old_input_filename
+
+    The path to the old input JSON file.
+
+    .. versionadded:: 2.0
+
+.. option:: patch_filename
+
+    The path to the JSON patch file.
+
+    .. versionadded:: 2.0
 
 .. option:: input_filename
 
@@ -141,23 +161,17 @@ Command line options
 
     .. versionadded:: 1.2
 
-.. option:: patch_filename
-
-    The path to the JSON patch file.
-
-    .. versionadded:: 2.0
-
 .. option:: -h, --help
 
     Show the help message and exit.
 
 .. option:: -a, --ensure-ascii
 
-    Escape non-ascii characters.
+    Escape non-ASCII characters.
 
 .. option:: -c, --compact
 
-    Don't add unnecessary whitespace after "," and ":".
+    Avoid unnecessary whitespace after "," and ":".
 
 .. option:: -C, --no-commas
 
@@ -169,7 +183,7 @@ Command line options
 
 .. option:: -i SPACES, --indent SPACES
 
-    Indent using spaces.
+    Indent using the specified number of spaces.
 
 .. option:: -s, --sort-keys
 
