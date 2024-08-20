@@ -199,7 +199,9 @@ def _run(args: _Namespace) -> None:
         if args.command == "diff":
             args = cast(_DiffNameSpace, args)
             old_input_obj: object = decoder.read(args.old_input_filename)
-            output_obj: object = diff(old_input_obj, input_obj)
+            output_obj: Any = diff(old_input_obj, input_obj)
+            if len(output_obj) == 1:
+                output_obj = output_obj[0]
         elif args.command == "format":
             output_obj = input_obj
         else:
