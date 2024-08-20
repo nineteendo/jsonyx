@@ -12,8 +12,8 @@ Welcome to jsonyx's documentation!
     :caption: Project links
     :hidden:
 
-    jsonyx @ PyPI <https://pypi.org/project/jsonyx>
-    jsonyx @ GitHub <https://pypi.org/nineteendo/jsonyx>
+    PyPI project <https://pypi.org/project/jsonyx>
+    GitHub repo <https://github.com/nineteendo/jsonyx>
     Issue Tracker <https://github.com/nineteendo/jsonyx/issues>
 
 .. image:: https://github.com/nineteendo/jsonyx/actions/workflows/pytest.yml/badge.svg
