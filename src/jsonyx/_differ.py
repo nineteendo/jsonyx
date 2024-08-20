@@ -45,9 +45,9 @@ def _eq(a: Any, b: Any) -> bool:
 
 def _get_lcs(old: list[Any], new: list[Any]) -> list[Any]:
     dp: list[list[int]] = [[0] * (len(new) + 1) for _ in range(len(old) + 1)]
-    for i, oldi in enumerate(old):
-        for j, newj in enumerate(new):
-            if _eq(oldi, newj):
+    for i, old_value in enumerate(old):
+        for j, new_value in enumerate(new):
+            if _eq(old_value, new_value):
                 dp[i + 1][j + 1] = dp[i][j] + 1
             else:
                 dp[i + 1][j + 1] = max(dp[i + 1][j], dp[i][j + 1])
@@ -77,55 +77,45 @@ def _make_patch(  # noqa: C901
         old_keys: KeysView[Any] = old.keys()  # type: ignore
         new_keys: KeysView[Any] = new.keys()  # type: ignore
         for key in old_keys - new_keys:
-            patch.append(  # noqa: PERF401
-                {"op": "del", "path": f"{path}.{_escape(_replace, key)}"},
-            )
+            new_path: str = f"{path}.{_escape(_replace, key)}"
+            patch.append({"op": "del", "path": new_path})
 
         for key in new_keys - old_keys:
-            patch.append({  # noqa: PERF401
-                "op": "set",
-                "path": f"{path}.{_escape(_replace, key)}",
-                "value": new[key],
-            })
+            new_path = f"{path}.{_escape(_replace, key)}"
+            patch.append({"op": "set", "path": new_path, "value": new[key]})
 
         for key in old_keys & new_keys:
-            _make_patch(
-                old[key], new[key], patch, f"{path}.{_escape(_replace, key)}",
-            )
+            new_path = f"{path}.{_escape(_replace, key)}"
+            _make_patch(old[key], new[key], patch, new_path)
     elif isinstance(old, list) and isinstance(new, list):
         lcs: list[Any] = _get_lcs(old, new)  # type: ignore
         old_idx = new_idx = lcs_idx = 0
         while old_idx < len(old) or new_idx < len(new):  # type: ignore
+            new_path = f"{path}[{new_idx}]"
             removed: bool = old_idx < len(old) and (  # type: ignore
-                lcs_idx >= len(lcs)
-                or not _eq(old[old_idx], lcs[lcs_idx])
+                lcs_idx >= len(lcs) or not _eq(old[old_idx], lcs[lcs_idx])
             )
             inserted: bool = new_idx < len(new) and (  # type: ignore
-                lcs_idx >= len(lcs)
-                or not _eq(new[new_idx], lcs[lcs_idx])
+                lcs_idx >= len(lcs) or not _eq(new[new_idx], lcs[lcs_idx])
             )
             if removed and inserted:
-                _make_patch(
-                    old[old_idx], new[new_idx], patch, f"{path}[{new_idx}]",
-                )
+                _make_patch(old[old_idx], new[new_idx], patch, new_path)
                 old_idx += 1
                 new_idx += 1
             elif removed and not inserted:
-                patch.append({"op": "del", "path": f"{path}[{new_idx}]"})
+                patch.append({"op": "del", "path": new_path})
                 old_idx += 1
             elif not removed and inserted:
-                patch.append({
-                    "op": "insert",
-                    "path": f"{path}[{new_idx}]",
-                    "value": new[new_idx],
-                })
+                patch.append(
+                    {"op": "insert", "path": new_path, "value": new[new_idx]},
+                )
                 new_idx += 1
             elif not (removed or inserted):
                 old_idx += 1
                 new_idx += 1
                 lcs_idx += 1
     else:
-        patch.append({"op": "replace", "path": path, "value": new})
+        patch.append({"op": "set", "path": path, "value": new})
 
 
 def make_patch(old: Any, new: Any) -> list[dict[str, Any]]:
