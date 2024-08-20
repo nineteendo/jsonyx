@@ -2,7 +2,7 @@
 """JSON differ."""
 from __future__ import annotations
 
-__all__: list[str] = ["diff"]
+__all__: list[str] = ["make_patch"]
 
 import re
 from itertools import starmap
@@ -118,8 +118,8 @@ def _diff(  # noqa: C901
         patch.append({"op": "set", "path": path, "value": new})
 
 
-def diff(old: Any, new: Any) -> list[dict[str, Any]]:
-    """Compare two Python objects and generate a diff in JSON patch format.
+def make_patch(old: Any, new: Any) -> list[dict[str, Any]]:
+    """Make a JSON patch from two Python objects.
 
     :param old: the old Python object
     :type old: Any
@@ -129,7 +129,7 @@ def diff(old: Any, new: Any) -> list[dict[str, Any]]:
     :rtype: list[dict[str, Any]]
 
     >>> import jsonyx as json
-    >>> json.diff([1, 2, 3, 5], [1, 3, 4, 5])
+    >>> json.make_patch([1, 2, 3, 5], [1, 3, 4, 5])
     [{'op': 'del', 'path': '$[1]'}, {'op': 'insert', 'path': '$[2]', 'value': 4}]
 
     .. versionadded:: 2.0
@@ -139,4 +139,4 @@ def diff(old: Any, new: Any) -> list[dict[str, Any]]:
     return patch
 
 
-diff.__module__ = "jsonyx"
+make_patch.__module__ = "jsonyx"

@@ -12,7 +12,8 @@ from traceback import format_exception_only
 from typing import Any, Literal, cast
 
 from jsonyx import (
-    Decoder, Encoder, JSONSyntaxError, Manipulator, diff, format_syntax_error,
+    Decoder, Encoder, JSONSyntaxError, Manipulator, format_syntax_error,
+    make_patch,
 )
 from jsonyx.allow import EVERYTHING, NOTHING
 
@@ -199,7 +200,7 @@ def _run(args: _Namespace) -> None:
         if args.command == "diff":
             args = cast(_DiffNameSpace, args)
             old_input_obj: object = decoder.read(args.old_input_filename)
-            output_obj: Any = diff(old_input_obj, input_obj)
+            output_obj: Any = make_patch(old_input_obj, input_obj)
             if len(output_obj) == 1:
                 output_obj = output_obj[0]
         elif args.command == "format":

@@ -11,13 +11,13 @@ __all__: list[str] = [
     "Manipulator",
     "apply_patch",
     "detect_encoding",
-    "diff",
     "dump",
     "dumps",
     "format_syntax_error",
     "load",
     "load_query_value",
     "loads",
+    "make_patch",
     "read",
     "run_filter_query",
     "run_select_query",
@@ -36,7 +36,7 @@ from sys import stdout
 from typing import TYPE_CHECKING, Any, Literal
 
 from jsonyx._decoder import DuplicateKey, JSONSyntaxError, make_scanner
-from jsonyx._differ import diff
+from jsonyx._differ import make_patch
 from jsonyx._encoder import make_encoder
 from jsonyx._manipulator import Manipulator
 from jsonyx.allow import NOTHING
