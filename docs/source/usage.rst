@@ -131,7 +131,7 @@ Command line options
 
 .. option:: command
 
-    - diff: make a JSON patch from two JSON files.
+    - diff: compare two JSON files and generate a diff in JSON patch format.
     - format: re-format a JSON file.
     - patch: apply a JSON patch to the input file.
 

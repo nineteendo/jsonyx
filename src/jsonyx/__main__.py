@@ -108,7 +108,8 @@ def _register(parser: ArgumentParser) -> None:
 
     diff_parser = commands.add_parser(
         "diff",
-        help="compare two JSON files and generate a diff in JSON patch format.",
+        help="compare two JSON files and generate a diff in JSON patch "
+             "format.",
         description="compare two JSON files and generate a diff in JSON patch "
                     "format.",
         parents=[parent_parser],
