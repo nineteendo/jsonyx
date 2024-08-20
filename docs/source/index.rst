@@ -4,8 +4,17 @@ Welcome to jsonyx's documentation!
 .. toctree::
    :hidden:
 
-   usage
+   getting-started
    api/index
+   cli
+
+.. toctree::
+    :caption: Project links
+    :hidden:
+
+   jsonyx @ PyPI <https://pypi.org/project/jsonyx>
+   jsonyx @ GitHub <https://pypi.org/nineteendo/jsonyx>
+   Issue Tracker <https://github.com/nineteendo/jsonyx/issues>
 
 .. image:: https://github.com/nineteendo/jsonyx/actions/workflows/pytest.yml/badge.svg
     :target: https://github.com/nineteendo/jsonyx/actions/workflows/pytest.yml
@@ -47,7 +56,5 @@ Key Features:
 
 - Dedicated functions for reading and writing files and pretty printing
 
-Development of jsonyx happens on Github: http://github.com/nineteendo/jsonyx.
-
-Check out the :doc:`usage` section for further information, including how to
-:ref:`installation` the project.
+Check out the :doc:`get-started` section for further information, including how
+to :ref:`installation` the project.
