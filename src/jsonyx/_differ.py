@@ -145,3 +145,6 @@ def make_patch(old: Any, new: Any) -> list[dict[str, Any]]:
     patch: list[dict[str, Any]] = []
     _make_patch(old, new, patch)
     return patch
+
+
+make_patch.__module__ = "jsonyx"
