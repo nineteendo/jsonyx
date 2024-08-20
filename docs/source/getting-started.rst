@@ -121,3 +121,5 @@ Using :mod:`jsonyx` from the shell to validate and pretty-print:
         {1.2: 3.4}
          ^
     jsonyx.JSONSyntaxError: Expecting string
+
+See :doc:`api` and :doc:`cli` for more details.
