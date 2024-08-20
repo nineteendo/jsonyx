@@ -2,7 +2,7 @@
 """JSON differ."""
 from __future__ import annotations
 
-__all__: list[str] = ["make_patch"]
+__all__: list[str] = ["diff"]
 
 import re
 from itertools import starmap
@@ -67,7 +67,7 @@ def _get_lcs(old: list[Any], new: list[Any]) -> list[Any]:
     return lcs[::-1]
 
 
-def _make_patch(  # noqa: C901
+def _diff(  # noqa: C901
     old: Any, new: Any, patch: list[dict[str, Any]], path: str = "$",
 ) -> None:
     if _eq(old, new):
@@ -86,7 +86,7 @@ def _make_patch(  # noqa: C901
 
         for key in old_keys & new_keys:
             new_path = f"{path}.{_escape(_replace, key)}"
-            _make_patch(old[key], new[key], patch, new_path)
+            _diff(old[key], new[key], patch, new_path)
     elif isinstance(old, list) and isinstance(new, list):
         lcs: list[Any] = _get_lcs(old, new)  # type: ignore
         old_idx = new_idx = lcs_idx = 0
@@ -99,7 +99,7 @@ def _make_patch(  # noqa: C901
                 lcs_idx >= len(lcs) or not _eq(new[new_idx], lcs[lcs_idx])
             )
             if removed and inserted:
-                _make_patch(old[old_idx], new[new_idx], patch, new_path)
+                _diff(old[old_idx], new[new_idx], patch, new_path)
                 old_idx += 1
                 new_idx += 1
             elif removed and not inserted:
@@ -118,7 +118,7 @@ def _make_patch(  # noqa: C901
         patch.append({"op": "set", "path": path, "value": new})
 
 
-def make_patch(old: Any, new: Any) -> list[dict[str, Any]]:
+def diff(old: Any, new: Any) -> list[dict[str, Any]]:
     """Make a JSON patch from two Python objects.
 
     :param old: the old Python object
@@ -135,8 +135,8 @@ def make_patch(old: Any, new: Any) -> list[dict[str, Any]]:
     .. versionadded:: 2.0
     """
     patch: list[dict[str, Any]] = []
-    _make_patch(old, new, patch)
+    _diff(old, new, patch)
     return patch
 
 
-make_patch.__module__ = "jsonyx"
+diff.__module__ = "jsonyx"
