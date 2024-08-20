@@ -78,18 +78,6 @@ Decoding JSON::
     ...
     ['filesystem API']
 
-Making a patch::
-
-    >>> import jsonyx as json
-    >>> json.make_patch([1, 2, 3, 5], [1, 3, 4, 5])
-    [{'op': 'del', 'path': '$[1]'}, {'op': 'insert', 'path': '$[2]', 'value': 4}]
-
-Applying a patch::
-
-    >>> import jsonyx as json
-    >>> json.apply_patch([1, 2, 3], {"op": "clear"})
-    []
-
 Allow NaN and infinity::
 
     >>> import jsonyx as json
@@ -107,6 +95,18 @@ Using :class:`decimal.Decimal` instead of :class:`float`::
     Decimal('1.1')
     >>> json.dump(Decimal("1.1"))
     1.1
+
+Making a patch::
+
+    >>> import jsonyx as json
+    >>> json.make_patch([1, 2, 3, 5], [1, 3, 4, 5])
+    [{'op': 'del', 'path': '$[1]'}, {'op': 'insert', 'path': '$[2]', 'value': 4}]
+
+Applying a patch::
+
+    >>> import jsonyx as json
+    >>> json.apply_patch([1, 2, 3], {"op": "clear"})
+    []
 
 Using :mod:`jsonyx` from the shell to validate and pretty-print:
 
