@@ -1,5 +1,5 @@
-Get Started
-===========
+Getting Started
+===============
 
 .. _installation:
 
@@ -78,7 +78,7 @@ Decoding JSON::
     ...
     ['filesystem API']
 
-Allow NaN and infinity::
+Allowing NaN and infinity::
 
     >>> import jsonyx as json
     >>> import jsonyx.allow
@@ -96,7 +96,7 @@ Using :class:`decimal.Decimal` instead of :class:`float`::
     >>> json.dump(Decimal("1.1"))
     1.1
 
-Make a patch from two Python objects::
+Making a patch from two Python objects::
 
     >>> import jsonyx as json
     >>> json.make_patch([1, 2, 3, 5], [1, 3, 4, 5])

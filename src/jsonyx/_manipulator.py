@@ -1,5 +1,6 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON manipulator."""
+# TODO(Nice Zombies): allow whitespace
 # TODO(Nice Zombies): add error messages
 # TODO(Nice Zombies): raise JSONSyntaxError
 # TODO(Nice Zombies): write specification
