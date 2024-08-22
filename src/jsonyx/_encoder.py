@@ -35,8 +35,7 @@ try:
     if not TYPE_CHECKING:
         from _jsonyx import make_encoder
 except ImportError:
-    # pylint: disable-next=R0915, R0913, R0914
-    def make_encoder(  # noqa: C901, PLR0915, PLR0917, PLR0913
+    def make_encoder(
         encode_decimal: Callable[[Decimal], str],
         indent: str | None,
         end: str,

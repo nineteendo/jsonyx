@@ -171,8 +171,7 @@ class Encoder:
     :type trailing_comma: bool, optional
     """
 
-    # pylint: disable-next=R0913
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
         *,
         allow: _AllowList = NOTHING,
@@ -452,8 +451,7 @@ def loads(
     )
 
 
-# pylint: disable-next=R0913
-def write(  # noqa: PLR0913
+def write(
     obj: object,
     filename: StrPath,
     *,
@@ -514,8 +512,7 @@ def write(  # noqa: PLR0913
     ).write(obj, filename)
 
 
-# pylint: disable-next=R0913
-def dump(  # noqa: PLR0913
+def dump(
     obj: object,
     fp: SupportsWrite[str] = stdout,
     *,
@@ -575,8 +572,7 @@ def dump(  # noqa: PLR0913
     ).dump(obj, fp)
 
 
-# pylint: disable-next=R0913
-def dumps(  # noqa: PLR0913
+def dumps(
     obj: object,
     *,
     allow: _AllowList = NOTHING,
@@ -665,8 +661,7 @@ def apply_patch(
     )
 
 
-# pylint: disable-next=R0913
-def run_select_query(  # noqa: PLR0913
+def run_select_query(
     nodes: _Node | list[_Node],
     query: str,
     *,

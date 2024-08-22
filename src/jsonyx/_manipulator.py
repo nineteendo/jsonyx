@@ -158,7 +158,6 @@ def _scan_query_string(s: str, end: int) -> tuple[str, int]:
         append_chunk(esc)
 
 
-# pylint: disable-next=R0915
 class Manipulator:
     """JSON manipulator.
 
@@ -180,10 +179,7 @@ class Manipulator:
         ] = Decimal if use_decimal else float
         self._use_decimal: bool = use_decimal
 
-    # pylint: disable-next=R0912
-    def _scan_query_value(  # noqa: C901, PLR0912
-        self, s: str, idx: int = 0,
-    ) -> tuple[Any, int]:
+    def _scan_query_value(self, s: str, idx: int = 0) -> tuple[Any, int]:
         try:
             nextchar: str = s[idx]
         except IndexError:
@@ -278,8 +274,7 @@ class Manipulator:
 
             end += 2
 
-    # pylint: disable-next=R0912, R0913
-    def _run_select_query(  # noqa: C901, PLR0912, PLR0913
+    def _run_select_query(
         self,
         nodes: list[_Node],
         query: str,
@@ -355,7 +350,7 @@ class Manipulator:
 
                 return nodes, end
 
-    def _paste_values(  # noqa: C901
+    def _paste_values(
         self,
         current_nodes: list[_Node],
         operation: dict[str, Any],
@@ -413,8 +408,7 @@ class Manipulator:
         else:
             raise ValueError
 
-    # pylint: disable-next=R0912, R0915, R0914
-    def _apply_patch(  # noqa: C901, PLR0912, PLR0915
+    def _apply_patch(
         self, root: list[Any], operations: list[dict[str, Any]],
     ) -> None:
         node: _Node = root, 0
@@ -557,7 +551,6 @@ class Manipulator:
         self._apply_patch(root, patch)
         return root[0]
 
-    # pylint: disable-next=R0913
     def run_select_query(
         self,
         nodes: _Node | list[_Node],

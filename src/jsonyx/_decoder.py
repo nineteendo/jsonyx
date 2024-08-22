@@ -129,7 +129,6 @@ class JSONSyntaxError(SyntaxError):
     :type end: int, optional
     """
 
-    # pylint: disable-next=R0913
     def __init__(
         self, msg: str, filename: str, doc: str, start: int, end: int = 0,
     ) -> None:
@@ -187,12 +186,11 @@ JSONSyntaxError.__module__ = "jsonyx"
 _errmsg: type[JSONSyntaxError] = JSONSyntaxError
 
 
-try:  # noqa: PLR1702
+try:
     if not TYPE_CHECKING:
         from _jsonyx import make_scanner
 except ImportError:
-    # pylint: disable-next=R0915, R0913, R0914
-    def make_scanner(  # noqa: C901, PLR0915, PLR0917, PLR0913
+    def make_scanner(
         allow_comments: bool,  # noqa: FBT001
         allow_duplicate_keys: bool,  # noqa: FBT001
         allow_missing_commas: bool,  # noqa: FBT001
@@ -236,10 +234,7 @@ except ImportError:
                     msg = "Comments are not allowed"
                     raise _errmsg(msg, filename, s, comment_idx, end)
 
-        # pylint: disable-next=R0912, R0915
-        def scan_string(  # noqa: C901, PLR0912, PLR0915
-            filename: str, s: str, end: int,
-        ) -> tuple[str, int]:
+        def scan_string(filename: str, s: str, end: int) -> tuple[str, int]:
             chunks: list[str] = []
             append_chunk: Callable[[str], None] = chunks.append
             str_idx: int = end - 1
@@ -314,8 +309,7 @@ except ImportError:
 
                 append_chunk(char)
 
-        # pylint: disable-next=R0913, R0912, R0915
-        def scan_object(  # noqa: C901, PLR0912, PLR0915
+        def scan_object(
             filename: str, s: str, end: int,
         ) -> tuple[dict[str, Any], int]:
             obj_idx: int = end - 1
@@ -393,7 +387,7 @@ except ImportError:
 
                     return result, end + 1
 
-        def scan_array(  # noqa: C901
+        def scan_array(
             filename: str, s: str, end: int,
         ) -> tuple[list[Any], int]:
             arr_idx: int = end - 1
@@ -447,10 +441,7 @@ except ImportError:
 
                     return values, end + 1
 
-        # pylint: disable-next=R0912, R0915
-        def scan_value(  # noqa: C901, PLR0912
-            filename: str, s: str, idx: int,
-        ) -> tuple[Any, int]:
+        def scan_value(filename: str, s: str, idx: int) -> tuple[Any, int]:
             try:
                 nextchar = s[idx]
             except IndexError:
