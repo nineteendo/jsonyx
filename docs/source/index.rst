@@ -48,7 +48,6 @@ Welcome to jsonyx's documentation!
 .. toctree::
     :hidden:
 
-    index
     getting-started
     api/index
     cli
