@@ -34,6 +34,7 @@ templates_path = ["_templates"]
 
 # -- Options for HTML output
 
+html_show_sourcelink: bool = False
 html_theme: str = "furo"
 
 # -- Options for EPUB output
