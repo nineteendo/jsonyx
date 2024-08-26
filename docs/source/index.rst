@@ -1,21 +1,6 @@
 Welcome to jsonyx's documentation!
 ===================================
 
-.. toctree::
-    :hidden:
-
-    getting-started
-    api/index
-    cli
-
-.. toctree::
-    :caption: Project links
-    :hidden:
-
-    PyPI project <https://pypi.org/project/jsonyx>
-    GitHub repo <https://github.com/nineteendo/jsonyx>
-    Issue Tracker <https://github.com/nineteendo/jsonyx/issues>
-
 .. image:: https://github.com/nineteendo/jsonyx/actions/workflows/pytest.yml/badge.svg
     :target: https://github.com/nineteendo/jsonyx/actions/workflows/pytest.yml
     :alt: pytest
@@ -58,3 +43,18 @@ Key Features:
 
 Check out the :doc:`getting-started` section for further information, including
 how to :ref:`installation` the project.
+
+.. toctree::
+    :hidden:
+
+    getting-started
+    api/index
+    cli
+
+.. toctree::
+    :caption: Project links
+    :hidden:
+
+    PyPI project <https://pypi.org/project/jsonyx>
+    GitHub repo <https://github.com/nineteendo/jsonyx>
+    Issue Tracker <https://github.com/nineteendo/jsonyx/issues>
