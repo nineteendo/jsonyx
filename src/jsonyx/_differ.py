@@ -7,19 +7,28 @@ __all__: list[str] = ["make_patch"]
 import re
 from itertools import starmap
 from math import isnan
-from re import Match
+from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from collections.abc import Callable, KeysView
 
+_FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
+
 _escape: Callable[[Callable[[Match[str]], str], str], str] = re.compile(
-    r"[ !&.<=>?[\]~]",
+    r"['~]", _FLAGS,
 ).sub
+_match_key: Callable[[str], Match[str] | None] = re.compile(
+    r"[^\W\d]\w*", _FLAGS,
+).fullmatch
 
 
 def _replace(match: Match[str]) -> str:
     return "~" + match.group()
+
+
+def _encode_query_key(key: str) -> str:
+    return f".{key}" if _match_key(key) else f"['{_escape(_replace, key)}']"
 
 
 def _eq(a: Any, b: Any) -> bool:
@@ -76,16 +85,16 @@ def _make_patch(
     if isinstance(old, dict) and isinstance(new, dict):
         old_keys: KeysView[Any] = old.keys()  # type: ignore
         new_keys: KeysView[Any] = new.keys()  # type: ignore
-        for key in old_keys - new_keys:
-            new_path: str = f"{path}.{_escape(_replace, key)}"
+        for key in sorted(old_keys - new_keys):
+            new_path: str = f"{path}{_encode_query_key(key)}"
             patch.append({"op": "del", "path": new_path})
 
-        for key in new_keys - old_keys:
-            new_path = f"{path}.{_escape(_replace, key)}"
+        for key in sorted(new_keys - old_keys):
+            new_path = f"{path}{_encode_query_key(key)}"
             patch.append({"op": "set", "path": new_path, "value": new[key]})
 
-        for key in old_keys & new_keys:
-            new_path = f"{path}.{_escape(_replace, key)}"
+        for key in sorted(old_keys & new_keys):
+            new_path = f"{path}{_encode_query_key(key)}"
             _make_patch(old[key], new[key], patch, new_path)
     elif isinstance(old, list) and isinstance(new, list):
         lcs: list[Any] = _get_lcs(old, new)  # type: ignore

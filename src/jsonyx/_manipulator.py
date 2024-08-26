@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON manipulator."""
-# TODO(Nice Zombies): allow whitespace
 # TODO(Nice Zombies): add error messages
 # TODO(Nice Zombies): raise JSONSyntaxError
 # TODO(Nice Zombies): write specification
@@ -35,8 +34,8 @@ _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 _match_idx: Callable[[str, int], Match[str] | None] = re.compile(
     r"-?0|-?[1-9]\d*", _FLAGS,
 ).match
-_match_key_chunk: Callable[[str, int], Match[str] | None] = re.compile(
-    r"[^ !&.<=>?[\]~]*", _FLAGS,
+_match_key: Callable[[str, int], Match[str] | None] = re.compile(
+    r"[^\W\d]\w*", _FLAGS,
 ).match
 _match_number: Callable[[str, int], Match[str] | None] = re.compile(
     r"""
@@ -94,30 +93,6 @@ def _has_key(target: _Target, key: _Key) -> bool:
         return key in target
 
     return -len(target) <= key < len(target)  # type: ignore
-
-
-def _scan_query_key(query: str, end: int) -> tuple[str, int]:
-    chunks: list[str] = []
-    append_chunk: Callable[[str], None] = chunks.append
-    while True:
-        if match := _match_key_chunk(query, end):
-            end = match.end()
-            append_chunk(match.group())
-
-        if query[end:end + 1] != "~":
-            return "".join(chunks), end
-
-        end += 1
-        try:
-            esc: str = query[end]
-        except IndexError:
-            raise SyntaxError from None
-
-        if esc not in {"!", "&", ".", "<", "=", ">", "?", "[", "]", "~"}:
-            raise SyntaxError
-
-        end += 1
-        append_chunk(esc)
 
 
 def _scan_query_operator(
@@ -311,8 +286,12 @@ class Manipulator:
         relative: bool = False,
         mapping: bool = False,
     ) -> tuple[list[_Node], int]:
-        key: _Key
-        key, end = _scan_query_key(query, end)
+        if match := _match_key(query, end):
+            end = match.end()
+            key: _Key = match.group()
+        else:
+            raise SyntaxError
+
         if relative and key != "@":
             raise SyntaxError
 
@@ -321,14 +300,20 @@ class Manipulator:
 
         while True:
             if (terminator := query[end:end + 1]) == ".":
-                key, end = _scan_query_key(query, end + 1)
+                if match := _match_key(query, end + 1):
+                    end = match.end()
+                    key = match.group()
+                else:
+                    raise SyntaxError
+
                 nodes = [
                     (target, key)
                     for node in nodes
                     for target in _get_query_targets(node, mapping=mapping)
                 ]
             elif terminator == "[":
-                if match := _match_slice(query, end + 1):
+                end += 1
+                if match := _match_slice(query, end):
                     end = match.end()
                     start, stop, step = match.groups()
                     key = slice(
@@ -340,8 +325,15 @@ class Manipulator:
                         for node in nodes
                         for target in _get_query_targets(node, mapping=mapping)
                     ]
-                elif match := _match_idx(query, end + 1):
+                elif match := _match_idx(query, end):
                     key, end = int(match.group()), match.end()
+                    nodes = [
+                        (target, key)
+                        for node in nodes
+                        for target in _get_query_targets(node, mapping=mapping)
+                    ]
+                elif query[end:end + 1] == "'":
+                    key, end = _scan_query_string(query, end + 1)
                     nodes = [
                         (target, key)
                         for node in nodes
@@ -360,7 +352,7 @@ class Manipulator:
                             range(len(target))
                         )
                     ]
-                    nodes, end = self._run_filter_query(nodes, query, end + 1)
+                    nodes, end = self._run_filter_query(nodes, query, end)
 
                 try:
                     terminator = query[end]
