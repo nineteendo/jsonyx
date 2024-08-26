@@ -34,7 +34,7 @@ templates_path = ["_templates"]
 
 # -- Options for HTML output
 
-html_theme: str = "sphinx_rtd_theme"
+html_theme: str = "furo"
 
 # -- Options for EPUB output
 epub_show_urls: str = "footnote"
