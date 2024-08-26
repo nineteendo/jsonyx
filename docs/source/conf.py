@@ -37,4 +37,4 @@ templates_path = ["_templates"]
 html_theme: str = "furo"
 
 # -- Options for EPUB output
-epub_show_urls: str = "footnote"
+epub_show_urls: str = "no"
