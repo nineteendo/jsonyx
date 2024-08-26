@@ -2,6 +2,8 @@
 """Configuration file for the Sphinx documentation builder."""
 from __future__ import annotations
 
+from typing import Any
+
 # -- Project information
 
 project: str = "jsonyx"
@@ -35,7 +37,8 @@ templates_path = ["_templates"]
 # -- Options for HTML output
 
 html_theme: str = "furo"
-html_theme_options: dict[str, str] = {
+html_theme_options: dict[str, Any] = {
+    "navigation_with_keys": True,
     "source_repository": "https://github.com/nineteendo/jsonyx/",
     "source_branch": "main",
     "source_directory": "docs/source/",
