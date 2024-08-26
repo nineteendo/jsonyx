@@ -44,10 +44,8 @@ Key Features:
 Check out the :doc:`getting-started` section for further information, including
 how to :ref:`installation` the project.
 
-Contents
---------
-
 .. toctree::
+    :hidden:
 
     getting-started
     api/index
@@ -55,6 +53,7 @@ Contents
 
 .. toctree::
     :caption: Project links
+    :hidden:
 
     PyPI project <https://pypi.org/project/jsonyx>
     GitHub repo <https://github.com/nineteendo/jsonyx>
