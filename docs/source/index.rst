@@ -10,6 +10,7 @@ Welcome to jsonyx's documentation!
     :alt: docs
 
 .. only:: html
+
     :mod:`jsonyx` is a robust `JSON <http://json.org>`_ manipulator for Python
     3.10+. It is written in pure Python with an optional C extension for better
     performance and no dependencies.
