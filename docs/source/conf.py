@@ -34,8 +34,12 @@ templates_path = ["_templates"]
 
 # -- Options for HTML output
 
-html_show_sourcelink: bool = False
 html_theme: str = "furo"
+html_theme_options: dict[str, str] = {
+    "source_repository": "https://github.com/nineteendo/jsonyx/",
+    "source_branch": "main",
+    "source_directory": "docs/source/",
+}
 
 # -- Options for EPUB output
 epub_show_urls: str = "no"
