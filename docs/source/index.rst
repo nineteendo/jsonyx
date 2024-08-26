@@ -44,6 +44,9 @@ Key Features:
 Check out the :doc:`getting-started` section for further information, including
 how to :ref:`installation` the project.
 
+Contents
+--------
+
 .. toctree::
 
     getting-started
