@@ -51,7 +51,7 @@ Key Features:
 
         File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
             "path": "c:\users"
-                        ^^^^
+                         ^^^^
         jsonyx.JSONSyntaxError: Expecting 4 hex digits
 
 - Dedicated functions for reading and writing files and pretty printing
