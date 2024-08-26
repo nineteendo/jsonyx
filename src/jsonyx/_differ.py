@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable, KeysView
 
 _escape: Callable[[Callable[[Match[str]], str], str], str] = re.compile(
-    r"[!&.<=>?[\]~]",
+    r"[ !&.<=>?[\]~]",
 ).sub
 
 

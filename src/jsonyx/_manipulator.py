@@ -36,16 +36,28 @@ _match_idx: Callable[[str, int], Match[str] | None] = re.compile(
     r"-?0|-?[1-9]\d*", _FLAGS,
 ).match
 _match_key_chunk: Callable[[str, int], Match[str] | None] = re.compile(
-    r"[^!&.<=>?[\]~]*", _FLAGS,
+    r"[^ !&.<=>?[\]~]*", _FLAGS,
 ).match
 _match_number: Callable[[str, int], Match[str] | None] = re.compile(
-    r"(-?0|-?[1-9]\d*)(\.\d+)?([eE][-+]?\d+)?", _FLAGS,
+    r"""
+    (-?0|-?[1-9]\d*) # integer
+    (\.\d+)?         # [frac]
+    ([eE][-+]?\d+)?  # [exp]
+    """, _FLAGS,
 ).match
 _match_slice: Callable[[str, int], Match[str] | None] = re.compile(
-    r"(-?0|-?[1-9]\d*)?:(-?0|-?[1-9]\d*)?(?::(-?0|-?[1-9]\d*)?)?", _FLAGS,
+    r"""
+    (-?0|-?[1-9]\d*)?       # [start]
+    :                       # ":"
+    (-?0|-?[1-9]\d*)?       # [stop]
+    (?::(-?0|-?[1-9]\d*)?)? # [":" [step]]
+    """, _FLAGS,
 ).match
 _match_str_chunk: Callable[[str, int], Match[str] | None] = re.compile(
     r"[^'~]*", _FLAGS,
+).match
+_match_whitespace: Callable[[str, int], Match[str] | None] = re.compile(
+    r"\ +", _FLAGS,
 ).match
 
 
@@ -242,37 +254,52 @@ class Manipulator:
                 )
                 if _has_key(filter_target, filter_key) != negate_filter
             ]
+            old_end: int = end
+            if match := _match_whitespace(query, end):
+                end = match.end()
+
             operator, end = _scan_query_operator(query, end)
             if operator is None:
                 nodes = [node for node, _filter_target in filtered_pairs]
             elif negate_filter:
                 raise SyntaxError
-            elif query[end:end + 1] != "@":
-                value, end = self._scan_query_value(query, end)
-                nodes = [
-                    node
-                    for node, filter_target in filtered_pairs
-                    if operator(filter_target, value)
-                ]
             else:
-                filter2_nodes, end = self._run_select_query(
-                    nodes, query, end, mapping=True, relative=True,
-                )
-                nodes = [
-                    node
-                    for (
-                        (node, filter_target), (filter2_target, filter2_key),
-                    ) in zip(filtered_pairs, filter2_nodes, strict=True)
-                    if _has_key(filter2_target, filter2_key) and operator(
-                        filter_target,
-                        filter2_target[filter2_key],  # type: ignore
+                if match := _match_whitespace(query, end):
+                    end = match.end()
+
+                if query[end:end + 1] != "@":
+                    value, end = self._scan_query_value(query, end)
+                    nodes = [
+                        node
+                        for node, filter_target in filtered_pairs
+                        if operator(filter_target, value)
+                    ]
+                else:
+                    filter2_nodes, end = self._run_select_query(
+                        nodes, query, end, mapping=True, relative=True,
                     )
-                ]
+                    nodes = [
+                        node
+                        for (
+                            (node, filter_target),
+                            (filter2_target, filter2_key),
+                        ) in zip(filtered_pairs, filter2_nodes, strict=True)
+                        if _has_key(filter2_target, filter2_key) and operator(
+                            filter_target,
+                            filter2_target[filter2_key],  # type: ignore
+                        )
+                    ]
+
+                old_end = end
+                if match := _match_whitespace(query, end):
+                    end = match.end()
 
             if query[end:end + 2] != "&&":
-                return nodes, end
+                return nodes, old_end
 
             end += 2
+            if match := _match_whitespace(query, end):
+                end = match.end()
 
     def _run_select_query(
         self,

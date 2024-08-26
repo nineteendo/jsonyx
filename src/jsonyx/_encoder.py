@@ -28,7 +28,7 @@ _escape: Callable[[Callable[[Match[str]], str], str], str] = re.compile(
     r'["\\\x00-\x1f]',
 ).sub
 _escape_ascii: Callable[[Callable[[Match[str]], str], str], str] = re.compile(
-    r'(?:["\\]|[^\x20-\x7e])',
+    r'["\\]|[^\x20-\x7e]',
 ).sub
 
 try:

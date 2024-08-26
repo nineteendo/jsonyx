@@ -34,7 +34,11 @@ _match_line_end: Callable[[str, int], Match[str] | None] = re.compile(
     r"[^\n\r]+", _FLAGS,
 ).match
 _match_number: Callable[[str, int], Match[str] | None] = re.compile(
-    r"(-?0|-?[1-9]\d*)(\.\d+)?([eE][-+]?\d+)?", _FLAGS,
+    r"""
+    (-?0|-?[1-9]\d*) # integer
+    (\.\d+)?         # [frac]
+    ([eE][-+]?\d+)?  # [exp]
+    """, _FLAGS,
 ).match
 _match_whitespace: Callable[[str, int], Match[str] | None] = re.compile(
     r"[ \t\n\r]+", _FLAGS,
