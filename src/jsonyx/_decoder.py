@@ -30,6 +30,9 @@ _UNESCAPE: dict[str, str] = {
 _match_chunk: Callable[[str, int], Match[str] | None] = re.compile(
     r'[^"\\\x00-\x1f]+', _FLAGS,
 ).match
+_match_key: Callable[[str, int], Match[str] | None] = re.compile(
+    r"[^\W\d]\w*", _FLAGS,
+).match
 _match_line_end: Callable[[str, int], Match[str] | None] = re.compile(
     r"[^\n\r]+", _FLAGS,
 ).match
@@ -201,6 +204,7 @@ except ImportError:
         allow_nan_and_infinity: bool,  # noqa: FBT001
         allow_surrogates: bool,  # noqa: FBT001
         allow_trailing_comma: bool,  # noqa: FBT001
+        allow_unquoted_keys: bool,  # noqa: FBT001
         use_decimal: bool,  # noqa: FBT001
     ) -> Callable[[str, str], Any]:
         """Make JSON scanner."""
@@ -324,17 +328,25 @@ except ImportError:
                 msg: str = "Unterminated object"
                 raise _errmsg(msg, filename, s, obj_idx, end) from None
 
-            if nextchar != '"':
-                if nextchar != "}":
-                    msg = "Expecting string"
-                    raise _errmsg(msg, filename, s, end)
-
+            if nextchar == "}":
                 return {}, end + 1
 
             result: dict[str, Any] = {}
             while True:
                 key_idx: int = end
-                key, end = scan_string(filename, s, end + 1)
+                if s[end:end + 1] == '"':
+                    key, end = scan_string(filename, s, end + 1)
+                elif match := _match_key(s, end):
+                    end = match.end()
+                    if not allow_unquoted_keys:
+                        msg = "Unquoted strings are not allowed"
+                        raise _errmsg(msg, filename, s, key_idx, end)
+
+                    key = match.group()
+                else:
+                    msg = "Expecting string"
+                    raise _errmsg(msg, filename, s, end)
+
                 if key not in result:
                     # Reduce memory consumption
                     key = memoize(key, key)
@@ -378,11 +390,7 @@ except ImportError:
                     msg = "Unterminated object"
                     raise _errmsg(msg, filename, s, obj_idx, end) from None
 
-                if nextchar != '"':
-                    if nextchar != "}":
-                        msg = "Expecting string"
-                        raise _errmsg(msg, filename, s, end)
-
+                if nextchar == "}":
                     if not allow_trailing_comma:
                         msg = "Trailing comma is not allowed"
                         raise _errmsg(

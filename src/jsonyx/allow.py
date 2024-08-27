@@ -11,6 +11,7 @@ __all__: list[str] = [
     "NOTHING",
     "SURROGATES",
     "TRAILING_COMMA",
+    "UNQUOTED_KEYS",
 ]
 
 #: Allow nothing
@@ -62,14 +63,6 @@ MISSING_COMMAS: frozenset[str] = frozenset({"missing_commas"})
 #:     ``Decimal("sNan")`` can't be (de)serialised this way.
 NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
 
-#: Allow trailing comma
-#:
-#: >>> import jsonyx as json
-#: >>> import jsonyx.allow
-#: >>> json.loads('[0,]', allow=jsonyx.allow.TRAILING_COMMA)
-#: [0]
-TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
-
 #: Allow surrogates
 #:
 #: >>> import jsonyx as json
@@ -84,11 +77,29 @@ TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
 #:     the unicode error handler to "surrogatepass".
 SURROGATES: frozenset[str] = frozenset({"surrogates"})
 
+#: Allow trailing comma
+#:
+#: >>> import jsonyx as json
+#: >>> import jsonyx.allow
+#: >>> json.loads('[0,]', allow=jsonyx.allow.TRAILING_COMMA)
+#: [0]
+TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
+
+#: Allow unquoted keys
+#:
+#: >>> import jsonyx as json
+#: >>> import jsonyx.allow
+#: >>> json.loads('{key: "value"}', allow=jsonyx.allow.UNQUOTED_KEYS)
+#: {'key': 'value'}
+#:
+#: .. versionadded:: 2.0
+UNQUOTED_KEYS: frozenset[str] = frozenset({"unquoted_keys"})
+
 #: Allow everything
 #:
 #: Equivalent to ``COMMENTS | DUPLICATE_KEYS | MISSING_COMMAS |
-#: NAN_AND_INFINITY | SURROGATES | TRAILING_COMMA``.
+#: NAN_AND_INFINITY | SURROGATES | TRAILING_COMMA | UNQUOTED_KEYS``.
 EVERYTHING: frozenset[str] = (
     COMMENTS | DUPLICATE_KEYS | MISSING_COMMAS | NAN_AND_INFINITY | SURROGATES
-    | TRAILING_COMMA
+    | TRAILING_COMMA | UNQUOTED_KEYS
 )

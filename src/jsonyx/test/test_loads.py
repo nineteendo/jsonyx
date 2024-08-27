@@ -1,4 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
+# TODO(Nice Zombies): test allow=UNQUOTED_KEYS
 """JSON loads tests."""
 from __future__ import annotations
 

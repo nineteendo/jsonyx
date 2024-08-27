@@ -1,5 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
-# TODO(Nice Zombies): allow unquoted keys
+# TODO(Nice Zombies): add unquoted_keys=True
 # TODO(Nice Zombies): update changelog
 # TODO(Nice Zombies): write migration guide
 """jsonyx module for JSON manipulation."""
@@ -73,7 +73,8 @@ class Decoder:
         self._scanner: Callable[[str, str], tuple[Any]] = make_scanner(
             "comments" in allow, "duplicate_keys" in allow,
             "missing_commas" in allow, "nan_and_infinity" in allow,
-            allow_surrogates, "trailing_comma" in allow, use_decimal,
+            allow_surrogates, "trailing_comma" in allow,
+            "unquoted_keys" in allow, use_decimal,
         )
 
     def read(self, filename: StrPath) -> Any:

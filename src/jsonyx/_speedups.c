@@ -27,6 +27,7 @@ typedef struct _PyScannerObject {
     int allow_nan_and_infinity;
     int allow_surrogates;
     int allow_trailing_comma;
+    int allow_unquoted_keys;
     int use_decimal;
 } PyScannerObject;
 
@@ -649,11 +650,25 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
             }
 
             /* read key */
-            if (PyUnicode_READ(kind, str, idx) != '"') {
+            if (PyUnicode_READ(kind, str, idx) == '"') {
+                key = scanstring_unicode(pyfilename, pystr, idx + 1, s->allow_surrogates, &next_idx);
+            }
+            else if (!Py_UNICODE_ISALPHA(PyUnicode_READ(kind, str, idx)) && PyUnicode_READ(kind, str, idx) != '_') {
                 raise_errmsg("Expecting string", pyfilename, pystr, idx, 0);
                 goto bail;
             }
-            key = scanstring_unicode(pyfilename, pystr, idx + 1, s->allow_surrogates, &next_idx);
+            else {
+                next_idx = idx;
+                next_idx++;
+                while (next_idx <= end_idx && (Py_UNICODE_ISALNUM(PyUnicode_READ(kind, str, next_idx)) || PyUnicode_READ(kind, str, next_idx) == '_')) {
+                    next_idx++;
+                }
+                if (!s->allow_unquoted_keys) {
+                    raise_errmsg("Unquoted keys are not allowed", pyfilename, pystr, idx, next_idx);
+                    goto bail;
+                }
+                key = PyUnicode_Substring(pystr, idx, next_idx);
+            }
             if (key == NULL)
                 goto bail;
             if (!PyDict_Contains(rval, key)) {
@@ -1154,17 +1169,17 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     static char *kwlist[] = {"allow_comments", "allow_duplicate_keys",
                              "allow_missing_commas", "allow_nan_and_infinity",
                              "allow_surrogates", "allow_trailing_comma",
-                             "use_decimal", NULL};
+                             "allow_unquoted_keys", "use_decimal", NULL};
 
     PyScannerObject *s;
     int allow_comments, allow_duplicate_keys, allow_missing_commas;
     int allow_nan_and_infinity, allow_surrogates, allow_trailing_comma;
-    int use_decimal;
+    int allow_unquoted_keys, use_decimal;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "ppppppp:make_scanner", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "pppppppp:make_scanner", kwlist,
         &allow_comments, &allow_duplicate_keys, &allow_missing_commas,
         &allow_nan_and_infinity, &allow_surrogates, &allow_trailing_comma,
-        &use_decimal))
+        &allow_unquoted_keys, &use_decimal))
         return NULL;
 
     s = (PyScannerObject *)type->tp_alloc(type, 0);
@@ -1187,6 +1202,7 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->allow_nan_and_infinity = allow_nan_and_infinity;
     s->allow_surrogates = allow_surrogates;
     s->allow_trailing_comma = allow_trailing_comma;
+    s->allow_unquoted_keys = allow_unquoted_keys;
     s->use_decimal = use_decimal;
     return (PyObject *)s;
 

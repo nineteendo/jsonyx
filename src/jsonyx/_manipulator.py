@@ -286,9 +286,9 @@ class Manipulator:
         relative: bool = False,
         mapping: bool = False,
     ) -> tuple[list[_Node], int]:
+        key: _Key
         if match := _match_key(query, end):
-            end = match.end()
-            key: _Key = match.group()
+            key, end = match.group(), match.end()
         else:
             raise SyntaxError
 
@@ -301,8 +301,7 @@ class Manipulator:
         while True:
             if (terminator := query[end:end + 1]) == ".":
                 if match := _match_key(query, end + 1):
-                    end = match.end()
-                    key = match.group()
+                    key, end = match.group(), match.end()
                 else:
                     raise SyntaxError
 
@@ -314,8 +313,7 @@ class Manipulator:
             elif terminator == "[":
                 end += 1
                 if match := _match_slice(query, end):
-                    end = match.end()
-                    start, stop, step = match.groups()
+                    (start, stop, step), end = match.groups(), match.end()
                     key = slice(
                         start and int(start), stop and int(stop),
                         step and int(step),

@@ -15,6 +15,7 @@ v2.0.0 (unreleased)
 - Added :func:`jsonyx.load_query_value`
 - Added :func:`jsonyx.make_patch`
 - Added :func:`jsonyx.Manipulator`
+- Added :data:`jsonyx.allow.UNQUOTED_KEYS`
 - Fixed typo in error message
 - Improved documentation
 - Removed :mod:`!jsonyx.tool`
