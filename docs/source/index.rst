@@ -40,6 +40,7 @@ how to :ref:`installation` the project.
     :hidden:
 
     getting-started
+    how-to
     api/index
     cli
 
