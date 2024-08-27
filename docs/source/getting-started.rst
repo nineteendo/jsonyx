@@ -10,7 +10,7 @@ To use :mod:`jsonyx`, first install it using pip:
 
 .. code-block:: console
 
-    (.venv) $ pip install jsonyx
+    (.venv) $ pip install -U jsonyx
 
 Quick start
 -----------
