@@ -1,8 +1,8 @@
 Changelog
 =========
 
-v2.0.0
-------
+v2.0.0 (unreleased)
+-------------------
 
 - Added :option:`command`
 - Added :option:`old_input_filename`
@@ -19,8 +19,13 @@ v2.0.0
 - Improved documentation
 - Removed :mod:`!jsonyx.tool`
 
-v1.2.0
-------
+`v1.2.1 <https://pypi.org/project/jsonyx/1.2.1>`_
+-------------------------------------------------
+
+- Fixed `#2 <https://github.com/nineteendo/jsonyx/issues/2>`_: Middle of error context is truncated incorrectly
+
+`v1.2.0 <https://pypi.org/project/jsonyx/1.2.0>`_
+-------------------------------------------------
 
 - Added :option:`output_filename`
 - Added :option:`-a` as an alias to :option:`--ensure-ascii`
@@ -32,10 +37,9 @@ v1.2.0
 - Added :option:`-S` as an alias to :option:`--nonstrict`
 - Added :option:`-t` as an alias to :option:`--trailing-comma`
 - Added :option:`-T` as an alias to :option:`--indent-tab`
-- Fixed `#2 <https://github.com/nineteendo/jsonyx/issues/2>`_: Middle of error context is truncated incorrectly
 - Renamed :option:`!filename` to :option:`input_filename`
 
-v1.1.0
-------
+`v1.1.0 <https://pypi.org/project/jsonyx/1.1.0>`_
+-------------------------------------------------
 
 - Allow ``python -m jsonyx`` instead of ``python -m jsonyx.tool``
