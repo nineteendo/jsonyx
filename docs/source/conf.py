@@ -5,6 +5,8 @@ from __future__ import annotations
 from os import getenv
 from typing import Any
 
+READTHEDOCS: bool = True
+
 # -- Project information
 
 project: str = "jsonyx"
