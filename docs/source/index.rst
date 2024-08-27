@@ -43,6 +43,7 @@ to :ref:`installation` the project.
     how-to
     api/index
     cli
+    changelog
 
 .. toctree::
     :caption: Project links

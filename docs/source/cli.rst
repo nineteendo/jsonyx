@@ -26,6 +26,9 @@ Command Line Interface
     The path to the input JSON file, or "-" for standard input. If not
     specified, read from :data:`sys.stdin`.
 
+    .. versionchanged:: 1.2
+        Renamed from :option:`!filename`
+
 .. option:: output_filename
 
     The path to the output JSON file, or "-" for standard output. If not
@@ -41,34 +44,61 @@ Command Line Interface
 
     Escape non-ASCII characters.
 
+    .. versionadded:: 1.2
+        :option:`!a`
+
 .. option:: -c, --compact
 
     Avoid unnecessary whitespace after "," and ":".
+
+    .. versionadded:: 1.2
+        :option:`!c`
 
 .. option:: -C, --no-commas
 
     Separate items by whitespace instead of commas.
 
+    .. versionadded:: 1.2
+        :option:`!C`
+
 .. option:: -d, --use-decimal
 
     Use decimal instead of float.
+
+    .. versionadded:: 1.2
+        :option:`!d`
 
 .. option:: -i SPACES, --indent SPACES
 
     Indent using the specified number of spaces.
 
+    .. versionadded:: 1.2
+        :option:`!i`
+
 .. option:: -s, --sort-keys
 
     Sort the keys of objects.
+
+    .. versionadded:: 1.2
+        :option:`!s`
 
 .. option:: -S, --nonstrict
 
     Allow all JSON deviations.
 
+    .. versionadded:: 1.2
+        :option:`!S`
+
 .. option:: -t, --trailing-comma
 
     Add a trailing comma if indented.
 
+    .. versionadded:: 1.2
+        :option:`!t`
+
 .. option:: -T, --indent-tab
 
     Indent using tabs.
+
+    .. versionadded:: 1.2
+        :option:`!T`
