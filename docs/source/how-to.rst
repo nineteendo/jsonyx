@@ -1,10 +1,13 @@
 How-to Guide
 ============
 
-Encoding custom objects::
+Encoding custom objects
+-----------------------
 
-    >>> from collections.abc import Mapping, Sequence
+::
+
     >>> import jsonyx as json
+    >>> from collections.abc import Mapping, Sequence
     >>> 
     >>> def to_json(obj):
     ...     if isinstance(obj, Sequence):
@@ -21,7 +24,10 @@ Encoding custom objects::
     >>> json.dump(to_json(1 + 2j))
     {"__complex__": true, "real": 1.0, "imag": 2.0}
 
-Decoding custom objects::
+Decoding custom objects
+-----------------------
+
+::
 
     >>> import jsonyx as json
     >>> 

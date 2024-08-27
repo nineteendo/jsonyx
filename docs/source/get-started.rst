@@ -15,7 +15,10 @@ To use :mod:`jsonyx`, first install it using pip:
 Quick start
 -----------
 
-Encoding basic Python object hierarchies::
+Encoding basic Python object hierarchies
+----------------------------------------
+
+::
 
     >>> import jsonyx as json
     >>> json.dumps({"foo": ["bar", None, 1.0, 2]})
@@ -42,13 +45,19 @@ Encoding basic Python object hierarchies::
     ...
     '["filesystem API"]\n'
 
-Compact encoding::
+Compact encoding
+----------------
+
+::
 
     >>> import jsonyx as json
     >>> json.dumps({"a": 1, "b": 2, "c": 3}, end="", item_separator=",", key_separator=":")
     '{"a":1,"b":2,"c":3}'
 
-Pretty printing::
+Pretty printing
+---------------
+
+::
 
     >>> import jsonyx as json
     >>> json.dump({"c": 3, "b": 2, "a": 1}, indent=4, sort_keys=True)
@@ -58,7 +67,10 @@ Pretty printing::
         "c": 3
     }
 
-Decoding JSON::
+Decoding JSON
+-------------
+
+::
 
     >>> import jsonyx as json
     >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
@@ -78,16 +90,10 @@ Decoding JSON::
     ...
     ['filesystem API']
 
-Allowing NaN and infinity::
+Using :class:`decimal.Decimal` instead of :class:`float`
+--------------------------------------------------------
 
-    >>> import jsonyx as json
-    >>> import jsonyx.allow
-    >>> json.loads("NaN", allow=jsonyx.allow.NAN_AND_INFINITY)
-    nan
-    >>> json.dump(float("nan"), allow=jsonyx.allow.NAN_AND_INFINITY)
-    NaN
-
-Using :class:`decimal.Decimal` instead of :class:`float`::
+::
 
     >>> import jsonyx as json
     >>> from decimal import Decimal
@@ -96,19 +102,26 @@ Using :class:`decimal.Decimal` instead of :class:`float`::
     >>> json.dump(Decimal("1.1"))
     1.1
 
-Making a patch from two Python objects::
+Making a patch from two Python objects
+--------------------------------------
+
+::
 
     >>> import jsonyx as json
     >>> json.make_patch([1, 2, 3, 5], [1, 3, 4, 5])
     [{'op': 'del', 'path': '$[1]'}, {'op': 'insert', 'path': '$[2]', 'value': 4}]
 
-Applying a patch::
+Applying a patch
+----------------
+
+::
 
     >>> import jsonyx as json
     >>> json.apply_patch([1, 2, 3], {"op": "clear"})
     []
 
-Using :mod:`jsonyx` from the shell to validate and pretty-print:
+Using :mod:`jsonyx` from the shell to validate and pretty-print
+---------------------------------------------------------------
 
 .. code-block:: shell-session
 

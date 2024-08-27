@@ -39,7 +39,7 @@ how to :ref:`installation` the project.
 .. toctree::
     :hidden:
 
-    getting-started
+    get-started
     how-to
     api/index
     cli

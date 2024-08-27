@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 # TODO(Nice Zombies): add changelog
-# TODO(Nice Zombies): write tutorial
 # TODO(Nice Zombies): write migration guide
 # TODO(Nice Zombies): allow unquoted keys
 """jsonyx module for JSON manipulation."""
