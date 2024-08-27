@@ -46,9 +46,10 @@ to :ref:`installation` the project.
 
 .. toctree::
     :caption: About the Project
+    :hidden:
 
     changelog
-    license <https://github.com/nineteendo/jsonyx/blob/main/LICENSE>
+    License <https://github.com/nineteendo/jsonyx/blob/main/LICENSE>
 
 .. toctree::
     :caption: Project Links
