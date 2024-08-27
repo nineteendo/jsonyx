@@ -21,8 +21,9 @@ Key Features:
             "Duplicate keys": {"key": "value 1", "key": "value 2"},
             "Missing commas": [1 2 3],
             "NaN and infinity": [NaN, Infinity, -Infinity],
+            "Surrogates": "\ud800",
             "Trailing comma": [0,],
-            "Surrogates": "\ud800"
+            "Unquoted keys": {key: "value"}
         }
 
 - Detailed error messages
