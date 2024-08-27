@@ -1,5 +1,5 @@
-Welcome to jsonyx's documentation!
-===================================
+Welcome to jsonyx's Documentation!
+==================================
 
 :mod:`jsonyx` is a robust `JSON <http://json.org>`_ manipulator for Python
 3.10+. It is written in pure Python with an optional C extension for better
@@ -43,10 +43,15 @@ to :ref:`installation` the project.
     how-to
     api/index
     cli
-    changelog
 
 .. toctree::
-    :caption: Project links
+    :caption: About the Project
+
+    changelog
+    license <https://github.com/nineteendo/jsonyx/blob/main/LICENSE>
+
+.. toctree::
+    :caption: Project Links
     :hidden:
 
     PyPI project <https://pypi.org/project/jsonyx>
