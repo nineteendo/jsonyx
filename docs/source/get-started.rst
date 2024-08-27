@@ -16,7 +16,7 @@ Quick start
 -----------
 
 Encoding basic Python object hierarchies
-----------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
 
@@ -46,7 +46,7 @@ Encoding basic Python object hierarchies
     '["filesystem API"]\n'
 
 Compact encoding
-----------------
+^^^^^^^^^^^^^^^^
 
 ::
 
@@ -55,7 +55,7 @@ Compact encoding
     '{"a":1,"b":2,"c":3}'
 
 Pretty printing
----------------
+^^^^^^^^^^^^^^^
 
 ::
 
@@ -68,7 +68,7 @@ Pretty printing
     }
 
 Decoding JSON
--------------
+^^^^^^^^^^^^^
 
 ::
 
@@ -91,7 +91,7 @@ Decoding JSON
     ['filesystem API']
 
 Using :class:`decimal.Decimal` instead of :class:`float`
---------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
 
@@ -103,7 +103,7 @@ Using :class:`decimal.Decimal` instead of :class:`float`
     1.1
 
 Making a patch from two Python objects
---------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ::
 
@@ -112,7 +112,7 @@ Making a patch from two Python objects
     [{'op': 'del', 'path': '$[1]'}, {'op': 'insert', 'path': '$[2]', 'value': 4}]
 
 Applying a patch
-----------------
+^^^^^^^^^^^^^^^^
 
 ::
 
@@ -121,7 +121,7 @@ Applying a patch
     []
 
 Using :mod:`jsonyx` from the shell to validate and pretty-print
----------------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: shell-session
 
