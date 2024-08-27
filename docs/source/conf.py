@@ -2,10 +2,8 @@
 """Configuration file for the Sphinx documentation builder."""
 from __future__ import annotations
 
-from os import getenv
+from os import environ, getenv
 from typing import Any
-
-READTHEDOCS: bool = True
 
 # -- Project information
 
@@ -39,11 +37,15 @@ templates_path = ["_templates"]
 
 # -- Options for HTML output
 
+html_context: dict[str, Any] = {}
+if "READTHEDOCS" in environ:
+    html_context["READTHEDOCS"] = True
+
 html_theme: str = "furo"
 html_theme_options: dict[str, Any] = {
     "navigation_with_keys": True,
     "source_repository": "https://github.com/nineteendo/jsonyx/",
-    "source_branch": getenv("READTHEDOCS_GIT_IDENTIFIER"),
+    "source_branch": getenv("READTHEDOCS_GIT_IDENTIFIER", "main"),
     "source_directory": "docs/source/",
 }
 
