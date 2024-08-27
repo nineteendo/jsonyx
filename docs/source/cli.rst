@@ -45,60 +45,60 @@ Command Line Interface
     Escape non-ASCII characters.
 
     .. versionadded:: 1.2
-        :option:`!a`
+        :option:`!-a`
 
 .. option:: -c, --compact
 
     Avoid unnecessary whitespace after "," and ":".
 
     .. versionadded:: 1.2
-        :option:`!c`
+        :option:`!-c`
 
 .. option:: -C, --no-commas
 
     Separate items by whitespace instead of commas.
 
     .. versionadded:: 1.2
-        :option:`!C`
+        :option:`!-C`
 
 .. option:: -d, --use-decimal
 
     Use decimal instead of float.
 
     .. versionadded:: 1.2
-        :option:`!d`
+        :option:`!-d`
 
 .. option:: -i SPACES, --indent SPACES
 
     Indent using the specified number of spaces.
 
     .. versionadded:: 1.2
-        :option:`!i`
+        :option:`!-i`
 
 .. option:: -s, --sort-keys
 
     Sort the keys of objects.
 
     .. versionadded:: 1.2
-        :option:`!s`
+        :option:`!-s`
 
 .. option:: -S, --nonstrict
 
     Allow all JSON deviations.
 
     .. versionadded:: 1.2
-        :option:`!S`
+        :option:`!-S`
 
 .. option:: -t, --trailing-comma
 
     Add a trailing comma if indented.
 
     .. versionadded:: 1.2
-        :option:`!t`
+        :option:`!-t`
 
 .. option:: -T, --indent-tab
 
     Indent using tabs.
 
     .. versionadded:: 1.2
-        :option:`!T`
+        :option:`!-T`
