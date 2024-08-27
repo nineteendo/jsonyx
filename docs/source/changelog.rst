@@ -23,19 +23,19 @@ v1.2.0
 ------
 
 - Added :option:`output_filename`
-- Added :option:`-a`
-- Added :option:`-c`
-- Added :option:`-C`
-- Added :option:`-d`
-- Added :option:`-i`
-- Added :option:`-s`
-- Added :option:`-S`
-- Added :option:`-t`
-- Added :option:`-T`
+- Added :option:`-a` as an alias to :option:`--ensure-ascii`
+- Added :option:`-c` as an alias to :option:`--compact`
+- Added :option:`-C` as an alias to :option:`--no-commas`
+- Added :option:`-d` as an alias to :option:`--use-decimal`
+- Added :option:`-i` as an alias to :option:`--indent`
+- Added :option:`-s` as an alias to :option:`--sort-keys`
+- Added :option:`-S` as an alias to :option:`--nonstrict`
+- Added :option:`-t` as an alias to :option:`--trailing-comma`
+- Added :option:`-T` as an alias to :option:`--indent-tab`
 - Fixed `#2 <https://github.com/nineteendo/jsonyx/issues/2>`_: Middle of error context is truncated incorrectly
 - Renamed :option:`!filename` to :option:`input_filename`
 
 v1.1.0
 ------
 
-- Allow `python -m jsonyx` instead of `python -m jsonyx.tool`
+- Allow ``python -m jsonyx`` instead of ``python -m jsonyx.tool``
