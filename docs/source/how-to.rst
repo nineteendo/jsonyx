@@ -1,0 +1,38 @@
+How-to Guide
+============
+
+Encoding custom objects::
+
+    >>> from collections.abc import Mapping, Sequence
+    >>> import jsonyx as json
+    >>> 
+    >>> def to_json(obj):
+    ...     if isinstance(obj, Sequence):
+    ...         return [to_json(value) for value in obj]
+    ...     if isinstance(obj, Mapping):
+    ...         return {
+    ...             key if isinstance(key, str) else str(key): to_json(value)
+    ...             for key, value in obj.items()
+    ...         }
+    ...     if isinstance(obj, complex):
+    ...         return {"__complex__": True, "real": obj.real, "imag": obj.imag}
+    ...     return obj
+    ... 
+    >>> json.dump(to_json(1 + 2j))
+    {"__complex__": true, "real": 1.0, "imag": 2.0}
+
+Decoding custom objects::
+
+    >>> import jsonyx as json
+    >>> 
+    >>> def from_json(obj):
+    ...     if isinstance(obj, list):
+    ...         return [from_json(value) for value in obj]
+    ...     if isinstance(obj, dict):
+    ...         if "__complex__" in obj:
+    ...             return complex(obj["real"], obj["imag"])
+    ...         return {key: from_json(value) for key, value in obj.items()}
+    ...     return obj
+    ... 
+    >>> from_json(json.loads('{"__complex__": true, "real": 1.0, "imag": 2.0}'))
+    (1+2j)

@@ -1,5 +1,5 @@
-Command line interface
-----------------------
+Command Line Interface
+======================
 
 .. option:: command
 
