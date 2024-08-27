@@ -37,13 +37,15 @@ templates_path = ["_templates"]
 
 # -- Options for HTML output
 
-html_theme: str = "furo"
-html_theme_options: dict[str, Any] = {
+html_context: dict[str, Any] = {
     "display_github": True,
     "github_user": "nineteendo",
     "github_repo": "jsonyx",
     "github_version": getenv("READTHEDOCS_GIT_IDENTIFIER", "main"),
     "conf_py_path": "/docs/source/",
+}
+html_theme: str = "furo"
+html_theme_options: dict[str, Any] = {
     "navigation_with_keys": True,
 }
 
