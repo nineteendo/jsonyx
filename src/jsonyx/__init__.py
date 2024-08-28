@@ -1,7 +1,6 @@
 # Copyright (C) 2024 Nice Zombies
 # TODO(Nice Zombies): add unquoted_keys=True
 # TODO(Nice Zombies): update changelog
-# TODO(Nice Zombies): write migration guide
 """Robust JSON manipulator for Python."""
 from __future__ import annotations
 

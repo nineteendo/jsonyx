@@ -12,7 +12,7 @@ and no dependencies
 Key Features:
 
 - JSON decoding, encoding and patching
-- Optionally supports these JSON deviations:
+- Optionally supports these JSON deviations using `jsonyx.allow`:
     ```javascript
     {
         /* Block */ // and line comments

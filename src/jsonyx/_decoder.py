@@ -339,7 +339,7 @@ except ImportError:
                 elif match := _match_key(s, end):
                     end = match.end()
                     if not allow_unquoted_keys:
-                        msg = "Unquoted strings are not allowed"
+                        msg = "Unquoted keys are not allowed"
                         raise _errmsg(msg, filename, s, key_idx, end)
 
                     key = match.group()

@@ -12,7 +12,7 @@ Key Features
 ------------
 
 - JSON decoding, encoding and patching
-- Optionally supports these JSON deviations
+- Optionally supports these JSON deviations using :mod:`jsonyx.allow`
 
     .. code-block:: javascript
 

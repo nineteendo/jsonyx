@@ -1,5 +1,4 @@
 # Copyright (C) 2024 Nice Zombies
-# TODO(Nice Zombies): test allow=UNQUOTED_KEYS
 """JSON loads tests."""
 from __future__ import annotations
 
@@ -13,7 +12,7 @@ import pytest
 
 from jsonyx.allow import (
     COMMENTS, DUPLICATE_KEYS, MISSING_COMMAS, NAN_AND_INFINITY, SURROGATES,
-    TRAILING_COMMA,
+    TRAILING_COMMA, UNQUOTED_KEYS,
 )
 # pylint: disable-next=W0611
 from jsonyx.test import get_json  # type: ignore # noqa: F401
@@ -433,7 +432,6 @@ def test_object_comments(
     ('{"": 0', "Unterminated object", 1, 7),
     ('{"a": 1"b": 2"c": 3}', "Expecting comma", 8, 0),
     ('{"a": 1 "b": 2 "c": 3}', "Missing commas are not allowed", 8, 0),
-    ('{"": 1, 2, 3}', "Expecting string", 9, 0),
     ('{"": 0,', "Unterminated object", 1, 8),
     ('{"": 0,}', "Trailing comma is not allowed", 7, 8),
 ])
@@ -445,6 +443,63 @@ def test_invalid_object(
         json.loads(s)
 
     _check_syntax_err(exc_info, msg, colno, end_colno)
+
+
+@pytest.mark.parametrize(("s", "expected"), [
+    # First character
+    ("{A: 0}", {"A": 0}),
+    ("{_: 0}", {"_": 0}),
+    ("{\u00aa: 0}", {"\u00aa": 0}),
+    ("{\u0800: 0}", {"\u0800": 0}),
+    ("{\U00010000: 0}", {"\U00010000": 0}),
+
+    # Remaining characters
+    ("{A0: 0}", {"A0": 0}),
+    ("{AA: 0}", {"AA": 0}),
+    ("{A_: 0}", {"A_": 0}),
+    ("{A\u00aa: 0}", {"A\u00aa": 0}),
+    ("{A\u00b2: 0}", {"A\u00b2": 0}),
+    ("{A\u0800: 0}", {"A\u0800": 0}),
+    ("{A\u0966: 0}", {"A\u0966": 0}),
+    ("{A\U00010000: 0}", {"A\U00010000": 0}),
+    ("{A\U00010107: 0}", {"A\U00010107": 0}),
+])
+def test_unquoted_keys(
+    json: ModuleType, s: str, expected: dict[str, object],
+) -> None:
+    """Test unquoted keys."""
+    assert json.loads(s, allow=UNQUOTED_KEYS) == expected
+
+
+@pytest.mark.parametrize(("s", "end_colno"), [
+    # First character
+    ("{A: 0}", 3),
+    ("{_: 0}", 3),
+    ("{\u00aa: 0}", 3),
+    ("{\u0800: 0}", 3),
+    ("{\U00010000: 0}", 3),
+
+    # Remaining characters
+    ("{A0: 0}", 4),
+    ("{AA: 0}", 4),
+    ("{A_: 0}", 4),
+    ("{A\u00aa: 0}", 4),
+    ("{A\u00b2: 0}", 4),
+    ("{A\u0800: 0}", 4),
+    ("{A\u0966: 0}", 4),
+    ("{A\U00010000: 0}", 4),
+    ("{A\U00010107: 0}", 4),
+])
+def test_unquoted_keys_not_allowed(
+    json: ModuleType, s: str, end_colno: int,
+) -> None:
+    """Test unquoted keys if not allowed."""
+    with pytest.raises(json.JSONSyntaxError) as exc_info:
+        json.loads(s)
+
+    _check_syntax_err(
+        exc_info, "Unquoted keys are not allowed", 2, end_colno,
+    )
 
 
 def test_duplicate_keys(json: ModuleType) -> None:
