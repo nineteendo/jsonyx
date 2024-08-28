@@ -31,6 +31,9 @@ _escape: Callable[[Callable[[Match[str]], str], str], str] = re.compile(
 _escape_ascii: Callable[[Callable[[Match[str]], str], str], str] = re.compile(
     r'["\\]|[^\x20-\x7e]', _FLAGS,
 ).sub
+_match_identifier: Callable[[str], Match[str] | None] = re.compile(
+    r"[^\W\d]\w*", _FLAGS,
+).fullmatch
 
 try:
     if not TYPE_CHECKING:
@@ -47,6 +50,7 @@ except ImportError:
         ensure_ascii: bool,  # noqa: FBT001
         sort_keys: bool,  # noqa: FBT001
         trailing_comma: bool,  # noqa: FBT001
+        unquoted_keys: bool,  # noqa: FBT001
     ) -> Callable[[object], str]:
         """Make JSON encoder."""
         float_repr: Callable[[float], str] = float.__repr__
@@ -168,7 +172,12 @@ except ImportError:
                 else:
                     write(current_item_separator)
 
-                write(encode_string(key) + key_separator)
+                if unquoted_keys and _match_identifier(key):
+                    write(key)
+                else:
+                    write(encode_string(key))
+
+                write(key_separator)
                 write_value(value, write, current_indent)
 
             del markers[markerid]

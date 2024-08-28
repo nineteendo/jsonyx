@@ -171,6 +171,12 @@ class Encoder:
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma if indented, defaults to False
     :type trailing_comma: bool, optional
+    :param unquoted_keys: don't quote keys that are identifiers, defaults to
+                          False
+    :type unquoted_keys: bool, optional
+
+    .. versionchanged:: 2.0
+        Added *unquoted_keys*.
     """
 
     def __init__(
@@ -184,6 +190,7 @@ class Encoder:
         key_separator: str = ": ",
         sort_keys: bool = False,
         trailing_comma: bool = False,
+        unquoted_keys: bool = False,
     ) -> None:
         """Create a new JSON encoder."""
         allow_nan_and_infinity: bool = "nan_and_infinity" in allow
@@ -213,7 +220,7 @@ class Encoder:
         self._encoder: Callable[[object], str] = make_encoder(
             encode_decimal, indent, end, item_separator, key_separator,
             allow_nan_and_infinity, allow_surrogates, ensure_ascii, sort_keys,
-            trailing_comma,
+            trailing_comma, unquoted_keys,
         )
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 
@@ -465,6 +472,7 @@ def write(
     key_separator: str = ": ",
     sort_keys: bool = False,
     trailing_comma: bool = False,
+    unquoted_keys: bool = False,
 ) -> None:
     r"""Serialize a Python object to a JSON file.
 
@@ -489,6 +497,9 @@ def write(
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma if indented, defaults to False
     :type trailing_comma: bool, optional
+    :param unquoted_keys: don't quote keys that are identifiers, defaults to
+                          False
+    :type unquoted_keys: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
 
@@ -501,6 +512,9 @@ def write(
     ...     filename.read_text("utf_8")
     ...
     '["filesystem API"]\n'
+
+    .. versionchanged:: 2.0
+        Added *unquoted_keys*.
     """
     return Encoder(
         allow=allow,
@@ -511,6 +525,7 @@ def write(
         key_separator=key_separator,
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
+        unquoted_keys=unquoted_keys,
     ).write(obj, filename)
 
 
@@ -526,6 +541,7 @@ def dump(
     key_separator: str = ": ",
     sort_keys: bool = False,
     trailing_comma: bool = False,
+    unquoted_keys: bool = False,
 ) -> None:
     r"""Serialize a Python object to an open JSON file.
 
@@ -550,6 +566,9 @@ def dump(
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma if indented, defaults to False
     :type trailing_comma: bool, optional
+    :param unquoted_keys: don't quote keys that are identifiers, defaults to
+                          False
+    :type unquoted_keys: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
 
@@ -561,6 +580,9 @@ def dump(
     >>> json.dump(["streaming API"], io)
     >>> io.getvalue()
     '["streaming API"]\n'
+
+    .. versionchanged:: 2.0
+        Added *unquoted_keys*.
     """
     Encoder(
         allow=allow,
@@ -571,6 +593,7 @@ def dump(
         key_separator=key_separator,
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
+        unquoted_keys=unquoted_keys,
     ).dump(obj, fp)
 
 
@@ -585,6 +608,7 @@ def dumps(
     key_separator: str = ": ",
     sort_keys: bool = False,
     trailing_comma: bool = False,
+    unquoted_keys: bool = False,
 ) -> str:
     r"""Serialize a Python object to a JSON string.
 
@@ -607,6 +631,9 @@ def dumps(
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma if indented, defaults to False
     :type trailing_comma: bool, optional
+    :param unquoted_keys: don't quote keys that are identifiers, defaults to
+                          False
+    :type unquoted_keys: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
     :return: a JSON string
@@ -615,6 +642,9 @@ def dumps(
     >>> import jsonyx as json
     >>> json.dumps({"foo": ["bar", None, 1.0, 2]})
     '{"foo": ["bar", null, 1.0, 2]}\n'
+
+    .. versionchanged:: 2.0
+        Added *unquoted_keys*.
     """
     return Encoder(
         allow=allow,
@@ -625,6 +655,7 @@ def dumps(
         key_separator=key_separator,
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
+        unquoted_keys=unquoted_keys,
     ).dumps(obj)
 
 

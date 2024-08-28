@@ -44,6 +44,7 @@ typedef struct _PyEncoderObject {
     int ensure_ascii;
     int sort_keys;
     int trailing_comma;
+    int unquoted_keys;
 } PyEncoderObject;
 
 static Py_hash_t duplicatekey_hash(PyUnicodeObject *self) {
@@ -1238,19 +1239,19 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
                              "item_separator", "key_separator",
                              "allow_nan_and_infinity", "allow_surrogates",
                              "ensure_ascii", "sort_keys", "trailing_comma",
-                             NULL};
+                             "unquoted_keys", NULL};
 
     PyEncoderObject *s;
     PyObject *encode_decimal, *indent;
     PyObject *end, *item_separator, *key_separator;
     int allow_nan_and_infinity, allow_surrogates, ensure_ascii, sort_keys;
-    int trailing_comma;
+    int trailing_comma, unquoted_keys;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOUUUppppp:make_encoder", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOUUUpppppp:make_encoder", kwlist,
         &encode_decimal, &indent,
         &end, &item_separator, &key_separator,
         &allow_nan_and_infinity, &allow_surrogates, &ensure_ascii, &sort_keys,
-        &trailing_comma))
+        &trailing_comma, &unquoted_keys))
         return NULL;
 
     s = (PyEncoderObject *)type->tp_alloc(type, 0);
@@ -1276,6 +1277,7 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->ensure_ascii = ensure_ascii;
     s->sort_keys = sort_keys;
     s->trailing_comma = trailing_comma;
+    s->unquoted_keys = unquoted_keys;
     return (PyObject *)s;
 
 bail:
@@ -1437,6 +1439,30 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
 }
 
 static int
+is_identifier(PyObject *pystr)
+{
+    const void *str;
+    int kind;
+    Py_ssize_t len;
+
+    str = PyUnicode_DATA(pystr);
+    kind = PyUnicode_KIND(pystr);
+    len = PyUnicode_GET_LENGTH(pystr);
+
+    if (len == 0 || (!Py_UNICODE_ISALPHA(PyUnicode_READ(kind, str, 0)) && PyUnicode_READ(kind, str, 0) != '_')) {
+        return 0;
+    }
+
+    for (Py_ssize_t i = 1; i < len; i++) {
+        if (!Py_UNICODE_ISALNUM(PyUnicode_READ(kind, str, i)) && PyUnicode_READ(kind, str, i) != '_') {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+static int
 encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *writer, bool *first,
                          PyObject *key, PyObject *value,
                          PyObject *newline_indent,
@@ -1468,8 +1494,14 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
         }
     }
 
-    encoded = encoder_encode_string(s, keystr);
-    Py_DECREF(keystr);
+    if (s->unquoted_keys && is_identifier(keystr)) {
+        encoded = keystr;
+    }
+    else {
+        encoded = encoder_encode_string(s, keystr);
+        Py_DECREF(keystr);
+    }
+
     if (encoded == NULL) {
         return -1;
     }

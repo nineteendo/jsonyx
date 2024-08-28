@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Copyright (C) 2024 Nice Zombies
+# TODO(Nice Zombies): add --unquoted-keys
 """A command line utility to manipulate JSON files."""
 from __future__ import annotations
 

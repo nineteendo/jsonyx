@@ -5,6 +5,8 @@ v2.0.0 (unreleased)
 -------------------
 
 - Added ``jsonyx`` command line utility
+- Added *unquoted_keys* to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
+  :func:`jsonyx.dumps`, :func:`jsonyx.write`.
 - Added :data:`jsonyx.allow.UNQUOTED_KEYS`
 - Added :func:`jsonyx.apply_patch`
 - Added :func:`jsonyx.load_query_value`
@@ -22,7 +24,8 @@ v2.0.0 (unreleased)
 `v1.2.1 <https://pypi.org/project/jsonyx/1.2.1>`_
 -------------------------------------------------
 
-- Fixed `#2 <https://github.com/nineteendo/jsonyx/issues/2>`_: Middle of error context is truncated incorrectly
+- Fixed `#2 <https://github.com/nineteendo/jsonyx/issues/2>`_: Middle of error
+  context is truncated incorrectly
 
 `v1.2.0 <https://pypi.org/project/jsonyx/1.2.0>`_
 -------------------------------------------------

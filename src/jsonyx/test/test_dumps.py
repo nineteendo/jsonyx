@@ -1,5 +1,6 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON dumps tests."""
+# TODO(Nice Zombies): test unquoted_keys=True
 from __future__ import annotations
 
 __all__: list[str] = []

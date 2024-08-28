@@ -18,7 +18,7 @@ _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 _escape: Callable[[Callable[[Match[str]], str], str], str] = re.compile(
     r"['~]", _FLAGS,
 ).sub
-_match_key: Callable[[str], Match[str] | None] = re.compile(
+_match_identifier: Callable[[str], Match[str] | None] = re.compile(
     r"[^\W\d]\w*", _FLAGS,
 ).fullmatch
 
@@ -28,7 +28,10 @@ def _replace(match: Match[str]) -> str:
 
 
 def _encode_query_key(key: str) -> str:
-    return f".{key}" if _match_key(key) else f"['{_escape(_replace, key)}']"
+    if _match_identifier(key):
+        return f".{key}"
+
+    return f"['{_escape(_replace, key)}']"
 
 
 def _eq(a: Any, b: Any) -> bool:
