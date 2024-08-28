@@ -1,6 +1,6 @@
 [project]
 name = "jsonyx"
-dynamic = ["version"]
+version = "2.0.0"
 authors = [
   { name="Nice Zombies", email="nineteendo19d0@gmail.com" },
 ]
@@ -9,6 +9,7 @@ maintainers = [
 ]
 description = "Robust JSON manipulator for Python"
 readme = "README.md"
+license = {text = "GPL-3.0"}
 requires-python = ">=3.10"
 keywords = ["python", "json", "json-parser"]
 classifiers = [

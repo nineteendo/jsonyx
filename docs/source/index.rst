@@ -8,7 +8,8 @@ Welcome to jsonyx's Documentation!
 3.10+. It is written in pure Python with an optional C extension for better
 performance and no dependencies.
 
-Key Features:
+Key Features
+------------
 
 - JSON decoding, encoding and patching
 - Optionally supports these JSON deviations
