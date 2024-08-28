@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # Copyright (C) 2024 Nice Zombies
-# TODO(Nice Zombies): add --unquoted-keys
 """A command line utility to manipulate JSON files."""
 from __future__ import annotations
 
@@ -31,6 +30,7 @@ class _Namespace:
     output_filename: str | None
     sort_keys: bool
     trailing_comma: bool
+    unquoted_keys: bool
     use_decimal: bool
 
 
@@ -104,6 +104,12 @@ def _register(parser: ArgumentParser) -> None:
         const="\t",
         dest="indent",
         help="indent using tabs",
+    )
+    indent_group.add_argument(
+        "-u",
+        "--unquoted-keys",
+        action="store_true",
+        help="don't quote keys that are identifiers",
     )
     commands = parser.add_subparsers(dest="command", required=True)
 
@@ -184,6 +190,7 @@ def _run(args: _Namespace) -> None:
         key_separator=":" if args.compact else ": ",
         sort_keys=args.sort_keys,
         trailing_comma=args.trailing_comma,
+        unquoted_keys=args.unquoted_keys,
     )
     manipulator: Manipulator = Manipulator(
         allow=EVERYTHING if args.nonstrict else NOTHING,

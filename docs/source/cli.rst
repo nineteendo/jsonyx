@@ -102,3 +102,9 @@ Command Line Interface
 
     .. versionadded:: 1.2
         :option:`!-T`
+
+.. option:: -u, --unquoted-keys
+
+    Don't quote keys that are identifiers.
+
+    .. versionadded:: 2.0

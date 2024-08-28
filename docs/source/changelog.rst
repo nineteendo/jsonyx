@@ -4,9 +4,9 @@ Changelog
 v2.0.0 (unreleased)
 -------------------
 
-- Added ``jsonyx`` command line utility
+- Added the ``jsonyx`` command line utility
 - Added *unquoted_keys* to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
-  :func:`jsonyx.dumps`, :func:`jsonyx.write`.
+  :func:`jsonyx.dumps` and :func:`jsonyx.write`
 - Added :data:`jsonyx.allow.UNQUOTED_KEYS`
 - Added :func:`jsonyx.apply_patch`
 - Added :func:`jsonyx.load_query_value`
@@ -17,6 +17,7 @@ v2.0.0 (unreleased)
 - Added :option:`command`
 - Added :option:`old_input_filename`
 - Added :option:`patch_filename`
+- Added :option:`--unquoted-keys` and its alias :option:`-u`
 - Fixed typo in error message
 - Improved documentation
 - Removed :mod:`!jsonyx.tool`
