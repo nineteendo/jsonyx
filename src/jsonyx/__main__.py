@@ -20,7 +20,7 @@ from jsonyx.allow import EVERYTHING, NOTHING
 
 # pylint: disable-next=R0903
 class _Namespace:
-    command: Literal["format", "patch", "diff"]
+    command: Literal["format", "patch", "diff"] | None
     compact: bool
     ensure_ascii: bool
     indent: int | str | None
@@ -111,7 +111,7 @@ def _register(parser: ArgumentParser) -> None:
         action="store_true",
         help="don't quote keys that are identifiers",
     )
-    commands = parser.add_subparsers(dest="command", required=True)
+    commands = parser.add_subparsers(title="commands", dest="command")
 
     diff_parser = commands.add_parser(
         "diff",
@@ -237,10 +237,14 @@ def main() -> None:
         description="a command line utility to manipulate JSON files.",
     )
     _register(parser)
-    try:
-        _run(parser.parse_args(namespace=_Namespace()))
-    except BrokenPipeError as exc:
-        sys.exit(exc.errno)
+    args: _Namespace = parser.parse_args(namespace=_Namespace())
+    if not args.command:
+        parser.print_help()
+    else:
+        try:
+            _run(args)
+        except BrokenPipeError as exc:
+            sys.exit(exc.errno)
 
 
 if __name__ == "__main__":
