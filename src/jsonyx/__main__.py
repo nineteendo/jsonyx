@@ -105,7 +105,7 @@ def _register(parser: ArgumentParser) -> None:
         dest="indent",
         help="indent using tabs",
     )
-    indent_group.add_argument(
+    parent_parser.add_argument(
         "-u",
         "--unquoted-keys",
         action="store_true",
