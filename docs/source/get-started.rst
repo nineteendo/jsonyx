@@ -125,11 +125,11 @@ Using :mod:`jsonyx` from the shell to validate and pretty-print
 
 .. code-block:: shell-session
 
-    $ echo '{"json": "obj"}' | python -m jsonyx format --indent 4
+    $ echo '{"json": "obj"}' | jsonyx format --indent 4
     {
         "json": "obj"
     }
-    $ echo '{1.2: 3.4}' | python -m jsonyx format
+    $ echo '{1.2: 3.4}' | jsonyx format
       File "<stdin>", line 1, column 2
         {1.2: 3.4}
          ^

@@ -4,18 +4,17 @@ Changelog
 v2.0.0 (unreleased)
 -------------------
 
+- Added ``jsonyx`` command line utility
+- Added :data:`jsonyx.allow.UNQUOTED_KEYS`
+- Added :func:`jsonyx.apply_patch`
+- Added :func:`jsonyx.load_query_value`
+- Added :func:`jsonyx.make_patch`
+- Added :func:`jsonyx.run_filter_query`
+- Added :func:`jsonyx.run_select_query`
+- Added :func:`jsonyx.Manipulator`
 - Added :option:`command`
 - Added :option:`old_input_filename`
 - Added :option:`patch_filename`
-- Added :func:`jsonyx.apply_patch`
-- Added :func:`jsonyx.apply_patch`
-- Added :func:`jsonyx.apply_patch`
-- Added :func:`jsonyx.run_select_query`
-- Added :func:`jsonyx.run_filter_query`
-- Added :func:`jsonyx.load_query_value`
-- Added :func:`jsonyx.make_patch`
-- Added :func:`jsonyx.Manipulator`
-- Added :data:`jsonyx.allow.UNQUOTED_KEYS`
 - Fixed typo in error message
 - Improved documentation
 - Removed :mod:`!jsonyx.tool`
@@ -43,4 +42,4 @@ v2.0.0 (unreleased)
 `v1.1.0 <https://pypi.org/project/jsonyx/1.1.0>`_
 -------------------------------------------------
 
-- Allow ``python -m jsonyx`` instead of ``python -m jsonyx.tool``
+- Allowed ``python -m jsonyx`` instead of ``python -m jsonyx.tool``

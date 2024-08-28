@@ -2,7 +2,7 @@
 # TODO(Nice Zombies): add unquoted_keys=True
 # TODO(Nice Zombies): update changelog
 # TODO(Nice Zombies): write migration guide
-"""jsonyx module for JSON manipulation."""
+"""Robust JSON manipulator for Python."""
 from __future__ import annotations
 
 __all__: list[str] = [

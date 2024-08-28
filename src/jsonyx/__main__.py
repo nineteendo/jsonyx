@@ -3,7 +3,7 @@
 """A command line utility to manipulate JSON files."""
 from __future__ import annotations
 
-__all__: list[str] = []
+__all__: list[str] = ["main"]
 
 import sys
 from argparse import ArgumentParser
@@ -223,7 +223,8 @@ def _run(args: _Namespace) -> None:
         encoder.dump(output_obj)
 
 
-def _main() -> None:
+def main() -> None:
+    """Start jsonyx."""
     parser: ArgumentParser = ArgumentParser(
         description="a command line utility to manipulate JSON files.",
     )
@@ -235,4 +236,4 @@ def _main() -> None:
 
 
 if __name__ == "__main__":
-    _main()
+    main()
