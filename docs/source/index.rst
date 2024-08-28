@@ -60,6 +60,7 @@ to :ref:`installation` the project.
     :caption: Project Links
     :hidden:
 
-    PyPI project <https://pypi.org/project/jsonyx>
-    GitHub repo <https://github.com/nineteendo/jsonyx>
+    PyPI Package <https://pypi.org/project/jsonyx>
+    Conda Package <https://anaconda.org/conda-forge/jsonyx>
+    GitHub Repository <https://github.com/nineteendo/jsonyx>
     Issue Tracker <https://github.com/nineteendo/jsonyx/issues>

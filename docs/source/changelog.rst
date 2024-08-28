@@ -26,6 +26,7 @@ v2.0.0 (unreleased)
 `v1.2.1 <https://pypi.org/project/jsonyx/1.2.1>`_
 -------------------------------------------------
 
+- First conda release
 - Fixed `#2 <https://github.com/nineteendo/jsonyx/issues/2>`_: Middle of error
   context is truncated incorrectly
 
