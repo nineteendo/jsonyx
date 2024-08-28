@@ -32,7 +32,7 @@ _escape_ascii: Callable[[Callable[[Match[str]], str], str], str] = re.compile(
     r'["\\]|[^\x20-\x7e]', _FLAGS,
 ).sub
 _match_identifier: Callable[[str], Match[str] | None] = re.compile(
-    r"[^\W\d]\w*", _FLAGS,
+    r"\w+", _FLAGS,
 ).fullmatch
 
 try:
@@ -172,7 +172,11 @@ except ImportError:
                 else:
                     write(current_item_separator)
 
-                if unquoted_keys and _match_identifier(key):
+                if (
+                    unquoted_keys
+                    and _match_identifier(key)
+                    and not key[0].isnumeric()
+                ):
                     write(key)
                 else:
                     write(encode_string(key))

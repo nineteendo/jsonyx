@@ -189,7 +189,7 @@ def test_too_big_number(json: ModuleType, s: str) -> None:
 
     # UTF-8
     ('"$"', "$"),
-    ('"\u00a3"', "\xa3"),
+    ('"\xa3"', "\xa3"),
     ('"\u0418"', "\u0418"),
     ('"\u0939"', "\u0939"),
     ('"\u20ac"', "\u20ac"),
@@ -199,7 +199,7 @@ def test_too_big_number(json: ModuleType, s: str) -> None:
 
     # Surrogates
     ('"\ud800"', "\ud800"),
-    ('"\ud800\u0024"', "\ud800$"),
+    ('"\ud800$"', "\ud800$"),
     ('"\udf48"', "\udf48"),  # noqa: PT014
 
     # Backslash escapes
@@ -447,22 +447,22 @@ def test_invalid_object(
 
 @pytest.mark.parametrize(("s", "expected"), [
     # First character
-    ("{A: 0}", {"A": 0}),
-    ("{_: 0}", {"_": 0}),
-    ("{\u00aa: 0}", {"\u00aa": 0}),
-    ("{\u0800: 0}", {"\u0800": 0}),
-    ("{\U00010000: 0}", {"\U00010000": 0}),
+    ("{A: 0}", {"A": 0}),  # first 1 byte letter
+    ("{_: 0}", {"_": 0}),  # underscore
+    ("{\xaa: 0}", {"\xaa": 0}),  # first 2 byte letter
+    ("{\u0800: 0}", {"\u0800": 0}),  # first 3 byte letter
+    ("{\U00010000: 0}", {"\U00010000": 0}),  # first 4 byte letter
 
     # Remaining characters
-    ("{A0: 0}", {"A0": 0}),
-    ("{AA: 0}", {"AA": 0}),
-    ("{A_: 0}", {"A_": 0}),
-    ("{A\u00aa: 0}", {"A\u00aa": 0}),
-    ("{A\u00b2: 0}", {"A\u00b2": 0}),
-    ("{A\u0800: 0}", {"A\u0800": 0}),
-    ("{A\u0966: 0}", {"A\u0966": 0}),
-    ("{A\U00010000: 0}", {"A\U00010000": 0}),
-    ("{A\U00010107: 0}", {"A\U00010107": 0}),
+    ("{A0: 0}", {"A0": 0}),  # first 1 byte number
+    ("{AA: 0}", {"AA": 0}),  # first 1 byte letter
+    ("{A_: 0}", {"A_": 0}),  # underscore
+    ("{A\xaa: 0}", {"A\xaa": 0}),  # first 2 byte letter
+    ("{A\xb2: 0}", {"A\xb2": 0}),  # first 2 byte number
+    ("{A\u0800: 0}", {"A\u0800": 0}),  # first 3 byte letter
+    ("{A\u0966: 0}", {"A\u0966": 0}),  # first 3 byte number
+    ("{A\U00010000: 0}", {"A\U00010000": 0}),  # first 4 byte letter
+    ("{A\U00010107: 0}", {"A\U00010107": 0}),  # first 4 byte number
 ])
 def test_unquoted_keys(
     json: ModuleType, s: str, expected: dict[str, object],
@@ -473,22 +473,22 @@ def test_unquoted_keys(
 
 @pytest.mark.parametrize(("s", "end_colno"), [
     # First character
-    ("{A: 0}", 3),
-    ("{_: 0}", 3),
-    ("{\u00aa: 0}", 3),
-    ("{\u0800: 0}", 3),
-    ("{\U00010000: 0}", 3),
+    ("{A: 0}", 3),  # first 1 byte letter
+    ("{_: 0}", 3),  # underscore
+    ("{\xaa: 0}", 3),  # first 2 byte letter
+    ("{\u0800: 0}", 3),  # first 3 byte letter
+    ("{\U00010000: 0}", 3),  # first 4 byte letter
 
     # Remaining characters
-    ("{A0: 0}", 4),
-    ("{AA: 0}", 4),
-    ("{A_: 0}", 4),
-    ("{A\u00aa: 0}", 4),
-    ("{A\u00b2: 0}", 4),
-    ("{A\u0800: 0}", 4),
-    ("{A\u0966: 0}", 4),
-    ("{A\U00010000: 0}", 4),
-    ("{A\U00010107: 0}", 4),
+    ("{A0: 0}", 4),  # first 1 byte number
+    ("{AA: 0}", 4),  # first 1 byte letter
+    ("{A_: 0}", 4),  # underscore
+    ("{A\xaa: 0}", 4),  # first 2 byte letter
+    ("{A\xb2: 0}", 4),  # first 2 byte number
+    ("{A\u0800: 0}", 4),  # first 3 byte letter
+    ("{A\u0966: 0}", 4),  # first 3 byte number
+    ("{A\U00010000: 0}", 4),  # first 4 byte letter
+    ("{A\U00010107: 0}", 4),  # first 4 byte number
 ])
 def test_unquoted_keys_not_allowed(
     json: ModuleType, s: str, end_colno: int,

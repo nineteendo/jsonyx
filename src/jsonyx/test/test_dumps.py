@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON dumps tests."""
-# TODO(Nice Zombies): test unquoted_keys=True
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -128,7 +127,7 @@ def test_signaling_nan(json: ModuleType, num_type: type[Decimal]) -> None:
 
     # UTF-8
     ("$", '"$"'),
-    ("\xa3", '"\u00a3"'),
+    ("\xa3", '"\xa3"'),
     ("\u0418", '"\u0418"'),
     ("\u0939", '"\u0939"'),
     ("\u20ac", '"\u20ac"'),
@@ -224,6 +223,42 @@ def test_list_indent(
 def test_dict(json: ModuleType, obj: dict[str, object], expected: str) -> None:
     """Test list."""
     assert json.dumps(obj, end="") == expected
+
+
+@pytest.mark.parametrize(("key", "expected"), [
+    # First character
+    ("\x00", r'{"\u0000": 0}'),  # first 1 byte non-alphanumeric
+    ("0", '{"0": 0}'),  # first 1 byte number
+    ("A", "{A: 0}"),  # first 1 byte letter
+    ("_", "{_: 0}"),  # underscore
+    ("\x80", '{"\x80": 0}'),  # first 2 byte non-alphanumeric
+    ("\xaa", "{\xaa: 0}"),  # first 2 byte letter
+    ("\xb2", '{"\xb2": 0}'),  # first 2 byte number
+    ("\u0800", "{\u0800: 0}"),  # first 3 byte letter
+    ("\u0816", '{"\u0816": 0}'),  # first 3 non-alphanumeric
+    ("\u0966", '{"\u0966": 0}'),  # first 3 byte number
+    ("\U00010000", "{\U00010000: 0}"),  # first 4 byte letter
+    ("\U0001000c", '{"\U0001000c": 0}'),  # first 4 byte non-alphanumeric
+    ("\U00010107", '{"\U00010107": 0}'),  # first 4 byte number
+
+    # Remaining characters
+    ("A\x00", r'{"A\u0000": 0}'),  # first 1 byte non-alphanumeric
+    ("A0", "{A0: 0}"),  # first 1 byte number
+    ("AA", "{AA: 0}"),  # first 1 byte letter
+    ("A_", "{A_: 0}"),  # underscor
+    ("A\x80", '{"A\x80": 0}'),  # first 2 byte non-alphanumeric
+    ("A\xaa", "{A\xaa: 0}"),  # first 2 byte letter
+    ("A\xb2", "{A\xb2: 0}"),  # first 2 byte number
+    ("A\u0800", "{A\u0800: 0}"),  # first 3 byte letter
+    ("A\u0816", '{"A\u0816": 0}'),  # first 3 non-alphanumeric
+    ("A\u0966", "{A\u0966: 0}"),  # first 3 byte number
+    ("A\U00010000", "{A\U00010000: 0}"),  # first 4 byte letter
+    ("A\U0001000c", '{"A\U0001000c": 0}'),  # first 4 byte non-alphanumeric
+    ("A\U00010107", "{A\U00010107: 0}"),  # first 4 byte number
+])
+def test_unquoted_keys(json: ModuleType, key: object, expected: str) -> None:
+    """Test unquoted keys."""
+    assert json.dumps({key: 0}, end="", unquoted_keys=True) == expected
 
 
 @pytest.mark.parametrize(

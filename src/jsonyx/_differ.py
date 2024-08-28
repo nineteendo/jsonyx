@@ -19,7 +19,7 @@ _escape: Callable[[Callable[[Match[str]], str], str], str] = re.compile(
     r"['~]", _FLAGS,
 ).sub
 _match_identifier: Callable[[str], Match[str] | None] = re.compile(
-    r"[^\W\d]\w*", _FLAGS,
+    r"\w+", _FLAGS,
 ).fullmatch
 
 
@@ -28,7 +28,7 @@ def _replace(match: Match[str]) -> str:
 
 
 def _encode_query_key(key: str) -> str:
-    if _match_identifier(key):
+    if _match_identifier(key) and not key[0].isnumeric():
         return f".{key}"
 
     return f"['{_escape(_replace, key)}']"
