@@ -120,7 +120,7 @@ _skip_comments(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py_ssi
             PyUnicode_READ(kind, str, idx + 1) == '/')
         {
             idx += 2;
-            while (idx < len && (PyUnicode_READ(kind,str, idx) != '\n' || PyUnicode_READ(kind,str, idx) != '\r')) {
+            while (idx < len && PyUnicode_READ(kind,str, idx) != '\n' && PyUnicode_READ(kind,str, idx) != '\r') {
                 idx++;
             }
         }

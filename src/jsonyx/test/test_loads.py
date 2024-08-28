@@ -586,19 +586,21 @@ def test_whitespace(json: ModuleType, s: str) -> None:
 
 @pytest.mark.parametrize("s", [
     # One comment
-    "0//", "0//line comment", "0/*block comment*/",
+    "//\n0", "//\r0", "//\r\n0",
+    "//line comment\n0", "//line comment\r0", "//line comment\r\n0",
+    "/*block comment*/0",
 
     # Multiple comments
-    "0//comment 1\n//comment 2\n//comment 3",
-    "0//comment 1\r//comment 2\r//comment 3",
-    "0//comment 1\r\n//comment 2\r\n//comment 3",
-    "0/*comment 1*//*comment 2*//*comment 3*/",
+    "//comment 1\n//comment 2\n//comment 3\n0",
+    "//comment 1\r//comment 2\r//comment 3\n0",
+    "//comment 1\r\n//comment 2\r\n//comment 3\r\n0",
+    "/*comment 1*//*comment 2*//*comment 3*/0",
 
     # Whitespace
-    "0 //comment 1\n //comment 2\n //comment 3\n ",
-    "0 //comment 1\r //comment 2\r //comment 3\r ",
-    "0 //comment 1\r\n //comment 2\r\n //comment 3\r\n ",
-    "0 /*comment 1*/ /*comment 2*/ /*comment 3*/ ",
+    " //comment 1\n //comment 2\n //comment 3\n 0",
+    " //comment 1\r //comment 2\r //comment 3\r 0",
+    " //comment 1\r\n //comment 2\r\n //comment 3\r\n 0",
+    " /*comment 1*/ /*comment 2*/ /*comment 3*/ 0",
 ])
 def test_comments(json: ModuleType, s: str) -> None:
     """Test comments."""
@@ -608,20 +610,29 @@ def test_comments(json: ModuleType, s: str) -> None:
 def test_invalid_comment(json: ModuleType) -> None:
     """Test invalid comment."""
     with pytest.raises(json.JSONSyntaxError) as exc_info:
-        json.loads("0/*unterminated comment", allow=COMMENTS)
+        json.loads("/*unterminated comment", allow=COMMENTS)
 
-    _check_syntax_err(exc_info, "Unterminated comment", 2, 24)
+    _check_syntax_err(exc_info, "Unterminated comment", 1, 23)
 
 
-@pytest.mark.parametrize("s", [
-    "0//", "0//line comment", "0/*block comment*/", "0/*unterminated comment",
+@pytest.mark.parametrize(("s", "end_colno"), [
+    ("//\n0", 3),
+    ("//\r0", 3),
+    ("//\r\n0", 3),
+    ("//line comment\n0", 15),
+    ("//line comment\r0", 15),
+    ("//line comment\r\n0", 15),
+    ("/*block comment*/0", 18),
+    ("/*unterminated comment", 23),
 ])
-def test_comments_not_allowed(json: ModuleType, s: str) -> None:
+def test_comments_not_allowed(
+    json: ModuleType, s: str, end_colno: int,
+) -> None:
     """Test comments if not allowed."""
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(s)
 
-    _check_syntax_err(exc_info, "Comments are not allowed", 2, len(s) + 1)
+    _check_syntax_err(exc_info, "Comments are not allowed", 1, end_colno)
 
 
 def test_end_of_file(json: ModuleType) -> None:

@@ -18,6 +18,7 @@ v2.0.0 (unreleased)
 - Added :option:`old_input_filename`
 - Added :option:`patch_filename`
 - Added :option:`--unquoted-keys` and its alias :option:`-u`
+- Fixed comment detection
 - Fixed typo in error message
 - Improved documentation
 - Removed :mod:`!jsonyx.tool`
