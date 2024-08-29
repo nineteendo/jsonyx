@@ -5,6 +5,7 @@ from __future__ import annotations
 __all__: list[str] = ["make_encoder"]
 
 import re
+from collections.abc import Mapping, Sequence
 from decimal import Decimal
 from io import StringIO
 from math import inf, isfinite
@@ -98,18 +99,19 @@ except ImportError:
 
             return "NaN"
 
-        def write_list(
-            lst: list[object], write: Callable[[str], object], old_indent: str,
+        def write_sequence(
+            seq: Sequence[object], write: Callable[[str], object],
+            old_indent: str,
         ) -> None:
-            if not lst:
+            if not seq:
                 write("[]")
                 return
 
-            if (markerid := id(lst)) in markers:
+            if (markerid := id(seq)) in markers:
                 msg: str = "Unexpected circular reference"
                 raise ValueError(msg)
 
-            markers[markerid] = lst
+            markers[markerid] = seq
             write("[")
             current_indent: str = old_indent
             current_item_separator: str = item_separator
@@ -119,7 +121,7 @@ except ImportError:
                 write(current_indent)
 
             first: bool = True
-            for value in lst:
+            for value in seq:
                 if first:
                     first = False
                 else:
@@ -136,19 +138,19 @@ except ImportError:
 
             write("]")
 
-        def write_dict(
-            dct: dict[object, object], write: Callable[[str], object],
+        def write_mapping(
+            mapping: Mapping[object, object], write: Callable[[str], object],
             old_indent: str,
         ) -> None:
-            if not dct:
+            if not mapping:
                 write("{}")
                 return
 
-            if (markerid := id(dct)) in markers:
+            if (markerid := id(mapping)) in markers:
                 msg: str = "Unexpected circular reference"
                 raise ValueError(msg)
 
-            markers[markerid] = dct
+            markers[markerid] = mapping
             write("{")
             current_indent: str = old_indent
             current_item_separator: str = item_separator
@@ -158,7 +160,7 @@ except ImportError:
                 write(current_indent)
 
             first: bool = True
-            items: ItemsView[object, object] = dct.items()
+            items: ItemsView[object, object] = mapping.items()
             for key, value in sorted(items) if sort_keys else items:
                 if not isinstance(key, str):
                     msg = f"Keys must be str, not {type(key).__name__}"
@@ -204,10 +206,10 @@ except ImportError:
                     write(int_repr(obj))
             elif isinstance(obj, float):
                 write(floatstr(obj))
-            elif isinstance(obj, list):
-                write_list(obj, write, current_indent)  # type: ignore
-            elif isinstance(obj, dict):
-                write_dict(obj, write, current_indent)  # type: ignore
+            elif isinstance(obj, Sequence):
+                write_sequence(obj, write, current_indent)  # type: ignore
+            elif isinstance(obj, Mapping):
+                write_mapping(obj, write, current_indent)  # type: ignore
             elif isinstance(obj, Decimal):
                 write(encode_decimal(obj))
             else:

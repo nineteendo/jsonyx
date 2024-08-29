@@ -2,6 +2,7 @@
 """JSON manipulator."""
 # TODO(Nice Zombies): add error messages
 # TODO(Nice Zombies): raise JSONSyntaxError
+# TODO(Nice Zombies): update schema ID
 # TODO(Nice Zombies): write specification
 from __future__ import annotations
 

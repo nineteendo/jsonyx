@@ -1,5 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
-# TODO(Nice Zombies): update changelog
+# TODO(Nice Zombies): link to v2.0.0 in changelog
 """Robust JSON manipulator for Python."""
 from __future__ import annotations
 
@@ -257,8 +257,8 @@ class Encoder:
 
         >>> import jsonyx as json
         >>> encoder = json.Encoder()
-        >>> encoder.dump({"foo": ["bar", None, 1.0, 2]})
-        {"foo": ["bar", null, 1.0, 2]}
+        >>> encoder.dump(["foo", {"bar": ('baz', None, 1.0, 2)}])
+        ["foo", {"bar": ["baz", null, 1.0, 2]}]
         >>> from io import StringIO
         >>> io = StringIO()
         >>> encoder.dump(["streaming API"], io)
@@ -278,8 +278,8 @@ class Encoder:
         :rtype: str
 
         >>> import jsonyx as json
-        >>> json.Encoder().dumps({"foo": ["bar", None, 1.0, 2]})
-        '{"foo": ["bar", null, 1.0, 2]}\n'
+        >>> json.Encoder().dumps(["foo", {"bar": ('baz', None, 1.0, 2)}])
+        '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
         """
         return self._encoder(obj)
 
@@ -584,8 +584,8 @@ def dump(
     :raises ValueError: for invalid values
 
     >>> import jsonyx as json
-    >>> json.dump({"foo": ["bar", None, 1.0, 2]})
-    {"foo": ["bar", null, 1.0, 2]}
+    >>> json.dump(["foo", {"bar": ('baz', None, 1.0, 2)}])
+    ["foo", {"bar": ["baz", null, 1.0, 2]}]
     >>> from io import StringIO
     >>> io = StringIO()
     >>> json.dump(["streaming API"], io)
@@ -654,8 +654,8 @@ def dumps(
     :rtype: str
 
     >>> import jsonyx as json
-    >>> json.dumps({"foo": ["bar", None, 1.0, 2]})
-    '{"foo": ["bar", null, 1.0, 2]}\n'
+    >>> json.dumps(["foo", {"bar": ('baz', None, 1.0, 2)}])
+    '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
 
     .. seealso::
         :func:`jsonyx.Encoder.dumps`
