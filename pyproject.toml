@@ -7,7 +7,7 @@ authors = [
 maintainers = [
   { name="Nice Zombies", email="nineteendo19d0@gmail.com" },
 ]
-description = "Robust JSON manipulator for Python"
+description = "Configurable JSON manipulator for Python"
 readme = "README.md"
 license = {text = "GPL-3.0"}
 requires-python = ">=3.10"

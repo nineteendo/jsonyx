@@ -1,6 +1,6 @@
 # Copyright (C) 2024 Nice Zombies
 # TODO(Nice Zombies): link to v2.0.0 in changelog
-"""Robust JSON manipulator for Python."""
+"""Configurable JSON manipulator for Python."""
 from __future__ import annotations
 
 __all__: list[str] = [

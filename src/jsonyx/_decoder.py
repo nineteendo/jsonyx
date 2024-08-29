@@ -116,7 +116,7 @@ except ImportError:
 
         .. note::
             To retrieve the value of a duplicate key, you can
-            :ref:`use a multidict <use_multidict>`.
+            :ref:`use a multi dict <use_multidict>`.
         """
 
         __slots__: tuple[()] = ()

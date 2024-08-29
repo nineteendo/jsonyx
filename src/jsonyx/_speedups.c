@@ -66,7 +66,7 @@ static PyTypeObject PyDuplicateKeyType = {
         "\n"
         ".. note::\n"
         "    To retrieve the value of a duplicate key, you can\n"
-        "    :ref:`use a multidict <use_multidict>`..\n"
+        "    :ref:`use a multi dict <use_multidict>`.\n"
     ),
     .tp_hash = (hashfunc)duplicatekey_hash,
 };
@@ -1428,7 +1428,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
             return -1;
         return _steal_accumulate(writer, encoded);
     }
-    else if (PySequence_Check(obj)) {
+    else if (PyList_Check(obj) || PyTuple_Check(obj)) {
         if (_Py_EnterRecursiveCall(" while encoding a JSON object"))
             return -1;
         rv = encoder_listencode_sequence(s, markers, writer, obj, newline_indent);

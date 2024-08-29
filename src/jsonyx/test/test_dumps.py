@@ -5,6 +5,7 @@ from __future__ import annotations
 
 __all__: list[str] = []
 
+from collections import UserDict
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
@@ -194,9 +195,13 @@ def test_surrogate_escapes_not_allowed(json: ModuleType, obj: str) -> None:
     ([[]] * 3, "[[], [], []]"),
     ([{}] * 3, "[{}, {}, {}]"),
 ])  # type: ignore
-def test_list(json: ModuleType, obj: list[object], expected: str) -> None:
-    """Test list."""
-    assert json.dumps(obj, end="") == expected
+@pytest.mark.parametrize("seq_type", [list, tuple])
+def test_sequence(
+    json: ModuleType, seq: list[object],
+    seq_type: type[list[object] | tuple[object, ...]], expected: str,
+) -> None:
+    """Test sequence."""
+    assert json.dumps(seq_type(seq), end="") == expected
 
 
 @pytest.mark.parametrize(("indent", "expected"), [
@@ -221,9 +226,14 @@ def test_list_indent(
     # Multiple values
     ({"a": 1, "b": 2, "c": 3}, '{"a": 1, "b": 2, "c": 3}'),
 ])
-def test_dict(json: ModuleType, obj: dict[str, object], expected: str) -> None:
-    """Test list."""
-    assert json.dumps(obj, end="") == expected
+@pytest.mark.parametrize("mapping_type", [UserDict, dict])
+def test_mapping(
+    json: ModuleType, mapping: dict[str, object],
+    mapping_type: type[UserDict[str, object] | dict[str, object]],
+    expected: str,
+) -> None:
+    """Test mapping."""
+    assert json.dumps(mapping_type(mapping), end="") == expected
 
 
 @pytest.mark.parametrize(("key", "expected"), [

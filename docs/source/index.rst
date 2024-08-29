@@ -4,9 +4,9 @@ Welcome to jsonyx's Documentation!
 .. meta::
     :google-site-verification: Htf0oc5j12UrWDfRoSv2B_0mn4S_mJ2P7eFiE63wwgg
 
-:mod:`jsonyx` is a robust `JSON <http://json.org>`_ manipulator for Python
-3.10+. It is written in pure Python with an optional C extension for better
-performance and no dependencies.
+:mod:`jsonyx` is a configurable `JSON <http://json.org>`_ manipulator for
+Python 3.10+. It is written in pure Python with an optional C extension for
+better performance and no dependencies.
 
 Key Features
 ------------

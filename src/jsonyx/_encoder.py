@@ -206,7 +206,7 @@ except ImportError:
                     write(int_repr(obj))
             elif isinstance(obj, float):
                 write(floatstr(obj))
-            elif isinstance(obj, Sequence):
+            elif isinstance(obj, (list, tuple)):
                 write_sequence(obj, write, current_indent)  # type: ignore
             elif isinstance(obj, Mapping):
                 write_mapping(obj, write, current_indent)  # type: ignore
