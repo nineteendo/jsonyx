@@ -55,11 +55,15 @@ static PyTypeObject PyDuplicateKeyType = {
     PyVarObject_HEAD_INIT(NULL, 0)
     .tp_name = "jsonyx.DuplicateKey",
     .tp_doc = PyDoc_STR(
-        "Duplicate key.\n"
+        "A key that can appear multiple times in a dictionary.\n"
         "\n"
         ">>> import jsonyx as json\n"
-        ">>> {'key': 'value 1', json.DuplicateKey('key'): 'value 2'}\n"
+        ">>> {json.DuplicateKey('key'): 'value 1', json.DuplicateKey('key'): 'value 2'}\n"
         "{'key': 'value 1', 'key': 'value 2'}\n"
+        "\n"
+        ".. note::\n"
+        "    To retrieve the value of a duplicate key, you need to iterate over\n"
+        "    the items of the dictionary.\n"
     ),
     .tp_hash = (hashfunc)duplicatekey_hash,
 };

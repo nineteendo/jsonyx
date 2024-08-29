@@ -105,11 +105,15 @@ try:
         from _jsonyx import DuplicateKey
 except ImportError:
     class DuplicateKey(str):
-        """Duplicate key.
+        """A key that can appear multiple times in a dictionary.
 
         >>> import jsonyx as json
-        >>> {'key': 'value 1', json.DuplicateKey('key'): 'value 2'}
+        >>> {json.DuplicateKey('key'): 'value 1', json.DuplicateKey('key'): 'value 2'}
         {'key': 'value 1', 'key': 'value 2'}
+
+        .. note::
+            To retrieve the value of a duplicate key, you need to iterate over
+            the items of the dictionary.
         """
 
         __slots__: tuple[()] = ()
@@ -122,7 +126,7 @@ except ImportError:
 
 
 class JSONSyntaxError(SyntaxError):
-    """Invalid JSON syntax.
+    """Invalid JSON (query) syntax.
 
     :param msg: an error message
     :type msg: str
