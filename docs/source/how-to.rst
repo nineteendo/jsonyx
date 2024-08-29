@@ -1,6 +1,24 @@
 How-to Guide
 ============
 
+Removing duplicate keys
+-----------------------
+
+To remove duplicate keys, they must be converted to regular strings::
+
+    >>> import jsonyx as json
+    >>> import jsonyx.allow
+    >>> 
+    >>> def from_json(obj):
+    ...     if isinstance(obj, list):
+    ...         return [from_json(value) for value in obj]
+    ...     if isinstance(obj, dict):
+    ...         return {str(key): from_json(value) for key, value in obj.items()}
+    ...     return obj
+    ... 
+    >>> from_json(json.loads('{"key": "value 1", "key": "value 2"}', allow=jsonyx.allow.DUPLICATE_KEYS))
+    {'key': 'value 2'}
+
 Encoding custom objects
 -----------------------
 
