@@ -12,7 +12,7 @@ Key Features
 ------------
 
 - JSON decoding, encoding and patching
-- Optionally supports these JSON deviations using :mod:`jsonyx.allow`
+- Optionally supports these JSON deviations using :mod:`jsonyx.allow`:
 
     .. code-block:: javascript
 
@@ -27,7 +27,7 @@ Key Features
             "Unquoted keys": {key: "value"}
         }
 
-- Detailed error messages
+- Detailed error messages:
 
     .. code-block:: pytb
 

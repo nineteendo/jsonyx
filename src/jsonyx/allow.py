@@ -25,7 +25,7 @@ NOTHING: frozenset[str] = frozenset()
 #: 0
 COMMENTS: frozenset[str] = frozenset({"comments"})
 
-#: Allow duplicate keys in objects which are identifiers.
+#: Allow duplicate keys in objects.
 #:
 #: >>> import jsonyx as json
 #: >>> import jsonyx.allow
@@ -78,7 +78,7 @@ SURROGATES: frozenset[str] = frozenset({"surrogates"})
 #: [0]
 TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
 
-#: Allow unquoted keys in objects.
+#: Allow unquoted keys in objects which are identifiers.
 #:
 #: >>> import jsonyx as json
 #: >>> import jsonyx.allow
