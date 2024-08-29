@@ -105,6 +105,6 @@ Command Line Interface
 
 .. option:: -u, --unquoted-keys
 
-    Don't quote keys that are identifiers.
+    Don't quote keys which are identifiers.
 
     .. versionadded:: 2.0

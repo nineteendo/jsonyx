@@ -109,7 +109,7 @@ def _register(parser: ArgumentParser) -> None:
         "-u",
         "--unquoted-keys",
         action="store_true",
-        help="don't quote keys that are identifiers",
+        help="don't quote keys which are identifiers",
     )
     commands = parser.add_subparsers(title="commands", dest="command")
 

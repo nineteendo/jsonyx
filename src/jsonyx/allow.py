@@ -1,5 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
-"""Allow JSON deviations that don't require human intervention."""
+"""Allow JSON deviations not requiring human intervention."""
 from __future__ import annotations
 
 __all__: list[str] = [
@@ -25,7 +25,7 @@ NOTHING: frozenset[str] = frozenset()
 #: 0
 COMMENTS: frozenset[str] = frozenset({"comments"})
 
-#: Allow duplicate keys in objects.
+#: Allow duplicate keys in objects which are identifiers.
 #:
 #: >>> import jsonyx as json
 #: >>> import jsonyx.allow
@@ -43,7 +43,7 @@ DUPLICATE_KEYS: frozenset[str] = frozenset({"duplicate_keys"})
 #: [1, 2, 3]
 MISSING_COMMAS: frozenset[str] = frozenset({"missing_commas"})
 
-#: Allow NaN and infinity
+#: Allow NaN and (negative) infinity
 #:
 #: >>> import jsonyx as json
 #: >>> import jsonyx.allow
@@ -70,7 +70,7 @@ NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
 #:     the unicode error handler to "surrogatepass".
 SURROGATES: frozenset[str] = frozenset({"surrogates"})
 
-#: Allow trailing comma at the end of arrays and objects.
+#: Allow a trailing comma at the end of arrays and objects.
 #:
 #: >>> import jsonyx as json
 #: >>> import jsonyx.allow

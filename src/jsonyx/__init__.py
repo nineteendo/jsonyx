@@ -170,7 +170,7 @@ class Encoder:
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma if indented, defaults to False
     :type trailing_comma: bool, optional
-    :param unquoted_keys: don't quote keys that are identifiers, defaults to
+    :param unquoted_keys: don't quote keys which are identifiers, defaults to
                           False
     :type unquoted_keys: bool, optional
 
@@ -505,7 +505,7 @@ def write(
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma if indented, defaults to False
     :type trailing_comma: bool, optional
-    :param unquoted_keys: don't quote keys that are identifiers, defaults to
+    :param unquoted_keys: don't quote keys which are identifiers, defaults to
                           False
     :type unquoted_keys: bool, optional
     :raises TypeError: for unserializable values
@@ -577,7 +577,7 @@ def dump(
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma if indented, defaults to False
     :type trailing_comma: bool, optional
-    :param unquoted_keys: don't quote keys that are identifiers, defaults to
+    :param unquoted_keys: don't quote keys which are identifiers, defaults to
                           False
     :type unquoted_keys: bool, optional
     :raises TypeError: for unserializable values
@@ -645,7 +645,7 @@ def dumps(
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma if indented, defaults to False
     :type trailing_comma: bool, optional
-    :param unquoted_keys: don't quote keys that are identifiers, defaults to
+    :param unquoted_keys: don't quote keys which are identifiers, defaults to
                           False
     :type unquoted_keys: bool, optional
     :raises TypeError: for unserializable values
