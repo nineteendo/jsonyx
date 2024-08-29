@@ -39,7 +39,7 @@ Key Features
 - Dedicated functions for reading and writing files and pretty printing
 
 Check out the :doc:`get-started` section for further information, including how
-to :ref:`installation` the project.
+to :ref:`install <installation>` the project.
 
 .. toctree::
     :hidden:

@@ -65,8 +65,8 @@ static PyTypeObject PyDuplicateKeyType = {
         "duplicate keys.\n"
         "\n"
         ".. note::\n"
-        "    To retrieve the value of a duplicate key, you need to iterate over\n"
-        "    the items of the dictionary.\n"
+        "    To retrieve the value of a duplicate key, you can\n"
+        "    :ref:`use a multidict <use_multidict>`..\n"
     ),
     .tp_hash = (hashfunc)duplicatekey_hash,
 };

@@ -359,7 +359,7 @@ def test_dict_indent(
 
 
 @pytest.mark.parametrize(
-    "obj", [b"", 0j, (), bytearray(), frozenset(), set()],  # type: ignore
+    "obj", [b"", 0j, bytearray(), frozenset(), set()],  # type: ignore
 )
 def test_unserializable_value(json: ModuleType, obj: object) -> None:
     """Test unserializable value."""

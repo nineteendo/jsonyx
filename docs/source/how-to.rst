@@ -58,6 +58,8 @@ Removing duplicate keys
     >>> from_json(json.loads('{"key": "value 1", "key": "value 2"}', allow=jsonyx.allow.DUPLICATE_KEYS))
     {'key': 'value 2'}
 
+.. _use_multidict:
+
 Using :class:`multidict.MultiDict` instead of :class:`dict`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
