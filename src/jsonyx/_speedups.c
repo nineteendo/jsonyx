@@ -94,7 +94,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
 static int
 encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *writer, PyObject *obj, PyObject *newline_indent);
 static int
-encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *writer, PyObject *mapping, PyObject *newline_indent);
+encoder_listencode_dict(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *writer, PyObject *dct, PyObject *newline_indent);
 static void
 raise_errmsg(const char *msg, PyObject *filename, PyObject *s, Py_ssize_t start, Py_ssize_t end);
 static PyObject *
@@ -1435,10 +1435,10 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         _Py_LeaveRecursiveCall();
         return rv;
     }
-    else if (PyMapping_Check(obj)) {
+    else if (PyDict_Check(obj)) {
         if (_Py_EnterRecursiveCall(" while encoding a JSON object"))
             return -1;
-        rv = encoder_listencode_mapping(s, markers, writer, obj, newline_indent);
+        rv = encoder_listencode_dict(s, markers, writer, obj, newline_indent);
         _Py_LeaveRecursiveCall();
         return rv;
     }
@@ -1514,10 +1514,10 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
 }
 
 static int
-encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *writer,
-                           PyObject *mapping, PyObject *newline_indent)
+encoder_listencode_dict(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *writer,
+                        PyObject *dct, PyObject *newline_indent)
 {
-    /* Encode Python mapping to a JSON term */
+    /* Encode Python dict dct to a JSON term */
     PyObject *ident = NULL;
     PyObject *items = NULL;
     PyObject *key, *value;
@@ -1525,11 +1525,11 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
     PyObject *new_newline_indent = NULL;
     PyObject *separator_indent = NULL;
 
-    if (PyMapping_Size(mapping) == 0)  /* Fast path */
+    if (PyMapping_Size(dct) == 0)  /* Fast path */
         return _PyUnicodeWriter_WriteASCIIString(writer, "{}", 2);
 
     int has_key;
-    ident = PyLong_FromVoidPtr(mapping);
+    ident = PyLong_FromVoidPtr(dct);
     if (ident == NULL)
         goto bail;
     has_key = PyDict_Contains(markers, ident);
@@ -1538,7 +1538,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
             PyErr_SetString(PyExc_ValueError, "Unexpected circular reference");
         goto bail;
     }
-    if (PyDict_SetItem(markers, ident, mapping)) {
+    if (PyDict_SetItem(markers, ident, dct)) {
         goto bail;
     }
 
@@ -1562,8 +1562,8 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
         }
     }
 
-    if (s->sort_keys || !PyDict_CheckExact(mapping)) {
-        items = PyMapping_Items(mapping);
+    if (s->sort_keys || !PyDict_CheckExact(dct)) {
+        items = PyMapping_Items(dct);
         if (items == NULL || (s->sort_keys && PyList_Sort(items) < 0))
             goto bail;
 
@@ -1586,7 +1586,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
 
     } else {
         Py_ssize_t pos = 0;
-        while (PyDict_Next(mapping, &pos, &key, &value)) {
+        while (PyDict_Next(dct, &pos, &key, &value)) {
             if (encoder_encode_key_value(s, markers, writer, &first, key, value,
                                          new_newline_indent,
                                          current_item_separator) < 0)

@@ -5,7 +5,6 @@ from __future__ import annotations
 __all__: list[str] = ["make_encoder"]
 
 import re
-from collections.abc import Mapping, Sequence
 from decimal import Decimal
 from io import StringIO
 from math import inf, isfinite
@@ -13,7 +12,7 @@ from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, ItemsView
+    from collections.abc import Callable, ItemsView, Sequence
 
 _ESCAPE_DCT: dict[str, str] = {chr(i): f"\\u{i:04x}" for i in range(0x20)} | {
     '"': '\\"',
@@ -138,19 +137,19 @@ except ImportError:
 
             write("]")
 
-        def write_mapping(
-            mapping: Mapping[object, object], write: Callable[[str], object],
+        def write_dict(
+            dct: dict[object, object], write: Callable[[str], object],
             old_indent: str,
         ) -> None:
-            if not mapping:
+            if not dct:
                 write("{}")
                 return
 
-            if (markerid := id(mapping)) in markers:
+            if (markerid := id(dct)) in markers:
                 msg: str = "Unexpected circular reference"
                 raise ValueError(msg)
 
-            markers[markerid] = mapping
+            markers[markerid] = dct
             write("{")
             current_indent: str = old_indent
             current_item_separator: str = item_separator
@@ -160,7 +159,7 @@ except ImportError:
                 write(current_indent)
 
             first: bool = True
-            items: ItemsView[object, object] = mapping.items()
+            items: ItemsView[object, object] = dct.items()
             for key, value in sorted(items) if sort_keys else items:
                 if not isinstance(key, str):
                     msg = f"Keys must be str, not {type(key).__name__}"
@@ -208,8 +207,8 @@ except ImportError:
                 write(floatstr(obj))
             elif isinstance(obj, (list, tuple)):
                 write_sequence(obj, write, current_indent)  # type: ignore
-            elif isinstance(obj, Mapping):
-                write_mapping(obj, write, current_indent)  # type: ignore
+            elif isinstance(obj, dict):
+                write_dict(obj, write, current_indent)  # type: ignore
             elif isinstance(obj, Decimal):
                 write(encode_decimal(obj))
             else:

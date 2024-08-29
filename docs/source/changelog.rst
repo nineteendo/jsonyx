@@ -21,7 +21,7 @@ v2.0.0 (unreleased)
 - Fixed comment detection
 - Fixed typo in error message
 - Improved documentation
-- Made mappings and tuples JSON serializable
+- Made tuples JSON serializable
 - Removed :mod:`!jsonyx.tool`
 
 `v1.2.1 <https://pypi.org/project/jsonyx/1.2.1>`_
