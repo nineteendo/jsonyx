@@ -4,7 +4,7 @@ How-to Guide
 Specializing JSON object encoding
 ---------------------------------
 
-To specialize JSON object encoding, you can write a converter function::
+::
 
     >>> import jsonyx as json
     >>> from collections.abc import Mapping, Sequence
@@ -24,7 +24,7 @@ To specialize JSON object encoding, you can write a converter function::
 Specializing JSON object decoding
 ---------------------------------
 
-To specialize JSON object decoding, you can write a converter function::
+::
 
     >>> import jsonyx as json
     >>> 
@@ -43,7 +43,7 @@ To specialize JSON object decoding, you can write a converter function::
 Removing duplicate keys
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-To remove duplicate keys, they can be converted to regular strings::
+::
 
     >>> import jsonyx as json
     >>> import jsonyx.allow
