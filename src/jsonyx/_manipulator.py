@@ -146,7 +146,7 @@ def _scan_query_string(s: str, end: int) -> tuple[str, int]:
 
 
 class Manipulator:
-    """JSON manipulator.
+    """A configurable JSON manipulator.
 
     :param allow: the allowed JSON deviations, defaults to NOTHING
     :type allow: Container[str], optional

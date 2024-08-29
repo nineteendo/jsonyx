@@ -54,7 +54,7 @@ if TYPE_CHECKING:
 
 
 class Decoder:
-    """JSON decoder.
+    """A configurable JSON decoder.
 
     :param allow: the allowed JSON deviations, defaults to NOTHING
     :type allow: Container[str], optional
@@ -151,7 +151,7 @@ class Decoder:
 
 
 class Encoder:
-    r"""JSON encoder.
+    r"""A configurable JSON encoder.
 
     :param allow: the allowed JSON deviations, defaults to NOTHING
     :type allow: Container[str], optional
@@ -396,6 +396,9 @@ def read(
     ...     json.Decoder().read(filename)
     ...
     ['filesystem API']
+
+    .. seealso::
+        :func:`jsonyx.Decoder.read`
     """
     return Decoder(allow=allow, use_decimal=use_decimal).read(filename)
 
@@ -426,6 +429,9 @@ def load(
     >>> io = StringIO('["streaming API"]')
     >>> json.load(io)
     ['streaming API']
+
+    .. seealso::
+        :func:`jsonyx.Decoder.read`
     """
     return Decoder(allow=allow, use_decimal=use_decimal).load(fp, root=root)
 
@@ -453,6 +459,9 @@ def loads(
 
     >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
     {'foo': ['bar', None, 1.0, 2]}
+
+    .. seealso::
+        :func:`jsonyx.Decoder.read`
     """
     return Decoder(allow=allow, use_decimal=use_decimal).loads(
         s, filename=filename,
@@ -511,6 +520,9 @@ def write(
     ...     filename.read_text("utf_8")
     ...
     '["filesystem API"]\n'
+
+    .. seealso::
+        :func:`jsonyx.Encoder.write`
 
     .. versionchanged:: 2.0
         Added *unquoted_keys*.
@@ -580,6 +592,9 @@ def dump(
     >>> io.getvalue()
     '["streaming API"]\n'
 
+    .. seealso::
+        :func:`jsonyx.Encoder.dump`
+
     .. versionchanged:: 2.0
         Added *unquoted_keys*.
     """
@@ -642,6 +657,9 @@ def dumps(
     >>> json.dumps({"foo": ["bar", None, 1.0, 2]})
     '{"foo": ["bar", null, 1.0, 2]}\n'
 
+    .. seealso::
+        :func:`jsonyx.Encoder.dumps`
+
     .. versionchanged:: 2.0
         Added *unquoted_keys*.
     """
@@ -686,6 +704,9 @@ def apply_patch(
     >>> json.apply_patch([1, 2, 3], {"op": "clear"})
     []
 
+    .. seealso::
+        :func:`jsonyx.Manipulator.apply_patch`
+
     .. versionadded:: 2.0
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).apply_patch(
@@ -729,6 +750,9 @@ def run_select_query(
     >>> root[0]
     [1, 2, 3, None, None, None]
 
+    .. seealso::
+        :func:`jsonyx.Manipulator.run_select_query`
+
     .. versionadded:: 2.0
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).run_select_query(
@@ -765,6 +789,9 @@ def run_filter_query(
     >>> node = [None], 0
     >>> assert json.run_filter_query(node, "@==null")
 
+    .. seealso::
+        :func:`jsonyx.Manipulator.run_filter_query`
+
     .. versionadded:: 2.0
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).run_filter_query(
@@ -793,6 +820,9 @@ def load_query_value(
     >>> import jsonyx as json
     >>> json.load_query_value("'~'foo'")
     "'foo"
+
+    .. seealso::
+        :func:`jsonyx.Manipulator.load_query_value`
 
     .. versionadded:: 2.0
     """

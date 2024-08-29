@@ -1,5 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
-"""Allow JSON deviations."""
+"""Allow JSON deviations that don't require human intervention."""
 from __future__ import annotations
 
 __all__: list[str] = [
@@ -34,7 +34,7 @@ COMMENTS: frozenset[str] = frozenset({"comments"})
 #: >>> json.loads('{"key": "value 1", "key": "value 2"}', allow=jsonyx.allow.DUPLICATE_KEYS)
 #: {'key': 'value 1', 'key': 'value 2'}
 #:
-#: See :class:`jsonyx.DuplicateKey` for more information about duplicate keys.
+#: See :class:`jsonyx.DuplicateKey` for more information.
 DUPLICATE_KEYS: frozenset[str] = frozenset({"duplicate_keys"})
 
 #: Allow missing commas
