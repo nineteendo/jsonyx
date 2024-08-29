@@ -744,7 +744,7 @@ def run_select_query(
     >>> import jsonyx as json
     >>> root = [[1, 2, 3, 4, 5, 6]]
     >>> node = root, 0
-    >>> for target, key in json.run_select_query(node, "$[@>3]"):
+    >>> for target, key in json.run_select_query(node, "$[@ > 3]"):
     ...     target[key] = None
     ...
     >>> root[0]
@@ -787,7 +787,7 @@ def run_filter_query(
 
     >>> import jsonyx as json
     >>> node = [None], 0
-    >>> assert json.run_filter_query(node, "@==null")
+    >>> assert json.run_filter_query(node, "@ == null")
 
     .. seealso::
         :func:`jsonyx.Manipulator.run_filter_query`

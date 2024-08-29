@@ -601,7 +601,7 @@ class Manipulator:
         >>> import jsonyx as json
         >>> root = [[1, 2, 3, 4, 5, 6]]
         >>> node = root, 0
-        >>> for target, key in json.Manipulator().run_select_query(node, "$[@>3]"):
+        >>> for target, key in json.Manipulator().run_select_query(node, "$[@ > 3]"):
         ...     target[key] = None
         ...
         >>> root[0]
@@ -642,7 +642,7 @@ class Manipulator:
 
         >>> import jsonyx as json
         >>> node = [None], 0
-        >>> assert json.Manipulator().run_filter_query(node, "@==null")
+        >>> assert json.Manipulator().run_filter_query(node, "@ == null")
         """
         if isinstance(nodes, tuple):
             nodes = [nodes]
