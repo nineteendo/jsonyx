@@ -7,7 +7,7 @@ Installation
 ------------
 
 To use :mod:`jsonyx`, first install it using pip or
-`conda <https://docs.conda.io>`_:
+`conda <https://conda.org>`_:
 
 .. code-block:: console
 
