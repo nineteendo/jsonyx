@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON dumps tests."""
-# TODO(Nice Zombies): test ensure_ascii with unquoted_keys
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -228,19 +227,12 @@ def test_dict(json: ModuleType, obj: dict[str, object], expected: str) -> None:
 
 @pytest.mark.parametrize(("key", "expected"), [
     # First character
-    ("\x00", r'{"\u0000": 0}'),
-    (" ", '{" ": 0}'),
-    ("!", '{"!": 0}'),
-    ("$", '{"$": 0}'),
-    ("0", '{"0": 0}'),
+    ("\xb2", '{"\xb2": 0}'),
     ("\u0300", '{"\u0300": 0}'),
     ("\u037a", '{"\u037a": 0}'),
+    ("\u0488", '{"\u0488": 0}'),
 
     # Remaining characters
-    ("A\x00", r'{"A\u0000": 0}'),
-    ("A ", '{"A ": 0}'),
-    ("A!", '{"A!": 0}'),
-    ("A$", '{"A$": 0}'),
     ("A\xb2", '{"A\xb2": 0}'),
     ("A\u037a", '{"A\u037a": 0}'),
     ("A\u0488", '{"A\u0488": 0}'),
@@ -252,22 +244,89 @@ def test_quoted_keys(json: ModuleType, key: object, expected: str) -> None:
 
 @pytest.mark.parametrize(("key", "expected"), [
     # First character
-    ("A", "{A: 0}"),
-    ("_", "{_: 0}"),
+    ("\xb2", r'{"\u00b2": 0}'),
+    ("\u0300", r'{"\u0300": 0}'),
+    ("\u037a", r'{"\u037a": 0}'),
+    ("\u0488", r'{"\u0488": 0}'),
+    ("\u16ee", r'{"\u16ee": 0}'),
+    ("\u1885", r'{"\u1885": 0}'),
+    ("\u2118", r'{"\u2118": 0}'),
+
+    # Remaining characters
+    ("A\xb2", r'{"A\u00b2": 0}'),
+    ("A\u0300", r'{"A\u0300": 0}'),
+    ("A\u037a", r'{"A\u037a": 0}'),
+    ("A\u0488", r'{"A\u0488": 0}'),
+    ("A\u2118", r'{"A\u2118": 0}'),
+])
+def test_quoted_keys_ensure_ascii(
+    json: ModuleType, key: object, expected: str,
+) -> None:
+    """Test quoted keys with ensure_ascii."""
+    assert json.dumps(
+        {key: 0}, end="", ensure_ascii=True, unquoted_keys=True,
+    ) == expected
+
+
+@pytest.mark.parametrize(("key", "expected"), [
+    # First character
+    ("\x00", r'{"\u0000": 0}'),
+    (" ", '{" ": 0}'),
+    ("!", '{"!": 0}'),
+    ("$", '{"$": 0}'),
+    ("0", '{"0": 0}'),
+
+    # Remaining characters
+    ("A\x00", r'{"A\u0000": 0}'),
+    ("A ", '{"A ": 0}'),
+    ("A!", '{"A!": 0}'),
+    ("A$", '{"A$": 0}'),
+])
+@pytest.mark.parametrize("ensure_ascii", [True, False])
+def test_quoted_ascii_keys(
+    json: ModuleType, key: object, ensure_ascii: bool,  # noqa: FBT001
+    expected: str,
+) -> None:
+    """Test quoted ascii keys."""
+    assert json.dumps(
+        {key: 0}, end="", ensure_ascii=ensure_ascii, unquoted_keys=True,
+    ) == expected
+
+
+@pytest.mark.parametrize(("key", "expected"), [
+    # First character
     ("\u16ee", "{\u16ee: 0}"),
     ("\u1885", "{\u1885: 0}"),
     ("\u2118", "{\u2118: 0}"),
 
     # Remaining characters
-    ("A0", "{A0: 0}"),
-    ("AA", "{AA: 0}"),
-    ("A_", "{A_: 0}"),
     ("A\u0300", "{A\u0300: 0}"),
     ("A\u2118", "{A\u2118: 0}"),
 ])
 def test_unquoted_keys(json: ModuleType, key: object, expected: str) -> None:
     """Test unquoted keys."""
     assert json.dumps({key: 0}, end="", unquoted_keys=True) == expected
+
+
+@pytest.mark.parametrize(("key", "expected"), [
+    # First character
+    ("A", "{A: 0}"),
+    ("_", "{_: 0}"),
+
+    # Remaining characters
+    ("A0", "{A0: 0}"),
+    ("AA", "{AA: 0}"),
+    ("A_", "{A_: 0}"),
+])
+@pytest.mark.parametrize("ensure_ascii", [True, False])
+def test_unquoted_ascii_keys(
+    json: ModuleType, key: object, ensure_ascii: bool,  # noqa: FBT001
+    expected: str,
+) -> None:
+    """Test unquoted ascii keys."""
+    assert json.dumps(
+        {key: 0}, end="", ensure_ascii=ensure_ascii, unquoted_keys=True,
+    ) == expected
 
 
 @pytest.mark.parametrize(
