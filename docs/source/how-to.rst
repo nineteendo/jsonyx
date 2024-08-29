@@ -57,3 +57,22 @@ Removing duplicate keys
     ... 
     >>> from_json(json.loads('{"key": "value 1", "key": "value 2"}', allow=jsonyx.allow.DUPLICATE_KEYS))
     {'key': 'value 2'}
+
+Using :class:`multidict.MultiDict` instead of :class:`dict`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    >>> import jsonyx as json
+    >>> import jsonyx.allow
+    >>> from multidict import MultiDict
+    >>> 
+    >>> def from_json(obj):
+    ...     if isinstance(obj, list):
+    ...         return [from_json(value) for value in obj]
+    ...     if isinstance(obj, dict):
+    ...         return MultiDict({key: from_json(value) for key, value in obj.items()})
+    ...     return obj
+    ... 
+    >>> from_json(json.loads('{"key": "value 1", "key": "value 2"}', allow=jsonyx.allow.DUPLICATE_KEYS))
+    <MultiDict('key': 'value 1', 'key': 'value 2')>
