@@ -30,9 +30,6 @@ _UNESCAPE: dict[str, str] = {
 _match_chunk: Callable[[str, int], Match[str] | None] = re.compile(
     r'[^"\\\x00-\x1f]+', _FLAGS,
 ).match
-_match_unquoted_key: Callable[[str, int], Match[str] | None] = re.compile(
-    r"\w+", _FLAGS,
-).match
 _match_line_end: Callable[[str, int], Match[str] | None] = re.compile(
     r"[^\n\r]+", _FLAGS,
 ).match
@@ -42,6 +39,9 @@ _match_number: Callable[[str, int], Match[str] | None] = re.compile(
     (\.\d+)?         # [frac]
     ([eE][-+]?\d+)?  # [exp]
     """, _FLAGS,
+).match
+_match_unquoted_key: Callable[[str, int], Match[str] | None] = re.compile(
+    r"(?:\w+|[^\x00-\x7f]+)+", _FLAGS,
 ).match
 _match_whitespace: Callable[[str, int], Match[str] | None] = re.compile(
     r"[ \t\n\r]+", _FLAGS,
@@ -338,7 +338,7 @@ except ImportError:
                     key, end = scan_string(filename, s, end + 1)
                 elif (
                     match := _match_unquoted_key(s, end)
-                ) and not nextchar.isnumeric():
+                ) and match.group().isidentifier():
                     end = match.end()
                     if not allow_unquoted_keys:
                         msg = "Unquoted keys are not allowed"

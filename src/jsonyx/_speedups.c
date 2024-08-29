@@ -654,21 +654,31 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
             if (PyUnicode_READ(kind, str, idx) == '"') {
                 key = scanstring_unicode(pyfilename, pystr, idx + 1, s->allow_surrogates, &next_idx);
             }
-            else if (!Py_UNICODE_ISALPHA(PyUnicode_READ(kind, str, idx)) && PyUnicode_READ(kind, str, idx) != '_') {
+            else if (!Py_UNICODE_ISALPHA(PyUnicode_READ(kind, str, idx))
+                     && PyUnicode_READ(kind, str, idx) != '_'
+                     && PyUnicode_READ(kind, str, idx) <= '\x7f')
+            {
                 raise_errmsg("Expecting string", pyfilename, pystr, idx, 0);
                 goto bail;
             }
             else {
                 next_idx = idx;
                 next_idx++;
-                while (next_idx <= end_idx && (Py_UNICODE_ISALNUM(PyUnicode_READ(kind, str, next_idx)) || PyUnicode_READ(kind, str, next_idx) == '_')) {
+                while (next_idx <= end_idx && (Py_UNICODE_ISALNUM(PyUnicode_READ(kind, str, next_idx))
+                                               || PyUnicode_READ(kind, str, next_idx) == '_'
+                                               || PyUnicode_READ(kind, str, next_idx) > '\x7f'))
+                {
                     next_idx++;
+                }
+                key = PyUnicode_Substring(pystr, idx, next_idx);
+                if (!PyUnicode_IsIdentifier(key)) {
+                    raise_errmsg("Expecting string", pyfilename, pystr, idx, 0);
+                    goto bail;
                 }
                 if (!s->allow_unquoted_keys) {
                     raise_errmsg("Unquoted keys are not allowed", pyfilename, pystr, idx, next_idx);
                     goto bail;
                 }
-                key = PyUnicode_Substring(pystr, idx, next_idx);
             }
             if (key == NULL)
                 goto bail;
@@ -1439,30 +1449,6 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
 }
 
 static int
-is_identifier(PyObject *pystr)
-{
-    const void *str;
-    int kind;
-    Py_ssize_t len;
-
-    str = PyUnicode_DATA(pystr);
-    kind = PyUnicode_KIND(pystr);
-    len = PyUnicode_GET_LENGTH(pystr);
-
-    if (len == 0 || (!Py_UNICODE_ISALPHA(PyUnicode_READ(kind, str, 0)) && PyUnicode_READ(kind, str, 0) != '_')) {
-        return 0;
-    }
-
-    for (Py_ssize_t i = 1; i < len; i++) {
-        if (!Py_UNICODE_ISALNUM(PyUnicode_READ(kind, str, i)) && PyUnicode_READ(kind, str, i) != '_') {
-            return 0;
-        }
-    }
-
-    return 1;
-}
-
-static int
 encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *writer, bool *first,
                          PyObject *key, PyObject *value,
                          PyObject *newline_indent,
@@ -1494,7 +1480,9 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
         }
     }
 
-    if (s->unquoted_keys && is_identifier(keystr)) {
+    if (s->unquoted_keys && PyUnicode_IsIdentifier(keystr) && (!s->ensure_ascii
+                                                               || PyUnicode_IS_ASCII(key)))
+    {
         encoded = keystr;
     }
     else {

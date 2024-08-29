@@ -447,22 +447,18 @@ def test_invalid_object(
 
 @pytest.mark.parametrize(("s", "expected"), [
     # First character
-    ("{A: 0}", {"A": 0}),  # first 1 byte letter
-    ("{_: 0}", {"_": 0}),  # underscore
-    ("{\xaa: 0}", {"\xaa": 0}),  # first 2 byte letter
-    ("{\u0800: 0}", {"\u0800": 0}),  # first 3 byte letter
-    ("{\U00010000: 0}", {"\U00010000": 0}),  # first 4 byte letter
+    ("{A: 0}", {"A": 0}),
+    ("{_: 0}", {"_": 0}),
+    ("{\u16ee: 0}", {"\u16ee": 0}),
+    ("{\u1885: 0}", {"\u1885": 0}),
+    ("{\u2118: 0}", {"\u2118": 0}),
 
     # Remaining characters
-    ("{A0: 0}", {"A0": 0}),  # first 1 byte number
-    ("{AA: 0}", {"AA": 0}),  # first 1 byte letter
-    ("{A_: 0}", {"A_": 0}),  # underscore
-    ("{A\xaa: 0}", {"A\xaa": 0}),  # first 2 byte letter
-    ("{A\xb2: 0}", {"A\xb2": 0}),  # first 2 byte number
-    ("{A\u0800: 0}", {"A\u0800": 0}),  # first 3 byte letter
-    ("{A\u0966: 0}", {"A\u0966": 0}),  # first 3 byte number
-    ("{A\U00010000: 0}", {"A\U00010000": 0}),  # first 4 byte letter
-    ("{A\U00010107: 0}", {"A\U00010107": 0}),  # first 4 byte number
+    ("{A0: 0}", {"A0": 0}),
+    ("{AA: 0}", {"AA": 0}),
+    ("{A_: 0}", {"A_": 0}),
+    ("{A\u0300: 0}", {"A\u0300": 0}),
+    ("{A\u2118: 0}", {"A\u2118": 0}),
 ])
 def test_unquoted_keys(
     json: ModuleType, s: str, expected: dict[str, object],
@@ -473,22 +469,18 @@ def test_unquoted_keys(
 
 @pytest.mark.parametrize(("s", "end_colno"), [
     # First character
-    ("{A: 0}", 3),  # first 1 byte letter
-    ("{_: 0}", 3),  # underscore
-    ("{\xaa: 0}", 3),  # first 2 byte letter
-    ("{\u0800: 0}", 3),  # first 3 byte letter
-    ("{\U00010000: 0}", 3),  # first 4 byte letter
+    ("{A: 0}", 3),
+    ("{_: 0}", 3),
+    ("{\u16ee: 0}", 3),
+    ("{\u1885: 0}", 3),
+    ("{\u2118: 0}", 3),
 
     # Remaining characters
-    ("{A0: 0}", 4),  # first 1 byte number
-    ("{AA: 0}", 4),  # first 1 byte letter
-    ("{A_: 0}", 4),  # underscore
-    ("{A\xaa: 0}", 4),  # first 2 byte letter
-    ("{A\xb2: 0}", 4),  # first 2 byte number
-    ("{A\u0800: 0}", 4),  # first 3 byte letter
-    ("{A\u0966: 0}", 4),  # first 3 byte number
-    ("{A\U00010000: 0}", 4),  # first 4 byte letter
-    ("{A\U00010107: 0}", 4),  # first 4 byte number
+    ("{A0: 0}", 4),
+    ("{AA: 0}", 4),
+    ("{A_: 0}", 4),
+    ("{A\u0300: 0}", 4),
+    ("{A\u2118: 0}", 4),
 ])
 def test_unquoted_keys_not_allowed(
     json: ModuleType, s: str, end_colno: int,

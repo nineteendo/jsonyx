@@ -34,9 +34,6 @@ _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 _match_idx: Callable[[str, int], Match[str] | None] = re.compile(
     r"-?0|-?[1-9]\d*", _FLAGS,
 ).match
-_match_key: Callable[[str, int], Match[str] | None] = re.compile(
-    r"[^\W\d]\w*", _FLAGS,
-).match
 _match_number: Callable[[str, int], Match[str] | None] = re.compile(
     r"""
     (-?0|-?[1-9]\d*) # integer
@@ -54,6 +51,9 @@ _match_slice: Callable[[str, int], Match[str] | None] = re.compile(
 ).match
 _match_str_chunk: Callable[[str, int], Match[str] | None] = re.compile(
     r"[^'~]*", _FLAGS,
+).match
+_match_unquoted_key: Callable[[str, int], Match[str] | None] = re.compile(
+    r"(?:\w+|[^\x00-\x7f]+)+", _FLAGS,
 ).match
 _match_whitespace: Callable[[str, int], Match[str] | None] = re.compile(
     r"\ +", _FLAGS,
@@ -286,12 +286,12 @@ class Manipulator:
         relative: bool = False,
         mapping: bool = False,
     ) -> tuple[list[_Node], int]:
-        key: _Key
-        if match := _match_key(query, end):
-            key, end = match.group(), match.end()
-        else:
-            raise SyntaxError
+        try:
+            key: _Key = query[end]
+        except IndexError:
+            raise SyntaxError from None
 
+        end += 1
         if relative and key != "@":
             raise SyntaxError
 
@@ -300,7 +300,9 @@ class Manipulator:
 
         while True:
             if (terminator := query[end:end + 1]) == ".":
-                if match := _match_key(query, end + 1):
+                if (
+                    match := _match_unquoted_key(query, end + 1)
+                ) and match.group().isidentifier():
                     key, end = match.group(), match.end()
                 else:
                     raise SyntaxError
