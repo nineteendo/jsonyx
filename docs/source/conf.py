@@ -32,7 +32,7 @@ intersphinx_mapping: dict[str, tuple[str, None]] = {
     "sphinx": ("https://www.sphinx-doc.org/en/master/", None),
 }
 intersphinx_disabled_domains: list[str] = ["std"]
-
+nitpicky: bool = True
 templates_path = ["_templates"]
 
 # -- Options for HTML output
