@@ -111,6 +111,9 @@ except ImportError:
         >>> {json.DuplicateKey('key'): 'value 1', json.DuplicateKey('key'): 'value 2'}
         {'key': 'value 1', 'key': 'value 2'}
 
+        See :data:`jsonyx.allow.DUPLICATE_KEYS` for loading a dictionary with
+        duplicate keys.
+
         .. note::
             To retrieve the value of a duplicate key, you need to iterate over
             the items of the dictionary.
