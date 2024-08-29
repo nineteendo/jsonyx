@@ -14,12 +14,10 @@ __all__: list[str] = [
     "UNQUOTED_KEYS",
 ]
 
-#: Allow nothing
-#:
-#: Raises an error for all JSON deviations.
+#: Raise an error for all JSON deviations.
 NOTHING: frozenset[str] = frozenset()
 
-#: Allow comments
+#: Allow block and line comments.
 #:
 #: >>> import jsonyx as json
 #: >>> import jsonyx.allow
@@ -27,7 +25,7 @@ NOTHING: frozenset[str] = frozenset()
 #: 0
 COMMENTS: frozenset[str] = frozenset({"comments"})
 
-#: Allow duplicate keys
+#: Allow duplicate keys in objects.
 #:
 #: >>> import jsonyx as json
 #: >>> import jsonyx.allow
@@ -37,15 +35,12 @@ COMMENTS: frozenset[str] = frozenset({"comments"})
 #: See :class:`jsonyx.DuplicateKey` for more information.
 DUPLICATE_KEYS: frozenset[str] = frozenset({"duplicate_keys"})
 
-#: Allow missing commas
+#: Allow separating items with whitespace.
 #:
 #: >>> import jsonyx as json
 #: >>> import jsonyx.allow
 #: >>> json.loads("[1 2 3]", allow=jsonyx.allow.MISSING_COMMAS)
 #: [1, 2, 3]
-#:
-#: .. note::
-#:     Whitespace or a comment must be present if the comma is missing.
 MISSING_COMMAS: frozenset[str] = frozenset({"missing_commas"})
 
 #: Allow NaN and infinity
@@ -61,7 +56,7 @@ MISSING_COMMAS: frozenset[str] = frozenset({"missing_commas"})
 #:     ``Decimal("sNan")`` can't be (de)serialised this way.
 NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
 
-#: Allow surrogates
+#: Allow unpaired surrogates in strings.
 #:
 #: >>> import jsonyx as json
 #: >>> import jsonyx.allow
@@ -75,7 +70,7 @@ NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
 #:     the unicode error handler to "surrogatepass".
 SURROGATES: frozenset[str] = frozenset({"surrogates"})
 
-#: Allow trailing comma
+#: Allow trailing comma at the end of arrays and objects.
 #:
 #: >>> import jsonyx as json
 #: >>> import jsonyx.allow
@@ -83,7 +78,7 @@ SURROGATES: frozenset[str] = frozenset({"surrogates"})
 #: [0]
 TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
 
-#: Allow unquoted keys
+#: Allow unquoted keys in objects.
 #:
 #: >>> import jsonyx as json
 #: >>> import jsonyx.allow
@@ -93,7 +88,7 @@ TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
 #: .. versionadded:: 2.0
 UNQUOTED_KEYS: frozenset[str] = frozenset({"unquoted_keys"})
 
-#: Allow everything
+#: Allow all JSON deviations provided by :mod:`jsonyx`.
 #:
 #: Equivalent to ``COMMENTS | DUPLICATE_KEYS | MISSING_COMMAS |
 #: NAN_AND_INFINITY | SURROGATES | TRAILING_COMMA | UNQUOTED_KEYS``.
