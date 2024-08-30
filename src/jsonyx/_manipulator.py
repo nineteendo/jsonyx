@@ -610,6 +610,9 @@ class Manipulator:
         ...
         >>> root[0]
         [1, 2, 3, None, None, None]
+
+        .. hint::
+            Using queries instead of indices is more robust.
         """
         if isinstance(nodes, tuple):
             nodes = [nodes]

@@ -736,6 +736,9 @@ def run_select_query(
     >>> root[0]
     [1, 2, 3, None, None, None]
 
+    .. hint::
+        Using queries instead of indices is more robust.
+
     .. versionadded:: 2.0
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).run_select_query(
