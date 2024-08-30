@@ -8,15 +8,12 @@ v2.0.0 (unreleased)
 - Added *unquoted_keys* to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
   :func:`jsonyx.dumps` and :func:`jsonyx.write`
 - Added :data:`jsonyx.allow.UNQUOTED_KEYS`
-- Added :func:`jsonyx.apply_patch`
+- Added :func:`jsonyx.apply_patch` and :func:`jsonyx.make_patch`
 - Added :func:`jsonyx.load_query_value`
-- Added :func:`jsonyx.make_patch`
-- Added :func:`jsonyx.run_filter_query`
-- Added :func:`jsonyx.run_select_query`
+- Added :func:`jsonyx.run_filter_query` and :func:`jsonyx.run_select_query`
 - Added :func:`jsonyx.Manipulator`
 - Added :option:`command`
-- Added :option:`old_input_filename`
-- Added :option:`patch_filename`
+- Added :option:`old_input_filename` and :option:`patch_filename`
 - Added :option:`--unquoted-keys` and its alias :option:`-u`
 - Fixed comment detection
 - Fixed typo in error message

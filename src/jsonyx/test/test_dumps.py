@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON dumps tests."""
-# TODO(Nice Zombies): test sequence and mapping
 from __future__ import annotations
 
 __all__: list[str] = []
