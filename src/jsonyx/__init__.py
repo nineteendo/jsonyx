@@ -301,6 +301,10 @@ def detect_encoding(b: bytearray | bytes) -> str:
     >>> b = b'\x00"\x00f\x00o\x00o\x00"'
     >>> b.decode(json.detect_encoding(b))
     '"foo"'
+
+    .. note::
+        Supports "utf_8", "utf_8-sig", "utf_16", "utf_16_be", "utf_16_le",
+        "utf_32", "utf_32_be", "utf_32_le".
     """
     # JSON must start with ASCII character (not NULL)
     # Strings can't contain control characters (including NULL)
