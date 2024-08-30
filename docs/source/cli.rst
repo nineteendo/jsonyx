@@ -31,8 +31,8 @@ Command Line Interface
 
 .. option:: output_filename
 
-    The path to the output JSON file, or "-" for standard output. If not
-    specified, write to :data:`sys.stdout`.
+    The path to the output JSON file. If not specified, write to
+    :data:`sys.stdout`.
 
     .. versionadded:: 1.2
 
