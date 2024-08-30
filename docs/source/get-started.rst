@@ -130,6 +130,9 @@ Applying a patch
     >>> json.apply_patch([1, 2, 3], {"op": "clear"})
     []
 
+.. hint::
+    Using queries instead of indices is more robust.
+
 Using the ``jsonyx`` command line utility
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
