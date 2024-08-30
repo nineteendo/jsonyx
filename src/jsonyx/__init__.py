@@ -690,6 +690,9 @@ def apply_patch(
     >>> json.apply_patch([1, 2, 3], {"op": "clear"})
     []
 
+    .. hint::
+        Using queries instead of indices is more robust.
+
     .. versionadded:: 2.0
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).apply_patch(

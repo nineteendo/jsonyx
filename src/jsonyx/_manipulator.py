@@ -563,6 +563,9 @@ class Manipulator:
         >>> import jsonyx as json
         >>> json.Manipulator().apply_patch([1, 2, 3], {"op": "clear"})
         []
+
+        .. hint::
+            Using queries instead of indices is more robust.
         """
         root: list[Any] = [obj]
         if isinstance(patch, dict):

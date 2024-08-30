@@ -66,7 +66,7 @@ static PyTypeObject PyDuplicateKeyType = {
         "See :data:`jsonyx.allow.DUPLICATE_KEYS` for loading a dictionary with\n"
         "duplicate keys.\n"
         "\n"
-        ".. note::\n"
+        ".. hint::\n"
         "    To retrieve the value of a duplicate key, you can\n"
         "    :ref:`use a multi dict <use_multidict>`.\n"
     ),
