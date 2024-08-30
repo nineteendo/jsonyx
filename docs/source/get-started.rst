@@ -6,8 +6,8 @@ Getting Started
 Installation
 ------------
 
-To use :mod:`jsonyx`, first install it using pip or
-`conda <https://conda.org>`_:
+To use :mod:`jsonyx`, first install it using pip, `conda <https://conda.org>`_
+or `mamba <https://mamba.readthedocs.io>`_:
 
 .. code-block:: console
 
@@ -16,6 +16,10 @@ To use :mod:`jsonyx`, first install it using pip or
 .. code-block:: console
 
     $ conda install conda-forge::jsonyx
+
+.. code-block:: console
+
+    $ mamba install conda-forge::jsonyx
 
 Quick start
 -----------
