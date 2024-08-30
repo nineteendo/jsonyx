@@ -5,6 +5,7 @@ from __future__ import annotations
 __all__: list[str] = ["make_encoder"]
 
 import re
+from collections.abc import Mapping, Sequence
 from decimal import Decimal
 from io import StringIO
 from math import inf, isfinite
@@ -12,7 +13,7 @@ from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, ItemsView, Sequence
+    from collections.abc import Callable, ItemsView
 
 _ESCAPE_DCT: dict[str, str] = {chr(i): f"\\u{i:04x}" for i in range(0x20)} | {
     '"': '\\"',
@@ -138,18 +139,18 @@ except ImportError:
             write("]")
 
         def write_dict(
-            dct: dict[object, object], write: Callable[[str], object],
+            mapping: Mapping[object, object], write: Callable[[str], object],
             old_indent: str,
         ) -> None:
-            if not dct:
+            if not mapping:
                 write("{}")
                 return
 
-            if (markerid := id(dct)) in markers:
+            if (markerid := id(mapping)) in markers:
                 msg: str = "Unexpected circular reference"
                 raise ValueError(msg)
 
-            markers[markerid] = dct
+            markers[markerid] = mapping
             write("{")
             current_indent: str = old_indent
             current_item_separator: str = item_separator
@@ -159,7 +160,7 @@ except ImportError:
                 write(current_indent)
 
             first: bool = True
-            items: ItemsView[object, object] = dct.items()
+            items: ItemsView[object, object] = mapping.items()
             for key, value in sorted(items) if sort_keys else items:
                 if not isinstance(key, str):
                     msg = f"Keys must be str, not {type(key).__name__}"
@@ -205,14 +206,19 @@ except ImportError:
                     write(int_repr(obj))
             elif isinstance(obj, float):
                 write(floatstr(obj))
-            elif isinstance(obj, (list, tuple)):
+            elif isinstance(obj, Sequence) and not isinstance(
+                obj, (bytearray, bytes, memoryview, str),
+            ):
                 write_sequence(obj, write, current_indent)  # type: ignore
-            elif isinstance(obj, dict):
+            elif isinstance(obj, Mapping):
                 write_dict(obj, write, current_indent)  # type: ignore
             elif isinstance(obj, Decimal):
                 write(encode_decimal(obj))
             else:
-                msg: str = f"{type(obj).__name__} is not JSON serializable"
+                msg: str = (
+                    f"{type(obj).__name__} is not JSON "  # type: ignore
+                    "serializable"
+                )
                 raise TypeError(msg)
 
         def encoder(obj: object) -> str:

@@ -10,7 +10,7 @@ Specializing JSON object encoding
     >>> from collections.abc import Mapping, Sequence
     >>> 
     >>> def to_json(obj):
-    ...     if isinstance(obj, Sequence):
+    ...     if isinstance(obj, Sequence) and not isinstance(obj, (bytearray, bytes, memoryview, str)):
     ...         return [to_json(value) for value in obj]
     ...     if isinstance(obj, Mapping):
     ...         return {key: to_json(value) for key, value in obj.items()}

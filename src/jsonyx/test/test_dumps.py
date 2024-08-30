@@ -5,6 +5,7 @@ from __future__ import annotations
 
 __all__: list[str] = []
 
+from collections import UserDict, UserList
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
@@ -194,10 +195,10 @@ def test_surrogate_escapes_not_allowed(json: ModuleType, obj: str) -> None:
     ([[]] * 3, "[[], [], []]"),
     ([{}] * 3, "[{}, {}, {}]"),
 ])  # type: ignore
-@pytest.mark.parametrize("seq_type", [list, tuple])
+@pytest.mark.parametrize("seq_type", [UserList, list])
 def test_sequence(
     json: ModuleType, seq: list[object],
-    seq_type: type[list[object] | tuple[object, ...]], expected: str,
+    seq_type: type[UserList[object] | list[object]], expected: str,
 ) -> None:
     """Test sequence."""
     assert json.dumps(seq_type(seq), end="") == expected
@@ -215,7 +216,7 @@ def test_list_indent(
     assert json.dumps([1, 2, 3], end="", indent=indent) == expected
 
 
-@pytest.mark.parametrize(("obj", "expected"), [
+@pytest.mark.parametrize(("mapping", "expected"), [
     # Empty dict
     ({}, "{}"),
 
@@ -225,9 +226,14 @@ def test_list_indent(
     # Multiple values
     ({"a": 1, "b": 2, "c": 3}, '{"a": 1, "b": 2, "c": 3}'),
 ])
-def test_dict(json: ModuleType, obj: dict[str, object], expected: str) -> None:
-    """Test dict."""
-    assert json.dumps(obj, end="") == expected
+@pytest.mark.parametrize("mapping_type", [UserDict, dict])
+def test_mapping(
+    json: ModuleType, mapping: dict[str, object],
+    mapping_type: type[UserDict[str, object] | dict[str, object]],
+    expected: str,
+) -> None:
+    """Test mapping."""
+    assert json.dumps(mapping_type(mapping), end="") == expected
 
 
 @pytest.mark.parametrize(("key", "expected"), [
@@ -362,9 +368,10 @@ def test_dict_indent(
     assert s == expected
 
 
-@pytest.mark.parametrize(
-    "obj", [b"", 0j, bytearray(), frozenset(), set()],  # type: ignore
-)
+@pytest.mark.parametrize("obj", [
+    b"", 0j, bytearray(), frozenset(), memoryview(b""),  # type: ignore
+    object(), set(), slice(0),
+])
 def test_unserializable_value(json: ModuleType, obj: object) -> None:
     """Test unserializable value."""
     with pytest.raises(TypeError, match="is not JSON serializable"):
