@@ -91,7 +91,7 @@ Command Line Interface
 
 .. option:: -t, --trailing-comma
 
-    Add a trailing comma if indented.
+    Add a trailing comma when indented.
 
     .. versionadded:: 1.2
         :option:`!-t`

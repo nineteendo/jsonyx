@@ -95,7 +95,7 @@ def _register(parser: ArgumentParser) -> None:
         "-t",
         "--trailing-comma",
         action="store_true",
-        help="add a trailing comma if indented",
+        help="add a trailing comma when indented",
     )
     indent_group.add_argument(
         "-T",

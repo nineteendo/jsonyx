@@ -168,7 +168,8 @@ class Encoder:
     :type key_separator: str, optional
     :param sort_keys: sort the keys of objects, defaults to False
     :type sort_keys: bool, optional
-    :param trailing_comma: add a trailing comma if indented, defaults to False
+    :param trailing_comma: add a trailing comma when indented, defaults to
+                           False
     :type trailing_comma: bool, optional
     :param unquoted_keys: don't quote keys which are identifiers, defaults to
                           False
@@ -285,7 +286,7 @@ class Encoder:
 
 
 def detect_encoding(b: bytearray | bytes) -> str:
-    r"""Detect JSON encoding.
+    r"""Detect the JSON encoding.
 
     :param b: a JSON string
     :type b: bytearray | bytes
@@ -329,7 +330,7 @@ def detect_encoding(b: bytearray | bytes) -> str:
 
 
 def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
-    """Format JSON syntax error.
+    """Format a JSON syntax error.
 
     :param exc: a JSON syntax error
     :type exc: JSONSyntaxError
@@ -494,7 +495,8 @@ def write(
     :type key_separator: str, optional
     :param sort_keys: sort the keys of objects, defaults to False
     :type sort_keys: bool, optional
-    :param trailing_comma: add a trailing comma if indented, defaults to False
+    :param trailing_comma: add a trailing comma when indented, defaults to
+                           False
     :type trailing_comma: bool, optional
     :param unquoted_keys: don't quote keys which are identifiers, defaults to
                           False
@@ -563,7 +565,8 @@ def dump(
     :type key_separator: str, optional
     :param sort_keys: sort the keys of objects, defaults to False
     :type sort_keys: bool, optional
-    :param trailing_comma: add a trailing comma if indented, defaults to False
+    :param trailing_comma: add a trailing comma when indented, defaults to
+                           False
     :type trailing_comma: bool, optional
     :param unquoted_keys: don't quote keys which are identifiers, defaults to
                           False
@@ -628,7 +631,8 @@ def dumps(
     :type key_separator: str, optional
     :param sort_keys: sort the keys of objects, defaults to False
     :type sort_keys: bool, optional
-    :param trailing_comma: add a trailing comma if indented, defaults to False
+    :param trailing_comma: add a trailing comma when indented, defaults to
+                           False
     :type trailing_comma: bool, optional
     :param unquoted_keys: don't quote keys which are identifiers, defaults to
                           False
