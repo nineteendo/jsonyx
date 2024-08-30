@@ -21,7 +21,7 @@ NOTHING: frozenset[str] = frozenset()
 #:
 #: >>> import jsonyx as json
 #: >>> import jsonyx.allow
-#: >>> json.loads("0 // line comment", allow=jsonyx.allow.COMMENTS)
+#: >>> json.loads("0 /* Block */ // and line comment", allow=jsonyx.allow.COMMENTS)
 #: 0
 COMMENTS: frozenset[str] = frozenset({"comments"})
 
@@ -49,10 +49,11 @@ MISSING_COMMAS: frozenset[str] = frozenset({"missing_commas"})
 #:
 #: >>> import jsonyx as json
 #: >>> import jsonyx.allow
-#: >>> json.loads("NaN", allow=jsonyx.allow.NAN_AND_INFINITY)
-#: nan
-#: >>> json.dump(float("nan"), allow=jsonyx.allow.NAN_AND_INFINITY)
-#: NaN
+#: >>> json.loads("[NaN, Infinity, -Infinity]", allow=jsonyx.allow.NAN_AND_INFINITY)
+#: [nan, inf, -inf]
+#: >>> from math import inf, nan
+#: >>> json.dump([nan, inf, -inf], allow=jsonyx.allow.NAN_AND_INFINITY)
+#: [NaN, Infinity, -Infinity]
 #:
 #: .. note::
 #:     ``Decimal("sNan")`` can't be (de)serialised this way.

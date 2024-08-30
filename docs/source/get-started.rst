@@ -109,9 +109,8 @@ Using :class:`decimal.Decimal` instead of :class:`float`
 ::
 
     >>> import jsonyx as json
-    >>> from decimal import Decimal
-    >>> json.loads("1.1", use_decimal=True)
-    Decimal('1.1')
+    >>> json.loads("[1.0000000000000001, 1e400]", use_decimal=True)
+    [Decimal('1.0000000000000001'), Decimal('1E+400')]
 
 .. note::
     :class:`decimal.Decimal` can be natively serialized.
