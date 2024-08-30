@@ -76,6 +76,10 @@ Pretty printing
         "c": 3
     }
 
+.. caution::
+    To pretty-print unpaired surrogates, you need to use
+    :data:`jsonyx.allow.SURROGATES` and *ensure_ascii*.
+
 Decoding JSON
 ^^^^^^^^^^^^^
 
