@@ -29,7 +29,9 @@ COMMENTS: frozenset[str] = frozenset({"comments"})
 #:
 #: >>> import jsonyx as json
 #: >>> import jsonyx.allow
-#: >>> json.loads('{"key": "value 1", "key": "value 2"}', allow=jsonyx.allow.DUPLICATE_KEYS)
+#: >>> json.loads(
+#: ...     '{"key": "value 1", "key": "value 2"}', allow=jsonyx.allow.DUPLICATE_KEYS
+#: ... )
 #: {'key': 'value 1', 'key': 'value 2'}
 #:
 #: See :class:`jsonyx.DuplicateKey` for more information.
