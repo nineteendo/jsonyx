@@ -108,8 +108,9 @@ Using :class:`decimal.Decimal` instead of :class:`float`
     >>> from decimal import Decimal
     >>> json.loads("1.1", use_decimal=True)
     Decimal('1.1')
-    >>> json.dump(Decimal("1.1"))
-    1.1
+
+.. note::
+    :class:`decimal.Decimal` can be natively serialized.
 
 Making a patch from two Python objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

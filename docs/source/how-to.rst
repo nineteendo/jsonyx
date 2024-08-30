@@ -87,3 +87,6 @@ Using :class:`multidict.MultiDict` instead of :class:`dict`
     ...     '{"key": "value 1", "key": "value 2"}', allow=jsonyx.allow.DUPLICATE_KEYS
     ... ))
     <MultiDict('key': 'value 1', 'key': 'value 2')>
+
+.. note::
+    :class:`multidict.MultiDict` can be natively serialized.
