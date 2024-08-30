@@ -135,8 +135,8 @@ def make_patch(old: Any, new: Any) -> list[dict[str, Any]]:
     :rtype: list[dict[str, Any]]
 
     >>> import jsonyx as json
-    >>> json.make_patch([1, 2, 3, 5], [1, 3, 4, 5])
-    [{'op': 'del', 'path': '$[1]'}, {'op': 'insert', 'path': '$[2]', 'value': 4}]
+    >>> json.make_patch([1, 2, 3], [1, 3])
+    [{'op': 'del', 'path': '$[1]'}]
 
     .. versionadded:: 2.0
     """

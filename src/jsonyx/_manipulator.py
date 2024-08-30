@@ -561,8 +561,8 @@ class Manipulator:
         :rtype: Any
 
         >>> import jsonyx as json
-        >>> json.Manipulator().apply_patch([1, 2, 3], {"op": "clear"})
-        []
+        >>> json.Manipulator().apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
+        [1, 3]
 
         .. hint::
             Using queries instead of indices is more robust.
