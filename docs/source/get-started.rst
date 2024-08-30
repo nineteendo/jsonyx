@@ -130,8 +130,8 @@ Applying a patch
     >>> json.apply_patch([1, 2, 3], {"op": "clear"})
     []
 
-Using the ``jsonyx`` command line utility to validate and pretty-print
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Using the ``jsonyx`` command line utility
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: shell-session
 
