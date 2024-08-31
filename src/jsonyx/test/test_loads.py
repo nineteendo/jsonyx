@@ -445,26 +445,24 @@ def test_invalid_object(
     _check_syntax_err(exc_info, msg, colno, end_colno)
 
 
-@pytest.mark.parametrize(("s", "expected"), [
+@pytest.mark.parametrize(("s", "key"), [
     # First character
-    ("{A: 0}", {"A": 0}),
-    ("{_: 0}", {"_": 0}),
-    ("{\u16ee: 0}", {"\u16ee": 0}),
-    ("{\u1885: 0}", {"\u1885": 0}),
-    ("{\u2118: 0}", {"\u2118": 0}),
+    ("{A: 0}", "A"),
+    ("{_: 0}", "_"),
+    ("{\u16ee: 0}", "\u16ee"),
+    ("{\u1885: 0}", "\u1885"),
+    ("{\u2118: 0}", "\u2118"),
 
     # Remaining characters
-    ("{A0: 0}", {"A0": 0}),
-    ("{AA: 0}", {"AA": 0}),
-    ("{A_: 0}", {"A_": 0}),
-    ("{A\u0300: 0}", {"A\u0300": 0}),
-    ("{A\u2118: 0}", {"A\u2118": 0}),
+    ("{A0: 0}", "A0"),
+    ("{AA: 0}", "AA"),
+    ("{A_: 0}", "A_"),
+    ("{A\u0300: 0}", "A\u0300"),
+    ("{A\u2118: 0}", "A\u2118"),
 ])
-def test_unquoted_keys(
-    json: ModuleType, s: str, expected: dict[str, object],
-) -> None:
+def test_unquoted_keys(json: ModuleType, s: str, key: str) -> None:
     """Test unquoted keys."""
-    assert json.loads(s, allow=UNQUOTED_KEYS) == expected
+    assert json.loads(s, allow=UNQUOTED_KEYS) == {key: 0}
 
 
 @pytest.mark.parametrize(("s", "end_colno"), [
@@ -489,9 +487,7 @@ def test_unquoted_keys_not_allowed(
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(s)
 
-    _check_syntax_err(
-        exc_info, "Unquoted keys are not allowed", 2, end_colno,
-    )
+    _check_syntax_err(exc_info, "Unquoted keys are not allowed", 2, end_colno)
 
 
 def test_duplicate_keys(json: ModuleType) -> None:
@@ -538,6 +534,13 @@ def test_trailing_comma(
 ) -> None:
     """Test trailing comma."""
     assert json.loads(s, allow=TRAILING_COMMA) == expected
+
+
+@pytest.mark.parametrize("start", ["[", '{"":'])
+def test_recursion(json: ModuleType, start: str) -> None:
+    """Test recursion."""
+    with pytest.raises(RecursionError):
+        json.loads(start * 100_000)
 
 
 @pytest.mark.parametrize("s", [

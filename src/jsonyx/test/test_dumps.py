@@ -215,6 +215,16 @@ def test_list_indent(
     assert json.dumps([1, 2, 3], end="", indent=indent) == expected
 
 
+def test_list_recursion(json: ModuleType) -> None:
+    """Test list recursion."""
+    obj: list[object] = []
+    for _ in range(100_000):
+        obj = [obj]
+
+    with pytest.raises(RecursionError):
+        json.dumps(obj)
+
+
 @pytest.mark.parametrize(("mapping", "expected"), [
     # Empty dict
     ({}, "{}"),
@@ -365,6 +375,16 @@ def test_dict_indent(
     """Test dict indent."""
     s: str = json.dumps({"a": 1, "b": 2, "c": 3}, end="", indent=indent)
     assert s == expected
+
+
+def test_dict_recursion(json: ModuleType) -> None:
+    """Test dict recursion."""
+    obj: dict[str, object] = {}
+    for _ in range(100_000):
+        obj = {"": obj}
+
+    with pytest.raises(RecursionError):
+        json.dumps(obj)
 
 
 @pytest.mark.parametrize("obj", [
