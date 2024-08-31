@@ -159,7 +159,8 @@ class Encoder:
     :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to False
     :type ensure_ascii: bool, optional
-    :param indent: indentation, defaults to None
+    :param indent: the number of spaces or string to indent with, defaults to
+                   None
     :type indent: int | str | None, optional
     :param item_separator: the separator between two items, defaults to ", "
     :type item_separator: str, optional
@@ -494,7 +495,8 @@ def write(
     :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to False
     :type ensure_ascii: bool, optional
-    :param indent: indentation, defaults to None
+    :param indent: the number of spaces or string to indent with, defaults to
+                   None
     :type indent: int | str | None, optional
     :param item_separator: the separator between two items, defaults to ", "
     :type item_separator: str, optional
@@ -564,7 +566,8 @@ def dump(
     :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to False
     :type ensure_ascii: bool, optional
-    :param indent: indentation, defaults to None
+    :param indent: the number of spaces or string to indent with, defaults to
+                   None
     :type indent: int | str | None, optional
     :param item_separator: the separator between two items, defaults to ", "
     :type item_separator: str, optional
@@ -634,7 +637,8 @@ def dumps(
     :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to False
     :type ensure_ascii: bool, optional
-    :param indent: indentation, defaults to None
+    :param indent: the number of spaces or string to indent with, defaults to
+                   None
     :type indent: int | str | None, optional
     :param item_separator: the separator between two items, defaults to ", "
     :type item_separator: str, optional
