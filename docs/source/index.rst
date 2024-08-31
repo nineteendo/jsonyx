@@ -63,3 +63,4 @@ to :ref:`install <installation>` the project.
     Conda Package <https://anaconda.org/conda-forge/jsonyx>
     GitHub Repository <https://github.com/nineteendo/jsonyx>
     Issue Tracker <https://github.com/nineteendo/jsonyx/issues>
+    Sponser <https://paypal.me/nineteendo>
