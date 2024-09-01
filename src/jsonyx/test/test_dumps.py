@@ -213,7 +213,9 @@ def test_list_indent(
     json: ModuleType, indent: int | str, expected: str,
 ) -> None:
     """Test list indent."""
-    assert json.dumps([1, 2, 3], end="", indent=indent) == expected
+    obj: list[object] = [1, 2, 3]
+    s: str = json.dumps(obj, end="", indent=indent, indent_leaves=True)
+    assert s == expected
 
 
 def test_list_recursion(json: ModuleType) -> None:
@@ -374,7 +376,8 @@ def test_dict_indent(
     json: ModuleType, indent: int | str, expected: str,
 ) -> None:
     """Test dict indent."""
-    s: str = json.dumps({"a": 1, "b": 2, "c": 3}, end="", indent=indent)
+    obj: dict[str, object] = {"a": 1, "b": 2, "c": 3}
+    s: str = json.dumps(obj, end="", indent=indent, indent_leaves=True)
     assert s == expected
 
 
@@ -437,8 +440,9 @@ def test_trailing_comma_indent(
     json: ModuleType, obj: dict[str, object] | list[object], expected: str,
 ) -> None:
     """Test trailing_comma with indent."""
-    s: str = json.dumps(obj, end="", indent="\t", trailing_comma=True)
-    assert s == expected
+    assert json.dumps(
+        obj, end="", indent="\t", indent_leaves=True, trailing_comma=True,
+    ) == expected
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
