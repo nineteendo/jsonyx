@@ -46,6 +46,10 @@ nitpick_ignore: list[tuple[str, str]] = [
 ]
 templates_path = ["_templates"]
 
+# -- Options for sphinx_copybutton
+
+copybutton_exclude: str = ".linenos, .gp, .go"
+
 # -- Options for HTML output
 
 html_context: dict[str, Any] = {
