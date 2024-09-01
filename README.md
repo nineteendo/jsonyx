@@ -37,7 +37,6 @@ Key Features:
     ```
 - Detailed error messages:
     ```none
-    Traceback (most recent call last):
       File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
          "path": "c:\users"
                       ^^^^
