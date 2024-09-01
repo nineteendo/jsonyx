@@ -13,36 +13,36 @@ better performance and no dependencies.
 - JSON decoding, encoding and patching
 - Pretty-printing:
 
-    .. code-block:: json
+.. code-block:: json
 
-        {
-            "foo": [1, 2, 3],
-            "bar": {"a": 1, "b": 2, "c": 3}
-        }
+    {
+        "foo": [1, 2, 3],
+        "bar": {"a": 1, "b": 2, "c": 3}
+    }
 
 - Optionally supports these JSON deviations using :mod:`jsonyx.allow`:
 
-    .. code-block:: javascript
+.. code-block:: javascript
 
-        {
-            /* Block */ // and line comments
-            "Decimal numbers": [1.0000000000000001, 1e400],
-            "Duplicate keys": {"key": "value 1", "key": "value 2"},
-            "Missing commas": [1 2 3],
-            "NaN and infinity": [NaN, Infinity, -Infinity],
-            "Surrogates": "\ud800",
-            "Trailing comma": [0,],
-            "Unquoted keys": {key: "value"}
-        }
+    {
+        /* Block */ // and line comments
+        "Decimal numbers": [1.0000000000000001, 1e400],
+        "Duplicate keys": {"key": "value 1", "key": "value 2"},
+        "Missing commas": [1 2 3],
+        "NaN and infinity": [NaN, Infinity, -Infinity],
+        "Surrogates": "\ud800",
+        "Trailing comma": [0,],
+        "Unquoted keys": {key: "value"}
+    }
 
 - Detailed error messages:
 
-    .. code-block:: pytb
+.. code-block:: pytb
 
-        File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
-            "path": "c:\users"
-                         ^^^^
-        jsonyx.JSONSyntaxError: Expecting 4 hex digits
+    File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
+        "path": "c:\users"
+                        ^^^^
+    jsonyx.JSONSyntaxError: Expecting 4 hex digits
 
 - Dedicated functions for reading and writing files and pretty printing
 
