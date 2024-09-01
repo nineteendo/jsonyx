@@ -76,7 +76,8 @@ Pretty printing
     }
 
 .. hint::
-    Use ``indent_leaves=True`` to indent everything.
+    Use ``indent_leaves=True`` to indent everything and ``sort_keys=True`` to
+    sort the keys of objects.
 
 .. caution::
     To pretty-print unpaired surrogates, you need to use

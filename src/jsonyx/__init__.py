@@ -178,6 +178,9 @@ class Encoder:
                           False
     :type unquoted_keys: bool, optional
 
+    .. note::
+        The *item_separator* is automatically stripped when indented.
+
     .. versionchanged:: 2.0
         Added *indent_leaves* and *unquoted_keys*.
     """
@@ -531,6 +534,9 @@ def write(
     ...
     '["filesystem API"]\n'
 
+    .. note::
+        The *item_separator* is automatically stripped when indented.
+
     .. versionchanged:: 2.0
         Added *indent_leaves* and *unquoted_keys*.
     """
@@ -605,6 +611,9 @@ def dump(
     >>> io.getvalue()
     '["streaming API"]\n'
 
+    .. note::
+        The *item_separator* is automatically stripped when indented.
+
     .. caution::
         To pretty-print unpaired surrogates, you need to use
         :data:`jsonyx.allow.SURROGATES` and ``ensure_ascii=True``.
@@ -676,6 +685,9 @@ def dumps(
     >>> import jsonyx as json
     >>> json.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
     '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
+
+    .. note::
+        The *item_separator* is automatically stripped when indented.
 
     .. versionchanged:: 2.0
         Added *indent_leaves* and *unquoted_keys*.
