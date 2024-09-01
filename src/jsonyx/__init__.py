@@ -368,6 +368,10 @@ def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
         [,]
          ^
     jsonyx.JSONSyntaxError: Expecting value
+
+    .. note::
+        Don't use :func:`traceback.format_exception_only`, it displays less
+        information.
     """
     if exc.end_lineno == exc.lineno:
         line_range: str = f"{exc.lineno:d}"
