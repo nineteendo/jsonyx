@@ -68,7 +68,7 @@ Removing duplicate keys
 Using :class:`multidict.MultiDict` instead of :class:`dict`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-::
+After installing ``multidict``, it can be used like this::
 
     >>> import jsonyx as json
     >>> import jsonyx.allow
