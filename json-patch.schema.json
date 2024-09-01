@@ -11,43 +11,47 @@
                     "type": "string",
                     "enum": ["append", "assert", "clear", "copy", "del", "extend", "insert", "move", "reverse", "set", "sort", "update"]
                 },
-                "path": {
-                    "description": "A JSON path.",
-                    "type": "string",
-                    "default": "$"
-                }
+                "path": {"description": "A JSON path.", "type": "string", "default": "$"}
             },
             "required": ["op"],
             "allOf": [
                 {
                     "if": {
-                        "properties": {"op": {"enum": ["append", "extend", "insert", "set", "update"]}},
+                        "properties": {
+                            "op": {
+                                "enum": ["append", "extend", "insert", "set", "update"]
+                            }
+                        },
                         "required": ["op"]
                     },
                     "then": {
-                        "properties": {"value": {"description": "The value to use."}},
+                        "properties": {
+                            "value": {"description": "The value to use."}
+                        },
                         "required": ["value"]
                     }
                 },
                 {
                     "if": {
-                        "properties": {"op": {"const": "assert"}},
+                        "properties": {
+                            "op": {"const": "assert"}
+                        },
                         "required": ["op"]
                     },
                     "then": {
                         "properties": {
-                            "expr": {
-                                "description": "A JSON expression.",
-                                "type": "string",
-                                "default": "@"
-                            }
+                            "expr": {"description": "A JSON expression.", "type": "string", "default": "@"}
                         },
                         "required": ["expr"]
                     }
                 },
                 {
                     "if": {
-                        "properties": {"op": {"enum": ["copy", "move"]}},
+                        "properties": {
+                            "op": {
+                                "enum": ["copy", "move"]
+                            }
+                        },
                         "required": ["op"]
                     },
                     "then": {
@@ -57,20 +61,14 @@
                                 "type": "string",
                                 "enum": ["append", "extend", "insert", "set", "update"]
                             },
-                            "from": {
-                                "description": "The source JSON path.",
-                                "type": "string",
-                                "default": "@"
-                            },
-                            "to": {
-                                "description": "The destination JSON path.",
-                                "type": "string",
-                                "default": "@"
-                            }
+                            "from": {"description": "The source JSON path.", "type": "string", "default": "@"},
+                            "to": {"description": "The destination JSON path.", "type": "string", "default": "@"}
                         },
                         "required": ["mode", "from"],
                         "if": {
-                            "properties": {"mode": {"const": "insert"}},
+                            "properties": {
+                                "mode": {"const": "insert"}
+                            },
                             "required": ["mode"]
                         },
                         "then": {
@@ -80,7 +78,11 @@
                 },
                 {
                     "if": {
-                        "properties": {"op": {"enum": ["del", "insert"]}},
+                        "properties": {
+                            "op": {
+                                "enum": ["del", "insert"]
+                            }
+                        },
                         "required": ["op"]
                     },
                     "then": {
@@ -89,16 +91,14 @@
                 },
                 {
                     "if": {
-                        "properties": {"op": {"const": "sort"}},
+                        "properties": {
+                            "op": {"const": "sort"}
+                        },
                         "required": ["op"]
                     },
                     "then": {
                         "properties": {
-                            "reverse": {
-                                "description": "Sort in descending order.",
-                                "type": "boolean",
-                                "default": false
-                            }
+                            "reverse": {"description": "Sort in descending order.", "type": "boolean", "default": false}
                         }
                     }
                 }
@@ -107,9 +107,7 @@
         }
     },
     "anyOf": [
-        {
-            "$ref": "#/definitions/operation"
-        },
+        {"$ref": "#/definitions/operation"},
         {
             "type": "array",
             "items": {"$ref": "#/definitions/operation"}
