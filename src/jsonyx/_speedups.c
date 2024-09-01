@@ -40,10 +40,12 @@ typedef struct _PyEncoderObject {
     PyObject *indent;
     PyObject *end;
     PyObject *item_separator;
+    PyObject *full_item_separator;
     PyObject *key_separator;
     int allow_nan_and_infinity;
     int allow_surrogates;
     int ensure_ascii;
+    int indent_leaves;
     int sort_keys;
     int trailing_comma;
     int unquoted_keys;
@@ -1255,22 +1257,23 @@ static PyObject *
 encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     static char *kwlist[] = {"encode_decimal", "indent", "end",
-                             "item_separator", "key_separator",
-                             "allow_nan_and_infinity", "allow_surrogates",
-                             "ensure_ascii", "sort_keys", "trailing_comma",
+                             "item_separator", "full_item_separator",
+                             "key_separator", "allow_nan_and_infinity",
+                             "allow_surrogates", "ensure_ascii",
+                             "indent_leaves", "sort_keys", "trailing_comma",
                              "unquoted_keys", NULL};
 
     PyEncoderObject *s;
     PyObject *encode_decimal, *indent;
-    PyObject *end, *item_separator, *key_separator;
-    int allow_nan_and_infinity, allow_surrogates, ensure_ascii, sort_keys;
-    int trailing_comma, unquoted_keys;
+    PyObject *end, *item_separator, *full_item_separator, *key_separator;
+    int allow_nan_and_infinity, allow_surrogates, ensure_ascii, indent_leaves;
+    int sort_keys, trailing_comma, unquoted_keys;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOUUUpppppp:make_encoder", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOUUUUppppppp:make_encoder", kwlist,
         &encode_decimal, &indent,
-        &end, &item_separator, &key_separator,
-        &allow_nan_and_infinity, &allow_surrogates, &ensure_ascii, &sort_keys,
-        &trailing_comma, &unquoted_keys))
+        &end, &item_separator, &full_item_separator, &key_separator,
+        &allow_nan_and_infinity, &allow_surrogates, &ensure_ascii,
+        &indent_leaves, &sort_keys, &trailing_comma, &unquoted_keys))
         return NULL;
 
     s = (PyEncoderObject *)type->tp_alloc(type, 0);
@@ -1300,10 +1303,12 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->indent = Py_NewRef(indent);
     s->end = Py_NewRef(end);
     s->item_separator = Py_NewRef(item_separator);
+    s->full_item_separator = Py_NewRef(full_item_separator);
     s->key_separator = Py_NewRef(key_separator);
     s->allow_nan_and_infinity = allow_nan_and_infinity;
     s->allow_surrogates = allow_surrogates;
     s->ensure_ascii = ensure_ascii;
+    s->indent_leaves = indent_leaves;
     s->sort_keys = sort_keys;
     s->trailing_comma = trailing_comma;
     s->unquoted_keys = unquoted_keys;
@@ -1560,18 +1565,45 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
     if (_PyUnicodeWriter_WriteChar(writer, '{'))
         goto bail;
 
-    PyObject *current_item_separator = s->item_separator; // borrowed reference
-    if (s->indent != Py_None) {
+    int indented;
+    if (s->indent == Py_None) {
+        indented = false;
+    }
+    else if (s->indent_leaves) {
+        indented = true;
+    }
+    else {
+        indented = false;
+        PyObject *values = PyMapping_Values(mapping);
+        for (Py_ssize_t  i = 0; i < PyList_GET_SIZE(values); i++) {
+            PyObject *obj = PyList_GET_ITEM(values, i);
+            if (obj != Py_None && !PyUnicode_Check(obj) && !PyLong_Check(obj)
+                && !PyFloat_Check(obj)
+                && !PyObject_TypeCheck(obj, (PyTypeObject *)s->Decimal))
+            {
+                indented = true;
+                break;
+            }
+        }
+        Py_CLEAR(values);
+    }
+
+    PyObject *current_item_separator;
+    if (!indented) {
+        current_item_separator = s->full_item_separator; // borrowed reference
+    }
+    else {
+#ifdef Py_DEBUG
+        assert(s->indent != Py_None);
+#endif
         new_newline_indent = PyUnicode_Concat(newline_indent, s->indent);
         if (new_newline_indent == NULL) {
             goto bail;
         }
-        separator_indent = PyUnicode_Concat(current_item_separator, new_newline_indent);
-        if (separator_indent == NULL) {
+        current_item_separator = PyUnicode_Concat(s->item_separator, new_newline_indent);
+        if (current_item_separator == NULL) {
             goto bail;
         }
-        // update item separator with a borrowed reference
-        current_item_separator = separator_indent;
         if (_PyUnicodeWriter_WriteStr(writer, new_newline_indent) < 0) {
             goto bail;
         }
@@ -1612,7 +1644,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
     if (PyDict_DelItem(markers, ident))
         goto bail;
     Py_CLEAR(ident);
-    if (s->indent != Py_None) {
+    if (indented) {
         Py_CLEAR(new_newline_indent);
         Py_CLEAR(separator_indent);
         if ((s->trailing_comma && _PyUnicodeWriter_WriteStr(writer, s->item_separator) < 0) ||
@@ -1670,8 +1702,35 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
     if (_PyUnicodeWriter_WriteChar(writer, '['))
         goto bail;
 
-    PyObject *separator = s->item_separator; // borrowed reference
-    if (s->indent != Py_None) {
+    int indented;
+    if (s->indent == Py_None) {
+        indented = false;
+    }
+    else if (s->indent_leaves) {
+        indented = true;
+    }
+    else {
+        indented = false;
+        for (i = 0; i < PySequence_Fast_GET_SIZE(s_fast); i++) {
+            PyObject *obj = PySequence_Fast_GET_ITEM(s_fast, i);
+            if (obj != Py_None && !PyUnicode_Check(obj) && !PyLong_Check(obj)
+                && !PyFloat_Check(obj)
+                && !PyObject_TypeCheck(obj, (PyTypeObject *)s->Decimal))
+            {
+                indented = true;
+                break;
+            }
+        }
+    }
+
+    PyObject *separator;
+    if (!indented) {
+        separator = s->full_item_separator; // borrowed reference
+    }
+    else {
+#ifdef Py_DEBUG
+        assert(s->indent != Py_None);
+#endif
         new_newline_indent = PyUnicode_Concat(newline_indent, s->indent);
         if (new_newline_indent == NULL) {
             goto bail;
@@ -1681,11 +1740,10 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
             goto bail;
         }
 
-        separator_indent = PyUnicode_Concat(separator, new_newline_indent);
-        if (separator_indent == NULL) {
+        separator = PyUnicode_Concat(s->item_separator, new_newline_indent);
+        if (separator == NULL) {
             goto bail;
         }
-        separator = separator_indent; // assign separator with borrowed reference
     }
     for (i = 0; i < PySequence_Fast_GET_SIZE(s_fast); i++) {
         PyObject *obj = PySequence_Fast_GET_ITEM(s_fast, i);
@@ -1700,7 +1758,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
         goto bail;
     Py_CLEAR(ident);
 
-    if (s->indent != Py_None) {
+    if (indented) {
         Py_CLEAR(new_newline_indent);
         Py_CLEAR(separator_indent);
         if ((s->trailing_comma && _PyUnicodeWriter_WriteStr(writer, s->item_separator) < 0) ||
@@ -1743,6 +1801,7 @@ encoder_traverse(PyEncoderObject *self, visitproc visit, void *arg)
     Py_VISIT(self->end);
     Py_VISIT(self->key_separator);
     Py_VISIT(self->item_separator);
+    Py_VISIT(self->full_item_separator);
     return 0;
 }
 
@@ -1755,6 +1814,7 @@ encoder_clear(PyEncoderObject *self)
     Py_CLEAR(self->end);
     Py_CLEAR(self->key_separator);
     Py_CLEAR(self->item_separator);
+    Py_CLEAR(self->full_item_separator);
     return 0;
 }
 

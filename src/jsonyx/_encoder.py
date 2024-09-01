@@ -42,10 +42,12 @@ except ImportError:
         indent: str | None,
         end: str,
         item_separator: str,
+        full_item_separator: str,
         key_separator: str,
         allow_nan_and_infinity: bool,  # noqa: FBT001
         allow_surrogates: bool,  # noqa: FBT001
         ensure_ascii: bool,  # noqa: FBT001
+        indent_leaves: bool,  # noqa: FBT001
         sort_keys: bool,  # noqa: FBT001
         trailing_comma: bool,  # noqa: FBT001
         unquoted_keys: bool,  # noqa: FBT001
@@ -114,10 +116,16 @@ except ImportError:
             markers[markerid] = seq
             write("[")
             current_indent: str = old_indent
-            current_item_separator: str = item_separator
-            if indent is not None:
+            if indent is None or (not indent_leaves and all(
+                value is None or isinstance(value, (Decimal, float, int, str))
+                for value in seq
+            )):
+                indented: bool = False
+                current_item_separator: str = full_item_separator
+            else:
+                indented = True
                 current_indent += indent
-                current_item_separator += current_indent
+                current_item_separator = item_separator + current_indent
                 write(current_indent)
 
             first: bool = True
@@ -130,7 +138,7 @@ except ImportError:
                 write_value(value, write, current_indent)
 
             del markers[markerid]
-            if indent is not None:
+            if indented:
                 if trailing_comma:
                     write(item_separator)
 
@@ -153,10 +161,16 @@ except ImportError:
             markers[markerid] = mapping
             write("{")
             current_indent: str = old_indent
-            current_item_separator: str = item_separator
-            if indent is not None:
+            if indent is None or (not indent_leaves and all(
+                value is None or isinstance(value, (Decimal, float, int, str))
+                for value in mapping.values()
+            )):
+                indented: bool = False
+                current_item_separator: str = full_item_separator
+            else:
+                indented = True
                 current_indent += indent
-                current_item_separator += current_indent
+                current_item_separator = item_separator + current_indent
                 write(current_indent)
 
             first: bool = True
@@ -182,7 +196,7 @@ except ImportError:
                 write_value(value, write, current_indent)
 
             del markers[markerid]
-            if indent is not None:
+            if indented:
                 if trailing_comma:
                     write(item_separator)
 

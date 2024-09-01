@@ -162,6 +162,8 @@ class Encoder:
     :param indent: the number of spaces or string to indent with, defaults to
                    None
     :type indent: int | str | None, optional
+    :param indent_leaves: indent leaf objects and arrays, defaults to False
+    :type indent_leaves: bool, optional
     :param item_separator: the separator between two items, defaults to ", "
     :type item_separator: str, optional
     :param key_separator: the separator between a key and a value, defaults to
@@ -177,7 +179,7 @@ class Encoder:
     :type unquoted_keys: bool, optional
 
     .. versionchanged:: 2.0
-        Added *unquoted_keys*.
+        Added *indent_leaves* and *unquoted_keys*.
     """
 
     def __init__(
@@ -187,6 +189,7 @@ class Encoder:
         end: str = "\n",
         ensure_ascii: bool = False,
         indent: int | str | None = None,
+        indent_leaves: bool = False,
         item_separator: str = ", ",
         key_separator: str = ": ",
         sort_keys: bool = False,
@@ -198,6 +201,7 @@ class Encoder:
         allow_surrogates: bool = "surrogates" in allow
         decimal_str: Callable[[Decimal], str] = Decimal.__str__
 
+        full_item_separator: str = item_separator
         if indent is not None:
             item_separator = item_separator.rstrip()
             if isinstance(indent, int):
@@ -219,9 +223,10 @@ class Encoder:
             return decimal_str(decimal)
 
         self._encoder: Callable[[object], str] = make_encoder(
-            encode_decimal, indent, end, item_separator, key_separator,
-            allow_nan_and_infinity, allow_surrogates, ensure_ascii, sort_keys,
-            trailing_comma, unquoted_keys,
+            encode_decimal, indent, end, item_separator, full_item_separator,
+            key_separator, allow_nan_and_infinity, allow_surrogates,
+            ensure_ascii, indent_leaves, sort_keys, trailing_comma,
+            unquoted_keys,
         )
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 
@@ -477,6 +482,7 @@ def write(
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
+    indent_leaves: bool = False,
     item_separator: str = ", ",
     key_separator: str = ": ",
     sort_keys: bool = False,
@@ -498,6 +504,8 @@ def write(
     :param indent: the number of spaces or string to indent with, defaults to
                    None
     :type indent: int | str | None, optional
+    :param indent_leaves: indent leaf objects and arrays, defaults to False
+    :type indent_leaves: bool, optional
     :param item_separator: the separator between two items, defaults to ", "
     :type item_separator: str, optional
     :param key_separator: the separator between a key and a value, defaults to
@@ -525,13 +533,14 @@ def write(
     '["filesystem API"]\n'
 
     .. versionchanged:: 2.0
-        Added *unquoted_keys*.
+        Added *indent_leaves* and *unquoted_keys*.
     """
     return Encoder(
         allow=allow,
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
+        indent_leaves=indent_leaves,
         item_separator=item_separator,
         key_separator=key_separator,
         sort_keys=sort_keys,
@@ -548,6 +557,7 @@ def dump(
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
+    indent_leaves: bool = False,
     item_separator: str = ", ",
     key_separator: str = ": ",
     sort_keys: bool = False,
@@ -569,6 +579,8 @@ def dump(
     :param indent: the number of spaces or string to indent with, defaults to
                    None
     :type indent: int | str | None, optional
+    :param indent_leaves: indent leaf objects and arrays, defaults to False
+    :type indent_leaves: bool, optional
     :param item_separator: the separator between two items, defaults to ", "
     :type item_separator: str, optional
     :param key_separator: the separator between a key and a value, defaults to
@@ -599,13 +611,14 @@ def dump(
         :data:`jsonyx.allow.SURROGATES` and *ensure_ascii*.
 
     .. versionchanged:: 2.0
-        Added *unquoted_keys*.
+        Added *indent_leaves* and *unquoted_keys*.
     """
     Encoder(
         allow=allow,
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
+        indent_leaves=indent_leaves,
         item_separator=item_separator,
         key_separator=key_separator,
         sort_keys=sort_keys,
@@ -621,6 +634,7 @@ def dumps(
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
+    indent_leaves: bool = False,
     item_separator: str = ", ",
     key_separator: str = ": ",
     sort_keys: bool = False,
@@ -640,6 +654,8 @@ def dumps(
     :param indent: the number of spaces or string to indent with, defaults to
                    None
     :type indent: int | str | None, optional
+    :param indent_leaves: indent leaf objects and arrays, defaults to False
+    :type indent_leaves: bool, optional
     :param item_separator: the separator between two items, defaults to ", "
     :type item_separator: str, optional
     :param key_separator: the separator between a key and a value, defaults to
@@ -663,13 +679,14 @@ def dumps(
     '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
 
     .. versionchanged:: 2.0
-        Added *unquoted_keys*.
+        Added *indent_leaves* and *unquoted_keys*.
     """
     return Encoder(
         allow=allow,
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
+        indent_leaves=indent_leaves,
         item_separator=item_separator,
         key_separator=key_separator,
         sort_keys=sort_keys,
