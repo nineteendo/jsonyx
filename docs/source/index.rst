@@ -39,7 +39,8 @@ better performance and no dependencies.
 
 .. code-block:: pytb
 
-    File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
+    Traceback (most recent call last):
+      File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
         "path": "c:\users"
                      ^^^^
     jsonyx.JSONSyntaxError: Expecting 4 hex digits
