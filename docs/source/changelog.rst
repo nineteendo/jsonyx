@@ -14,6 +14,7 @@ v2.0.0 (unreleased)
 - Added :func:`jsonyx.Manipulator`
 - Added :option:`command`
 - Added :option:`old_input_filename` and :option:`patch_filename`
+- Added :option:`--indent-leaves` and its alias :option:`-l`
 - Added :option:`--unquoted-keys` and its alias :option:`-u`
 - Fixed comment detection
 - Fixed typo in error message

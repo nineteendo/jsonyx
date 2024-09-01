@@ -75,6 +75,12 @@ Command Line Interface
     .. versionadded:: 1.2
         :option:`!-i`
 
+.. option:: -l, --indent-leaves
+
+    Indent leaf objects and arrays.
+
+    .. versionadded:: 2.0
+
 .. option:: -s, --sort-keys
 
     Sort the keys of objects.

@@ -26,7 +26,7 @@ better performance and no dependencies.
             "Unquoted keys": {key: "value"}
         }
 
-- Pretty-printing
+- Pretty-printing:
 
     .. code-block:: json
 

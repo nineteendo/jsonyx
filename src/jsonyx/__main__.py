@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # Copyright (C) 2024 Nice Zombies
 """A command line utility to manipulate JSON files."""
-# TODO(Nice Zombies): add --indent-leaves
 from __future__ import annotations
 
 __all__: list[str] = ["main"]
@@ -25,6 +24,7 @@ class _Namespace:
     compact: bool
     ensure_ascii: bool
     indent: int | str | None
+    indent_leaves: bool
     input_filename: str | None
     no_commas: bool
     nonstrict: bool
@@ -45,7 +45,7 @@ class _PatchNameSpace(_Namespace):
     patch_filename: str
 
 
-def _register(parser: ArgumentParser) -> None:
+def _configure(parser: ArgumentParser) -> None:
     parent_parser: ArgumentParser = ArgumentParser(add_help=False)
     parent_parser.add_argument(
         "-a",
@@ -79,6 +79,12 @@ def _register(parser: ArgumentParser) -> None:
         type=int,
         metavar="SPACES",
         help="indent using the specified number of spaces",
+    )
+    parent_parser.add_argument(
+        "-l",
+        "--indent-leaves",
+        action="store_true",
+        help="indent leaf objects and arrays",
     )
     parent_parser.add_argument(
         "-s",
@@ -183,6 +189,7 @@ def _run(args: _Namespace) -> None:
         allow=EVERYTHING if args.nonstrict else NOTHING,
         ensure_ascii=args.ensure_ascii,
         indent=args.indent,
+        indent_leaves=args.indent_leaves,
         item_separator=(
             " " if args.no_commas else
             "," if args.compact else
@@ -237,7 +244,7 @@ def main() -> None:
     parser: ArgumentParser = ArgumentParser(
         description="a command line utility to manipulate JSON files.",
     )
-    _register(parser)
+    _configure(parser)
     args: _Namespace = parser.parse_args(namespace=_Namespace())
     if not args.command:
         parser.print_help()

@@ -202,10 +202,9 @@ class Encoder:
         decimal_str: Callable[[Decimal], str] = Decimal.__str__
 
         full_item_separator: str = item_separator
-        if indent is not None:
-            item_separator = item_separator.rstrip()
-            if isinstance(indent, int):
-                indent = " " * indent
+        item_separator = item_separator.rstrip()
+        if indent is not None and isinstance(indent, int):
+            indent = " " * indent
 
         def encode_decimal(decimal: Decimal) -> str:
             if not decimal.is_finite():
