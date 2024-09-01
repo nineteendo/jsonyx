@@ -136,6 +136,9 @@ class Decoder:
 
         >>> json.Decoder().loads('{"foo": ["bar", null, 1.0, 2]}')
         {'foo': ['bar', None, 1.0, 2]}
+
+        .. tip::
+            Specify *filename* to display the filename in error messages.
         """
         filename = fspath(filename)
         if not filename.startswith("<") and not filename.endswith(">"):
@@ -470,6 +473,9 @@ def loads(
 
     >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
     {'foo': ['bar', None, 1.0, 2]}
+
+    .. tip::
+        Specify *filename* to display the filename in error messages.
     """
     return Decoder(allow=allow, use_decimal=use_decimal).loads(
         s, filename=filename,
