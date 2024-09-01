@@ -273,7 +273,7 @@ class Encoder:
 
         .. caution::
             To pretty-print unpaired surrogates, you need to use
-            :data:`jsonyx.allow.SURROGATES` and *ensure_ascii*.
+            :data:`jsonyx.allow.SURROGATES` and ``ensure_ascii=True``.
         """
         fp.write(self._encoder(obj))
 
@@ -607,7 +607,7 @@ def dump(
 
     .. caution::
         To pretty-print unpaired surrogates, you need to use
-        :data:`jsonyx.allow.SURROGATES` and *ensure_ascii*.
+        :data:`jsonyx.allow.SURROGATES` and ``ensure_ascii=True``.
 
     .. versionchanged:: 2.0
         Added *indent_leaves* and *unquoted_keys*.

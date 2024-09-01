@@ -15,6 +15,13 @@ performance and no dependencies
 Key Features:
 
 - JSON decoding, encoding and patching
+- Pretty printing:
+    ```json
+    {
+        "foo": [1, 2, 3],
+        "bar": {"a": 1, "b": 2, "c": 3}
+    }
+    ```
 - Optionally supports these JSON deviations using `jsonyx.allow`:
     ```javascript
     {
@@ -26,13 +33,6 @@ Key Features:
         "Surrogates": "\ud800",
         "Trailing comma": [0,],
         "Unquoted keys": {key: "value"}
-    }
-    ```
-- Pretty printing:
-    ```json
-    {
-        "foo": [1, 2, 3],
-        "bar": {"a": 1, "b": 2, "c": 3}
     }
     ```
 - Detailed error messages:

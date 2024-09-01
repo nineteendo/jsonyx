@@ -76,11 +76,11 @@ Pretty printing
     }
 
 .. hint::
-    Use *indent_leaves* to indent everything.
+    Use ``indent_leaves=True`` to indent everything.
 
 .. caution::
     To pretty-print unpaired surrogates, you need to use
-    :data:`jsonyx.allow.SURROGATES` and *ensure_ascii*.
+    :data:`jsonyx.allow.SURROGATES` and ``ensure_ascii=True``.
 
 Decoding JSON
 ^^^^^^^^^^^^^

@@ -11,6 +11,15 @@ better performance and no dependencies.
 .. rubric:: Key Features
 
 - JSON decoding, encoding and patching
+- Pretty-printing:
+
+    .. code-block:: json
+
+        {
+            "foo": [1, 2, 3],
+            "bar": {"a": 1, "b": 2, "c": 3}
+        }
+
 - Optionally supports these JSON deviations using :mod:`jsonyx.allow`:
 
     .. code-block:: javascript
@@ -24,15 +33,6 @@ better performance and no dependencies.
             "Surrogates": "\ud800",
             "Trailing comma": [0,],
             "Unquoted keys": {key: "value"}
-        }
-
-- Pretty-printing:
-
-    .. code-block:: json
-
-        {
-            "foo": [1, 2, 3],
-            "bar": {"a": 1, "b": 2, "c": 3}
         }
 
 - Detailed error messages:
