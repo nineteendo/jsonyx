@@ -277,7 +277,7 @@ class Encoder:
         >>> io.getvalue()
         '["streaming API"]\n'
 
-        .. caution::
+        .. warning::
             To pretty-print unpaired surrogates, you need to use
             :data:`jsonyx.allow.SURROGATES` and ``ensure_ascii=True``.
         """
@@ -620,7 +620,7 @@ def dump(
     .. note::
         The *item_separator* is automatically stripped when indented.
 
-    .. caution::
+    .. warning::
         To pretty-print unpaired surrogates, you need to use
         :data:`jsonyx.allow.SURROGATES` and ``ensure_ascii=True``.
 
