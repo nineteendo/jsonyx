@@ -69,12 +69,14 @@ Pretty printing
 ::
 
     >>> import jsonyx as json
-    >>> json.dump({"c": 3, "b": 2, "a": 1}, indent=4, sort_keys=True)
+    >>> json.dump({"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}, indent=4)
     {
-        "a": 1,
-        "b": 2,
-        "c": 3
+        "foo": [1, 2, 3],
+        "bar": {"a": 1, "b": 2, "c": 3}
     }
+
+.. hint::
+    Use *indent_leaves* to indent everything.
 
 .. caution::
     To pretty-print unpaired surrogates, you need to use
@@ -141,9 +143,10 @@ Using the ``jsonyx`` command line utility
 
 .. code-block:: shell-session
 
-    $ echo '{"json": "obj"}' | jsonyx format --indent 4
+    $ echo '{"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}' | jsonyx format --indent 4
     {
-        "json": "obj"
+        "foo": [1, 2, 3],
+        "bar": {"a": 1, "b": 2, "c": 3}
     }
     $ echo '{1.2: 3.4}' | jsonyx format
       File "<stdin>", line 1, column 2

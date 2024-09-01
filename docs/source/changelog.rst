@@ -5,7 +5,7 @@ v2.0.0 (unreleased)
 -------------------
 
 - Added the ``jsonyx`` command line utility
-- Added *unquoted_keys* to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
+- Added *indent_leaves* and *unquoted_keys* to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
   :func:`jsonyx.dumps` and :func:`jsonyx.write`
 - Added :data:`jsonyx.allow.UNQUOTED_KEYS`
 - Added :func:`jsonyx.apply_patch` and :func:`jsonyx.make_patch`

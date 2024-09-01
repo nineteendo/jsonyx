@@ -26,6 +26,15 @@ better performance and no dependencies.
             "Unquoted keys": {key: "value"}
         }
 
+- Pretty-printing
+
+    .. code-block:: json
+
+        {
+            "foo": [1, 2, 3],
+            "bar": {"a": 1, "b": 2, "c": 3}
+        }
+
 - Detailed error messages:
 
     .. code-block:: pytb

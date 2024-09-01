@@ -28,6 +28,13 @@ Key Features:
         "Unquoted keys": {key: "value"}
     }
     ```
+- Pretty printing:
+    ```json
+    {
+        "foo": [1, 2, 3],
+        "bar": {"a": 1, "b": 2, "c": 3}
+    }
+    ```
 - Detailed error messages:
     ```none
       File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
