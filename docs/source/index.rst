@@ -37,8 +37,9 @@ better performance and no dependencies.
 
 - Detailed error messages:
 
-.. code-block:: pytb
+.. code-block:: none
 
+    Traceback (most recent call last):
       File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
         "path": "c:\users"
                      ^^^^

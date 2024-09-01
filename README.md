@@ -12,7 +12,7 @@
 3.10+. It is written in pure Python with an optional C extension for better
 performance and no dependencies
 
-Key Features:
+## Key Features
 
 - JSON decoding, encoding and patching
 - Pretty printing:
@@ -37,6 +37,7 @@ Key Features:
     ```
 - Detailed error messages:
     ```none
+    Traceback (most recent call last):
       File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
          "path": "c:\users"
                       ^^^^
