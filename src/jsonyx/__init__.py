@@ -740,7 +740,7 @@ def apply_patch(
     >>> json.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
     [1, 3]
 
-    .. hint::
+    .. tip::
         Using queries instead of indices is more robust.
 
     .. versionadded:: 2.0
@@ -786,7 +786,7 @@ def run_select_query(
     >>> root[0]
     [1, 2, 3, None, None, None]
 
-    .. hint::
+    .. tip::
         Using queries instead of indices is more robust.
 
     .. versionadded:: 2.0

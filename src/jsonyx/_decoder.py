@@ -114,7 +114,7 @@ except ImportError:
         See :data:`jsonyx.allow.DUPLICATE_KEYS` for loading a dictionary with
         duplicate keys.
 
-        .. hint::
+        .. tip::
             To retrieve the value of a duplicate key, you can
             :ref:`use a multi dict <use_multidict>`.
         """

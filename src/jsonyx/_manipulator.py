@@ -564,7 +564,7 @@ class Manipulator:
         >>> json.Manipulator().apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
         [1, 3]
 
-        .. hint::
+        .. tip::
             Using queries instead of indices is more robust.
         """
         root: list[Any] = [obj]
@@ -611,7 +611,7 @@ class Manipulator:
         >>> root[0]
         [1, 2, 3, None, None, None]
 
-        .. hint::
+        .. tip::
             Using queries instead of indices is more robust.
         """
         if isinstance(nodes, tuple):

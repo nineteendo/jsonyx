@@ -68,7 +68,7 @@ NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
 #: >>> json.dump("\ud800", allow=jsonyx.allow.SURROGATES, ensure_ascii=True)
 #: "\ud800"
 #:
-#: .. hint::
+#: .. tip::
 #:     If you're not using ``read()`` or ``write()``, you still need to set
 #:     the unicode error handler to "surrogatepass".
 SURROGATES: frozenset[str] = frozenset({"surrogates"})

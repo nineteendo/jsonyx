@@ -75,11 +75,11 @@ Pretty printing
         "bar": {"a": 1, "b": 2, "c": 3}
     }
 
-.. hint::
+.. tip::
     Use ``indent_leaves=True`` to indent everything and ``sort_keys=True`` to
     sort the keys of objects.
 
-.. caution::
+.. warning::
     To pretty-print unpaired surrogates, you need to use
     :data:`jsonyx.allow.SURROGATES` and ``ensure_ascii=True``.
 
@@ -136,7 +136,7 @@ Applying a patch
     >>> json.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
     [1, 3]
 
-.. hint::
+.. tip::
     Using queries instead of indices is more robust.
 
 Using the ``jsonyx`` command line utility
