@@ -263,7 +263,7 @@ class Encoder:
 
         >>> import jsonyx as json
         >>> encoder = json.Encoder()
-        >>> encoder.dump(["foo", {"bar": ('baz', None, 1.0, 2)}])
+        >>> encoder.dump(["foo", {"bar": ("baz", None, 1.0, 2)}])
         ["foo", {"bar": ["baz", null, 1.0, 2]}]
         >>> from io import StringIO
         >>> io = StringIO()
@@ -288,7 +288,7 @@ class Encoder:
         :rtype: str
 
         >>> import jsonyx as json
-        >>> json.Encoder().dumps(["foo", {"bar": ('baz', None, 1.0, 2)}])
+        >>> json.Encoder().dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
         '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
         """
         return self._encoder(obj)
@@ -597,7 +597,7 @@ def dump(
     :raises ValueError: for invalid values
 
     >>> import jsonyx as json
-    >>> json.dump(["foo", {"bar": ('baz', None, 1.0, 2)}])
+    >>> json.dump(["foo", {"bar": ("baz", None, 1.0, 2)}])
     ["foo", {"bar": ["baz", null, 1.0, 2]}]
     >>> from io import StringIO
     >>> io = StringIO()
@@ -674,7 +674,7 @@ def dumps(
     :rtype: str
 
     >>> import jsonyx as json
-    >>> json.dumps(["foo", {"bar": ('baz', None, 1.0, 2)}])
+    >>> json.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
     '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
 
     .. versionchanged:: 2.0

@@ -30,7 +30,7 @@ Encoding basic Python object hierarchies
 ::
 
     >>> import jsonyx as json
-    >>> json.dumps(["foo", {"bar": ('baz', None, 1.0, 2)}])
+    >>> json.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
     '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
     >>> json.dump('"foo\bar')
     "\"foo\bar"
