@@ -648,7 +648,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
         return NULL;
 
     /* skip comments after { */
-    if (_skip_comments(s, pyfilename, pystr, &idx)) {
+    if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
         goto bail;
     }
 
@@ -693,8 +693,15 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
             }
             if (key == NULL)
                 goto bail;
-            if (!PyDict_Contains(rval, key)) {
+            int contains = PyDict_Contains(rval, key);
+            if (contains == -1)
+                goto bail;
+
+            if (contains == 0) {
                 new_key = PyDict_SetDefault(memo, key, key);
+                // This returns a borrowed reference, while new_key
+                // is a strong reference in the case of PyObject_CallOneArg
+                Py_INCREF(new_key);
             }
             else if (!s->allow_duplicate_keys) {
                 raise_errmsg("Duplicate keys are not allowed", pyfilename, pystr, idx, next_idx);
@@ -703,14 +710,15 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
             else {
                 new_key = PyObject_CallOneArg((PyObject *)&PyDuplicateKeyType, key);
             }
-            Py_SETREF(key, Py_NewRef(new_key));
-            if (key == NULL) {
+
+            if (new_key == NULL)
                 goto bail;
-            }
+
+            Py_SETREF(key, new_key);
             colon_idx = idx = next_idx;
 
             /* skip comments between key and : delimiter, read :, skip comments */
-            if (_skip_comments(s, pyfilename, pystr, &idx)) {
+            if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
                 goto bail;
             }
             if (idx > end_idx || PyUnicode_READ(kind, str, idx) != ':') {
@@ -718,7 +726,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
                 goto bail;
             }
             idx++;
-            if (_skip_comments(s, pyfilename, pystr, &idx)) {
+            if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
                 goto bail;
             }
 
@@ -734,7 +742,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
             comma_idx = idx = next_idx;
 
             /* skip comments before } or , */
-            if (_skip_comments(s, pyfilename, pystr, &idx)) {
+            if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
                 goto bail;
             }
 
@@ -748,7 +756,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
                 idx++;
 
                 /* skip comments after , delimiter */
-                if (_skip_comments(s, pyfilename, pystr, &idx)) {
+                if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
                     goto bail;
                 }
             }
