@@ -26,7 +26,6 @@ class _Namespace:
     indent: int | str | None
     indent_leaves: bool
     input_filename: str | None
-    no_commas: bool
     nonstrict: bool
     output_filename: str | None
     sort_keys: bool
@@ -58,13 +57,6 @@ def _configure(parser: ArgumentParser) -> None:
         "--compact",
         action="store_true",
         help='avoid unnecessary whitespace after "," and ":"',
-    )
-    comma_group = parent_parser.add_mutually_exclusive_group()
-    comma_group.add_argument(
-        "-C",
-        "--no-commas",
-        action="store_true",
-        help="separate items by whitespace instead of commas",
     )
     parent_parser.add_argument(
         "-d",
@@ -98,7 +90,7 @@ def _configure(parser: ArgumentParser) -> None:
         action="store_true",
         help="allow all JSON deviations",
     )
-    comma_group.add_argument(
+    parent_parser.add_argument(
         "-t",
         "--trailing-comma",
         action="store_true",
@@ -190,11 +182,7 @@ def _run(args: _Namespace) -> None:
         ensure_ascii=args.ensure_ascii,
         indent=args.indent,
         indent_leaves=args.indent_leaves,
-        item_separator=(
-            " " if args.no_commas else
-            "," if args.compact else
-            ", "
-        ),
+        item_separator="," if args.compact else ", ",
         key_separator=":" if args.compact else ": ",
         sort_keys=args.sort_keys,
         trailing_comma=args.trailing_comma,

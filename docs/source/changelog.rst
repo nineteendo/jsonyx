@@ -22,6 +22,7 @@ v2.0.0 (unreleased)
 - Made :class:`collections.abc.Mapping` and :class:`collections.abc.Sequence`
   JSON serializable
 - Removed :mod:`!jsonyx.tool`
+- Removed :option:`!--no-commas` and its alias :option:`!-C`
 
 `v1.2.1 <https://pypi.org/project/jsonyx/1.2.1>`_
 -------------------------------------------------
@@ -36,7 +37,7 @@ v2.0.0 (unreleased)
 - Added :option:`output_filename`
 - Added :option:`-a` as an alias to :option:`--ensure-ascii`
 - Added :option:`-c` as an alias to :option:`--compact`
-- Added :option:`-C` as an alias to :option:`--no-commas`
+- Added :option:`!-C` as an alias to :option:`!--no-commas`
 - Added :option:`-d` as an alias to :option:`--use-decimal`
 - Added :option:`-i` as an alias to :option:`--indent`
 - Added :option:`-s` as an alias to :option:`--sort-keys`

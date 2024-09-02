@@ -54,13 +54,6 @@ Command Line Interface
     .. versionadded:: 1.2
         :option:`!-c`
 
-.. option:: -C, --no-commas
-
-    Separate items by whitespace instead of commas.
-
-    .. versionadded:: 1.2
-        :option:`!-C`
-
 .. option:: -d, --use-decimal
 
     Use decimal instead of float.
