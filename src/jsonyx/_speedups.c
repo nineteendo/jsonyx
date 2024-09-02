@@ -1573,10 +1573,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
         goto bail;
     }
     if (has_key) {
-        if (has_key != -1)
-            PyErr_SetString(PyExc_ValueError, "Unexpected circular reference");
-        // Should this be removed? has_key can never be -1 in this block, since
-        // that isn't truthy.
+        PyErr_SetString(PyExc_ValueError, "Unexpected circular reference");
         goto bail;
     }
     if (PyDict_SetItem(markers, ident, mapping) < 0) {
@@ -1721,8 +1718,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
         goto bail;
 
     if (has_key) {
-        if (has_key != -1)
-            PyErr_SetString(PyExc_ValueError, "Unexpected circular reference");
+        PyErr_SetString(PyExc_ValueError, "Unexpected circular reference");
         goto bail;
     }
     if (PyDict_SetItem(markers, ident, seq) < 0) {
