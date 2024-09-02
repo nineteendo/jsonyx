@@ -40,7 +40,7 @@ typedef struct _PyEncoderObject {
     PyObject *indent;
     PyObject *end;
     PyObject *item_separator;
-    PyObject *full_item_separator;
+    PyObject *long_item_separator;
     PyObject *key_separator;
     int allow_nan_and_infinity;
     int allow_surrogates;
@@ -1257,7 +1257,7 @@ static PyObject *
 encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     static char *kwlist[] = {"encode_decimal", "indent", "end",
-                             "item_separator", "full_item_separator",
+                             "item_separator", "long_item_separator",
                              "key_separator", "allow_nan_and_infinity",
                              "allow_surrogates", "ensure_ascii",
                              "indent_leaves", "sort_keys", "trailing_comma",
@@ -1265,13 +1265,13 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 
     PyEncoderObject *s;
     PyObject *encode_decimal, *indent;
-    PyObject *end, *item_separator, *full_item_separator, *key_separator;
+    PyObject *end, *item_separator, *long_item_separator, *key_separator;
     int allow_nan_and_infinity, allow_surrogates, ensure_ascii, indent_leaves;
     int sort_keys, trailing_comma, unquoted_keys;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOUUUUppppppp:make_encoder", kwlist,
         &encode_decimal, &indent,
-        &end, &item_separator, &full_item_separator, &key_separator,
+        &end, &item_separator, &long_item_separator, &key_separator,
         &allow_nan_and_infinity, &allow_surrogates, &ensure_ascii,
         &indent_leaves, &sort_keys, &trailing_comma, &unquoted_keys))
         return NULL;
@@ -1303,7 +1303,7 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->indent = Py_NewRef(indent);
     s->end = Py_NewRef(end);
     s->item_separator = Py_NewRef(item_separator);
-    s->full_item_separator = Py_NewRef(full_item_separator);
+    s->long_item_separator = Py_NewRef(long_item_separator);
     s->key_separator = Py_NewRef(key_separator);
     s->allow_nan_and_infinity = allow_nan_and_infinity;
     s->allow_surrogates = allow_surrogates;
@@ -1590,7 +1590,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
 
     PyObject *current_item_separator;
     if (!indented) {
-        current_item_separator = s->full_item_separator; // borrowed reference
+        current_item_separator = s->long_item_separator; // borrowed reference
     }
     else {
 #ifdef Py_DEBUG
@@ -1725,7 +1725,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
 
     PyObject *separator;
     if (!indented) {
-        separator = s->full_item_separator; // borrowed reference
+        separator = s->long_item_separator; // borrowed reference
     }
     else {
 #ifdef Py_DEBUG
@@ -1801,7 +1801,7 @@ encoder_traverse(PyEncoderObject *self, visitproc visit, void *arg)
     Py_VISIT(self->end);
     Py_VISIT(self->key_separator);
     Py_VISIT(self->item_separator);
-    Py_VISIT(self->full_item_separator);
+    Py_VISIT(self->long_item_separator);
     return 0;
 }
 
@@ -1814,7 +1814,7 @@ encoder_clear(PyEncoderObject *self)
     Py_CLEAR(self->end);
     Py_CLEAR(self->key_separator);
     Py_CLEAR(self->item_separator);
-    Py_CLEAR(self->full_item_separator);
+    Py_CLEAR(self->long_item_separator);
     return 0;
 }
 

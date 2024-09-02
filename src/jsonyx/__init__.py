@@ -207,7 +207,7 @@ class Encoder:
         allow_surrogates: bool = "surrogates" in allow
         decimal_str: Callable[[Decimal], str] = Decimal.__str__
 
-        full_item_separator: str = item_separator
+        long_item_separator: str = item_separator
         item_separator = item_separator.rstrip()
         if indent is not None and isinstance(indent, int):
             indent = " " * indent
@@ -228,7 +228,7 @@ class Encoder:
             return decimal_str(decimal)
 
         self._encoder: Callable[[object], str] = make_encoder(
-            encode_decimal, indent, end, item_separator, full_item_separator,
+            encode_decimal, indent, end, item_separator, long_item_separator,
             key_separator, allow_nan_and_infinity, allow_surrogates,
             ensure_ascii, indent_leaves, sort_keys, trailing_comma,
             unquoted_keys,

@@ -105,9 +105,9 @@ def test_format_syntax_error(
 
 def test_dump(json: ModuleType) -> None:
     """Test JSON dump."""
-    fp: StringIO = StringIO()
-    json.dump(0, fp, end="")
-    assert fp.getvalue() == "0"
+    io: StringIO = StringIO()
+    json.dump(0, io, end="")
+    assert io.getvalue() == "0"
 
 
 def test_load(json: ModuleType) -> None:

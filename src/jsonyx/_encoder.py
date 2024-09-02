@@ -42,7 +42,7 @@ except ImportError:
         indent: str | None,
         end: str,
         item_separator: str,
-        full_item_separator: str,
+        long_item_separator: str,
         key_separator: str,
         allow_nan_and_infinity: bool,  # noqa: FBT001
         allow_surrogates: bool,  # noqa: FBT001
@@ -121,7 +121,7 @@ except ImportError:
                 for value in seq
             )):
                 indented: bool = False
-                current_item_separator: str = full_item_separator
+                current_item_separator: str = long_item_separator
             else:
                 indented = True
                 current_indent += indent
@@ -166,7 +166,7 @@ except ImportError:
                 for value in mapping.values()
             )):
                 indented: bool = False
-                current_item_separator: str = full_item_separator
+                current_item_separator: str = long_item_separator
             else:
                 indented = True
                 current_indent += indent
@@ -236,8 +236,8 @@ except ImportError:
                 raise TypeError(msg)
 
         def encoder(obj: object) -> str:
-            fp: StringIO = StringIO()
-            write: Callable[[str], object] = fp.write
+            io: StringIO = StringIO()
+            write: Callable[[str], object] = io.write
             try:
                 write_value(obj, write, "\n")
             except (ValueError, TypeError) as exc:
@@ -246,6 +246,6 @@ except ImportError:
                 markers.clear()
 
             write(end)
-            return fp.getvalue()
+            return io.getvalue()
 
         return encoder
