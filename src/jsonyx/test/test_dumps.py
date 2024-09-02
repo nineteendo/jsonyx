@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from types import ModuleType
 
 _CIRCULAR_DICT: dict[str, object] = {}
-_CIRCULAR_DICT["self"] = _CIRCULAR_DICT
+_CIRCULAR_DICT[""] = _CIRCULAR_DICT
 _CIRCULAR_LIST: list[object] = []
 _CIRCULAR_LIST.append(_CIRCULAR_LIST)
 
@@ -372,9 +372,13 @@ def test_unquoted_ascii_keys(
     ) == f"{{{key}: 0}}"
 
 
-@pytest.mark.parametrize(
-    "key", [0, Decimal(0), 0.0, Decimal(0.0), True, False, None],
-)
+@pytest.mark.parametrize("key", [
+    # JSON values
+    0, Decimal(0), 0.0, Decimal(0.0), True, False, None,
+
+    # No JSON values
+    b"", 0j, frozenset(), memoryview(b""), object(), slice(0),
+])  # type: ignore
 def test_unserializable_key(json: ModuleType, key: object) -> None:
     """Test unserializable key."""
     with pytest.raises(TypeError, match="Keys must be str, not"):
@@ -424,9 +428,9 @@ def test_dict_recursion(json: ModuleType) -> None:
 
 
 @pytest.mark.parametrize("obj", [
-    b"", 0j, bytearray(), frozenset(), memoryview(b""),  # type: ignore
-    object(), set(), slice(0),
-])
+    b"", 0j, bytearray(), frozenset(), memoryview(b""), object(), set(),
+    slice(0),
+])  # type: ignore
 def test_unserializable_value(json: ModuleType, obj: object) -> None:
     """Test unserializable value."""
     with pytest.raises(TypeError, match="is not JSON serializable"):
