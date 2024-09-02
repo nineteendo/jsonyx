@@ -72,7 +72,7 @@ def test_rational_number(
 def test_nan_and_infinity(
     json: ModuleType, num: str, num_type: type[Decimal | float],
 ) -> None:
-    """Test NaN and infinity."""
+    """Test NaN and (negative) infinity."""
     assert json.dumps(num_type(num), allow=NAN_AND_INFINITY, end="") == num
 
 
@@ -81,7 +81,7 @@ def test_nan_and_infinity(
 def test_nan_and_infinity_not_allowed(
     json: ModuleType, num: str, num_type: type[Decimal | float],
 ) -> None:
-    """Test NaN and infinity if not allowed."""
+    """Test NaN and (negative) infinity if not allowed."""
     with pytest.raises(ValueError, match="is not allowed"):
         json.dumps(num_type(num))
 
@@ -236,9 +236,8 @@ def test_list_indent(
 def test_list_indent_leaves(
     json: ModuleType, indent: int | str, expected: str,
 ) -> None:
-    """Test list indent_leaves."""
-    obj: list[object] = [1, 2, 3]
-    s: str = json.dumps(obj, end="", indent=indent, indent_leaves=True)
+    """Test list indent with indent_leaves."""
+    s: str = json.dumps([1, 2, 3], end="", indent=indent, indent_leaves=True)
     assert s == expected
 
 
@@ -274,37 +273,38 @@ def test_mapping(
 
 @pytest.mark.parametrize(("key", "expected"), [
     # First character
-    ("\xb2", '{"\xb2": 0}'),
-    ("\u0300", '{"\u0300": 0}'),
-    ("\u037a", '{"\u037a": 0}'),
-    ("\u0488", '{"\u0488": 0}'),
+    ("\xb2", '"\xb2"'),
+    ("\u0300", '"\u0300"'),
+    ("\u037a", '"\u037a"'),
+    ("\u0488", '"\u0488"'),
 
     # Remaining characters
-    ("A\xb2", '{"A\xb2": 0}'),
-    ("A\u037a", '{"A\u037a": 0}'),
-    ("A\u0488", '{"A\u0488": 0}'),
+    ("A\xb2", '"A\xb2"'),
+    ("A\u037a", '"A\u037a"'),
+    ("A\u0488", '"A\u0488"'),
 ])
 def test_quoted_keys(json: ModuleType, key: object, expected: str) -> None:
     """Test quoted keys."""
-    assert json.dumps({key: 0}, end="", unquoted_keys=True) == expected
+    s: str = json.dumps({key: 0}, end="", unquoted_keys=True)
+    assert s == f"{{{expected}: 0}}"
 
 
 @pytest.mark.parametrize(("key", "expected"), [
     # First character
-    ("\xb2", r'{"\u00b2": 0}'),
-    ("\u0300", r'{"\u0300": 0}'),
-    ("\u037a", r'{"\u037a": 0}'),
-    ("\u0488", r'{"\u0488": 0}'),
-    ("\u16ee", r'{"\u16ee": 0}'),
-    ("\u1885", r'{"\u1885": 0}'),
-    ("\u2118", r'{"\u2118": 0}'),
+    ("\xb2", r'"\u00b2"'),
+    ("\u0300", r'"\u0300"'),
+    ("\u037a", r'"\u037a"'),
+    ("\u0488", r'"\u0488"'),
+    ("\u16ee", r'"\u16ee"'),
+    ("\u1885", r'"\u1885"'),
+    ("\u2118", r'"\u2118"'),
 
     # Remaining characters
-    ("A\xb2", r'{"A\u00b2": 0}'),
-    ("A\u0300", r'{"A\u0300": 0}'),
-    ("A\u037a", r'{"A\u037a": 0}'),
-    ("A\u0488", r'{"A\u0488": 0}'),
-    ("A\u2118", r'{"A\u2118": 0}'),
+    ("A\xb2", r'"A\u00b2"'),
+    ("A\u0300", r'"A\u0300"'),
+    ("A\u037a", r'"A\u037a"'),
+    ("A\u0488", r'"A\u0488"'),
+    ("A\u2118", r'"A\u2118"'),
 ])
 def test_quoted_keys_ensure_ascii(
     json: ModuleType, key: object, expected: str,
@@ -312,22 +312,25 @@ def test_quoted_keys_ensure_ascii(
     """Test quoted keys with ensure_ascii."""
     assert json.dumps(
         {key: 0}, end="", ensure_ascii=True, unquoted_keys=True,
-    ) == expected
+    ) == f"{{{expected}: 0}}"
 
 
 @pytest.mark.parametrize(("key", "expected"), [
+    # Empty string
+    ("", '""'),
+
     # First character
-    ("\x00", r'{"\u0000": 0}'),
-    (" ", '{" ": 0}'),
-    ("!", '{"!": 0}'),
-    ("$", '{"$": 0}'),
-    ("0", '{"0": 0}'),
+    ("\x00", r'"\u0000"'),
+    (" ", '" "'),
+    ("!", '"!"'),
+    ("$", '"$"'),
+    ("0", '"0"'),
 
     # Remaining characters
-    ("A\x00", r'{"A\u0000": 0}'),
-    ("A ", '{"A ": 0}'),
-    ("A!", '{"A!": 0}'),
-    ("A$", '{"A$": 0}'),
+    ("A\x00", r'"A\u0000"'),
+    ("A ", '"A "'),
+    ("A!", '"A!"'),
+    ("A$", '"A$"'),
 ])
 @pytest.mark.parametrize("ensure_ascii", [True, False])
 def test_quoted_ascii_keys(
@@ -337,43 +340,36 @@ def test_quoted_ascii_keys(
     """Test quoted ascii keys."""
     assert json.dumps(
         {key: 0}, end="", ensure_ascii=ensure_ascii, unquoted_keys=True,
-    ) == expected
+    ) == f"{{{expected}: 0}}"
 
 
-@pytest.mark.parametrize(("key", "expected"), [
+@pytest.mark.parametrize("key", [
     # First character
-    ("\u16ee", "{\u16ee: 0}"),
-    ("\u1885", "{\u1885: 0}"),
-    ("\u2118", "{\u2118: 0}"),
+    "\u16ee", "\u1885", "\u2118",
 
     # Remaining characters
-    ("A\u0300", "{A\u0300: 0}"),
-    ("A\u2118", "{A\u2118: 0}"),
+    "A\u0300", "A\u2118",
 ])
-def test_unquoted_keys(json: ModuleType, key: object, expected: str) -> None:
+def test_unquoted_keys(json: ModuleType, key: object) -> None:
     """Test unquoted keys."""
-    assert json.dumps({key: 0}, end="", unquoted_keys=True) == expected
+    assert json.dumps({key: 0}, end="", unquoted_keys=True) == f"{{{key}: 0}}"
 
 
-@pytest.mark.parametrize(("key", "expected"), [
+@pytest.mark.parametrize("key", [
     # First character
-    ("A", "{A: 0}"),
-    ("_", "{_: 0}"),
+    "A", "_",
 
     # Remaining characters
-    ("A0", "{A0: 0}"),
-    ("AA", "{AA: 0}"),
-    ("A_", "{A_: 0}"),
+    "A0", "AA", "A_",
 ])
 @pytest.mark.parametrize("ensure_ascii", [True, False])
 def test_unquoted_ascii_keys(
     json: ModuleType, key: object, ensure_ascii: bool,  # noqa: FBT001
-    expected: str,
 ) -> None:
     """Test unquoted ascii keys."""
     assert json.dumps(
         {key: 0}, end="", ensure_ascii=ensure_ascii, unquoted_keys=True,
-    ) == expected
+    ) == f"{{{key}: 0}}"
 
 
 @pytest.mark.parametrize(
@@ -410,7 +406,7 @@ def test_dict_indent(
 def test_dict_indent_leaves(
     json: ModuleType, indent: int | str, expected: str,
 ) -> None:
-    """Test dict indent_leaves."""
+    """Test dict indent with indent_leaves."""
     obj: dict[str, object] = {"a": 1, "b": 2, "c": 3}
     s: str = json.dumps(obj, end="", indent=indent, indent_leaves=True)
     assert s == expected
@@ -469,24 +465,24 @@ def test_compact(
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
-    ([1, 2, 3], "[\n\t1,\n\t2,\n\t3,\n]"),
-    ({"a": 1, "b": 2, "c": 3}, '{\n\t"a": 1,\n\t"b": 2,\n\t"c": 3,\n}'),
-])
-def test_trailing_comma_indent(
-    json: ModuleType, obj: dict[str, object] | list[object], expected: str,
-) -> None:
-    """Test trailing_comma with indent."""
-    assert json.dumps(
-        obj, end="", indent="\t", indent_leaves=True, trailing_comma=True,
-    ) == expected
-
-
-@pytest.mark.parametrize(("obj", "expected"), [
     ([1, 2, 3], "[1, 2, 3]"),
     ({"a": 1, "b": 2, "c": 3}, '{"a": 1, "b": 2, "c": 3}'),
 ])
-def test_trailing_comma_no_indent(
+def test_trailing_comma(
     json: ModuleType, obj: dict[str, object] | list[object], expected: str,
 ) -> None:
-    """Test trailing_comma without indent."""
+    """Test trailing_comma."""
     assert json.dumps(obj, end="", trailing_comma=True) == expected
+
+
+@pytest.mark.parametrize(("obj", "expected"), [
+    ([1, 2, 3], "[\n 1,\n 2,\n 3,\n]"),
+    ({"a": 1, "b": 2, "c": 3}, '{\n "a": 1,\n "b": 2,\n "c": 3,\n}'),
+])
+def test_trailing_comma_indent_leaves(
+    json: ModuleType, obj: dict[str, object] | list[object], expected: str,
+) -> None:
+    """Test trailing_comma with indent and indent_leaves."""
+    assert json.dumps(
+        obj, end="", indent=1, indent_leaves=True, trailing_comma=True,
+    ) == expected
