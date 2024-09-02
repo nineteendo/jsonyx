@@ -377,7 +377,7 @@ def test_unquoted_ascii_keys(
     0, Decimal(0), 0.0, Decimal(0.0), True, False, None,
 
     # No JSON values
-    b"", 0j, frozenset(), memoryview(b""), object(), slice(0),
+    b"", 0j, frozenset(), memoryview(b""), object(),
 ])  # type: ignore
 def test_unserializable_key(json: ModuleType, key: object) -> None:
     """Test unserializable key."""

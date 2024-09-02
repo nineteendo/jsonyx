@@ -27,10 +27,10 @@ if TYPE_CHECKING:
 
 def test_duplicate_key(json: ModuleType) -> None:
     """Test DuplicateKey."""
-    string: object = json.DuplicateKey("")
-    assert isinstance(string, str)
-    assert not str(string)
-    assert hash(string) == id(string)
+    key: object = json.DuplicateKey("")
+    assert isinstance(key, str)
+    assert not str(key)
+    assert hash(key) == id(key)
 
 
 @pytest.mark.parametrize(("s", "encoding"), [

@@ -445,47 +445,39 @@ def test_invalid_object(
     _check_syntax_err(exc_info, msg, colno, end_colno)
 
 
-@pytest.mark.parametrize(("s", "key"), [
+@pytest.mark.parametrize("key", [
     # First character
-    ("{A: 0}", "A"),
-    ("{_: 0}", "_"),
-    ("{\u16ee: 0}", "\u16ee"),
-    ("{\u1885: 0}", "\u1885"),
-    ("{\u2118: 0}", "\u2118"),
+    "A", "_", "\u16ee", "\u1885", "\u2118",
 
     # Remaining characters
-    ("{A0: 0}", "A0"),
-    ("{AA: 0}", "AA"),
-    ("{A_: 0}", "A_"),
-    ("{A\u0300: 0}", "A\u0300"),
-    ("{A\u2118: 0}", "A\u2118"),
+    "A0", "AA", "A_", "A\u0300", "A\u2118",
 ])
-def test_unquoted_keys(json: ModuleType, s: str, key: str) -> None:
+def test_unquoted_keys(json: ModuleType, key: str) -> None:
     """Test unquoted keys."""
-    assert json.loads(s, allow=UNQUOTED_KEYS) == {key: 0}
+    assert json.loads(f"{{{key}: 0}}", allow=UNQUOTED_KEYS) == {key: 0}
 
 
-@pytest.mark.parametrize(("s", "end_colno"), [
+@pytest.mark.parametrize(("key", "end_colno"), [
     # First character
-    ("{A: 0}", 3),
-    ("{_: 0}", 3),
-    ("{\u16ee: 0}", 3),
-    ("{\u1885: 0}", 3),
-    ("{\u2118: 0}", 3),
+    ("A", 3),
+    ("_", 3),
+    ("\u16ee", 3),
+    ("\u1885", 3),
+    ("\u2118", 3),
 
     # Remaining characters
-    ("{A0: 0}", 4),
-    ("{AA: 0}", 4),
-    ("{A_: 0}", 4),
-    ("{A\u0300: 0}", 4),
-    ("{A\u2118: 0}", 4),
+    ("A0", 4),
+    ("AA", 4),
+    ("A_", 4),
+    ("A\u0300", 4),
+    ("A\u2118", 4),
 ])
 def test_unquoted_keys_not_allowed(
-    json: ModuleType, s: str, end_colno: int,
+    json: ModuleType, key: str, end_colno: int,
 ) -> None:
     """Test unquoted keys if not allowed."""
     with pytest.raises(json.JSONSyntaxError) as exc_info:
-        json.loads(s)
+        json.loads(f"{{{key}: 0}}")
 
     _check_syntax_err(exc_info, "Unquoted keys are not allowed", 2, end_colno)
 
@@ -493,15 +485,15 @@ def test_unquoted_keys_not_allowed(
 def test_duplicate_keys(json: ModuleType) -> None:
     """Test duplicate keys."""
     s: str = '{"": 1, "": 2, "": 3}'
-    obj: dict[str, int] = json.loads(s, allow=DUPLICATE_KEYS)
-    assert list(map(str, obj.keys())) == [""] * 3
-    assert list(obj.values()) == [1, 2, 3]
+    dct: dict[str, int] = json.loads(s, allow=DUPLICATE_KEYS)
+    assert all(not key for key in dct)
+    assert list(dct.values()) == [1, 2, 3]
 
 
 def test_reuse_keys(json: ModuleType) -> None:
     """Test if keys are re-used."""
-    obj: list[dict[str, int]] = json.loads('[{"": 1}, {"": 2}, {"": 3}]')
-    ids: set[int] = {id(next(iter(value.keys()))) for value in obj}
+    dcts: list[dict[str, int]] = json.loads('[{"": 1}, {"": 2}, {"": 3}]')
+    ids: set[int] = {id(key) for dct in dcts for key in dct}
     assert len(ids) == 1
 
 
