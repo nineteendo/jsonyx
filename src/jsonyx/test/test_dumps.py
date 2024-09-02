@@ -416,7 +416,6 @@ def test_dict_indent_leaves(
     assert s == expected
 
 
-@pytest.mark.skip(reason="bug in Python")
 def test_dict_recursion(json: ModuleType) -> None:
     """Test dict recursion."""
     obj: dict[str, object] = {}
