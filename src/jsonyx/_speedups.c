@@ -648,7 +648,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
         return NULL;
 
     /* skip comments after { */
-    if (_skip_comments(s, pyfilename, pystr, &idx)) {
+    if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
         goto bail;
     }
 
@@ -693,8 +693,15 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
             }
             if (key == NULL)
                 goto bail;
-            if (!PyDict_Contains(rval, key)) {
+            int contains = PyDict_Contains(rval, key);
+            if (contains == -1)
+                goto bail;
+
+            if (contains == 0) {
                 new_key = PyDict_SetDefault(memo, key, key);
+                // This returns a borrowed reference, while new_key
+                // is a strong reference in the case of PyObject_CallOneArg
+                Py_INCREF(new_key);
             }
             else if (!s->allow_duplicate_keys) {
                 raise_errmsg("Duplicate keys are not allowed", pyfilename, pystr, idx, next_idx);
@@ -703,14 +710,15 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
             else {
                 new_key = PyObject_CallOneArg((PyObject *)&PyDuplicateKeyType, key);
             }
-            Py_SETREF(key, Py_NewRef(new_key));
-            if (key == NULL) {
+
+            if (new_key == NULL)
                 goto bail;
-            }
+
+            Py_SETREF(key, new_key);
             colon_idx = idx = next_idx;
 
             /* skip comments between key and : delimiter, read :, skip comments */
-            if (_skip_comments(s, pyfilename, pystr, &idx)) {
+            if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
                 goto bail;
             }
             if (idx > end_idx || PyUnicode_READ(kind, str, idx) != ':') {
@@ -718,7 +726,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
                 goto bail;
             }
             idx++;
-            if (_skip_comments(s, pyfilename, pystr, &idx)) {
+            if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
                 goto bail;
             }
 
@@ -734,7 +742,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
             comma_idx = idx = next_idx;
 
             /* skip comments before } or , */
-            if (_skip_comments(s, pyfilename, pystr, &idx)) {
+            if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
                 goto bail;
             }
 
@@ -748,7 +756,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
                 idx++;
 
                 /* skip comments after , delimiter */
-                if (_skip_comments(s, pyfilename, pystr, &idx)) {
+                if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
                     goto bail;
                 }
             }
@@ -813,7 +821,7 @@ _parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, P
     end_idx = PyUnicode_GET_LENGTH(pystr) - 1;
 
     /* skip comments after [ */
-    if (_skip_comments(s, pyfilename, pystr, &idx)) {
+    if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
         goto bail;
     }
 
@@ -830,14 +838,14 @@ _parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, P
             if (val == NULL)
                 goto bail;
 
-            if (PyList_Append(rval, val) == -1)
+            if (PyList_Append(rval, val) < 0)
                 goto bail;
 
             Py_CLEAR(val);
             comma_idx = idx = next_idx;
 
             /* skip comments between term and , */
-            if (_skip_comments(s, pyfilename, pystr, &idx)) {
+            if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
                 goto bail;
             }
 
@@ -851,7 +859,7 @@ _parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, P
                 idx++;
 
                 /* skip comments after , */
-                if (_skip_comments(s, pyfilename, pystr, &idx)) {
+                if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
                     goto bail;
                 }
             }
@@ -1161,7 +1169,7 @@ scanner_call(PyScannerObject *self, PyObject *args, PyObject *kwds)
     Py_ssize_t next_idx = -1;
     static char *kwlist[] = {"filename", "string", NULL};
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "UU:scanner", kwlist, &pyfilename, &pystr) ||
-        _skip_comments(self, pyfilename, pystr, &idx))
+        _skip_comments(self, pyfilename, pystr, &idx) < 0)
     {
         return NULL;
     }
@@ -1175,7 +1183,7 @@ scanner_call(PyScannerObject *self, PyObject *args, PyObject *kwds)
         return NULL;
     }
     idx = next_idx;
-    if (_skip_comments(self, pyfilename, pystr, &idx)) {
+    if (_skip_comments(self, pyfilename, pystr, &idx) < 0) {
         return NULL;
     }
     if (idx < PyUnicode_GET_LENGTH(pystr)) {
@@ -1445,17 +1453,24 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
             return -1;
         return _steal_accumulate(writer, encoded);
     }
-    else if (PyObject_IsInstance(obj, (PyTypeObject *)s->Sequence)
+    else if (PyObject_IsInstance(obj, (PyObject *)s->Sequence)
              && !PyByteArray_Check(obj) && !PyBytes_Check(obj)
              && !PyMemoryView_Check(obj) && !PyUnicode_Check(obj))
     {
+        // See https://github.com/python/cpython/issues/123593 
+        if (PyErr_Occurred())
+            return -1;
+
         if (_Py_EnterRecursiveCall(" while encoding a JSON object"))
             return -1;
         rv = encoder_listencode_sequence(s, markers, writer, obj, newline_indent);
         _Py_LeaveRecursiveCall();
         return rv;
     }
-    else if (PyObject_IsInstance(obj, (PyTypeObject *)s->Mapping)) {
+    else if (PyObject_IsInstance(obj, (PyObject *)s->Mapping)) {
+        if (PyErr_Occurred())
+            return -1;
+
         if (_Py_EnterRecursiveCall(" while encoding a JSON object"))
             return -1;
         rv = encoder_listencode_mapping(s, markers, writer, obj, newline_indent);
@@ -1553,16 +1568,22 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
     if (ident == NULL)
         goto bail;
     has_key = PyDict_Contains(markers, ident);
+    if (has_key == -1)
+    {
+        goto bail;
+    }
     if (has_key) {
         if (has_key != -1)
             PyErr_SetString(PyExc_ValueError, "Unexpected circular reference");
+        // Should this be removed? has_key can never be -1 in this block, since
+        // that isn't truthy.
         goto bail;
     }
-    if (PyDict_SetItem(markers, ident, mapping)) {
+    if (PyDict_SetItem(markers, ident, mapping) < 0) {
         goto bail;
     }
 
-    if (_PyUnicodeWriter_WriteChar(writer, '{'))
+    if (_PyUnicodeWriter_WriteChar(writer, '{') < 0)
         goto bail;
 
     int indented;
@@ -1575,6 +1596,9 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
     else {
         indented = false;
         PyObject *values = PyMapping_Values(mapping);
+        if (values == NULL)
+            goto bail;
+
         for (Py_ssize_t  i = 0; i < PyList_GET_SIZE(values); i++) {
             PyObject *obj = PyList_GET_ITEM(values, i);
             if (obj != Py_None && !PyUnicode_Check(obj) && !PyLong_Check(obj)
@@ -1639,9 +1663,12 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
                                          current_item_separator) < 0)
                 goto bail;
         }
+        // PyDict_Next could return an error, we need to handle it
+        if (PyErr_Occurred())
+            goto bail;
     }
 
-    if (PyDict_DelItem(markers, ident))
+    if (PyDict_DelItem(markers, ident) < 0)
         goto bail;
     Py_CLEAR(ident);
     if (indented) {
@@ -1654,7 +1681,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
         }
     }
 
-    if (_PyUnicodeWriter_WriteChar(writer, '}'))
+    if (_PyUnicodeWriter_WriteChar(writer, '}') < 0)
         goto bail;
     return 0;
 
@@ -1690,16 +1717,19 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
     if (ident == NULL)
         goto bail;
     has_key = PyDict_Contains(markers, ident);
+    if (has_key == -1)
+        goto bail;
+
     if (has_key) {
         if (has_key != -1)
             PyErr_SetString(PyExc_ValueError, "Unexpected circular reference");
         goto bail;
     }
-    if (PyDict_SetItem(markers, ident, seq)) {
+    if (PyDict_SetItem(markers, ident, seq) < 0) {
         goto bail;
     }
 
-    if (_PyUnicodeWriter_WriteChar(writer, '['))
+    if (_PyUnicodeWriter_WriteChar(writer, '[') < 0)
         goto bail;
 
     int indented;
@@ -1751,10 +1781,10 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
             if (_PyUnicodeWriter_WriteStr(writer, separator) < 0)
                 goto bail;
         }
-        if (encoder_listencode_obj(s, markers, writer, obj, new_newline_indent))
+        if (encoder_listencode_obj(s, markers, writer, obj, new_newline_indent) < 0)
             goto bail;
     }
-    if (PyDict_DelItem(markers, ident))
+    if (PyDict_DelItem(markers, ident) < 0)
         goto bail;
     Py_CLEAR(ident);
 
@@ -1768,7 +1798,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
         }
     }
 
-    if (_PyUnicodeWriter_WriteChar(writer, ']'))
+    if (_PyUnicodeWriter_WriteChar(writer, ']') < 0)
         goto bail;
     Py_DECREF(s_fast);
     return 0;
