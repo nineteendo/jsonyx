@@ -1457,6 +1457,10 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
              && !PyByteArray_Check(obj) && !PyBytes_Check(obj)
              && !PyMemoryView_Check(obj) && !PyUnicode_Check(obj))
     {
+        // See https://github.com/python/cpython/issues/123593 
+        if (PyErr_Occurred())
+            return -1;
+
         if (_Py_EnterRecursiveCall(" while encoding a JSON object"))
             return -1;
         rv = encoder_listencode_sequence(s, markers, writer, obj, newline_indent);
@@ -1464,6 +1468,9 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         return rv;
     }
     else if (PyObject_IsInstance(obj, (PyObject *)s->Mapping)) {
+        if (PyErr_Occurred())
+            return -1;
+
         if (_Py_EnterRecursiveCall(" while encoding a JSON object"))
             return -1;
         rv = encoder_listencode_mapping(s, markers, writer, obj, newline_indent);
