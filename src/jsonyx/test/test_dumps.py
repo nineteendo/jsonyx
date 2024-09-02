@@ -114,21 +114,7 @@ def test_signaling_nan(json: ModuleType, num_type: type[Decimal]) -> None:
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
-    # Empty string
-    ("", '""'),
-
-    # Control characters
-    ("\x00", r'"\u0000"'),
-    ("\x08", r'"\b"'),
-    ("\t", r'"\t"'),
-    ("\n", r'"\n"'),
-    ("\x0c", r'"\f"'),
-    ("\r", r'"\r"'),
-    ('"', r'"\""'),
-    ("\\", r'"\\"'),
-
     # UTF-8
-    ("$", '"$"'),
     ("\xa3", '"\xa3"'),
     ("\u0418", '"\u0418"'),
     ("\u0939", '"\u0939"'),
@@ -140,10 +126,6 @@ def test_signaling_nan(json: ModuleType, num_type: type[Decimal]) -> None:
     # Surrogates
     ("\ud800", '"\ud800"'),
     ("\udf48", '"\udf48"'),  # noqa: PT014
-
-    # Multiple characters
-    ("foo", '"foo"'),
-    (r"foo\bar", r'"foo\\bar"'),
 ])
 def test_string(json: ModuleType, obj: str, expected: str) -> None:
     """Test string."""
@@ -159,9 +141,41 @@ def test_string(json: ModuleType, obj: str, expected: str) -> None:
     ("\U00010348", r'"\ud800\udf48"'),
     ("\U001096b3", r'"\udbe5\udeb3"'),
 ])
-def test_ensure_ascii(json: ModuleType, obj: str, expected: str) -> None:
-    """Test ensure_ascii."""
+def test_string_ensure_ascii(
+    json: ModuleType, obj: str, expected: str,
+) -> None:
+    """Test string with ensure_ascii."""
     assert json.dumps(obj, end="", ensure_ascii=True) == expected
+
+
+@pytest.mark.parametrize(("obj", "expected"), [
+    # Empty string
+    ("", '""'),
+
+    # Control characters
+    ("\x00", r'"\u0000"'),
+    ("\x08", r'"\b"'),
+    ("\t", r'"\t"'),
+    ("\n", r'"\n"'),
+    ("\x0c", r'"\f"'),
+    ("\r", r'"\r"'),
+    ('"', r'"\""'),
+    ("\\", r'"\\"'),
+
+    # ASCII
+    ("$", '"$"'),
+
+    # Multiple characters
+    ("foo", '"foo"'),
+    (r"foo\bar", r'"foo\\bar"'),
+])
+@pytest.mark.parametrize("ensure_ascii", [True, False])
+def test_ascii_string(
+    json: ModuleType, obj: str, ensure_ascii: bool,  # noqa: FBT001
+    expected: str,
+) -> None:
+    """Test ascii string."""
+    assert json.dumps(obj, end="", ensure_ascii=ensure_ascii) == expected
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
