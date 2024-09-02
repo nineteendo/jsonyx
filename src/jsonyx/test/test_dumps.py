@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON dumps tests."""
-# TODO(Nice Zombies): test indent_leaves=False
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -152,6 +151,9 @@ def test_string_ensure_ascii(
     # Empty string
     ("", '""'),
 
+    # One character
+    ("$", '"$"'),
+
     # Control characters
     ("\x00", r'"\u0000"'),
     ("\x08", r'"\b"'),
@@ -161,9 +163,6 @@ def test_string_ensure_ascii(
     ("\r", r'"\r"'),
     ('"', r'"\""'),
     ("\\", r'"\\"'),
-
-    # ASCII
-    ("$", '"$"'),
 
     # Multiple characters
     ("foo", '"foo"'),
@@ -218,15 +217,26 @@ def test_sequence(
     assert json.dumps(seq_type(seq), end="") == expected
 
 
+@pytest.mark.parametrize(("obj", "expected"), [
+    ([1, 2, 3], "[1, 2, 3]"),
+    ([[1, 2, 3]], "[\n [1, 2, 3]\n]"),
+])
+def test_list_indent(
+    json: ModuleType, obj: list[object], expected: str,
+) -> None:
+    """Test list indent."""
+    assert json.dumps(obj, end="", indent=1) == expected
+
+
 @pytest.mark.parametrize(("indent", "expected"), [
     (0, "[\n1,\n2,\n3\n]"),
     (1, "[\n 1,\n 2,\n 3\n]"),
     ("\t", "[\n\t1,\n\t2,\n\t3\n]"),
 ])
-def test_list_indent(
+def test_list_indent_leaves(
     json: ModuleType, indent: int | str, expected: str,
 ) -> None:
-    """Test list indent."""
+    """Test list indent_leaves."""
     obj: list[object] = [1, 2, 3]
     s: str = json.dumps(obj, end="", indent=indent, indent_leaves=True)
     assert s == expected
@@ -381,15 +391,26 @@ def test_sort_keys(json: ModuleType) -> None:
     assert s == '{"a": 1, "b": 2, "c": 3}'
 
 
+@pytest.mark.parametrize(("obj", "expected"), [
+    ({"a": 1, "b": 2, "c": 3}, '{"a": 1, "b": 2, "c": 3}'),
+    ({"": {"a": 1, "b": 2, "c": 3}}, '{\n "": {"a": 1, "b": 2, "c": 3}\n}'),
+])
+def test_dict_indent(
+    json: ModuleType, obj: dict[str, object], expected: str,
+) -> None:
+    """Test dict indent."""
+    assert json.dumps(obj, end="", indent=1) == expected
+
+
 @pytest.mark.parametrize(("indent", "expected"), [
     (0, '{\n"a": 1,\n"b": 2,\n"c": 3\n}'),
     (1, '{\n "a": 1,\n "b": 2,\n "c": 3\n}'),
     ("\t", '{\n\t"a": 1,\n\t"b": 2,\n\t"c": 3\n}'),
 ])
-def test_dict_indent(
+def test_dict_indent_leaves(
     json: ModuleType, indent: int | str, expected: str,
 ) -> None:
-    """Test dict indent."""
+    """Test dict indent_leaves."""
     obj: dict[str, object] = {"a": 1, "b": 2, "c": 3}
     s: str = json.dumps(obj, end="", indent=indent, indent_leaves=True)
     assert s == expected
