@@ -1453,7 +1453,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
             return -1;
         return _steal_accumulate(writer, encoded);
     }
-    else if (PyObject_IsInstance(obj, (PyTypeObject *)s->Sequence)
+    else if (PyObject_IsInstance(obj, (PyObject *)s->Sequence)
              && !PyByteArray_Check(obj) && !PyBytes_Check(obj)
              && !PyMemoryView_Check(obj) && !PyUnicode_Check(obj))
     {
@@ -1463,7 +1463,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         _Py_LeaveRecursiveCall();
         return rv;
     }
-    else if (PyObject_IsInstance(obj, (PyTypeObject *)s->Mapping)) {
+    else if (PyObject_IsInstance(obj, (PyObject *)s->Mapping)) {
         if (_Py_EnterRecursiveCall(" while encoding a JSON object"))
             return -1;
         rv = encoder_listencode_mapping(s, markers, writer, obj, newline_indent);
