@@ -459,11 +459,11 @@ def test_custom_end(json: ModuleType) -> None:
     ([1, 2, 3], "[1,2,3]"),
     ({"a": 1, "b": 2, "c": 3}, '{"a":1,"b":2,"c":3}'),
 ])
-def test_compact(
+def test_separators(
     json: ModuleType, obj: dict[str, object] | list[object], expected: str,
 ) -> None:
-    """Test compact."""
-    s: str = json.dumps(obj, end="", item_separator=",", key_separator=":")
+    """Test separators."""
+    s: str = json.dumps(obj, end="", separators=(",", ":"))
     assert s == expected
 
 

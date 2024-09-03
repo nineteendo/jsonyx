@@ -60,7 +60,7 @@ Compact encoding
 ::
 
     >>> import jsonyx as json
-    >>> json.dumps({"a": 1, "b": 2, "c": 3}, end="", item_separator=",", key_separator=":")
+    >>> json.dumps({"a": 1, "b": 2, "c": 3}, end="", separators=(",", ":"))
     '{"a":1,"b":2,"c":3}'
 
 Pretty printing

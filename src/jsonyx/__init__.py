@@ -167,11 +167,8 @@ class Encoder:
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to False
     :type indent_leaves: bool, optional
-    :param item_separator: the separator between two items, defaults to ", "
-    :type item_separator: str, optional
-    :param key_separator: the separator between a key and a value, defaults to
-                          ": "
-    :type key_separator: str, optional
+    :param separators: the item and key separator, defaults to (", ", ": ")
+    :type separators: tuple[str, str], optional
     :param sort_keys: sort the keys of objects, defaults to False
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to
@@ -182,10 +179,11 @@ class Encoder:
     :type unquoted_keys: bool, optional
 
     .. note::
-        The *item_separator* is automatically stripped when indented.
+        The item separator is automatically stripped when indented.
 
     .. versionchanged:: 2.0
         Added *indent_leaves* and *unquoted_keys*.
+        Merged *item_separator* and *key_separator* as *separators*.
     """
 
     def __init__(
@@ -196,8 +194,7 @@ class Encoder:
         ensure_ascii: bool = False,
         indent: int | str | None = None,
         indent_leaves: bool = False,
-        item_separator: str = ", ",
-        key_separator: str = ": ",
+        separators: tuple[str, str] = (", ", ": "),
         sort_keys: bool = False,
         trailing_comma: bool = False,
         unquoted_keys: bool = False,
@@ -207,8 +204,8 @@ class Encoder:
         allow_surrogates: bool = "surrogates" in allow
         decimal_str: Callable[[Decimal], str] = Decimal.__str__
 
-        long_item_separator: str = item_separator
-        item_separator = item_separator.rstrip()
+        long_item_separator, key_separator = separators
+        item_separator: str = long_item_separator.rstrip()
         if indent is not None and isinstance(indent, int):
             indent = " " * indent
 
@@ -495,8 +492,7 @@ def write(
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     indent_leaves: bool = False,
-    item_separator: str = ", ",
-    key_separator: str = ": ",
+    separators: tuple[str, str] = (", ", ": "),
     sort_keys: bool = False,
     trailing_comma: bool = False,
     unquoted_keys: bool = False,
@@ -518,11 +514,8 @@ def write(
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to False
     :type indent_leaves: bool, optional
-    :param item_separator: the separator between two items, defaults to ", "
-    :type item_separator: str, optional
-    :param key_separator: the separator between a key and a value, defaults to
-                          ": "
-    :type key_separator: str, optional
+    :param separators: the item and key separator, defaults to (", ", ": ")
+    :type separators: tuple[str, str], optional
     :param sort_keys: sort the keys of objects, defaults to False
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to
@@ -545,10 +538,11 @@ def write(
     '["filesystem API"]\n'
 
     .. note::
-        The *item_separator* is automatically stripped when indented.
+        The item separator is automatically stripped when indented.
 
     .. versionchanged:: 2.0
         Added *indent_leaves* and *unquoted_keys*.
+        Merged *item_separator* and *key_separator* as *separators*.
     """
     return Encoder(
         allow=allow,
@@ -556,8 +550,7 @@ def write(
         ensure_ascii=ensure_ascii,
         indent=indent,
         indent_leaves=indent_leaves,
-        item_separator=item_separator,
-        key_separator=key_separator,
+        separators=separators,
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
         unquoted_keys=unquoted_keys,
@@ -573,8 +566,7 @@ def dump(
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     indent_leaves: bool = False,
-    item_separator: str = ", ",
-    key_separator: str = ": ",
+    separators: tuple[str, str] = (", ", ": "),
     sort_keys: bool = False,
     trailing_comma: bool = False,
     unquoted_keys: bool = False,
@@ -596,11 +588,8 @@ def dump(
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to False
     :type indent_leaves: bool, optional
-    :param item_separator: the separator between two items, defaults to ", "
-    :type item_separator: str, optional
-    :param key_separator: the separator between a key and a value, defaults to
-                          ": "
-    :type key_separator: str, optional
+    :param separators: the item and key separator, defaults to (", ", ": ")
+    :type separators: tuple[str, str], optional
     :param sort_keys: sort the keys of objects, defaults to False
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to
@@ -622,7 +611,7 @@ def dump(
     '["streaming API"]\n'
 
     .. note::
-        The *item_separator* is automatically stripped when indented.
+        The item separator is automatically stripped when indented.
 
     .. warning::
         To pretty-print unpaired surrogates, you need to use
@@ -630,6 +619,7 @@ def dump(
 
     .. versionchanged:: 2.0
         Added *indent_leaves* and *unquoted_keys*.
+        Merged *item_separator* and *key_separator* as *separators*.
     """
     Encoder(
         allow=allow,
@@ -637,8 +627,7 @@ def dump(
         ensure_ascii=ensure_ascii,
         indent=indent,
         indent_leaves=indent_leaves,
-        item_separator=item_separator,
-        key_separator=key_separator,
+        separators=separators,
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
         unquoted_keys=unquoted_keys,
@@ -653,8 +642,7 @@ def dumps(
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     indent_leaves: bool = False,
-    item_separator: str = ", ",
-    key_separator: str = ": ",
+    separators: tuple[str, str] = (", ", ": "),
     sort_keys: bool = False,
     trailing_comma: bool = False,
     unquoted_keys: bool = False,
@@ -674,11 +662,8 @@ def dumps(
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to False
     :type indent_leaves: bool, optional
-    :param item_separator: the separator between two items, defaults to ", "
-    :type item_separator: str, optional
-    :param key_separator: the separator between a key and a value, defaults to
-                          ": "
-    :type key_separator: str, optional
+    :param separators: the item and key separator, defaults to (", ", ": ")
+    :type separators: tuple[str, str], optional
     :param sort_keys: sort the keys of objects, defaults to False
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to
@@ -697,10 +682,11 @@ def dumps(
     '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
 
     .. note::
-        The *item_separator* is automatically stripped when indented.
+        The item separator is automatically stripped when indented.
 
     .. versionchanged:: 2.0
         Added *indent_leaves* and *unquoted_keys*.
+        Merged *item_separator* and *key_separator* as *separators*.
     """
     return Encoder(
         allow=allow,
@@ -708,8 +694,7 @@ def dumps(
         ensure_ascii=ensure_ascii,
         indent=indent,
         indent_leaves=indent_leaves,
-        item_separator=item_separator,
-        key_separator=key_separator,
+        separators=separators,
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
         unquoted_keys=unquoted_keys,

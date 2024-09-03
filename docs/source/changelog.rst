@@ -21,6 +21,9 @@ v2.0.0 (unreleased)
 - Improved documentation
 - Made :class:`collections.abc.Mapping` and :class:`collections.abc.Sequence`
   JSON serializable
+- Merged *item_separator* and *key_separator* as *separators* for
+  :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
+  :func:`jsonyx.write`
 - Removed :mod:`!jsonyx.tool`
 - Removed :option:`!--no-commas` and its alias :option:`!-C`
 
