@@ -759,6 +759,12 @@ def run_select_query(
     :type allow: Container[str], optional
     :param allow_slice: allow slice, defaults to False
     :type allow_slice: bool, optional
+    :param mapping: map every input node to a single output node, defaults to
+                    False
+    :type mapping: bool, optional
+    :param relative: query must start with "@" instead of "$", defaults to
+                     False
+    :type relative: bool, optional
     :param use_decimal: use decimal instead of float, defaults to False
     :type use_decimal: bool, optional
     :raises SyntaxError: if the select query is invalid
