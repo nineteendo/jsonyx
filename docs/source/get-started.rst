@@ -83,6 +83,10 @@ Pretty printing
     To pretty-print unpaired surrogates, you need to use
     :data:`jsonyx.allow.SURROGATES` and ``ensure_ascii=True``.
 
+.. seealso::
+    The built-in :mod:`pprint` module for pretty-printing arbitrary Python data
+    structures.
+
 Decoding JSON
 ^^^^^^^^^^^^^
 
