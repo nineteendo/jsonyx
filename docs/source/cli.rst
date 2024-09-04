@@ -23,7 +23,7 @@ Command Line Interface
 
 .. option:: input_filename
 
-    The path to the input JSON file, or "-" for standard input. If not
+    The path to the input JSON file, or ``"-"`` for standard input. If not
     specified, read from :data:`sys.stdin`.
 
     .. versionchanged:: 1.2
@@ -49,14 +49,14 @@ Command Line Interface
 
 .. option:: -c, --compact
 
-    Avoid unnecessary whitespace after "," and ":".
+    Avoid unnecessary whitespace after ``","`` and ``":"``.
 
     .. versionadded:: 1.2
         :option:`!-c`
 
 .. option:: -d, --use-decimal
 
-    Use decimal instead of float.
+    Use :class:`decimal.Decimal` instead of :class:`float`.
 
     .. versionadded:: 1.2
         :option:`!-d`
@@ -83,7 +83,7 @@ Command Line Interface
 
 .. option:: -S, --nonstrict
 
-    Allow all JSON deviations.
+    Allow all JSON deviations provided by :mod:`jsonyx`.
 
     .. versionadded:: 1.2
         :option:`!-S`

@@ -139,7 +139,7 @@ class JSONSyntaxError(SyntaxError):
     :type doc: str
     :param start: the start position
     :type start: int
-    :param end: the end position, defaults to 0
+    :param end: the end position, defaults to ``0``
     :type end: int, optional
     """
 

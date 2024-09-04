@@ -88,7 +88,7 @@ def _configure(parser: ArgumentParser) -> None:
         "-S",
         "--nonstrict",
         action="store_true",
-        help="allow all JSON deviations",
+        help="allow all JSON deviations provided by jsonyx",
     )
     parent_parser.add_argument(
         "-t",

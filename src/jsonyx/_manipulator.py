@@ -149,9 +149,11 @@ def _scan_query_string(s: str, end: int) -> tuple[str, int]:
 class Manipulator:
     """A configurable JSON manipulator.
 
-    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :param allow: the allowed JSON deviations, defaults to
+                  :data:`jsonyx.NOTHING`
     :type allow: Container[str], optional
-    :param use_decimal: use decimal instead of float, defaults to False
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
+                        defaults to ``False``
     :type use_decimal: bool, optional
 
     .. versionadded:: 2.0
@@ -589,13 +591,13 @@ class Manipulator:
         :type nodes: _Node | list[_Node]
         :param query: a JSON select query
         :type query: str
-        :param allow_slice: allow slice, defaults to False
+        :param allow_slice: allow slice, defaults to ``False``
         :type allow_slice: bool, optional
         :param mapping: map every input node to a single output node, defaults
-                        to False
+                        to ``False``
         :type mapping: bool, optional
-        :param relative: query must start with "@" instead of "$", defaults to
-                         False
+        :param relative: query must start with ``"@"`` instead of ``"$"``,
+                         defaults to ``False``
         :type relative: bool, optional
         :raises SyntaxError: if the select query is invalid
         :raises ValueError: if a value is invalid

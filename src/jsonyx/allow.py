@@ -45,7 +45,7 @@ DUPLICATE_KEYS: frozenset[str] = frozenset({"duplicate_keys"})
 #: [1, 2, 3]
 MISSING_COMMAS: frozenset[str] = frozenset({"missing_commas"})
 
-#: Allow NaN and (negative) infinity
+#: Allow ``NaN``, ``Infinity`` and ``-Infinity``
 #:
 #: >>> import jsonyx as json
 #: >>> import jsonyx.allow

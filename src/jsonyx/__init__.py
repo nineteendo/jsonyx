@@ -56,9 +56,11 @@ if TYPE_CHECKING:
 class Decoder:
     """A configurable JSON decoder.
 
-    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :param allow: the allowed JSON deviations, defaults to
+                  :data:`jsonyx.NOTHING`
     :type allow: Container[str], optional
-    :param use_decimal: use decimal instead of float, defaults to False
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
+                        defaults to ``False``
     :type use_decimal: bool, optional
     """
 
@@ -104,7 +106,7 @@ class Decoder:
         :param fp: an open JSON file
         :type fp: SupportsRead[bytes | str]
         :param root: the path to the archive containing this JSON file,
-                     defaults to "."
+                     defaults to ``"."``
         :type root: StrPath, optional
         :raises JSONSyntaxError: if the JSON file is invalid
         :return: a Python object
@@ -128,7 +130,7 @@ class Decoder:
 
         :param s: a JSON string
         :type s: bytearray | bytes | str
-        :param filename: the path to the JSON file, defaults to "<string>"
+        :param filename: the path to the JSON file, defaults to ``"<string>"``
         :type filename: StrPath, optional
         :raises JSONSyntaxError: if the JSON string is invalid
         :return: a Python object
@@ -156,26 +158,27 @@ class Decoder:
 class Encoder:
     r"""A configurable JSON encoder.
 
-    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :param allow: the allowed JSON deviations, defaults to
+                  :data:`jsonyx.NOTHING`
     :type allow: Container[str], optional
-    :param end: the string to append at the end, defaults to "\\n"
+    :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
-    :param ensure_ascii: escape non-ASCII characters, defaults to False
+    :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
     :type ensure_ascii: bool, optional
     :param indent: the number of spaces or string to indent with, defaults to
-                   None
+                   ``None``
     :type indent: int | str | None, optional
-    :param indent_leaves: indent leaf objects and arrays, defaults to False
+    :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
     :type indent_leaves: bool, optional
-    :param separators: the item and key separator, defaults to (", ", ": ")
+    :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
-    :param sort_keys: sort the keys of objects, defaults to False
+    :param sort_keys: sort the keys of objects, defaults to ``False``
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to
-                           False
+                           ``False``
     :type trailing_comma: bool, optional
     :param unquoted_keys: don't quote keys which are identifiers, defaults to
-                          False
+                          ``False``
     :type unquoted_keys: bool, optional
 
     .. note::
@@ -259,7 +262,7 @@ class Encoder:
 
         :param obj: a Python object
         :type obj: object
-        :param fp: an open JSON file, defaults to stdout
+        :param fp: an open JSON file, defaults to :data:`sys.stdout`
         :type fp: SupportsWrite[str], optional
         :raises TypeError: for unserializable values
         :raises ValueError: for invalid values
@@ -311,8 +314,9 @@ def detect_encoding(b: bytearray | bytes) -> str:
     '"foo"'
 
     .. note::
-        Supports only "utf_8", "utf_8-sig", "utf_16", "utf_16_be", "utf_16_le",
-        "utf_32", "utf_32_be" and "utf_32_le".
+        Supports only ``"utf_8"``, ``"utf_8-sig"``, ``"utf_16"``,
+        ``"utf_16_be"``, ``"utf_16_le"``, ``"utf_32"``, ``"utf_32_be"`` and
+        ``"utf_32_le"``.
     """
     # JSON must start with ASCII character (not NULL)
     # Strings can't contain control characters (including NULL)
@@ -400,9 +404,11 @@ def read(
 
     :param filename: the path to the JSON file
     :type filename: StrPath
-    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :param allow: the allowed JSON deviations, defaults to
+                  :data:`jsonyx.NOTHING`
     :type allow: Container[str], optional
-    :param use_decimal: use decimal instead of float, defaults to False
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
+                        defaults to ``False``
     :type use_decimal: bool, optional
     :raises JSONSyntaxError: if the JSON file is invalid
     :return: a Python object.
@@ -432,12 +438,14 @@ def load(
 
     :param fp: an open JSON file
     :type fp: SupportsRead[bytes | str]
-    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :param allow: the allowed JSON deviations, defaults to
+                  :data:`jsonyx.NOTHING`
     :type allow: Container[str], optional
     :param root: the path to the archive containing this JSON file, defaults to
-                 "."
+                 ``"."``
     :type root: StrPath, optional
-    :param use_decimal: use decimal instead of float, defaults to False
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
+                        defaults to ``False``
     :type use_decimal: bool, optional
     :raises JSONSyntaxError: if the JSON file is invalid
     :return: a Python object
@@ -462,11 +470,13 @@ def loads(
 
     :param s: a JSON string
     :type s: bytearray | bytes | str
-    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :param allow: the allowed JSON deviations, defaults to
+                  :data:`jsonyx.NOTHING`
     :type allow: Container[str], optional
-    :param filename: the path to the JSON file, defaults to "<string>"
+    :param filename: the path to the JSON file, defaults to ``"<string>"``
     :type filename: StrPath, optional
-    :param use_decimal: use decimal instead of float, defaults to False
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
+                        defaults to ``False``
     :type use_decimal: bool, optional
     :raises JSONSyntaxError: if the JSON string is invalid
     :return: a Python object
@@ -503,26 +513,27 @@ def write(
     :type obj: object
     :param filename: the path to the JSON file
     :type filename: StrPath
-    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :param allow: the allowed JSON deviations, defaults to
+                  :data:`jsonyx.NOTHING`
     :type allow: Container[str], optional
-    :param end: the string to append at the end, defaults to "\\n"
+    :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
-    :param ensure_ascii: escape non-ASCII characters, defaults to False
+    :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
     :type ensure_ascii: bool, optional
     :param indent: the number of spaces or string to indent with, defaults to
-                   None
+                   ``None``
     :type indent: int | str | None, optional
-    :param indent_leaves: indent leaf objects and arrays, defaults to False
+    :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
     :type indent_leaves: bool, optional
-    :param separators: the item and key separator, defaults to (", ", ": ")
+    :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
-    :param sort_keys: sort the keys of objects, defaults to False
+    :param sort_keys: sort the keys of objects, defaults to ``False``
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to
-                           False
+                           ``False``
     :type trailing_comma: bool, optional
     :param unquoted_keys: don't quote keys which are identifiers, defaults to
-                          False
+                          ``False``
     :type unquoted_keys: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
@@ -575,28 +586,29 @@ def dump(
 
     :param obj: a Python object
     :type obj: object
-    :param fp: an open JSON file, defaults to stdout
+    :param fp: an open JSON file, defaults to :data:`sys.stdout`
     :type fp: SupportsWrite[str], optional
-    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :param allow: the allowed JSON deviations, defaults to
+                  :data:`jsonyx.NOTHING`
     :type allow: Container[str], optional
-    :param end: the string to append at the end, defaults to "\\n"
+    :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
-    :param ensure_ascii: escape non-ASCII characters, defaults to False
+    :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
     :type ensure_ascii: bool, optional
     :param indent: the number of spaces or string to indent with, defaults to
-                   None
+                   ``None``
     :type indent: int | str | None, optional
-    :param indent_leaves: indent leaf objects and arrays, defaults to False
+    :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
     :type indent_leaves: bool, optional
-    :param separators: the item and key separator, defaults to (", ", ": ")
+    :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
-    :param sort_keys: sort the keys of objects, defaults to False
+    :param sort_keys: sort the keys of objects, defaults to ``False``
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to
-                           False
+                           ``False``
     :type trailing_comma: bool, optional
     :param unquoted_keys: don't quote keys which are identifiers, defaults to
-                          False
+                          ``False``
     :type unquoted_keys: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
@@ -651,26 +663,27 @@ def dumps(
 
     :param obj: a Python object
     :type obj: object
-    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :param allow: the allowed JSON deviations, defaults to
+                  :data:`jsonyx.NOTHING`
     :type allow: Container[str], optional
-    :param end: the string to append at the end, defaults to "\\n"
+    :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
-    :param ensure_ascii: escape non-ASCII characters, defaults to False
+    :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
     :type ensure_ascii: bool, optional
     :param indent: the number of spaces or string to indent with, defaults to
-                   None
+                   ``None``
     :type indent: int | str | None, optional
-    :param indent_leaves: indent leaf objects and arrays, defaults to False
+    :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
     :type indent_leaves: bool, optional
-    :param separators: the item and key separator, defaults to (", ", ": ")
+    :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
-    :param sort_keys: sort the keys of objects, defaults to False
+    :param sort_keys: sort the keys of objects, defaults to ``False``
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to
-                           False
+                           ``False``
     :type trailing_comma: bool, optional
     :param unquoted_keys: don't quote keys which are identifiers, defaults to
-                          False
+                          ``False``
     :type unquoted_keys: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
@@ -714,9 +727,11 @@ def apply_patch(
     :type obj: Any
     :param patch: a JSON patch
     :type patch: dict[str, Any] | list[dict[str, Any]]
-    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :param allow: the allowed JSON deviations, defaults to
+                  :data:`jsonyx.NOTHING`
     :type allow: Container[str], optional
-    :param use_decimal: use decimal instead of float, defaults to False
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
+                        defaults to ``False``
     :type use_decimal: bool, optional
     :raises AssertionError: if an assertion fails
     :raises SyntaxError: if a query is invalid
@@ -755,17 +770,19 @@ def run_select_query(
     :type nodes: _Node | list[_Node]
     :param query: a JSON select query
     :type query: str
-    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :param allow: the allowed JSON deviations, defaults to
+                  :data:`jsonyx.NOTHING`
     :type allow: Container[str], optional
-    :param allow_slice: allow slice, defaults to False
+    :param allow_slice: allow slice, defaults to ``False``
     :type allow_slice: bool, optional
     :param mapping: map every input node to a single output node, defaults to
-                    False
+                    ``False``
     :type mapping: bool, optional
-    :param relative: query must start with "@" instead of "$", defaults to
-                     False
+    :param relative: query must start with ``"@"`` instead of ``"$"``, defaults
+                     to ``False``
     :type relative: bool, optional
-    :param use_decimal: use decimal instead of float, defaults to False
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
+                        defaults to ``False``
     :type use_decimal: bool, optional
     :raises SyntaxError: if the select query is invalid
     :raises ValueError: if a value is invalid
@@ -808,9 +825,11 @@ def run_filter_query(
     :type nodes: _Node | list[_Node]
     :param query: a JSON filter query
     :type query: str
-    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :param allow: the allowed JSON deviations, defaults to
+                  :data:`jsonyx.NOTHING`
     :type allow: Container[str], optional
-    :param use_decimal: use decimal instead of float, defaults to False
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
+                        defaults to ``False``
     :type use_decimal: bool, optional
     :raises SyntaxError: if the filter query is invalid
     :return: the filtered list of nodes
@@ -837,9 +856,11 @@ def load_query_value(
 
     :param s: a JSON query value
     :type s: str
-    :param allow: the allowed JSON deviations, defaults to NOTHING
+    :param allow: the allowed JSON deviations, defaults to
+                  :data:`jsonyx.NOTHING`
     :type allow: Container[str], optional
-    :param use_decimal: use decimal instead of float, defaults to False
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
+                        defaults to ``False``
     :type use_decimal: bool, optional
     :raises SyntaxError: if the query value is invalid
     :return: a Python object
