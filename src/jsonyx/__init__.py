@@ -86,15 +86,17 @@ class Decoder:
         :return: a Python object
         :rtype: Any
 
-        >>> import jsonyx as json
-        >>> from pathlib import Path
-        >>> from tempfile import TemporaryDirectory
-        >>> with TemporaryDirectory() as tmpdir:
-        ...     filename = Path(tmpdir) / "file.json"
-        ...     _ = filename.write_text('["filesystem API"]', "utf_8")
-        ...     json.Decoder().read(filename)
-        ...
-        ['filesystem API']
+        .. doctest::
+
+            >>> # import jsonyx as json
+            >>> from pathlib import Path
+            >>> from tempfile import TemporaryDirectory
+            >>> with TemporaryDirectory() as tmpdir:
+            ...     filename = Path(tmpdir) / "file.json"
+            ...     _ = filename.write_text('["filesystem API"]', "utf_8")
+            ...     json.Decoder().read(filename)
+            ...
+            ['filesystem API']
         """
         return self.loads(Path(filename).read_bytes(), filename=filename)
 
@@ -171,8 +173,6 @@ class Encoder:
                    ``None``
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
-
-        .. versionadded:: 2.0
     :type indent_leaves: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
