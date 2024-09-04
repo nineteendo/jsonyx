@@ -46,6 +46,10 @@ nitpick_ignore: list[tuple[str, str]] = [
 ]
 templates_path = ["_templates"]
 
+# -- Options for autodoc
+
+autodoc_typehints: str = "none"
+
 # -- Options for sphinx_copybutton
 
 copybutton_exclude: str = ".linenos, .gp, .go"

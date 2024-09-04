@@ -70,7 +70,7 @@ NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
 #:
 #: .. tip::
 #:     If you're not using ``read()`` or ``write()``, you still need to set
-#:     the unicode error handler to "surrogatepass".
+#:     the unicode error handler to ``"surrogatepass"``.
 SURROGATES: frozenset[str] = frozenset({"surrogates"})
 
 #: Allow a trailing comma at the end of arrays and objects.
