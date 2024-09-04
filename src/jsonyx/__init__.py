@@ -57,7 +57,7 @@ class Decoder:
     """A configurable JSON decoder.
 
     :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.NOTHING`
+                  :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
@@ -159,7 +159,7 @@ class Encoder:
     r"""A configurable JSON encoder.
 
     :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.NOTHING`
+                  :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
     :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
@@ -405,7 +405,7 @@ def read(
     :param filename: the path to the JSON file
     :type filename: StrPath
     :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.NOTHING`
+                  :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
@@ -439,7 +439,7 @@ def load(
     :param fp: an open JSON file
     :type fp: SupportsRead[bytes | str]
     :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.NOTHING`
+                  :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
     :param root: the path to the archive containing this JSON file, defaults to
                  ``"."``
@@ -471,7 +471,7 @@ def loads(
     :param s: a JSON string
     :type s: bytearray | bytes | str
     :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.NOTHING`
+                  :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
     :param filename: the path to the JSON file, defaults to ``"<string>"``
     :type filename: StrPath, optional
@@ -514,7 +514,7 @@ def write(
     :param filename: the path to the JSON file
     :type filename: StrPath
     :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.NOTHING`
+                  :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
     :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
@@ -589,7 +589,7 @@ def dump(
     :param fp: an open JSON file, defaults to :data:`sys.stdout`
     :type fp: SupportsWrite[str], optional
     :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.NOTHING`
+                  :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
     :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
@@ -664,7 +664,7 @@ def dumps(
     :param obj: a Python object
     :type obj: object
     :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.NOTHING`
+                  :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
     :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
@@ -728,7 +728,7 @@ def apply_patch(
     :param patch: a JSON patch
     :type patch: dict[str, Any] | list[dict[str, Any]]
     :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.NOTHING`
+                  :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
@@ -771,7 +771,7 @@ def run_select_query(
     :param query: a JSON select query
     :type query: str
     :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.NOTHING`
+                  :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
     :param allow_slice: allow slice, defaults to ``False``
     :type allow_slice: bool, optional
@@ -826,7 +826,7 @@ def run_filter_query(
     :param query: a JSON filter query
     :type query: str
     :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.NOTHING`
+                  :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
@@ -857,7 +857,7 @@ def load_query_value(
     :param s: a JSON query value
     :type s: str
     :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.NOTHING`
+                  :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``

@@ -150,7 +150,7 @@ class Manipulator:
     """A configurable JSON manipulator.
 
     :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.NOTHING`
+                  :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
