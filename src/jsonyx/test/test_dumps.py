@@ -463,8 +463,7 @@ def test_separators(
     json: ModuleType, obj: dict[str, object] | list[object], expected: str,
 ) -> None:
     """Test separators."""
-    s: str = json.dumps(obj, end="", separators=(",", ":"))
-    assert s == expected
+    assert json.dumps(obj, end="", separators=(",", ":")) == expected
 
 
 @pytest.mark.parametrize(("obj", "expected"), [

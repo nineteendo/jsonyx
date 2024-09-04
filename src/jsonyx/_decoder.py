@@ -52,7 +52,7 @@ def _get_err_context(doc: str, start: int, end: int) -> tuple[int, str, int]:
     line_start: int = max(
         doc.rfind("\n", 0, start), doc.rfind("\r", 0, start),
     ) + 1
-    if (match := _match_line_end(doc, start)):
+    if match := _match_line_end(doc, start):
         line_end: int = match.end()
     else:
         line_end = start
@@ -157,7 +157,7 @@ class JSONSyntaxError(SyntaxError):
             doc.rfind("\n", 0, start), doc.rfind("\r", 0, start),
         )
         if end <= 0:  # offset
-            if (match := _match_line_end(doc, start)):
+            if match := _match_line_end(doc, start):
                 end = min(match.end(), start - end)
             else:
                 end = start
@@ -230,7 +230,7 @@ except ImportError:
                 comment_idx: int = end
                 if (comment_prefix := s[end:end + 2]) == "//":
                     end += 2
-                    if (match := _match_line_end(s, end)):
+                    if match := _match_line_end(s, end):
                         end = match.end()
                 elif comment_prefix == "/*":
                     if (end := find("*/", end + 2)) == -1:
