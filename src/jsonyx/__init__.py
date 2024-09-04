@@ -112,6 +112,7 @@ class Decoder:
         :return: a Python object
         :rtype: Any
 
+        >>> import jsonyx as json
         >>> from io import StringIO
         >>> io = StringIO('["streaming API"]')
         >>> json.Decoder().load(io)
@@ -136,6 +137,7 @@ class Decoder:
         :return: a Python object
         :rtype: Any
 
+        >>> import jsonyx as json
         >>> json.Decoder().loads('{"foo": ["bar", null, 1.0, 2]}')
         {'foo': ['bar', None, 1.0, 2]}
 
@@ -451,6 +453,7 @@ def load(
     :return: a Python object
     :rtype: Any
 
+    >>> import jsonyx as json
     >>> from io import StringIO
     >>> io = StringIO('["streaming API"]')
     >>> json.load(io)
@@ -482,6 +485,7 @@ def loads(
     :return: a Python object
     :rtype: Any
 
+    >>> import jsonyx as json
     >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
     {'foo': ['bar', None, 1.0, 2]}
 
