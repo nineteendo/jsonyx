@@ -171,6 +171,7 @@ class Encoder:
                    ``None``
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
+
                           .. versionadded:: 2.0
     :type indent_leaves: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
