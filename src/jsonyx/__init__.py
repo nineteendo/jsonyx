@@ -86,17 +86,15 @@ class Decoder:
         :return: a Python object
         :rtype: Any
 
-        .. doctest::
-
-            >>> # import jsonyx as json
-            >>> from pathlib import Path
-            >>> from tempfile import TemporaryDirectory
-            >>> with TemporaryDirectory() as tmpdir:
-            ...     filename = Path(tmpdir) / "file.json"
-            ...     _ = filename.write_text('["filesystem API"]', "utf_8")
-            ...     json.Decoder().read(filename)
-            ...
-            ['filesystem API']
+        >>> import jsonyx as json
+        >>> from pathlib import Path
+        >>> from tempfile import TemporaryDirectory
+        >>> with TemporaryDirectory() as tmpdir:
+        ...     filename = Path(tmpdir) / "file.json"
+        ...     _ = filename.write_text('["filesystem API"]', "utf_8")
+        ...     json.Decoder().read(filename)
+        ...
+        ['filesystem API']
         """
         return self.loads(Path(filename).read_bytes(), filename=filename)
 

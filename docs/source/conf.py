@@ -48,6 +48,7 @@ templates_path = ["_templates"]
 
 # -- Options for autodoc
 
+autodoc_preserve_defaults: bool = True
 autodoc_typehints: str = "none"
 
 # -- Options for sphinx_copybutton
