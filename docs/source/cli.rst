@@ -54,6 +54,13 @@ Command Line Interface
     .. versionadded:: 1.2
         :option:`!-c`
 
+.. option:: -C, --no-commas
+
+    Don't separate items by commas when indented.
+
+    .. versionadded:: 1.2
+        :option:`!-C`
+
 .. option:: -d, --use-decimal
 
     Use :class:`decimal.Decimal` instead of :class:`float`.

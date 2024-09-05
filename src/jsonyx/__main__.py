@@ -21,6 +21,7 @@ from jsonyx.allow import EVERYTHING, NOTHING
 # pylint: disable-next=R0903
 class _Namespace:
     command: Literal["format", "patch", "diff"] | None
+    commas: bool
     compact: bool
     ensure_ascii: bool
     indent: int | str | None
@@ -58,6 +59,14 @@ def _configure(parser: ArgumentParser) -> None:
         action="store_true",
         help='avoid unnecessary whitespace after "," and ":"',
     )
+    comma_group = parent_parser.add_mutually_exclusive_group()
+    comma_group.add_argument(
+        "-C",
+        "--no-commas",
+        action="store_false",
+        dest="commas",
+        help="don't separate items by commas when indented",
+    )
     parent_parser.add_argument(
         "-d",
         "--use-decimal",
@@ -90,7 +99,7 @@ def _configure(parser: ArgumentParser) -> None:
         action="store_true",
         help="allow all JSON deviations provided by jsonyx",
     )
-    parent_parser.add_argument(
+    comma_group.add_argument(
         "-t",
         "--trailing-comma",
         action="store_true",
@@ -179,6 +188,7 @@ def _run(args: _Namespace) -> None:
     )
     encoder: Encoder = Encoder(
         allow=EVERYTHING if args.nonstrict else NOTHING,
+        commas=args.commas,
         ensure_ascii=args.ensure_ascii,
         indent=args.indent,
         indent_leaves=args.indent_leaves,
