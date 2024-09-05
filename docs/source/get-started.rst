@@ -21,6 +21,13 @@ or `mamba <https://mamba.readthedocs.io>`_:
 
     $ mamba install conda-forge::jsonyx
 
+Check if you have installed the correct version:
+
+.. code-block:: console
+
+    $ jsonyx --version
+    jsonyx 2.0.0
+
 Quick start
 -----------
 

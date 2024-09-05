@@ -12,8 +12,8 @@ from traceback import format_exception_only
 from typing import Any, Literal, cast
 
 from jsonyx import (
-    Decoder, Encoder, JSONSyntaxError, Manipulator, format_syntax_error,
-    make_patch,
+    Decoder, Encoder, JSONSyntaxError, Manipulator, __version__,
+    format_syntax_error, make_patch,
 )
 from jsonyx.allow import EVERYTHING, NOTHING
 
@@ -46,6 +46,9 @@ class _PatchNameSpace(_Namespace):
 
 
 def _configure(parser: ArgumentParser) -> None:
+    parser.add_argument(
+        "-v", "--version", action="version", version=f"jsonyx {__version__}",
+    )
     parent_parser: ArgumentParser = ArgumentParser(add_help=False)
     parent_parser.add_argument(
         "-a",

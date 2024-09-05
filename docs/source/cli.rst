@@ -114,3 +114,9 @@ Command Line Interface
     Don't quote keys which are identifiers.
 
     .. versionadded:: 2.0
+
+.. option:: -v, --version
+
+    Show the version number.
+
+    .. versionadded:: 2.0

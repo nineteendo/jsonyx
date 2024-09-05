@@ -17,6 +17,7 @@ v2.0.0 (unreleased)
 - Added :option:`old_input_filename` and :option:`patch_filename`
 - Added :option:`--indent-leaves` and its alias :option:`-l`
 - Added :option:`--unquoted-keys` and its alias :option:`-u`
+- Added :option:`--version` and its alias :option:`-v`
 - Fixed comment detection
 - Fixed typo in error message
 - Improved documentation
