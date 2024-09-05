@@ -68,6 +68,8 @@ html_context: dict[str, Any] = {
 if "READTHEDOCS" in environ:
     html_context["READTHEDOCS"] = True
 
+html_css_files = ["custom.css"]
+html_static_path = ["_static"]
 html_theme: str = "furo"
 html_theme_options: dict[str, Any] = {
     "navigation_with_keys": True,
