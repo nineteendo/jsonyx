@@ -51,7 +51,7 @@ def test_surrogates(json: ModuleType, s: str, expected: str) -> None:
     "s", ['"\ud800"', '"\ud800$"', '"\udf48"'],  # noqa: PT014
 )
 def test_surrogates_not_allowed(json: ModuleType, s: str) -> None:
-    """Test surrogates if not allowed."""
+    """Test surrogates when not allowed."""
     b: bytes = s.encode(errors="surrogatepass")
     with pytest.raises(UnicodeDecodeError):
         json.loads(b)
@@ -100,7 +100,7 @@ def test_nan_and_infinity(
 def test_nan_and_infinity_not_allowed(
     json: ModuleType, s: str, use_decimal: bool,  # noqa: FBT001
 ) -> None:
-    """Test NaN and infinity if not allowed."""
+    """Test NaN and infinity when not allowed."""
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(s, use_decimal=use_decimal)
 
@@ -475,7 +475,7 @@ def test_unquoted_keys(json: ModuleType, key: str) -> None:
 def test_unquoted_keys_not_allowed(
     json: ModuleType, key: str, end_colno: int,
 ) -> None:
-    """Test unquoted keys if not allowed."""
+    """Test unquoted keys when not allowed."""
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(f"{{{key}: 0}}")
 
@@ -615,7 +615,7 @@ def test_invalid_comment(json: ModuleType) -> None:
 def test_comments_not_allowed(
     json: ModuleType, s: str, end_colno: int,
 ) -> None:
-    """Test comments if not allowed."""
+    """Test comments when not allowed."""
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(s)
 

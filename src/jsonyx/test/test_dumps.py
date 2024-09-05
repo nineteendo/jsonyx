@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON dumps tests."""
-# TODO(Nice Zombies): test commas=False
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -82,7 +81,7 @@ def test_nan_and_infinity(
 def test_nan_and_infinity_not_allowed(
     json: ModuleType, num: str, num_type: type[Decimal | float],
 ) -> None:
-    """Test NaN and (negative) infinity if not allowed."""
+    """Test NaN and (negative) infinity when not allowed."""
     with pytest.raises(ValueError, match="is not allowed"):
         json.dumps(num_type(num))
 
@@ -101,7 +100,7 @@ def test_nan_payload(
 def test_nan_payload_not_allowed(
     json: ModuleType, num: str, num_type: type[Decimal],
 ) -> None:
-    """Test NaN payload if not allowed."""
+    """Test NaN payload when not allowed."""
     with pytest.raises(ValueError, match="is not allowed"):
         json.dumps(num_type(num))
 
@@ -171,7 +170,9 @@ def test_string_ensure_ascii(
 ])
 @pytest.mark.parametrize("ensure_ascii", [True, False])
 def test_ascii_string(
-    json: ModuleType, obj: str, ensure_ascii: bool,  # noqa: FBT001
+    json: ModuleType,
+    obj: str,
+    ensure_ascii: bool,  # noqa: FBT001
     expected: str,
 ) -> None:
     """Test ascii string."""
@@ -190,7 +191,7 @@ def test_surrogate_escapes(json: ModuleType, obj: str, expected: str) -> None:
 
 @pytest.mark.parametrize("obj", ["\ud800", "\udf48"])  # noqa: PT014
 def test_surrogate_escapes_not_allowed(json: ModuleType, obj: str) -> None:
-    """Test surrogate escapes if not allowed."""
+    """Test surrogate escapes when not allowed."""
     with pytest.raises(ValueError, match="Surrogates are not allowed"):
         json.dumps(obj, ensure_ascii=True)
 
@@ -211,8 +212,10 @@ def test_surrogate_escapes_not_allowed(json: ModuleType, obj: str) -> None:
 ])  # type: ignore
 @pytest.mark.parametrize("seq_type", [UserList, list])
 def test_sequence(
-    json: ModuleType, seq: list[object],
-    seq_type: type[UserList[object] | list[object]], expected: str,
+    json: ModuleType,
+    seq: list[object],
+    seq_type: type[UserList[object] | list[object]],
+    expected: str,
 ) -> None:
     """Test sequence."""
     assert json.dumps(seq_type(seq), end="") == expected
@@ -264,7 +267,8 @@ def test_list_recursion(json: ModuleType) -> None:
 ])
 @pytest.mark.parametrize("mapping_type", [UserDict, dict])
 def test_mapping(
-    json: ModuleType, mapping: dict[str, object],
+    json: ModuleType,
+    mapping: dict[str, object],
     mapping_type: type[UserDict[str, object] | dict[str, object]],
     expected: str,
 ) -> None:
@@ -335,7 +339,9 @@ def test_quoted_keys_ensure_ascii(
 ])
 @pytest.mark.parametrize("ensure_ascii", [True, False])
 def test_quoted_ascii_keys(
-    json: ModuleType, key: object, ensure_ascii: bool,  # noqa: FBT001
+    json: ModuleType,
+    key: object,
+    ensure_ascii: bool,  # noqa: FBT001
     expected: str,
 ) -> None:
     """Test quoted ascii keys."""
@@ -444,6 +450,39 @@ def test_circular_reference(
     """Test circular reference."""
     with pytest.raises(ValueError, match="Unexpected circular reference"):
         json.dumps(obj)
+
+
+@pytest.mark.parametrize(("obj", "expected"), [
+    ([1, 2, 3], "[1, 2, 3]"),
+    ({"a": 1, "b": 2, "c": 3}, '{"a": 1, "b": 2, "c": 3}'),
+])
+def test_no_commas(
+    json: ModuleType, obj: dict[str, object] | list[object], expected: str,
+) -> None:
+    """Test no commas."""
+    assert json.dumps(obj, commas=False, end="") == expected
+
+
+@pytest.mark.parametrize(("obj", "expected"), [
+    ([1, 2, 3], "[\n 1\n 2\n 3\n]"),
+    ({"a": 1, "b": 2, "c": 3}, '{\n "a": 1\n "b": 2\n "c": 3\n}'),
+])
+@pytest.mark.parametrize("trailing_comma", [True, False])
+def test_no_commas_indent_leaves(
+    json: ModuleType,
+    obj: dict[str, object] | list[object],
+    expected: str,
+    trailing_comma: bool,  # noqa: FBT001
+) -> None:
+    """Test no commas with indent and indent_leaves."""
+    assert json.dumps(
+        obj,
+        commas=False,
+        end="",
+        indent=1,
+        indent_leaves=True,
+        trailing_comma=trailing_comma,
+    ) == expected
 
 
 def test_default_end(json: ModuleType) -> None:

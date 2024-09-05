@@ -53,7 +53,11 @@ from jsonyx import JSONSyntaxError
     ],
 )
 def test_start_and_end_position(
-    doc: str, start: int, end: int, lineno: int, end_lineno: int,
+    doc: str,
+    start: int,
+    end: int,
+    lineno: int,
+    end_lineno: int,
     end_colno: int,
 ) -> None:
     """Test start and end position."""
@@ -140,8 +144,14 @@ def test_start_and_end_position(
     ],
 )
 def test_err_context(
-    monkeypatch: pytest.MonkeyPatch, columns: int, doc: str, start: int,
-    end: int, offset: int, text: str, end_offset: int,
+    monkeypatch: pytest.MonkeyPatch,
+    columns: int,
+    doc: str,
+    start: int,
+    end: int,
+    offset: int,
+    text: str,
+    end_offset: int,
 ) -> None:
     """Test error context."""
     monkeypatch.setenv("COLUMNS", str(4 + columns))  # leading spaces
