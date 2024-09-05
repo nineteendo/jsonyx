@@ -26,15 +26,10 @@ Command Line Interface
     The path to the input JSON file, or ``"-"`` for standard input. If not
     specified, read from :data:`sys.stdin`.
 
-    .. versionchanged:: 1.2
-        Renamed from :option:`!filename`
-
 .. option:: output_filename
 
     The path to the output JSON file. If not specified, write to
     :data:`sys.stdout`.
-
-    .. versionadded:: 1.2
 
 .. option:: -h, --help
 
@@ -44,36 +39,21 @@ Command Line Interface
 
     Escape non-ASCII characters.
 
-    .. versionadded:: 1.2
-        :option:`!-a`
-
 .. option:: -c, --compact
 
     Avoid unnecessary whitespace after ``","`` and ``":"``.
-
-    .. versionadded:: 1.2
-        :option:`!-c`
 
 .. option:: -C, --no-commas
 
     Don't separate items by commas when indented.
 
-    .. versionadded:: 1.2
-        :option:`!-C`
-
 .. option:: -d, --use-decimal
 
     Use :class:`decimal.Decimal` instead of :class:`float`.
 
-    .. versionadded:: 1.2
-        :option:`!-d`
-
 .. option:: -i SPACES, --indent SPACES
 
     Indent using the specified number of spaces.
-
-    .. versionadded:: 1.2
-        :option:`!-i`
 
 .. option:: -l, --indent-leaves
 
@@ -85,29 +65,17 @@ Command Line Interface
 
     Sort the keys of objects.
 
-    .. versionadded:: 1.2
-        :option:`!-s`
-
 .. option:: -S, --nonstrict
 
     Allow all JSON deviations provided by :mod:`jsonyx`.
-
-    .. versionadded:: 1.2
-        :option:`!-S`
 
 .. option:: -t, --trailing-comma
 
     Add a trailing comma when indented.
 
-    .. versionadded:: 1.2
-        :option:`!-t`
-
 .. option:: -T, --indent-tab
 
     Indent using tabs.
-
-    .. versionadded:: 1.2
-        :option:`!-T`
 
 .. option:: -u, --unquoted-keys
 
