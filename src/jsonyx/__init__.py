@@ -1,6 +1,7 @@
 # Copyright (C) 2024 Nice Zombies
-# TODO(Nice Zombies): link to v2.0.0 in changelog
 """Customizable JSON manipulator for Python."""
+# TODO(Nice Zombies): add --no-commas
+# TODO(Nice Zombies): link to v2.0.0 in changelog
 from __future__ import annotations
 
 __all__: list[str] = [
@@ -163,6 +164,8 @@ class Encoder:
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
+    :param commas: separate items by commas when indented, defaults to ``True``
+    :type commas: bool, optional
     :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
@@ -187,7 +190,7 @@ class Encoder:
         The item separator is automatically stripped when indented.
 
     .. versionchanged:: 2.0
-        Added *indent_leaves* and *unquoted_keys*.
+        Added *commas*, *indent_leaves* and *unquoted_keys*.
         Merged *item_separator* and *key_separator* as *separators*.
     """
 
@@ -195,6 +198,7 @@ class Encoder:
         self,
         *,
         allow: _AllowList = NOTHING,
+        commas: bool = True,
         end: str = "\n",
         ensure_ascii: bool = False,
         indent: int | str | None = None,
@@ -210,7 +214,11 @@ class Encoder:
         decimal_str: Callable[[Decimal], str] = Decimal.__str__
 
         long_item_separator, key_separator = separators
-        item_separator: str = long_item_separator.rstrip()
+        if commas:
+            item_separator: str = long_item_separator.rstrip()
+        else:
+            item_separator = ""
+
         if indent is not None and isinstance(indent, int):
             indent = " " * indent
 
@@ -232,7 +240,7 @@ class Encoder:
         self._encoder: Callable[[object], str] = make_encoder(
             encode_decimal, indent, end, item_separator, long_item_separator,
             key_separator, allow_nan_and_infinity, allow_surrogates,
-            ensure_ascii, indent_leaves, sort_keys, trailing_comma,
+            ensure_ascii, indent_leaves, sort_keys, commas and trailing_comma,
             unquoted_keys,
         )
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
@@ -502,6 +510,7 @@ def write(
     filename: StrPath,
     *,
     allow: _AllowList = NOTHING,
+    commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
@@ -520,6 +529,8 @@ def write(
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
+    :param commas: separate items by commas when indented, defaults to ``True``
+    :type commas: bool, optional
     :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
@@ -556,11 +567,12 @@ def write(
         The item separator is automatically stripped when indented.
 
     .. versionchanged:: 2.0
-        Added *indent_leaves* and *unquoted_keys*.
+        Added *commas*, *indent_leaves* and *unquoted_keys*.
         Merged *item_separator* and *key_separator* as *separators*.
     """
     return Encoder(
         allow=allow,
+        commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
@@ -577,6 +589,7 @@ def dump(
     fp: SupportsWrite[str] = stdout,
     *,
     allow: _AllowList = NOTHING,
+    commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
@@ -595,6 +608,8 @@ def dump(
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
+    :param commas: separate items by commas when indented, defaults to ``True``
+    :type commas: bool, optional
     :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
@@ -634,11 +649,12 @@ def dump(
         :data:`jsonyx.allow.SURROGATES` and ``ensure_ascii=True``.
 
     .. versionchanged:: 2.0
-        Added *indent_leaves* and *unquoted_keys*.
+        Added *commas*, *indent_leaves* and *unquoted_keys*.
         Merged *item_separator* and *key_separator* as *separators*.
     """
     Encoder(
         allow=allow,
+        commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
@@ -654,6 +670,7 @@ def dumps(
     obj: object,
     *,
     allow: _AllowList = NOTHING,
+    commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
@@ -670,6 +687,8 @@ def dumps(
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
+    :param commas: separate items by commas when indented, defaults to ``True``
+    :type commas: bool, optional
     :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
@@ -702,11 +721,12 @@ def dumps(
         The item separator is automatically stripped when indented.
 
     .. versionchanged:: 2.0
-        Added *indent_leaves* and *unquoted_keys*.
+        Added *commas*, *indent_leaves* and *unquoted_keys*.
         Merged *item_separator* and *key_separator* as *separators*.
     """
     return Encoder(
         allow=allow,
+        commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
