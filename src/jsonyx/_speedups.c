@@ -1165,11 +1165,19 @@ scanner_call(PyScannerObject *self, PyObject *args, PyObject *kwds)
     PyObject *pyfilename;
     PyObject *pystr;
     PyObject *rval;
+    Py_ssize_t len;
     Py_ssize_t idx = 0;
     Py_ssize_t next_idx = -1;
     static char *kwlist[] = {"filename", "string", NULL};
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "UU:scanner", kwlist, &pyfilename, &pystr) ||
-        _skip_comments(self, pyfilename, pystr, &idx) < 0)
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "UU:scanner", kwlist, &pyfilename, &pystr)) {
+        return NULL;
+    }
+    len = PyUnicode_GET_LENGTH(pystr);
+    if (len > 0 && PyUnicode_ReadChar(pystr, 0) == L'\ufeff') {
+        raise_errmsg("Unexpected UTF-8 BOM", pyfilename, pystr, 0, 0);
+        return NULL;
+    }
+    if (_skip_comments(self, pyfilename, pystr, &idx) < 0)
     {
         return NULL;
     }
@@ -1186,7 +1194,7 @@ scanner_call(PyScannerObject *self, PyObject *args, PyObject *kwds)
     if (_skip_comments(self, pyfilename, pystr, &idx) < 0) {
         return NULL;
     }
-    if (idx < PyUnicode_GET_LENGTH(pystr)) {
+    if (idx < len) {
         raise_errmsg("Expecting end of file", pyfilename, pystr, idx, 0);
         return NULL;
     }

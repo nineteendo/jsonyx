@@ -270,6 +270,8 @@ def detect_encoding(b: bytearray | bytes) -> str:
     return encoding
 
 
+detect_encoding.__module__ = "jsonyx"
+
 try:
     if not TYPE_CHECKING:
         from _jsonyx import make_scanner
@@ -594,6 +596,10 @@ except ImportError:
             return value, end
 
         def scanner(filename: str, s: str) -> Any:
+            if s.startswith("\ufeff"):
+                msg: str = "Unexpected UTF-8 BOM"
+                raise JSONSyntaxError(msg, filename, s, 0)
+
             end: int = skip_comments(filename, s, 0)
             try:
                 obj, end = scan_value(filename, s, end)
@@ -603,7 +609,7 @@ except ImportError:
                 memo.clear()
 
             if (end := skip_comments(filename, s, end)) < len(s):
-                msg: str = "Expecting end of file"
+                msg = "Expecting end of file"
                 raise _errmsg(msg, filename, s, end)
 
             return obj
@@ -708,9 +714,6 @@ class Decoder:
 
         if not isinstance(s, str):
             s = s.decode(detect_encoding(s), self._errors)
-        elif s.startswith("\ufeff"):
-            msg: str = "Unexpected UTF-8 BOM"
-            raise JSONSyntaxError(msg, filename, s, 0)
 
         return self._scanner(filename, s)
 
