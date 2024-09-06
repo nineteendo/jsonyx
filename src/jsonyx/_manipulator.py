@@ -16,6 +16,7 @@ from operator import eq, ge, gt, le, lt, ne
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from typing import TYPE_CHECKING, Any, Literal
 
+from jsonyx import JSONSyntaxError
 from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
@@ -59,6 +60,10 @@ _match_unquoted_key: Callable[[str, int], Match[str] | None] = re.compile(
 _match_whitespace: Callable[[str, int], Match[str] | None] = re.compile(
     r"\ +", _FLAGS,
 ).match
+
+
+def _errmsg(msg: str, doc: str, start: int, end: int = 0) -> JSONSyntaxError:
+    return JSONSyntaxError(msg, "<query>", doc, start, end)
 
 
 def _check_query_key(
@@ -173,7 +178,8 @@ class Manipulator:
         try:
             nextchar: str = s[idx]
         except IndexError:
-            raise SyntaxError from None
+            msg: str = "Expecting value"
+            raise _errmsg(msg, s, idx) from None
 
         value: Any
         if nextchar == "'":
@@ -187,7 +193,9 @@ class Manipulator:
         elif number := _match_number(s, idx):
             integer, frac, exp = number.groups()
             end = number.end()
-            if frac or exp:
+            if not frac and not exp:
+                value = int(integer)
+            else:
                 try:
                     value = self._parse_float(
                         integer + (frac or "") + (exp or ""),
@@ -197,8 +205,6 @@ class Manipulator:
 
                 if not self._use_decimal and isinf(value):
                     raise SyntaxError
-            else:
-                value = int(integer)
         elif nextchar == "I" and s[idx:idx + 8] == "Infinity":
             if not self._allow_nan_and_infinity:
                 raise SyntaxError

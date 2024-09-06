@@ -165,7 +165,7 @@ class JSONSyntaxError(SyntaxError):
     """
 
     def __init__(
-        self, msg: str, filename: str, doc: str, start: int, end: int = 0,
+        self, msg: str, filename: str, doc: str, start: int = 0, end: int = 0,
     ) -> None:
         """Create a new JSON syntax error."""
         lineno: int = (
@@ -557,7 +557,9 @@ except ImportError:
             elif number := _match_number(s, idx):
                 integer, frac, exp = number.groups()
                 end = number.end()
-                if frac or exp:
+                if not frac and not exp:
+                    value = int(integer)
+                else:
                     try:
                         value = parse_float(
                             integer + (frac or "") + (exp or ""),
@@ -569,8 +571,6 @@ except ImportError:
                     if not use_decimal and isinf(value):
                         msg = "Big numbers require decimal"
                         raise _errmsg(msg, filename, s, idx, end)
-                else:
-                    value = int(integer)
             elif nextchar == "N" and s[idx:idx + 3] == "NaN":
                 if not allow_nan_and_infinity:
                     msg = "NaN is not allowed"
@@ -598,7 +598,7 @@ except ImportError:
         def scanner(filename: str, s: str) -> Any:
             if s.startswith("\ufeff"):
                 msg: str = "Unexpected UTF-8 BOM"
-                raise JSONSyntaxError(msg, filename, s, 0)
+                raise _errmsg(msg, filename, s)
 
             end: int = skip_comments(filename, s, 0)
             try:

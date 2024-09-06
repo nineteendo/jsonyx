@@ -108,15 +108,15 @@ def _make_patch(
                 _make_patch(old[old_idx], new[new_idx], patch, new_path)
                 old_idx += 1
                 new_idx += 1
-            elif removed and not inserted:
+            elif removed:
                 patch.append({"op": "del", "path": new_path})
                 old_idx += 1
-            elif not removed and inserted:
+            elif inserted:
                 patch.append(
                     {"op": "insert", "path": new_path, "value": new[new_idx]},
                 )
                 new_idx += 1
-            elif not (removed or inserted):
+            else:
                 old_idx += 1
                 new_idx += 1
                 lcs_idx += 1

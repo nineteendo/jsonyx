@@ -124,28 +124,6 @@ def _configure(parser: ArgumentParser) -> None:
     )
     commands = parser.add_subparsers(title="commands", dest="command")
 
-    diff_parser = commands.add_parser(
-        "diff",
-        help="compare two JSON files and generate a diff in JSON patch "
-             "format.",
-        description="compare two JSON files and generate a diff in JSON patch "
-                    "format.",
-        parents=[parent_parser],
-    )
-    diff_parser.add_argument(
-        "old_input_filename", help="the path to the old input JSON file",
-    )
-    diff_parser.add_argument(
-        "input_filename",
-        nargs="?",
-        help='the path to the input JSON file, or "-" for standard input',
-    )
-    diff_parser.add_argument(
-        "output_filename",
-        nargs="?",
-        help="the path to the output JSON file",
-    )
-
     format_parser = commands.add_parser(
         "format",
         help="re-format a JSON file",
@@ -183,6 +161,28 @@ def _configure(parser: ArgumentParser) -> None:
         help="the path to the output JSON file",
     )
 
+    diff_parser = commands.add_parser(
+        "diff",
+        help="compare two JSON files and generate a diff in JSON patch "
+             "format.",
+        description="compare two JSON files and generate a diff in JSON patch "
+                    "format.",
+        parents=[parent_parser],
+    )
+    diff_parser.add_argument(
+        "old_input_filename", help="the path to the old input JSON file",
+    )
+    diff_parser.add_argument(
+        "input_filename",
+        nargs="?",
+        help='the path to the input JSON file, or "-" for standard input',
+    )
+    diff_parser.add_argument(
+        "output_filename",
+        nargs="?",
+        help="the path to the output JSON file",
+    )
+
 
 def _run(args: _Namespace) -> None:
     decoder: Decoder = Decoder(
@@ -214,23 +214,23 @@ def _run(args: _Namespace) -> None:
         else:
             input_obj = decoder.load(stdin)
 
-        if args.command == "diff":
-            args = cast(_DiffNameSpace, args)
-            old_input_obj: object = decoder.read(args.old_input_filename)
-            output_obj: Any = make_patch(old_input_obj, input_obj)
-            if len(output_obj) == 1:
-                output_obj = output_obj[0]
-        elif args.command == "format":
-            output_obj = input_obj
-        else:
+        if args.command == "format":
+            output_obj: Any = input_obj
+        elif args.command == "patch":
             args = cast(_PatchNameSpace, args)
             patch: Any = decoder.read(args.patch_filename)
             output_obj = manipulator.apply_patch(input_obj, patch)
-    except (AssertionError, TypeError, ValueError) as exc:
-        stderr.write("".join(format_exception_only(exc)))
-        sys.exit(1)
+        else:
+            args = cast(_DiffNameSpace, args)
+            old_input_obj: object = decoder.read(args.old_input_filename)
+            output_obj = make_patch(old_input_obj, input_obj)
+            if len(output_obj) == 1:
+                output_obj = output_obj[0]
     except JSONSyntaxError as exc:
         stderr.write("".join(format_syntax_error(exc)))
+        sys.exit(1)
+    except (AssertionError, TypeError, ValueError) as exc:
+        stderr.write("".join(format_exception_only(exc)))
         sys.exit(1)
 
     if args.output_filename and args.output_filename != "-":
