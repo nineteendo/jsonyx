@@ -112,61 +112,54 @@ def test_signaling_nan(json: ModuleType, num_type: type[Decimal]) -> None:
         json.dumps(num_type("sNaN"))
 
 
-@pytest.mark.parametrize(("obj", "expected"), [
+@pytest.mark.parametrize("obj", [
     # UTF-8
-    ("\xa3", '"\xa3"'),
-    ("\u0418", '"\u0418"'),
-    ("\u0939", '"\u0939"'),
-    ("\u20ac", '"\u20ac"'),
-    ("\ud55c", '"\ud55c"'),
-    ("\U00010348", '"\U00010348"'),
-    ("\U001096b3", '"\U001096b3"'),
+    "\xa3", "\u0418", "\u0939", "\u20ac", "\ud55c", "\U00010348", "\U001096b3",
 
     # Surrogates
-    ("\ud800", '"\ud800"'),
-    ("\udf48", '"\udf48"'),  # noqa: PT014
+    "\ud800", "\udf48",  # noqa: PT014
 ])
-def test_string(json: ModuleType, obj: str, expected: str) -> None:
+def test_string(json: ModuleType, obj: str) -> None:
     """Test string."""
-    assert json.dumps(obj, end="") == expected
+    assert json.dumps(obj, end="") == f'"{obj}"'
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
-    ("\xa3", r'"\u00a3"'),
-    ("\u0418", r'"\u0418"'),
-    ("\u0939", r'"\u0939"'),
-    ("\u20ac", r'"\u20ac"'),
-    ("\ud55c", r'"\ud55c"'),
-    ("\U00010348", r'"\ud800\udf48"'),
-    ("\U001096b3", r'"\udbe5\udeb3"'),
+    ("\xa3", r"\u00a3"),
+    ("\u0418", r"\u0418"),
+    ("\u0939", r"\u0939"),
+    ("\u20ac", r"\u20ac"),
+    ("\ud55c", r"\ud55c"),
+    ("\U00010348", r"\ud800\udf48"),
+    ("\U001096b3", r"\udbe5\udeb3"),
 ])
 def test_string_ensure_ascii(
     json: ModuleType, obj: str, expected: str,
 ) -> None:
     """Test string with ensure_ascii."""
-    assert json.dumps(obj, end="", ensure_ascii=True) == expected
+    assert json.dumps(obj, end="", ensure_ascii=True) == f'"{expected}"'
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
     # Empty string
-    ("", '""'),
+    ("", ""),
 
     # One character
-    ("$", '"$"'),
+    ("$", "$"),
 
     # Control characters
-    ("\x00", r'"\u0000"'),
-    ("\x08", r'"\b"'),
-    ("\t", r'"\t"'),
-    ("\n", r'"\n"'),
-    ("\x0c", r'"\f"'),
-    ("\r", r'"\r"'),
-    ('"', r'"\""'),
-    ("\\", r'"\\"'),
+    ("\x00", r"\u0000"),
+    ("\x08", r"\b"),
+    ("\t", r"\t"),
+    ("\n", r"\n"),
+    ("\x0c", r"\f"),
+    ("\r", r"\r"),
+    ('"', r"\""),
+    ("\\", r"\\"),
 
     # Multiple characters
-    ("foo", '"foo"'),
-    (r"foo\bar", r'"foo\\bar"'),
+    ("foo", "foo"),
+    (r"foo\bar", r"foo\\bar"),
 ])
 @pytest.mark.parametrize("ensure_ascii", [True, False])
 def test_ascii_string(
@@ -176,17 +169,18 @@ def test_ascii_string(
     expected: str,
 ) -> None:
     """Test ascii string."""
-    assert json.dumps(obj, end="", ensure_ascii=ensure_ascii) == expected
+    s: str = json.dumps(obj, end="", ensure_ascii=ensure_ascii)
+    assert s == f'"{expected}"'
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
-    ("\ud800", r'"\ud800"'),
-    ("\udf48", r'"\udf48"'),
+    ("\ud800", r"\ud800"),
+    ("\udf48", r"\udf48"),
 ])
 def test_surrogate_escapes(json: ModuleType, obj: str, expected: str) -> None:
     """Test surrogate escapes."""
     s: str = json.dumps(obj, allow=SURROGATES, end="", ensure_ascii=True)
-    assert s == expected
+    assert s == f'"{expected}"'
 
 
 @pytest.mark.parametrize("obj", ["\ud800", "\udf48"])  # noqa: PT014
@@ -276,40 +270,35 @@ def test_mapping(
     assert json.dumps(mapping_type(mapping), end="") == expected
 
 
-@pytest.mark.parametrize(("key", "expected"), [
+@pytest.mark.parametrize("key", [
     # First character
-    ("\xb2", '"\xb2"'),
-    ("\u0300", '"\u0300"'),
-    ("\u037a", '"\u037a"'),
-    ("\u0488", '"\u0488"'),
+    "\xb2", "\u0300", "\u037a", "\u0488",
 
     # Remaining characters
-    ("A\xb2", '"A\xb2"'),
-    ("A\u037a", '"A\u037a"'),
-    ("A\u0488", '"A\u0488"'),
+    "A\xb2", "A\u037a", "A\u0488",
 ])
-def test_quoted_keys(json: ModuleType, key: object, expected: str) -> None:
+def test_quoted_keys(json: ModuleType, key: object) -> None:
     """Test quoted keys."""
     s: str = json.dumps({key: 0}, end="", unquoted_keys=True)
-    assert s == f"{{{expected}: 0}}"
+    assert s == f'{{"{key}": 0}}'
 
 
 @pytest.mark.parametrize(("key", "expected"), [
     # First character
-    ("\xb2", r'"\u00b2"'),
-    ("\u0300", r'"\u0300"'),
-    ("\u037a", r'"\u037a"'),
-    ("\u0488", r'"\u0488"'),
-    ("\u16ee", r'"\u16ee"'),
-    ("\u1885", r'"\u1885"'),
-    ("\u2118", r'"\u2118"'),
+    ("\xb2", r"\u00b2"),
+    ("\u0300", r"\u0300"),
+    ("\u037a", r"\u037a"),
+    ("\u0488", r"\u0488"),
+    ("\u16ee", r"\u16ee"),
+    ("\u1885", r"\u1885"),
+    ("\u2118", r"\u2118"),
 
     # Remaining characters
-    ("A\xb2", r'"A\u00b2"'),
-    ("A\u0300", r'"A\u0300"'),
-    ("A\u037a", r'"A\u037a"'),
-    ("A\u0488", r'"A\u0488"'),
-    ("A\u2118", r'"A\u2118"'),
+    ("A\xb2", r"A\u00b2"),
+    ("A\u0300", r"A\u0300"),
+    ("A\u037a", r"A\u037a"),
+    ("A\u0488", r"A\u0488"),
+    ("A\u2118", r"A\u2118"),
 ])
 def test_quoted_keys_ensure_ascii(
     json: ModuleType, key: object, expected: str,
@@ -317,25 +306,25 @@ def test_quoted_keys_ensure_ascii(
     """Test quoted keys with ensure_ascii."""
     assert json.dumps(
         {key: 0}, end="", ensure_ascii=True, unquoted_keys=True,
-    ) == f"{{{expected}: 0}}"
+    ) == f'{{"{expected}": 0}}'
 
 
 @pytest.mark.parametrize(("key", "expected"), [
     # Empty string
-    ("", '""'),
+    ("", ""),
 
     # First character
-    ("\x00", r'"\u0000"'),
-    (" ", '" "'),
-    ("!", '"!"'),
-    ("$", '"$"'),
-    ("0", '"0"'),
+    ("\x00", r"\u0000"),
+    (" ", " "),
+    ("!", "!"),
+    ("$", "$"),
+    ("0", "0"),
 
     # Remaining characters
-    ("A\x00", r'"A\u0000"'),
-    ("A ", '"A "'),
-    ("A!", '"A!"'),
-    ("A$", '"A$"'),
+    ("A\x00", r"A\u0000"),
+    ("A ", "A "),
+    ("A!", "A!"),
+    ("A$", "A$"),
 ])
 @pytest.mark.parametrize("ensure_ascii", [True, False])
 def test_quoted_ascii_keys(
@@ -347,7 +336,7 @@ def test_quoted_ascii_keys(
     """Test quoted ascii keys."""
     assert json.dumps(
         {key: 0}, end="", ensure_ascii=ensure_ascii, unquoted_keys=True,
-    ) == f"{{{expected}: 0}}"
+    ) == f'{{"{expected}": 0}}'
 
 
 @pytest.mark.parametrize("key", [
@@ -381,7 +370,7 @@ def test_unquoted_ascii_keys(
 
 @pytest.mark.parametrize("key", [
     # JSON values
-    0, Decimal(0), 0.0, Decimal(0.0), True, False, None,
+    0, Decimal(0), 0.0, Decimal("0.0"), True, False, None,
 
     # No JSON values
     b"", 0j, frozenset(), memoryview(b""), object(),

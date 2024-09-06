@@ -36,23 +36,21 @@ def _check_syntax_err(
     assert exc.end_colno == end_colno
 
 
-@pytest.mark.parametrize(("s", "expected"), [
-    ('"\ud800"', "\ud800"),
-    ('"\ud800$"', "\ud800$"),
-    ('"\udf48"', "\udf48"),  # noqa: PT014
-])
-def test_surrogates(json: ModuleType, s: str, expected: str) -> None:
+@pytest.mark.parametrize(
+    "string", ["\ud800", "\ud800$", "\udf48"],  # noqa: PT014
+)
+def test_surrogates(json: ModuleType, string: str) -> None:
     """Test surrogates."""
-    b: bytes = s.encode(errors="surrogatepass")
-    assert json.loads(b, allow=SURROGATES) == expected
+    b: bytes = f'"{string}"'.encode(errors="surrogatepass")
+    assert json.loads(b, allow=SURROGATES) == string
 
 
 @pytest.mark.parametrize(
-    "s", ['"\ud800"', '"\ud800$"', '"\udf48"'],  # noqa: PT014
+    "string", ["\ud800", "\ud800$", "\udf48"],  # noqa: PT014
 )
-def test_surrogates_not_allowed(json: ModuleType, s: str) -> None:
+def test_surrogates_not_allowed(json: ModuleType, string: str) -> None:
     """Test surrogates when not allowed."""
-    b: bytes = s.encode(errors="surrogatepass")
+    b: bytes = f'"{string}"'.encode(errors="surrogatepass")
     with pytest.raises(UnicodeDecodeError):
         json.loads(b)
 
@@ -185,60 +183,60 @@ def test_too_big_number(json: ModuleType, s: str) -> None:
 
 @pytest.mark.parametrize(("s", "expected"), [
     # Empty string
-    ('""', ""),
+    ("", ""),
 
     # UTF-8
-    ('"$"', "$"),
-    ('"\xa3"', "\xa3"),
-    ('"\u0418"', "\u0418"),
-    ('"\u0939"', "\u0939"),
-    ('"\u20ac"', "\u20ac"),
-    ('"\ud55c"', "\ud55c"),
-    ('"\U00010348"', "\U00010348"),
-    ('"\U001096b3"', "\U001096b3"),
+    ("$", "$"),
+    ("\xa3", "\xa3"),
+    ("\u0418", "\u0418"),
+    ("\u0939", "\u0939"),
+    ("\u20ac", "\u20ac"),
+    ("\ud55c", "\ud55c"),
+    ("\U00010348", "\U00010348"),
+    ("\U001096b3", "\U001096b3"),
 
     # Surrogates
-    ('"\ud800"', "\ud800"),
-    ('"\ud800$"', "\ud800$"),
-    ('"\udf48"', "\udf48"),  # noqa: PT014
+    ("\ud800", "\ud800"),
+    ("\ud800$", "\ud800$"),
+    ("\udf48", "\udf48"),  # noqa: PT014
 
     # Backslash escapes
-    (r'"\""', '"'),
-    (r'"\\"', "\\"),
-    (r'"\/"', "/"),
-    (r'"\b"', "\b"),
-    (r'"\f"', "\f"),
-    (r'"\n"', "\n"),
-    (r'"\r"', "\r"),
-    (r'"\t"', "\t"),
+    (r"\"", '"'),
+    (r"\\", "\\"),
+    (r"\/", "/"),
+    (r"\b", "\b"),
+    (r"\f", "\f"),
+    (r"\n", "\n"),
+    (r"\r", "\r"),
+    (r"\t", "\t"),
 
     # Unicode escape sequences
-    (r'"\u0024"', "$"),
-    (r'"\u00a3"', "\xa3"),
-    (r'"\u0418"', "\u0418"),
-    (r'"\u0939"', "\u0939"),
-    (r'"\u20ac"', "\u20ac"),
-    (r'"\ud55c"', "\ud55c"),
-    (r'"\ud800\udf48"', "\U00010348"),
-    (r'"\udbe5\udeb3"', "\U001096b3"),
+    (r"\u0024", "$"),
+    (r"\u00a3", "\xa3"),
+    (r"\u0418", "\u0418"),
+    (r"\u0939", "\u0939"),
+    (r"\u20ac", "\u20ac"),
+    (r"\ud55c", "\ud55c"),
+    (r"\ud800\udf48", "\U00010348"),
+    (r"\udbe5\udeb3", "\U001096b3"),
 
     # Multiple characters
-    ('"foo"', "foo"),
-    (r'"foo\\bar"', r"foo\bar"),
+    ("foo", "foo"),
+    (r"foo\\bar", r"foo\bar"),
 ])
 def test_string(json: ModuleType, s: str, expected: str) -> None:
     """Test JSON string."""
-    assert json.loads(s) == expected
+    assert json.loads(f'"{s}"') == expected
 
 
 @pytest.mark.parametrize(("s", "expected"), [
-    (r'"\ud800"', "\ud800"),
-    (r'"\ud800\u0024"', "\ud800$"),
-    (r'"\udf48"', "\udf48"),
+    (r"\ud800", "\ud800"),
+    (r"\ud800\u0024", "\ud800$"),
+    (r"\udf48", "\udf48"),
 ])
 def test_surrogate_escapes(json: ModuleType, s: str, expected: str) -> None:
     """Test surrogate escapes."""
-    assert json.loads(s, allow=SURROGATES) == expected
+    assert json.loads(f'"{s}"', allow=SURROGATES) == expected
 
 
 @pytest.mark.parametrize(("s", "msg", "colno", "end_colno"), [
@@ -457,29 +455,21 @@ def test_unquoted_keys(json: ModuleType, key: str) -> None:
     assert json.loads(f"{{{key}: 0}}", allow=UNQUOTED_KEYS) == {key: 0}
 
 
-@pytest.mark.parametrize(("key", "end_colno"), [
+@pytest.mark.parametrize("key", [
     # First character
-    ("A", 3),
-    ("_", 3),
-    ("\u16ee", 3),
-    ("\u1885", 3),
-    ("\u2118", 3),
+    "A", "_", "\u16ee", "\u1885", "\u2118",
 
     # Remaining characters
-    ("A0", 4),
-    ("AA", 4),
-    ("A_", 4),
-    ("A\u0300", 4),
-    ("A\u2118", 4),
+    "A0", "AA", "A_", "A\u0300", "A\u2118",
 ])
-def test_unquoted_keys_not_allowed(
-    json: ModuleType, key: str, end_colno: int,
-) -> None:
+def test_unquoted_keys_not_allowed(json: ModuleType, key: str) -> None:
     """Test unquoted keys when not allowed."""
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(f"{{{key}: 0}}")
 
-    _check_syntax_err(exc_info, "Unquoted keys are not allowed", 2, end_colno)
+    _check_syntax_err(
+        exc_info, "Unquoted keys are not allowed", 2, 2 + len(key),
+    )
 
 
 def test_duplicate_keys(json: ModuleType) -> None:

@@ -53,7 +53,6 @@ autodoc_typehints: str = "none"
 
 # -- Options for sphinx_copybutton
 
-copybutton_copy_empty_lines: bool = False
 copybutton_exclude: str = ".linenos, .gp, .go"
 
 # -- Options for HTML output
