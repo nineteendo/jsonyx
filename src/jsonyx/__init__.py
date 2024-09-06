@@ -25,20 +25,19 @@ __all__: list[str] = [
 ]
 __version__: str = "2.0.0"
 
-from codecs import (
-    BOM_UTF8, BOM_UTF16_BE, BOM_UTF16_LE, BOM_UTF32_BE, BOM_UTF32_LE,
-)
 from sys import stdout
 from typing import TYPE_CHECKING, Any, Literal
 
-from jsonyx._decoder import Decoder, DuplicateKey, JSONSyntaxError
+from jsonyx._decoder import (
+    Decoder, DuplicateKey, JSONSyntaxError, detect_encoding,
+)
 from jsonyx._differ import make_patch
 from jsonyx._encoder import Encoder
 from jsonyx._manipulator import Manipulator
 from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Container
+    from collections.abc import Container
 
     from _typeshed import StrPath, SupportsRead, SupportsWrite
 
@@ -47,55 +46,6 @@ if TYPE_CHECKING:
         "surrogates", "trailing_comma",
     ] | str]
     _Node = tuple[dict[Any, Any] | list[Any], int | slice | str]
-
-
-def detect_encoding(b: bytearray | bytes) -> str:
-    r"""Detect the JSON encoding.
-
-    :param b: a JSON string
-    :type b: bytearray | bytes
-    :return: the detected encoding
-    :rtype: str
-
-    >>> import jsonyx as json
-    >>> b = b'\x00"\x00f\x00o\x00o\x00"'
-    >>> b.decode(json.detect_encoding(b))
-    '"foo"'
-
-    .. note::
-        Supports only ``"utf_8"``, ``"utf_8-sig"``, ``"utf_16"``,
-        ``"utf_16_be"``, ``"utf_16_le"``, ``"utf_32"``, ``"utf_32_be"`` and
-        ``"utf_32_le"``.
-    """
-    # JSON must start with ASCII character (not NULL)
-    # Strings can't contain control characters (including NULL)
-    encoding: str = "utf_8"
-    startswith: Callable[[bytes | tuple[bytes, ...]], bool] = b.startswith
-    if startswith((BOM_UTF32_BE, BOM_UTF32_LE)):
-        encoding = "utf_32"
-    elif startswith((BOM_UTF16_BE, BOM_UTF16_LE)):
-        encoding = "utf_16"
-    elif startswith(BOM_UTF8):
-        encoding = "utf_8_sig"
-    elif len(b) >= 4:
-        if not b[0]:
-            # 00 00 -- -- - utf_32_be
-            # 00 XX -- -- - utf_16_be
-            encoding = "utf_16_be" if b[1] else "utf_32_be"
-        elif not b[1]:
-            # XX 00 00 00 - utf_32_le
-            # XX 00 00 XX - utf_16_le
-            # XX 00 XX -- - utf_16_le
-            encoding = "utf_16_le" if b[2] or b[3] else "utf_32_le"
-    elif len(b) == 2:
-        if not b[0]:
-            # 00 -- - utf_16_be
-            encoding = "utf_16_be"
-        elif not b[1]:
-            # XX 00 - utf_16_le
-            encoding = "utf_16_le"
-
-    return encoding
 
 
 def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
