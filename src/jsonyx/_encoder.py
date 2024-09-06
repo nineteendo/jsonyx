@@ -2,18 +2,30 @@
 """JSON encoder."""
 from __future__ import annotations
 
-__all__: list[str] = ["make_encoder"]
+__all__: list[str] = ["Encoder"]
 
 import re
 from collections.abc import Mapping, Sequence
 from decimal import Decimal
 from io import StringIO
 from math import inf, isfinite
+from pathlib import Path
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
-from typing import TYPE_CHECKING
+from sys import stdout
+from typing import TYPE_CHECKING, Literal
+
+from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, ItemsView
+    from collections.abc import Callable, Container, ItemsView
+
+    from _typeshed import StrPath, SupportsWrite
+
+    _AllowList = Container[Literal[
+        "comments", "duplicate_keys", "missing_commas", "nan_and_infinity",
+        "surrogates", "trailing_comma",
+    ] | str]
+
 
 _ESCAPE_DCT: dict[str, str] = {chr(i): f"\\u{i:04x}" for i in range(0x20)} | {
     '"': '\\"',
@@ -249,3 +261,158 @@ except ImportError:
             return io.getvalue()
 
         return encoder
+
+
+class Encoder:
+    r"""A configurable JSON encoder.
+
+    :param allow: the allowed JSON deviations, defaults to
+                  :data:`jsonyx.allow.NOTHING`
+    :type allow: Container[str], optional
+    :param commas: separate items by commas when indented, defaults to ``True``
+    :type commas: bool, optional
+    :param end: the string to append at the end, defaults to ``"\n"``
+    :type end: str, optional
+    :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
+    :type ensure_ascii: bool, optional
+    :param indent: the number of spaces or string to indent with, defaults to
+                   ``None``
+    :type indent: int | str | None, optional
+    :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
+    :type indent_leaves: bool, optional
+    :param separators: the item and key separator, defaults to ``(", ", ": ")``
+    :type separators: tuple[str, str], optional
+    :param sort_keys: sort the keys of objects, defaults to ``False``
+    :type sort_keys: bool, optional
+    :param trailing_comma: add a trailing comma when indented, defaults to
+                           ``False``
+    :type trailing_comma: bool, optional
+    :param unquoted_keys: don't quote keys which are identifiers, defaults to
+                          ``False``
+    :type unquoted_keys: bool, optional
+
+    .. note::
+        The item separator is automatically stripped when indented.
+
+    .. versionchanged:: 2.0
+        Added *commas*, *indent_leaves* and *unquoted_keys*.
+        Merged *item_separator* and *key_separator* as *separators*.
+    """
+
+    def __init__(
+        self,
+        *,
+        allow: _AllowList = NOTHING,
+        commas: bool = True,
+        end: str = "\n",
+        ensure_ascii: bool = False,
+        indent: int | str | None = None,
+        indent_leaves: bool = False,
+        separators: tuple[str, str] = (", ", ": "),
+        sort_keys: bool = False,
+        trailing_comma: bool = False,
+        unquoted_keys: bool = False,
+    ) -> None:
+        """Create a new JSON encoder."""
+        allow_nan_and_infinity: bool = "nan_and_infinity" in allow
+        allow_surrogates: bool = "surrogates" in allow
+        decimal_str: Callable[[Decimal], str] = Decimal.__str__
+
+        long_item_separator, key_separator = separators
+        if commas:
+            item_separator: str = long_item_separator.rstrip()
+        else:
+            item_separator = ""
+
+        if indent is not None and isinstance(indent, int):
+            indent = " " * indent
+
+        def encode_decimal(decimal: Decimal) -> str:
+            if not decimal.is_finite():
+                if decimal.is_snan():
+                    msg: str = f"{decimal!r} is not JSON serializable"
+                    raise ValueError(msg)
+
+                if not allow_nan_and_infinity:
+                    msg = f"{decimal!r} is not allowed"
+                    raise ValueError(msg)
+
+                if decimal.is_qnan():
+                    return "NaN"
+
+            return decimal_str(decimal)
+
+        self._encoder: Callable[[object], str] = make_encoder(
+            encode_decimal, indent, end, item_separator, long_item_separator,
+            key_separator, allow_nan_and_infinity, allow_surrogates,
+            ensure_ascii, indent_leaves, sort_keys, commas and trailing_comma,
+            unquoted_keys,
+        )
+        self._errors: str = "surrogatepass" if allow_surrogates else "strict"
+
+    def write(self, obj: object, filename: StrPath) -> None:
+        r"""Serialize a Python object to a JSON file.
+
+        :param obj: a Python object
+        :type obj: object
+        :param filename: the path to the JSON file
+        :type filename: StrPath
+        :raises TypeError: for unserializable values
+        :raises ValueError: for invalid values
+
+        >>> import jsonyx as json
+        >>> from pathlib import Path
+        >>> from tempfile import TemporaryDirectory
+        >>> with TemporaryDirectory() as tmpdir:
+        ...     filename = Path(tmpdir) / "file.json"
+        ...     json.Encoder().write(["filesystem API"], filename)
+        ...     filename.read_text("utf_8")
+        ...
+        '["filesystem API"]\n'
+        """
+        Path(filename).write_text(self._encoder(obj), "utf_8", self._errors)
+
+    def dump(self, obj: object, fp: SupportsWrite[str] = stdout) -> None:
+        r"""Serialize a Python object to an open JSON file.
+
+        :param obj: a Python object
+        :type obj: object
+        :param fp: an open JSON file, defaults to :data:`sys.stdout`
+        :type fp: SupportsWrite[str], optional
+        :raises TypeError: for unserializable values
+        :raises ValueError: for invalid values
+
+        >>> import jsonyx as json
+        >>> encoder = json.Encoder()
+        >>> encoder.dump(["foo", {"bar": ("baz", None, 1.0, 2)}])
+        ["foo", {"bar": ["baz", null, 1.0, 2]}]
+        >>> from io import StringIO
+        >>> io = StringIO()
+        >>> encoder.dump(["streaming API"], io)
+        >>> io.getvalue()
+        '["streaming API"]\n'
+
+        .. warning::
+            To pretty-print unpaired surrogates, you need to use
+            :data:`jsonyx.allow.SURROGATES` and ``ensure_ascii=True``.
+        """
+        fp.write(self._encoder(obj))
+
+    def dumps(self, obj: object) -> str:
+        r"""Serialize a Python object to a JSON string.
+
+        :param obj: a Python object
+        :type obj: object
+        :raises TypeError: for unserializable values
+        :raises ValueError: for invalid values
+        :return: a JSON string
+        :rtype: str
+
+        >>> import jsonyx as json
+        >>> json.Encoder().dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
+        '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
+        """
+        return self._encoder(obj)
+
+
+Encoder.__module__ = "jsonyx"

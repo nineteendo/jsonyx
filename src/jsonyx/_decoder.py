@@ -3,17 +3,31 @@
 # TODO(Nice Zombies): add specification
 from __future__ import annotations
 
-__all__: list[str] = ["DuplicateKey", "JSONSyntaxError", "make_scanner"]
+__all__: list[str] = ["Decoder", "DuplicateKey", "JSONSyntaxError"]
 
 import re
 from decimal import Decimal, InvalidOperation
 from math import isinf
+from os import fspath
+from os.path import realpath
+from pathlib import Path
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from shutil import get_terminal_size
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
+
+from jsonyx import detect_encoding
+from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Container
+
+    from _typeshed import StrPath, SupportsRead
+
+    _AllowList = Container[Literal[
+        "comments", "duplicate_keys", "missing_commas", "nan_and_infinity",
+        "surrogates", "trailing_comma",
+    ] | str]
+
 
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 _UNESCAPE: dict[str, str] = {
@@ -539,3 +553,110 @@ except ImportError:
             return obj
 
         return scanner
+
+
+class Decoder:
+    """A configurable JSON decoder.
+
+    :param allow: the allowed JSON deviations, defaults to
+                  :data:`jsonyx.allow.NOTHING`
+    :type allow: Container[str], optional
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
+                        defaults to ``False``
+    :type use_decimal: bool, optional
+    """
+
+    def __init__(
+        self, *, allow: _AllowList = NOTHING, use_decimal: bool = False,
+    ) -> None:
+        """Create a new JSON decoder."""
+        allow_surrogates: bool = "surrogates" in allow
+        self._errors: str = "surrogatepass" if allow_surrogates else "strict"
+        self._scanner: Callable[[str, str], tuple[Any]] = make_scanner(
+            "comments" in allow, "duplicate_keys" in allow,
+            "missing_commas" in allow, "nan_and_infinity" in allow,
+            allow_surrogates, "trailing_comma" in allow,
+            "unquoted_keys" in allow, use_decimal,
+        )
+
+    def read(self, filename: StrPath) -> Any:
+        """Deserialize a JSON file to a Python object.
+
+        :param filename: the path to the JSON file
+        :type filename: StrPath
+        :raises JSONSyntaxError: if the JSON file is invalid
+        :return: a Python object
+        :rtype: Any
+
+        >>> import jsonyx as json
+        >>> from pathlib import Path
+        >>> from tempfile import TemporaryDirectory
+        >>> with TemporaryDirectory() as tmpdir:
+        ...     filename = Path(tmpdir) / "file.json"
+        ...     _ = filename.write_text('["filesystem API"]', "utf_8")
+        ...     json.Decoder().read(filename)
+        ...
+        ['filesystem API']
+        """
+        return self.loads(Path(filename).read_bytes(), filename=filename)
+
+    def load(
+        self, fp: SupportsRead[bytes | str], *, root: StrPath = ".",
+    ) -> Any:
+        """Deserialize an open JSON file to a Python object.
+
+        :param fp: an open JSON file
+        :type fp: SupportsRead[bytes | str]
+        :param root: the path to the archive containing this JSON file,
+                     defaults to ``"."``
+        :type root: StrPath, optional
+        :raises JSONSyntaxError: if the JSON file is invalid
+        :return: a Python object
+        :rtype: Any
+
+        >>> import jsonyx as json
+        >>> from io import StringIO
+        >>> io = StringIO('["streaming API"]')
+        >>> json.Decoder().load(io)
+        ['streaming API']
+        """
+        name: str | None
+        if name := getattr(fp, "name", None):
+            return self.loads(fp.read(), filename=Path(root) / name)
+
+        return self.loads(fp.read())
+
+    def loads(
+        self, s: bytearray | bytes | str, *, filename: StrPath = "<string>",
+    ) -> Any:
+        """Deserialize a JSON string to a Python object.
+
+        :param s: a JSON string
+        :type s: bytearray | bytes | str
+        :param filename: the path to the JSON file, defaults to ``"<string>"``
+        :type filename: StrPath, optional
+        :raises JSONSyntaxError: if the JSON string is invalid
+        :return: a Python object
+        :rtype: Any
+
+        >>> import jsonyx as json
+        >>> json.Decoder().loads('{"foo": ["bar", null, 1.0, 2]}')
+        {'foo': ['bar', None, 1.0, 2]}
+
+        .. tip::
+            Specify *filename* to display the filename in error messages.
+        """
+        filename = fspath(filename)
+        if not filename.startswith("<") and not filename.endswith(">"):
+            filename = realpath(filename)
+
+        if not isinstance(s, str):
+            s = s.decode(detect_encoding(s), self._errors)
+        elif s.startswith("\ufeff"):
+            msg: str = "Unexpected UTF-8 BOM"
+            raise JSONSyntaxError(msg, filename, s, 0)
+
+        return self._scanner(filename, s)
+
+
+Decoder.__module__ = "jsonyx"
