@@ -162,6 +162,15 @@ class JSONSyntaxError(SyntaxError):
     :type start: int
     :param end: the end position, defaults to ``0``
     :type end: int, optional
+
+    >>> import jsonyx as json
+    >>> raise json.JSONSyntaxError("Expecting value", "<string>", "[,]", 1)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "<string>", line 1
+        [,]
+         ^
+    jsonyx.JSONSyntaxError: Expecting value
     """
 
     def __init__(
