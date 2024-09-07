@@ -171,6 +171,8 @@ class JSONSyntaxError(SyntaxError):
         [,]
          ^
     jsonyx.JSONSyntaxError: Expecting value
+
+    See :func:`jsonyx.format_syntax_error` for formatting the exception.
     """
 
     def __init__(
