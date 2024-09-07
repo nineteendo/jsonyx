@@ -75,9 +75,12 @@ Command Line Interface
 
     Allow all JSON deviations provided by :mod:`jsonyx`.
 
-.. option:: -t, --trailing-comma
+.. option:: -t, --add-trailing-comma
 
     Add a trailing comma when indented.
+
+    .. versionchanged:: 2.0
+        Renamed :option:`!--trailing-comma` to :option:`!--add-trailing-comma`
 
 .. option:: -T, --indent-tab
 

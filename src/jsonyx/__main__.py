@@ -20,6 +20,7 @@ from jsonyx.allow import EVERYTHING, NOTHING
 
 # pylint: disable-next=R0903
 class _Namespace:
+    add_trailing_comma: bool
     command: Literal["format", "patch", "diff"] | None
     commas: bool
     compact: bool
@@ -31,7 +32,6 @@ class _Namespace:
     quote_keys: bool
     output_filename: str | None
     sort_keys: bool
-    trailing_comma: bool
     use_decimal: bool
 
 
@@ -111,7 +111,7 @@ def _configure(parser: ArgumentParser) -> None:
     )
     comma_group.add_argument(
         "-t",
-        "--trailing-comma",
+        "--add-trailing-comma",
         action="store_true",
         help="add a trailing comma when indented",
     )
@@ -191,7 +191,7 @@ def _run(args: _Namespace) -> None:
         use_decimal=args.use_decimal,
     )
     encoder: Encoder = Encoder(
-        add_trailing_comma=args.trailing_comma,
+        add_trailing_comma=args.add_trailing_comma,
         allow=EVERYTHING if args.nonstrict else NOTHING,
         commas=args.commas,
         ensure_ascii=args.ensure_ascii,
