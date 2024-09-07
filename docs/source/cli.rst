@@ -43,9 +43,13 @@ Command Line Interface
 
     Avoid unnecessary whitespace after ``","`` and ``":"``.
 
-.. option:: -C, --no-commas
+.. option:: -C, --no-add-commas
 
     Don't separate items by commas when indented.
+
+    .. versionchanged:: 2.0
+        Renamed :option:`!--no-commas` to :option:`!--no-add-commas`
+
 
 .. option:: -d, --use-decimal
 

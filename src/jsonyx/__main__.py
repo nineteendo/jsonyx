@@ -20,9 +20,9 @@ from jsonyx.allow import EVERYTHING, NOTHING
 
 # pylint: disable-next=R0903
 class _Namespace:
+    add_commas: bool
     add_trailing_comma: bool
     command: Literal["format", "patch", "diff"] | None
-    commas: bool
     compact: bool
     ensure_ascii: bool
     indent: int | str | None
@@ -65,9 +65,9 @@ def _configure(parser: ArgumentParser) -> None:
     comma_group = parent_parser.add_mutually_exclusive_group()
     comma_group.add_argument(
         "-C",
-        "--no-commas",
+        "--no-add-commas",
         action="store_false",
-        dest="commas",
+        dest="add_commas",
         help="don't separate items by commas when indented",
     )
     parent_parser.add_argument(
@@ -191,7 +191,7 @@ def _run(args: _Namespace) -> None:
         use_decimal=args.use_decimal,
     )
     encoder: Encoder = Encoder(
-        add_commas=args.commas,
+        add_commas=args.add_commas,
         add_trailing_comma=args.add_trailing_comma,
         allow=EVERYTHING if args.nonstrict else NOTHING,
         ensure_ascii=args.ensure_ascii,
