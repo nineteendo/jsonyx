@@ -1,6 +1,25 @@
 How-to Guide
 ============
 
+Better error messages for other JSON libraries
+----------------------------------------------
+
+::
+
+    >>> import jsonyx
+    >>> from json import JSONDecodeError, loads
+    >>> try:
+    ...     loads("[,]")
+    ... except JSONDecodeError as exc:
+    ...     raise jsonyx.JSONSyntaxError(exc.msg, "<string>", exc.doc, exc.pos) from None
+    ...
+    Traceback (most recent call last):
+      File "<stdin>", line 4, in <module>
+      File "<string>", line 1
+        [,]
+         ^
+    jsonyx.JSONSyntaxError: Expecting value
+
 Specializing JSON object encoding
 ---------------------------------
 
