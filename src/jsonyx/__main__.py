@@ -191,9 +191,9 @@ def _run(args: _Namespace) -> None:
         use_decimal=args.use_decimal,
     )
     encoder: Encoder = Encoder(
+        add_commas=args.commas,
         add_trailing_comma=args.add_trailing_comma,
         allow=EVERYTHING if args.nonstrict else NOTHING,
-        commas=args.commas,
         ensure_ascii=args.ensure_ascii,
         indent=args.indent,
         indent_leaves=args.indent_leaves,

@@ -198,9 +198,9 @@ def write(
     obj: object,
     filename: StrPath,
     *,
+    add_commas: bool = True,
     add_trailing_comma: bool = False,
     allow: _AllowList = NOTHING,
-    commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
@@ -255,14 +255,14 @@ def write(
         The item separator is automatically stripped when indented.
 
     .. versionchanged:: 2.0
-        Added *commas*, *quote_keys*, *indent_leaves*.
+        Added *add_commas*, *quote_keys*, *indent_leaves*.
         Merged *item_separator* and *key_separator* as *separators*.
         Renamed *trailing_comma* to *add_trailing_comma*.
     """
     return Encoder(
+        add_commas=add_commas,
         add_trailing_comma=add_trailing_comma,
         allow=allow,
-        commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
@@ -277,9 +277,9 @@ def dump(
     obj: object,
     fp: SupportsWrite[str] = stdout,
     *,
+    add_commas: bool = True,
     add_trailing_comma: bool = False,
     allow: _AllowList = NOTHING,
-    commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
@@ -294,14 +294,15 @@ def dump(
     :type obj: object
     :param fp: an open JSON file, defaults to :data:`sys.stdout`
     :type fp: SupportsWrite[str], optional
+    :param add_commas: separate items by commas when indented, defaults to
+                       ``True``
+    :type add_commas: bool, optional
     :param add_trailing_comma: add a trailing comma when indented, defaults to
                                ``False``
     :type add_trailing_comma: bool, optional
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
-    :param commas: separate items by commas when indented, defaults to ``True``
-    :type commas: bool, optional
     :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
@@ -337,14 +338,14 @@ def dump(
         :data:`jsonyx.allow.SURROGATES` and ``ensure_ascii=True``.
 
     .. versionchanged:: 2.0
-        Added *commas*, *quote_keys*, *indent_leaves*.
+        Added *add_commas*, *quote_keys*, *indent_leaves*.
         Merged *item_separator* and *key_separator* as *separators*.
         Renamed *trailing_comma* to *add_trailing_comma*.
     """
     Encoder(
+        add_commas=add_commas,
         add_trailing_comma=add_trailing_comma,
         allow=allow,
-        commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
@@ -358,9 +359,9 @@ def dump(
 def dumps(
     obj: object,
     *,
+    add_commas: bool = True,
     add_trailing_comma: bool = False,
     allow: _AllowList = NOTHING,
-    commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
@@ -373,14 +374,15 @@ def dumps(
 
     :param obj: a Python object
     :type obj: object
+    :param add_commas: separate items by commas when indented, defaults to
+                       ``True``
+    :type add_commas: bool, optional
     :param add_trailing_comma: add a trailing comma when indented, defaults to
                                ``False``
     :type add_trailing_comma: bool, optional
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
-    :param commas: separate items by commas when indented, defaults to ``True``
-    :type commas: bool, optional
     :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
@@ -409,14 +411,14 @@ def dumps(
         The item separator is automatically stripped when indented.
 
     .. versionchanged:: 2.0
-        Added *commas*, *quote_keys*, *indent_leaves*.
+        Added *add_commas*, *quote_keys*, *indent_leaves*.
         Merged *item_separator* and *key_separator* as *separators*.
         Renamed *trailing_comma* to *add_trailing_comma*.
     """
     return Encoder(
+        add_commas=add_commas,
         add_trailing_comma=add_trailing_comma,
         allow=allow,
-        commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,

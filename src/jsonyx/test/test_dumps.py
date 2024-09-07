@@ -445,11 +445,11 @@ def test_circular_reference(
     ([1, 2, 3], "[1, 2, 3]"),
     ({"a": 1, "b": 2, "c": 3}, '{"a": 1, "b": 2, "c": 3}'),
 ])
-def test_no_commas(
+def test_no_add_commas(
     json: ModuleType, obj: dict[str, object] | list[object], expected: str,
 ) -> None:
-    """Test no commas."""
-    assert json.dumps(obj, commas=False, end="") == expected
+    """Test no add_commas."""
+    assert json.dumps(obj, add_commas=False, end="") == expected
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
@@ -457,17 +457,17 @@ def test_no_commas(
     ({"a": 1, "b": 2, "c": 3}, '{\n "a": 1\n "b": 2\n "c": 3\n}'),
 ])
 @pytest.mark.parametrize("add_trailing_comma", [True, False])
-def test_no_commas_indent_leaves(
+def test_no_add_commas_indent_leaves(
     json: ModuleType,
     obj: dict[str, object] | list[object],
     expected: str,
     add_trailing_comma: bool,  # noqa: FBT001
 ) -> None:
-    """Test no commas with indent and indent_leaves."""
+    """Test no add_commas with indent and indent_leaves."""
     assert json.dumps(
         obj,
+        add_commas=False,
         add_trailing_comma=add_trailing_comma,
-        commas=False,
         end="",
         indent=1,
         indent_leaves=True,

@@ -266,14 +266,15 @@ except ImportError:
 class Encoder:
     r"""A configurable JSON encoder.
 
+    :param add_commas: separate items by commas when indented, defaults to
+                       ``True``
+    :type add_commas: bool, optional
     :param add_trailing_comma: add a trailing comma when indented, defaults to
                                ``False``
     :type add_trailing_comma: bool, optional
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
-    :param commas: separate items by commas when indented, defaults to ``True``
-    :type commas: bool, optional
     :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
@@ -294,7 +295,7 @@ class Encoder:
         The item separator is automatically stripped when indented.
 
     .. versionchanged:: 2.0
-        Added *commas*, *quote_keys*, *indent_leaves*.
+        Added *add_commas*, *quote_keys*, *indent_leaves*.
         Merged *item_separator* and *key_separator* as *separators*.
         Renamed *trailing_comma* to *add_trailing_comma*.
     """
@@ -302,9 +303,9 @@ class Encoder:
     def __init__(
         self,
         *,
+        add_commas: bool = True,
         add_trailing_comma: bool = False,
         allow: _AllowList = NOTHING,
-        commas: bool = True,
         end: str = "\n",
         ensure_ascii: bool = False,
         indent: int | str | None = None,
@@ -319,7 +320,7 @@ class Encoder:
         decimal_str: Callable[[Decimal], str] = Decimal.__str__
 
         long_item_separator, key_separator = separators
-        if commas:
+        if add_commas:
             item_separator: str = long_item_separator.rstrip()
         else:
             item_separator = ""
@@ -344,7 +345,7 @@ class Encoder:
 
         self._encoder: Callable[[object], str] = make_encoder(
             encode_decimal, indent, end, item_separator, long_item_separator,
-            key_separator, commas and add_trailing_comma,
+            key_separator, add_commas and add_trailing_comma,
             allow_nan_and_infinity, allow_surrogates, ensure_ascii,
             indent_leaves, quote_keys, sort_keys,
         )
