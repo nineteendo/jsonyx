@@ -132,12 +132,13 @@ except ImportError:
         >>> {json.DuplicateKey('key'): 'value 1', json.DuplicateKey('key'): 'value 2'}
         {'key': 'value 1', 'key': 'value 2'}
 
-        See :data:`jsonyx.allow.DUPLICATE_KEYS` for loading a dictionary with
-        duplicate keys.
-
         .. tip::
             To retrieve the value of a duplicate key, you can
             :ref:`use a multi dict <use_multidict>`.
+
+        .. seealso::
+            :data:`jsonyx.allow.DUPLICATE_KEYS` for loading a dictionary with
+            duplicate keys.
         """
 
         __slots__: tuple[()] = ()
@@ -172,7 +173,8 @@ class JSONSyntaxError(SyntaxError):
          ^
     jsonyx.JSONSyntaxError: Expecting value
 
-    See :func:`jsonyx.format_syntax_error` for formatting the exception.
+    .. tip::
+        Use :func:`jsonyx.format_syntax_error` for formatting the exception.
     """
 
     def __init__(

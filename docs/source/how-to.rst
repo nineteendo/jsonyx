@@ -20,7 +20,8 @@ Better error messages for other JSON libraries
          ^
     jsonyx.JSONSyntaxError: Expecting value
 
-See :func:`jsonyx.format_syntax_error` for formatting the exception.
+.. tip::
+    Use :func:`jsonyx.format_syntax_error` for formatting the exception.
 
 Specializing JSON object encoding
 ---------------------------------
