@@ -93,7 +93,7 @@ UNQUOTED_KEYS: frozenset[str] = frozenset({"unquoted_keys"})
 
 #: Allow all JSON deviations provided by :mod:`jsonyx`.
 #:
-#: Equivalent to ``COMMENTS | DUPLICATE_KEYS | MISSING_COMMAS |
+#: This is equivalent to ``COMMENTS | DUPLICATE_KEYS | MISSING_COMMAS |
 #: NAN_AND_INFINITY | SURROGATES | TRAILING_COMMA | UNQUOTED_KEYS``.
 EVERYTHING: frozenset[str] = (
     COMMENTS | DUPLICATE_KEYS | MISSING_COMMAS | NAN_AND_INFINITY | SURROGATES

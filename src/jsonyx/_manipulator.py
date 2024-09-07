@@ -216,7 +216,8 @@ class Manipulator:
 
             value, end = float("-Infinity"), idx + 9
         else:
-            raise SyntaxError
+            msg = "Expecting value"
+            raise _errmsg(msg, s, idx) from None
 
         return value, end
 
