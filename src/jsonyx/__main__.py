@@ -28,10 +28,10 @@ class _Namespace:
     indent_leaves: bool
     input_filename: str | None
     nonstrict: bool
+    quote_keys: bool
     output_filename: str | None
     sort_keys: bool
     trailing_comma: bool
-    unquoted_keys: bool
     use_decimal: bool
 
 
@@ -91,6 +91,13 @@ def _configure(parser: ArgumentParser) -> None:
         help="indent leaf objects and arrays",
     )
     parent_parser.add_argument(
+        "-q",
+        "--no-quote-keys",
+        action="store_false",
+        dest="quote_keys",
+        help="don't quote keys which are identifiers",
+    )
+    parent_parser.add_argument(
         "-s",
         "--sort-keys",
         action="store_true",
@@ -115,12 +122,6 @@ def _configure(parser: ArgumentParser) -> None:
         const="\t",
         dest="indent",
         help="indent using tabs",
-    )
-    parent_parser.add_argument(
-        "-u",
-        "--unquoted-keys",
-        action="store_true",
-        help="don't quote keys which are identifiers",
     )
     commands = parser.add_subparsers(title="commands", dest="command")
 
@@ -195,7 +196,7 @@ def _run(args: _Namespace) -> None:
         ensure_ascii=args.ensure_ascii,
         indent=args.indent,
         indent_leaves=args.indent_leaves,
-        quote_keys=not args.unquoted_keys,
+        quote_keys=args.quote_keys,
         separators=(",", ":") if args.compact else (", ", ": "),
         sort_keys=args.sort_keys,
         trailing_comma=args.trailing_comma,

@@ -61,6 +61,12 @@ Command Line Interface
 
     .. versionadded:: 2.0
 
+.. option:: -q, --no-quote-keys
+
+    Don't quote keys which are identifiers.
+
+    .. versionadded:: 2.0
+
 .. option:: -s, --sort-keys
 
     Sort the keys of objects.
@@ -76,12 +82,6 @@ Command Line Interface
 .. option:: -T, --indent-tab
 
     Indent using tabs.
-
-.. option:: -u, --unquoted-keys
-
-    Don't quote keys which are identifiers.
-
-    .. versionadded:: 2.0
 
 .. option:: -v, --version
 
