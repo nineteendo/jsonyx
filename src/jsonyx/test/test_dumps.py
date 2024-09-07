@@ -456,21 +456,21 @@ def test_no_commas(
     ([1, 2, 3], "[\n 1\n 2\n 3\n]"),
     ({"a": 1, "b": 2, "c": 3}, '{\n "a": 1\n "b": 2\n "c": 3\n}'),
 ])
-@pytest.mark.parametrize("trailing_comma", [True, False])
+@pytest.mark.parametrize("add_trailing_comma", [True, False])
 def test_no_commas_indent_leaves(
     json: ModuleType,
     obj: dict[str, object] | list[object],
     expected: str,
-    trailing_comma: bool,  # noqa: FBT001
+    add_trailing_comma: bool,  # noqa: FBT001
 ) -> None:
     """Test no commas with indent and indent_leaves."""
     assert json.dumps(
         obj,
+        add_trailing_comma=add_trailing_comma,
         commas=False,
         end="",
         indent=1,
         indent_leaves=True,
-        trailing_comma=trailing_comma,
     ) == expected
 
 
@@ -499,21 +499,21 @@ def test_separators(
     ([1, 2, 3], "[1, 2, 3]"),
     ({"a": 1, "b": 2, "c": 3}, '{"a": 1, "b": 2, "c": 3}'),
 ])
-def test_trailing_comma(
+def test_add_trailing_comma(
     json: ModuleType, obj: dict[str, object] | list[object], expected: str,
 ) -> None:
-    """Test trailing_comma."""
-    assert json.dumps(obj, end="", trailing_comma=True) == expected
+    """Test add_trailing_comma."""
+    assert json.dumps(obj, add_trailing_comma=True, end="") == expected
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
     ([1, 2, 3], "[\n 1,\n 2,\n 3,\n]"),
     ({"a": 1, "b": 2, "c": 3}, '{\n "a": 1,\n "b": 2,\n "c": 3,\n}'),
 ])
-def test_trailing_comma_indent_leaves(
+def test_add_trailing_comma_indent_leaves(
     json: ModuleType, obj: dict[str, object] | list[object], expected: str,
 ) -> None:
-    """Test trailing_comma with indent and indent_leaves."""
+    """Test add_trailing_comma with indent and indent_leaves."""
     assert json.dumps(
-        obj, end="", indent=1, indent_leaves=True, trailing_comma=True,
+        obj, add_trailing_comma=True, end="", indent=1, indent_leaves=True,
     ) == expected

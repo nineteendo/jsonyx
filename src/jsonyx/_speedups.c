@@ -42,13 +42,13 @@ typedef struct _PyEncoderObject {
     PyObject *item_separator;
     PyObject *long_item_separator;
     PyObject *key_separator;
+    int add_trailing_comma;
     int allow_nan_and_infinity;
     int allow_surrogates;
     int ensure_ascii;
     int indent_leaves;
     int quote_keys;
     int sort_keys;
-    int trailing_comma;
 } PyEncoderObject;
 
 static Py_hash_t duplicatekey_hash(PyUnicodeObject *self) {
@@ -1275,22 +1275,22 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     static char *kwlist[] = {"encode_decimal", "indent", "end",
                              "item_separator", "long_item_separator",
-                             "key_separator", "allow_nan_and_infinity",
-                             "allow_surrogates", "ensure_ascii",
-                             "indent_leaves", "quote_keys", "sort_keys",
-                             "trailing_comma", NULL};
+                             "key_separator", "add_trailing_comma",
+                             "allow_nan_and_infinity", "allow_surrogates",
+                             "ensure_ascii", "indent_leaves", "quote_keys",
+                             "sort_keys", NULL};
 
     PyEncoderObject *s;
     PyObject *encode_decimal, *indent;
     PyObject *end, *item_separator, *long_item_separator, *key_separator;
-    int allow_nan_and_infinity, allow_surrogates, ensure_ascii, indent_leaves;
-    int quote_keys, sort_keys, trailing_comma;
+    int add_trailing_comma, allow_nan_and_infinity, allow_surrogates, ensure_ascii, indent_leaves;
+    int quote_keys, sort_keys;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOUUUUppppppp:make_encoder", kwlist,
         &encode_decimal, &indent,
         &end, &item_separator, &long_item_separator, &key_separator,
-        &allow_nan_and_infinity, &allow_surrogates, &ensure_ascii,
-        &indent_leaves, &quote_keys, &sort_keys, &trailing_comma))
+        &add_trailing_comma, &allow_nan_and_infinity, &allow_surrogates,
+        &ensure_ascii, &indent_leaves, &quote_keys, &sort_keys))
         return NULL;
 
     s = (PyEncoderObject *)type->tp_alloc(type, 0);
@@ -1322,13 +1322,13 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->item_separator = Py_NewRef(item_separator);
     s->long_item_separator = Py_NewRef(long_item_separator);
     s->key_separator = Py_NewRef(key_separator);
+    s->add_trailing_comma = add_trailing_comma;
     s->allow_nan_and_infinity = allow_nan_and_infinity;
     s->allow_surrogates = allow_surrogates;
     s->ensure_ascii = ensure_ascii;
     s->indent_leaves = indent_leaves;
     s->quote_keys = quote_keys;
     s->sort_keys = sort_keys;
-    s->trailing_comma = trailing_comma;
     return (PyObject *)s;
 
 bail:
@@ -1680,7 +1680,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
     if (indented) {
         Py_CLEAR(new_newline_indent);
         Py_CLEAR(separator_indent);
-        if ((s->trailing_comma && _PyUnicodeWriter_WriteStr(writer, s->item_separator) < 0) ||
+        if ((s->add_trailing_comma && _PyUnicodeWriter_WriteStr(writer, s->item_separator) < 0) ||
             _PyUnicodeWriter_WriteStr(writer, newline_indent) < 0)
         {
             goto bail;
@@ -1796,7 +1796,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
     if (indented) {
         Py_CLEAR(new_newline_indent);
         Py_CLEAR(separator_indent);
-        if ((s->trailing_comma && _PyUnicodeWriter_WriteStr(writer, s->item_separator) < 0) ||
+        if ((s->add_trailing_comma && _PyUnicodeWriter_WriteStr(writer, s->item_separator) < 0) ||
             _PyUnicodeWriter_WriteStr(writer, newline_indent) < 0)
         {
             goto bail;

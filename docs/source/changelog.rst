@@ -26,6 +26,8 @@ v2.0.0 (unreleased)
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
   :func:`jsonyx.write`
 - Removed :mod:`!jsonyx.tool`
+- Renamed *trailing_comma* to *add_trailing_comma* for :class:`jsonyx.Encoder`,
+  :func:`jsonyx.dump`, :func:`jsonyx.dumps` and :func:`jsonyx.write`
 
 `v1.2.1 <https://pypi.org/project/jsonyx/1.2.1>`_
 -------------------------------------------------

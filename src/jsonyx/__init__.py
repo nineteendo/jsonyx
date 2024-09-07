@@ -198,6 +198,7 @@ def write(
     obj: object,
     filename: StrPath,
     *,
+    add_trailing_comma: bool = False,
     allow: _AllowList = NOTHING,
     commas: bool = True,
     end: str = "\n",
@@ -207,7 +208,6 @@ def write(
     quote_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
     sort_keys: bool = False,
-    trailing_comma: bool = False,
 ) -> None:
     r"""Serialize a Python object to a JSON file.
 
@@ -215,6 +215,9 @@ def write(
     :type obj: object
     :param filename: the path to the JSON file
     :type filename: StrPath
+    :param add_trailing_comma: add a trailing comma when indented, defaults to
+                               ``False``
+    :type add_trailing_comma: bool, optional
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
@@ -235,9 +238,6 @@ def write(
     :type separators: tuple[str, str], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
     :type sort_keys: bool, optional
-    :param trailing_comma: add a trailing comma when indented, defaults to
-                           ``False``
-    :type trailing_comma: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
 
@@ -257,8 +257,10 @@ def write(
     .. versionchanged:: 2.0
         Added *commas*, *quote_keys*, *indent_leaves*.
         Merged *item_separator* and *key_separator* as *separators*.
+        Renamed *trailing_comma* to *add_trailing_comma*.
     """
     return Encoder(
+        add_trailing_comma=add_trailing_comma,
         allow=allow,
         commas=commas,
         end=end,
@@ -268,7 +270,6 @@ def write(
         quote_keys=quote_keys,
         separators=separators,
         sort_keys=sort_keys,
-        trailing_comma=trailing_comma,
     ).write(obj, filename)
 
 
@@ -276,6 +277,7 @@ def dump(
     obj: object,
     fp: SupportsWrite[str] = stdout,
     *,
+    add_trailing_comma: bool = False,
     allow: _AllowList = NOTHING,
     commas: bool = True,
     end: str = "\n",
@@ -285,7 +287,6 @@ def dump(
     quote_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
     sort_keys: bool = False,
-    trailing_comma: bool = False,
 ) -> None:
     r"""Serialize a Python object to an open JSON file.
 
@@ -293,6 +294,9 @@ def dump(
     :type obj: object
     :param fp: an open JSON file, defaults to :data:`sys.stdout`
     :type fp: SupportsWrite[str], optional
+    :param add_trailing_comma: add a trailing comma when indented, defaults to
+                               ``False``
+    :type add_trailing_comma: bool, optional
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
@@ -313,9 +317,6 @@ def dump(
     :type separators: tuple[str, str], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
     :type sort_keys: bool, optional
-    :param trailing_comma: add a trailing comma when indented, defaults to
-                           ``False``
-    :type trailing_comma: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
 
@@ -338,8 +339,10 @@ def dump(
     .. versionchanged:: 2.0
         Added *commas*, *quote_keys*, *indent_leaves*.
         Merged *item_separator* and *key_separator* as *separators*.
+        Renamed *trailing_comma* to *add_trailing_comma*.
     """
     Encoder(
+        add_trailing_comma=add_trailing_comma,
         allow=allow,
         commas=commas,
         end=end,
@@ -349,13 +352,13 @@ def dump(
         quote_keys=quote_keys,
         separators=separators,
         sort_keys=sort_keys,
-        trailing_comma=trailing_comma,
     ).dump(obj, fp)
 
 
 def dumps(
     obj: object,
     *,
+    add_trailing_comma: bool = False,
     allow: _AllowList = NOTHING,
     commas: bool = True,
     end: str = "\n",
@@ -365,12 +368,14 @@ def dumps(
     quote_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
     sort_keys: bool = False,
-    trailing_comma: bool = False,
 ) -> str:
     r"""Serialize a Python object to a JSON string.
 
     :param obj: a Python object
     :type obj: object
+    :param add_trailing_comma: add a trailing comma when indented, defaults to
+                               ``False``
+    :type add_trailing_comma: bool, optional
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
@@ -391,9 +396,6 @@ def dumps(
     :type separators: tuple[str, str], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
     :type sort_keys: bool, optional
-    :param trailing_comma: add a trailing comma when indented, defaults to
-                           ``False``
-    :type trailing_comma: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
     :return: a JSON string
@@ -409,8 +411,10 @@ def dumps(
     .. versionchanged:: 2.0
         Added *commas*, *quote_keys*, *indent_leaves*.
         Merged *item_separator* and *key_separator* as *separators*.
+        Renamed *trailing_comma* to *add_trailing_comma*.
     """
     return Encoder(
+        add_trailing_comma=add_trailing_comma,
         allow=allow,
         commas=commas,
         end=end,
@@ -420,7 +424,6 @@ def dumps(
         quote_keys=quote_keys,
         separators=separators,
         sort_keys=sort_keys,
-        trailing_comma=trailing_comma,
     ).dumps(obj)
 
 

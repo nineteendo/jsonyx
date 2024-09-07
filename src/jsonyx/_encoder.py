@@ -56,13 +56,13 @@ except ImportError:
         item_separator: str,
         long_item_separator: str,
         key_separator: str,
+        add_trailing_comma: bool,  # noqa: FBT001
         allow_nan_and_infinity: bool,  # noqa: FBT001
         allow_surrogates: bool,  # noqa: FBT001
         ensure_ascii: bool,  # noqa: FBT001
         indent_leaves: bool,  # noqa: FBT001
         quote_keys: bool,  # noqa: FBT001
         sort_keys: bool,  # noqa: FBT001
-        trailing_comma: bool,  # noqa: FBT001
     ) -> Callable[[object], str]:
         """Make JSON encoder."""
         float_repr: Callable[[float], str] = float.__repr__
@@ -151,7 +151,7 @@ except ImportError:
 
             del markers[markerid]
             if indented:
-                if trailing_comma:
+                if add_trailing_comma:
                     write(item_separator)
 
                 write(old_indent)
@@ -209,7 +209,7 @@ except ImportError:
 
             del markers[markerid]
             if indented:
-                if trailing_comma:
+                if add_trailing_comma:
                     write(item_separator)
 
                 write(old_indent)
@@ -266,6 +266,9 @@ except ImportError:
 class Encoder:
     r"""A configurable JSON encoder.
 
+    :param add_trailing_comma: add a trailing comma when indented, defaults to
+                               ``False``
+    :type add_trailing_comma: bool, optional
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
@@ -286,9 +289,6 @@ class Encoder:
     :type separators: tuple[str, str], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
     :type sort_keys: bool, optional
-    :param trailing_comma: add a trailing comma when indented, defaults to
-                           ``False``
-    :type trailing_comma: bool, optional
 
     .. note::
         The item separator is automatically stripped when indented.
@@ -296,11 +296,13 @@ class Encoder:
     .. versionchanged:: 2.0
         Added *commas*, *quote_keys*, *indent_leaves*.
         Merged *item_separator* and *key_separator* as *separators*.
+        Renamed *trailing_comma* to *add_trailing_comma*.
     """
 
     def __init__(
         self,
         *,
+        add_trailing_comma: bool = False,
         allow: _AllowList = NOTHING,
         commas: bool = True,
         end: str = "\n",
@@ -310,7 +312,6 @@ class Encoder:
         quote_keys: bool = True,
         separators: tuple[str, str] = (", ", ": "),
         sort_keys: bool = False,
-        trailing_comma: bool = False,
     ) -> None:
         """Create a new JSON encoder."""
         allow_nan_and_infinity: bool = "nan_and_infinity" in allow
@@ -343,9 +344,9 @@ class Encoder:
 
         self._encoder: Callable[[object], str] = make_encoder(
             encode_decimal, indent, end, item_separator, long_item_separator,
-            key_separator, allow_nan_and_infinity, allow_surrogates,
-            ensure_ascii, indent_leaves, quote_keys, sort_keys,
-            commas and trailing_comma,
+            key_separator, commas and add_trailing_comma,
+            allow_nan_and_infinity, allow_surrogates, ensure_ascii,
+            indent_leaves, quote_keys, sort_keys,
         )
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 

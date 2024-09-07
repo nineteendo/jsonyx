@@ -191,6 +191,7 @@ def _run(args: _Namespace) -> None:
         use_decimal=args.use_decimal,
     )
     encoder: Encoder = Encoder(
+        add_trailing_comma=args.trailing_comma,
         allow=EVERYTHING if args.nonstrict else NOTHING,
         commas=args.commas,
         ensure_ascii=args.ensure_ascii,
@@ -199,7 +200,6 @@ def _run(args: _Namespace) -> None:
         quote_keys=args.quote_keys,
         separators=(",", ":") if args.compact else (", ", ": "),
         sort_keys=args.sort_keys,
-        trailing_comma=args.trailing_comma,
     )
     manipulator: Manipulator = Manipulator(
         allow=EVERYTHING if args.nonstrict else NOTHING,
