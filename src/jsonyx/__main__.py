@@ -195,10 +195,10 @@ def _run(args: _Namespace) -> None:
         ensure_ascii=args.ensure_ascii,
         indent=args.indent,
         indent_leaves=args.indent_leaves,
+        quote_keys=not args.unquoted_keys,
         separators=(",", ":") if args.compact else (", ", ": "),
         sort_keys=args.sort_keys,
         trailing_comma=args.trailing_comma,
-        unquoted_keys=args.unquoted_keys,
     )
     manipulator: Manipulator = Manipulator(
         allow=EVERYTHING if args.nonstrict else NOTHING,

@@ -46,9 +46,9 @@ typedef struct _PyEncoderObject {
     int allow_surrogates;
     int ensure_ascii;
     int indent_leaves;
+    int quote_keys;
     int sort_keys;
     int trailing_comma;
-    int unquoted_keys;
 } PyEncoderObject;
 
 static Py_hash_t duplicatekey_hash(PyUnicodeObject *self) {
@@ -1277,20 +1277,20 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
                              "item_separator", "long_item_separator",
                              "key_separator", "allow_nan_and_infinity",
                              "allow_surrogates", "ensure_ascii",
-                             "indent_leaves", "sort_keys", "trailing_comma",
-                             "unquoted_keys", NULL};
+                             "indent_leaves", "quote_keys", "sort_keys",
+                             "trailing_comma", NULL};
 
     PyEncoderObject *s;
     PyObject *encode_decimal, *indent;
     PyObject *end, *item_separator, *long_item_separator, *key_separator;
     int allow_nan_and_infinity, allow_surrogates, ensure_ascii, indent_leaves;
-    int sort_keys, trailing_comma, unquoted_keys;
+    int quote_keys, sort_keys, trailing_comma;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOUUUUppppppp:make_encoder", kwlist,
         &encode_decimal, &indent,
         &end, &item_separator, &long_item_separator, &key_separator,
         &allow_nan_and_infinity, &allow_surrogates, &ensure_ascii,
-        &indent_leaves, &sort_keys, &trailing_comma, &unquoted_keys))
+        &indent_leaves, &quote_keys, &sort_keys, &trailing_comma))
         return NULL;
 
     s = (PyEncoderObject *)type->tp_alloc(type, 0);
@@ -1326,9 +1326,9 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->allow_surrogates = allow_surrogates;
     s->ensure_ascii = ensure_ascii;
     s->indent_leaves = indent_leaves;
+    s->quote_keys = quote_keys;
     s->sort_keys = sort_keys;
     s->trailing_comma = trailing_comma;
-    s->unquoted_keys = unquoted_keys;
     return (PyObject *)s;
 
 bail:
@@ -1531,8 +1531,8 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
         }
     }
 
-    if (s->unquoted_keys && PyUnicode_IsIdentifier(keystr) && (!s->ensure_ascii
-                                                               || PyUnicode_IS_ASCII(key)))
+    if (!s->quote_keys && PyUnicode_IsIdentifier(keystr) && (!s->ensure_ascii
+                                                             || PyUnicode_IS_ASCII(key)))
     {
         encoded = keystr;
     }

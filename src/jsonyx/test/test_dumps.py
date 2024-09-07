@@ -279,7 +279,7 @@ def test_mapping(
 ])
 def test_quoted_keys(json: ModuleType, key: object) -> None:
     """Test quoted keys."""
-    s: str = json.dumps({key: 0}, end="", unquoted_keys=True)
+    s: str = json.dumps({key: 0}, end="", quote_keys=False)
     assert s == f'{{"{key}": 0}}'
 
 
@@ -305,7 +305,7 @@ def test_quoted_keys_ensure_ascii(
 ) -> None:
     """Test quoted keys with ensure_ascii."""
     assert json.dumps(
-        {key: 0}, end="", ensure_ascii=True, unquoted_keys=True,
+        {key: 0}, end="", ensure_ascii=True, quote_keys=False,
     ) == f'{{"{expected}": 0}}'
 
 
@@ -335,7 +335,7 @@ def test_quoted_ascii_keys(
 ) -> None:
     """Test quoted ascii keys."""
     assert json.dumps(
-        {key: 0}, end="", ensure_ascii=ensure_ascii, unquoted_keys=True,
+        {key: 0}, end="", ensure_ascii=ensure_ascii, quote_keys=False,
     ) == f'{{"{expected}": 0}}'
 
 
@@ -348,7 +348,7 @@ def test_quoted_ascii_keys(
 ])
 def test_unquoted_keys(json: ModuleType, key: object) -> None:
     """Test unquoted keys."""
-    assert json.dumps({key: 0}, end="", unquoted_keys=True) == f"{{{key}: 0}}"
+    assert json.dumps({key: 0}, end="", quote_keys=False) == f"{{{key}: 0}}"
 
 
 @pytest.mark.parametrize("key", [
@@ -364,7 +364,7 @@ def test_unquoted_ascii_keys(
 ) -> None:
     """Test unquoted ascii keys."""
     assert json.dumps(
-        {key: 0}, end="", ensure_ascii=ensure_ascii, unquoted_keys=True,
+        {key: 0}, end="", ensure_ascii=ensure_ascii, quote_keys=False,
     ) == f"{{{key}: 0}}"
 
 
