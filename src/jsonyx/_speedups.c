@@ -65,13 +65,13 @@ static PyTypeObject PyDuplicateKeyType = {
         ">>> {json.DuplicateKey('key'): 'value 1', json.DuplicateKey('key'): 'value 2'}\n"
         "{'key': 'value 1', 'key': 'value 2'}\n"
         "\n"
-        ".. seealso::\n"
-        "    :data:`jsonyx.allow.DUPLICATE_KEYS` for loading a dictionary with\n"
-        "    duplicate keys.\n"
-        "\n"
         ".. tip::\n"
         "    To retrieve the value of a duplicate key, you can\n"
         "    :ref:`use a multi dict <use_multidict>`.\n"
+        "\n"
+        ".. seealso::\n"
+        "    :data:`jsonyx.allow.DUPLICATE_KEYS` for loading a dictionary with\n"
+        "    duplicate keys.\n"
     ),
     .tp_hash = (hashfunc)duplicatekey_hash,
 };
