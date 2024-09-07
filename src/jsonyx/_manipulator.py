@@ -309,6 +309,17 @@ class Manipulator:
             raise SyntaxError
 
         while True:
+            if query[end:end + 1] == "?":
+                if mapping:
+                    raise ValueError
+
+                end += 1
+                nodes = [
+                    (target, key)
+                    for (target, key) in nodes
+                    if isinstance(key, slice) or _has_key(target, key)
+                ]
+
             if (terminator := query[end:end + 1]) == ".":
                 if (
                     match := _match_unquoted_key(query, end + 1)
@@ -626,22 +637,18 @@ class Manipulator:
         if isinstance(nodes, tuple):
             nodes = [nodes]
 
-        selected_nodes, end = self._run_select_query(
+        nodes, end = self._run_select_query(
             nodes,
             query,
             allow_slice=allow_slice,
             relative=relative,
             mapping=mapping,
         )
-        if query[end:end + 1] == "?":
-            end += 1
-        elif not selected_nodes and nodes:
-            raise ValueError
 
         if end < len(query):
             raise SyntaxError
 
-        return selected_nodes
+        return nodes
 
     def run_filter_query(
         self, nodes: _Node | list[_Node], query: str,
