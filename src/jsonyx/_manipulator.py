@@ -125,6 +125,7 @@ def _scan_query_operator(
 def _scan_query_string(s: str, end: int) -> tuple[str, int]:
     chunks: list[str] = []
     append_chunk: Callable[[str], None] = chunks.append
+    str_idx: int = end - 1
     while True:
         if match := _match_str_chunk(s, end):
             end = match.end()
@@ -133,7 +134,8 @@ def _scan_query_string(s: str, end: int) -> tuple[str, int]:
         try:
             terminator: str = s[end]
         except IndexError:
-            raise SyntaxError from None
+            msg: str = "Unterminated string"
+            raise _errmsg(msg, s, str_idx, end) from None
 
         if terminator == "'":
             return "".join(chunks), end + 1
@@ -142,10 +144,12 @@ def _scan_query_string(s: str, end: int) -> tuple[str, int]:
         try:
             esc: str = s[end]
         except IndexError:
-            raise SyntaxError from None
+            msg = "Expecting escaped character"
+            raise _errmsg(msg, s, end) from None
 
         if esc not in {"'", "~"}:
-            raise SyntaxError
+            msg = "Invalid tilde escape"
+            raise _errmsg(msg, s, end - 1, end + 1)
 
         end += 1
         append_chunk(esc)
@@ -221,7 +225,7 @@ class Manipulator:
             value, end = self._parse_float("-Infinity"), idx + 9
         else:
             msg = "Expecting value"
-            raise _errmsg(msg, s, idx) from None
+            raise _errmsg(msg, s, idx)
 
         return value, end
 
