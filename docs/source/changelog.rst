@@ -5,8 +5,9 @@ v2.0.0 (unreleased)
 -------------------
 
 - Added the ``jsonyx`` command line utility
-- Added *commas*, *quote_keys*, *indent_leaves* to :class:`jsonyx.Encoder`,
-  :func:`jsonyx.dump`, :func:`jsonyx.dumps` and :func:`jsonyx.write`
+- Added *commas*, *indent_leaves* and *unquoted_keys* to
+  :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
+  :func:`jsonyx.write`
 - Added :data:`jsonyx.allow.UNQUOTED_KEYS`
 - Added :func:`jsonyx.apply_patch` and :func:`jsonyx.make_patch`
 - Added :func:`jsonyx.load_query_value`
@@ -26,8 +27,6 @@ v2.0.0 (unreleased)
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
   :func:`jsonyx.write`
 - Removed :mod:`!jsonyx.tool`
-- Renamed *trailing_comma* to *add_trailing_comma* for :class:`jsonyx.Encoder`,
-  :func:`jsonyx.dump`, :func:`jsonyx.dumps` and :func:`jsonyx.write`
 
 `v1.2.1 <https://pypi.org/project/jsonyx/1.2.1>`_
 -------------------------------------------------

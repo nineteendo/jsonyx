@@ -279,7 +279,7 @@ def test_mapping(
 ])
 def test_quoted_keys(json: ModuleType, key: object) -> None:
     """Test quoted keys."""
-    s: str = json.dumps({key: 0}, end="", quote_keys=False)
+    s: str = json.dumps({key: 0}, end="", unquoted_keys=True)
     assert s == f'{{"{key}": 0}}'
 
 
@@ -305,7 +305,7 @@ def test_quoted_keys_ensure_ascii(
 ) -> None:
     """Test quoted keys with ensure_ascii."""
     assert json.dumps(
-        {key: 0}, end="", ensure_ascii=True, quote_keys=False,
+        {key: 0}, end="", ensure_ascii=True, unquoted_keys=True,
     ) == f'{{"{expected}": 0}}'
 
 
@@ -335,7 +335,7 @@ def test_quoted_ascii_keys(
 ) -> None:
     """Test quoted ascii keys."""
     assert json.dumps(
-        {key: 0}, end="", ensure_ascii=ensure_ascii, quote_keys=False,
+        {key: 0}, end="", ensure_ascii=ensure_ascii, unquoted_keys=True,
     ) == f'{{"{expected}": 0}}'
 
 
@@ -348,7 +348,7 @@ def test_quoted_ascii_keys(
 ])
 def test_unquoted_keys(json: ModuleType, key: object) -> None:
     """Test unquoted keys."""
-    assert json.dumps({key: 0}, end="", quote_keys=False) == f"{{{key}: 0}}"
+    assert json.dumps({key: 0}, end="", unquoted_keys=True) == f"{{{key}: 0}}"
 
 
 @pytest.mark.parametrize("key", [
@@ -364,7 +364,7 @@ def test_unquoted_ascii_keys(
 ) -> None:
     """Test unquoted ascii keys."""
     assert json.dumps(
-        {key: 0}, end="", ensure_ascii=ensure_ascii, quote_keys=False,
+        {key: 0}, end="", ensure_ascii=ensure_ascii, unquoted_keys=True,
     ) == f"{{{key}: 0}}"
 
 
@@ -445,32 +445,32 @@ def test_circular_reference(
     ([1, 2, 3], "[1, 2, 3]"),
     ({"a": 1, "b": 2, "c": 3}, '{"a": 1, "b": 2, "c": 3}'),
 ])
-def test_no_add_commas(
+def test_no_commas(
     json: ModuleType, obj: dict[str, object] | list[object], expected: str,
 ) -> None:
-    """Test no add_commas."""
-    assert json.dumps(obj, add_commas=False, end="") == expected
+    """Test no commas."""
+    assert json.dumps(obj, commas=False, end="") == expected
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
     ([1, 2, 3], "[\n 1\n 2\n 3\n]"),
     ({"a": 1, "b": 2, "c": 3}, '{\n "a": 1\n "b": 2\n "c": 3\n}'),
 ])
-@pytest.mark.parametrize("add_trailing_comma", [True, False])
-def test_no_add_commas_indent_leaves(
+@pytest.mark.parametrize("trailing_comma", [True, False])
+def test_no_commas_indent_leaves(
     json: ModuleType,
     obj: dict[str, object] | list[object],
     expected: str,
-    add_trailing_comma: bool,  # noqa: FBT001
+    trailing_comma: bool,  # noqa: FBT001
 ) -> None:
-    """Test no add_commas with indent and indent_leaves."""
+    """Test no commas with indent and indent_leaves."""
     assert json.dumps(
         obj,
-        add_commas=False,
-        add_trailing_comma=add_trailing_comma,
+        commas=False,
         end="",
         indent=1,
         indent_leaves=True,
+        trailing_comma=trailing_comma,
     ) == expected
 
 
@@ -499,21 +499,21 @@ def test_separators(
     ([1, 2, 3], "[1, 2, 3]"),
     ({"a": 1, "b": 2, "c": 3}, '{"a": 1, "b": 2, "c": 3}'),
 ])
-def test_add_trailing_comma(
+def test_trailing_comma(
     json: ModuleType, obj: dict[str, object] | list[object], expected: str,
 ) -> None:
-    """Test add_trailing_comma."""
-    assert json.dumps(obj, add_trailing_comma=True, end="") == expected
+    """Test trailing_comma."""
+    assert json.dumps(obj, end="", trailing_comma=True) == expected
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
     ([1, 2, 3], "[\n 1,\n 2,\n 3,\n]"),
     ({"a": 1, "b": 2, "c": 3}, '{\n "a": 1,\n "b": 2,\n "c": 3,\n}'),
 ])
-def test_add_trailing_comma_indent_leaves(
+def test_trailing_comma_indent_leaves(
     json: ModuleType, obj: dict[str, object] | list[object], expected: str,
 ) -> None:
-    """Test add_trailing_comma with indent and indent_leaves."""
+    """Test trailing_comma with indent and indent_leaves."""
     assert json.dumps(
-        obj, add_trailing_comma=True, end="", indent=1, indent_leaves=True,
+        obj, end="", indent=1, indent_leaves=True, trailing_comma=True,
     ) == expected

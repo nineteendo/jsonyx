@@ -20,18 +20,18 @@ from jsonyx.allow import EVERYTHING, NOTHING
 
 # pylint: disable-next=R0903
 class _Namespace:
-    add_commas: bool
-    add_trailing_comma: bool
     command: Literal["format", "patch", "diff"] | None
+    commas: bool
     compact: bool
     ensure_ascii: bool
     indent: int | str | None
     indent_leaves: bool
     input_filename: str | None
     nonstrict: bool
-    quote_keys: bool
     output_filename: str | None
     sort_keys: bool
+    trailing_comma: bool
+    unquoted_keys: bool
     use_decimal: bool
 
 
@@ -65,9 +65,9 @@ def _configure(parser: ArgumentParser) -> None:
     comma_group = parent_parser.add_mutually_exclusive_group()
     comma_group.add_argument(
         "-C",
-        "--no-add-commas",
+        "--no-commas",
         action="store_false",
-        dest="add_commas",
+        dest="commas",
         help="don't separate items by commas when indented",
     )
     parent_parser.add_argument(
@@ -91,13 +91,6 @@ def _configure(parser: ArgumentParser) -> None:
         help="indent leaf objects and arrays",
     )
     parent_parser.add_argument(
-        "-q",
-        "--no-quote-keys",
-        action="store_false",
-        dest="quote_keys",
-        help="don't quote keys which are identifiers",
-    )
-    parent_parser.add_argument(
         "-s",
         "--sort-keys",
         action="store_true",
@@ -111,7 +104,7 @@ def _configure(parser: ArgumentParser) -> None:
     )
     comma_group.add_argument(
         "-t",
-        "--add-trailing-comma",
+        "--trailing-comma",
         action="store_true",
         help="add a trailing comma when indented",
     )
@@ -122,6 +115,12 @@ def _configure(parser: ArgumentParser) -> None:
         const="\t",
         dest="indent",
         help="indent using tabs",
+    )
+    parent_parser.add_argument(
+        "-u",
+        "--unquoted-keys",
+        action="store_true",
+        help="don't quote keys which are identifiers",
     )
     commands = parser.add_subparsers(title="commands", dest="command")
 
@@ -191,15 +190,15 @@ def _run(args: _Namespace) -> None:
         use_decimal=args.use_decimal,
     )
     encoder: Encoder = Encoder(
-        add_commas=args.add_commas,
-        add_trailing_comma=args.add_trailing_comma,
         allow=EVERYTHING if args.nonstrict else NOTHING,
+        commas=args.commas,
         ensure_ascii=args.ensure_ascii,
         indent=args.indent,
         indent_leaves=args.indent_leaves,
-        quote_keys=args.quote_keys,
         separators=(",", ":") if args.compact else (", ", ": "),
         sort_keys=args.sort_keys,
+        trailing_comma=args.trailing_comma,
+        unquoted_keys=args.unquoted_keys,
     )
     manipulator: Manipulator = Manipulator(
         allow=EVERYTHING if args.nonstrict else NOTHING,

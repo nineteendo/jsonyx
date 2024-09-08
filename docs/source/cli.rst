@@ -43,13 +43,9 @@ Command Line Interface
 
     Avoid unnecessary whitespace after ``","`` and ``":"``.
 
-.. option:: -C, --no-add-commas
+.. option:: -C, --no-commas
 
     Don't separate items by commas when indented.
-
-    .. versionchanged:: 2.0
-        Renamed :option:`!--no-commas` to :option:`!--no-add-commas`
-
 
 .. option:: -d, --use-decimal
 
@@ -65,12 +61,6 @@ Command Line Interface
 
     .. versionadded:: 2.0
 
-.. option:: -q, --no-quote-keys
-
-    Don't quote keys which are identifiers.
-
-    .. versionadded:: 2.0
-
 .. option:: -s, --sort-keys
 
     Sort the keys of objects.
@@ -79,16 +69,19 @@ Command Line Interface
 
     Allow all JSON deviations provided by :mod:`jsonyx`.
 
-.. option:: -t, --add-trailing-comma
+.. option:: -t, --trailing-comma
 
     Add a trailing comma when indented.
-
-    .. versionchanged:: 2.0
-        Renamed :option:`!--trailing-comma` to :option:`!--add-trailing-comma`
 
 .. option:: -T, --indent-tab
 
     Indent using tabs.
+
+.. option:: -u, --unquoted-keys
+
+    Don't quote keys which are identifiers.
+
+    .. versionadded:: 2.0
 
 .. option:: -v, --version
 

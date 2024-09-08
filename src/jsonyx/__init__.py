@@ -198,16 +198,16 @@ def write(
     obj: object,
     filename: StrPath,
     *,
-    add_commas: bool = True,
-    add_trailing_comma: bool = False,
     allow: _AllowList = NOTHING,
+    commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     indent_leaves: bool = False,
-    quote_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
     sort_keys: bool = False,
+    trailing_comma: bool = False,
+    unquoted_keys: bool = False,
 ) -> None:
     r"""Serialize a Python object to a JSON file.
 
@@ -215,9 +215,6 @@ def write(
     :type obj: object
     :param filename: the path to the JSON file
     :type filename: StrPath
-    :param add_trailing_comma: add a trailing comma when indented, defaults to
-                               ``False``
-    :type add_trailing_comma: bool, optional
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
@@ -232,12 +229,16 @@ def write(
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
     :type indent_leaves: bool, optional
-    :param quote_keys: quote keys which are identifiers, defaults to ``True``
-    :type quote_keys: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
     :type sort_keys: bool, optional
+    :param trailing_comma: add a trailing comma when indented, defaults to
+                           ``False``
+    :type trailing_comma: bool, optional
+    :param unquoted_keys: don't quote keys which are identifiers, defaults to
+                          ``False``
+    :type unquoted_keys: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
 
@@ -255,21 +256,20 @@ def write(
         The item separator is automatically stripped when indented.
 
     .. versionchanged:: 2.0
-        Added *add_commas*, *quote_keys*, *indent_leaves*.
+        Added *commas*, *indent_leaves* and *unquoted_keys*.
         Merged *item_separator* and *key_separator* as *separators*.
-        Renamed *trailing_comma* to *add_trailing_comma*.
     """
     return Encoder(
-        add_commas=add_commas,
-        add_trailing_comma=add_trailing_comma,
         allow=allow,
+        commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
         indent_leaves=indent_leaves,
-        quote_keys=quote_keys,
         separators=separators,
         sort_keys=sort_keys,
+        trailing_comma=trailing_comma,
+        unquoted_keys=unquoted_keys,
     ).write(obj, filename)
 
 
@@ -277,16 +277,16 @@ def dump(
     obj: object,
     fp: SupportsWrite[str] = stdout,
     *,
-    add_commas: bool = True,
-    add_trailing_comma: bool = False,
     allow: _AllowList = NOTHING,
+    commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     indent_leaves: bool = False,
-    quote_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
     sort_keys: bool = False,
+    trailing_comma: bool = False,
+    unquoted_keys: bool = False,
 ) -> None:
     r"""Serialize a Python object to an open JSON file.
 
@@ -294,15 +294,11 @@ def dump(
     :type obj: object
     :param fp: an open JSON file, defaults to :data:`sys.stdout`
     :type fp: SupportsWrite[str], optional
-    :param add_commas: separate items by commas when indented, defaults to
-                       ``True``
-    :type add_commas: bool, optional
-    :param add_trailing_comma: add a trailing comma when indented, defaults to
-                               ``False``
-    :type add_trailing_comma: bool, optional
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
+    :param commas: separate items by commas when indented, defaults to ``True``
+    :type commas: bool, optional
     :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
@@ -312,12 +308,16 @@ def dump(
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
     :type indent_leaves: bool, optional
-    :param quote_keys: quote keys which are identifiers, defaults to ``True``
-    :type quote_keys: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
     :type sort_keys: bool, optional
+    :param trailing_comma: add a trailing comma when indented, defaults to
+                           ``False``
+    :type trailing_comma: bool, optional
+    :param unquoted_keys: don't quote keys which are identifiers, defaults to
+                          ``False``
+    :type unquoted_keys: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
 
@@ -338,51 +338,46 @@ def dump(
         :data:`jsonyx.allow.SURROGATES` and ``ensure_ascii=True``.
 
     .. versionchanged:: 2.0
-        Added *add_commas*, *quote_keys*, *indent_leaves*.
+        Added *commas*, *indent_leaves* and *unquoted_keys*.
         Merged *item_separator* and *key_separator* as *separators*.
-        Renamed *trailing_comma* to *add_trailing_comma*.
     """
     Encoder(
-        add_commas=add_commas,
-        add_trailing_comma=add_trailing_comma,
         allow=allow,
+        commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
         indent_leaves=indent_leaves,
-        quote_keys=quote_keys,
         separators=separators,
         sort_keys=sort_keys,
+        trailing_comma=trailing_comma,
+        unquoted_keys=unquoted_keys,
     ).dump(obj, fp)
 
 
 def dumps(
     obj: object,
     *,
-    add_commas: bool = True,
-    add_trailing_comma: bool = False,
     allow: _AllowList = NOTHING,
+    commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     indent_leaves: bool = False,
-    quote_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
     sort_keys: bool = False,
+    trailing_comma: bool = False,
+    unquoted_keys: bool = False,
 ) -> str:
     r"""Serialize a Python object to a JSON string.
 
     :param obj: a Python object
     :type obj: object
-    :param add_commas: separate items by commas when indented, defaults to
-                       ``True``
-    :type add_commas: bool, optional
-    :param add_trailing_comma: add a trailing comma when indented, defaults to
-                               ``False``
-    :type add_trailing_comma: bool, optional
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
     :type allow: Container[str], optional
+    :param commas: separate items by commas when indented, defaults to ``True``
+    :type commas: bool, optional
     :param end: the string to append at the end, defaults to ``"\n"``
     :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
@@ -392,12 +387,16 @@ def dumps(
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
     :type indent_leaves: bool, optional
-    :param quote_keys: quote keys which are identifiers, defaults to ``True``
-    :type quote_keys: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
     :type sort_keys: bool, optional
+    :param trailing_comma: add a trailing comma when indented, defaults to
+                           ``False``
+    :type trailing_comma: bool, optional
+    :param unquoted_keys: don't quote keys which are identifiers, defaults to
+                          ``False``
+    :type unquoted_keys: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
     :return: a JSON string
@@ -411,21 +410,20 @@ def dumps(
         The item separator is automatically stripped when indented.
 
     .. versionchanged:: 2.0
-        Added *add_commas*, *quote_keys*, *indent_leaves*.
+        Added *commas*, *indent_leaves* and *unquoted_keys*.
         Merged *item_separator* and *key_separator* as *separators*.
-        Renamed *trailing_comma* to *add_trailing_comma*.
     """
     return Encoder(
-        add_commas=add_commas,
-        add_trailing_comma=add_trailing_comma,
         allow=allow,
+        commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
         indent_leaves=indent_leaves,
-        quote_keys=quote_keys,
         separators=separators,
         sort_keys=sort_keys,
+        trailing_comma=trailing_comma,
+        unquoted_keys=unquoted_keys,
     ).dumps(obj)
 
 
