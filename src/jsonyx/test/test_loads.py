@@ -22,11 +22,11 @@ if TYPE_CHECKING:
 
 
 def _check_syntax_err(
-    exc_info: pytest.ExceptionInfo[Any], msg: str, colno: int,
-    end_colno: int = 0,
+    exc_info: pytest.ExceptionInfo[Any], msg: str, colno: int = 1,
+    end_colno: int = -1,
 ) -> None:
     exc: Any = exc_info.value
-    if not end_colno:
+    if end_colno < 0:
         end_colno = colno
 
     assert exc.msg == msg
@@ -60,7 +60,7 @@ def test_utf8_bom(json: ModuleType) -> None:
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads("\ufeff0")
 
-    _check_syntax_err(exc_info, "Unexpected UTF-8 BOM", 1)
+    _check_syntax_err(exc_info, "Unexpected UTF-8 BOM")
 
 
 @pytest.mark.parametrize(("s", "expected"), [
@@ -245,10 +245,10 @@ def test_surrogate_escapes(json: ModuleType, s: str, expected: str) -> None:
     ('"foo\r', "Unterminated string", 1, 5),
     ('"foo\r\n', "Unterminated string", 1, 5),
     ('"\b"', "Unescaped control character", 2, 3),
-    ('"\\', "Expecting escaped character", 3, 0),
-    ('"\\\n', "Expecting escaped character", 3, 0),
-    ('"\\\r', "Expecting escaped character", 3, 0),
-    ('"\\\r\n', "Expecting escaped character", 3, 0),
+    ('"\\', "Expecting escaped character", 3, -1),
+    ('"\\\n', "Expecting escaped character", 3, -1),
+    ('"\\\r', "Expecting escaped character", 3, -1),
+    ('"\\\r\n', "Expecting escaped character", 3, -1),
     (r'"\a"', "Invalid backslash escape", 2, 4),
     (r'"\u"', "Expecting 4 hex digits", 4, 5),
     (r'"\u0xff"', "Expecting 4 hex digits", 4, 8),
@@ -334,8 +334,8 @@ def test_array_comments(
 @pytest.mark.parametrize(("s", "msg", "colno", "end_colno"), [
     ("[", "Unterminated array", 1, 2),
     ("[0", "Unterminated array", 1, 3),
-    ("[1-2-3]", "Expecting comma", 3, 0),
-    ("[1 2 3]", "Missing commas are not allowed", 3, 0),
+    ("[1-2-3]", "Expecting comma", 3, -1),
+    ("[1 2 3]", "Missing commas are not allowed", 3, -1),
     ("[0,", "Unterminated array", 1, 4),
     ("[0,]", "Trailing comma is not allowed", 3, 4),
 ])
@@ -424,12 +424,12 @@ def test_object_comments(
 
 @pytest.mark.parametrize(("s", "msg", "colno", "end_colno"), [
     ("{", "Unterminated object", 1, 2),
-    ("{0: 0}", "Expecting string", 2, 0),
+    ("{0: 0}", "Expecting string", 2, -1),
     ('{"": 1, "": 2, "": 3}', "Duplicate keys are not allowed", 9, 11),
-    ('{""}', "Expecting colon", 4, 0),
+    ('{""}', "Expecting colon", 4, -1),
     ('{"": 0', "Unterminated object", 1, 7),
-    ('{"a": 1"b": 2"c": 3}', "Expecting comma", 8, 0),
-    ('{"a": 1 "b": 2 "c": 3}', "Missing commas are not allowed", 8, 0),
+    ('{"a": 1"b": 2"c": 3}', "Expecting comma", 8, -1),
+    ('{"a": 1 "b": 2 "c": 3}', "Missing commas are not allowed", 8, -1),
     ('{"": 0,', "Unterminated object", 1, 8),
     ('{"": 0,}', "Trailing comma is not allowed", 7, 8),
 ])
@@ -493,7 +493,7 @@ def test_expecting_value(json: ModuleType, s: str) -> None:
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(s)
 
-    _check_syntax_err(exc_info, "Expecting value", 1)
+    _check_syntax_err(exc_info, "Expecting value")
 
 
 @pytest.mark.parametrize(("s", "expected"), [
