@@ -573,7 +573,7 @@ def load_query_value(
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
     :type use_decimal: bool, optional
-    :raises SyntaxError: if the query value is invalid
+    :raises JSONSyntaxError: if the query value is invalid
     :return: a Python object
     :rtype: Any
 

@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON load_query_value tests."""
-# TODO(Nice Zombies): add more tests
 from __future__ import annotations
 
 __all__: list[str] = []
