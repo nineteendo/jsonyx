@@ -1,5 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
-"""Customizable JSON manipulator for Python."""
+"""Customizable JSON library for Python."""
 # TODO(Nice Zombies): link to v2.0.0 in changelog
 from __future__ import annotations
 

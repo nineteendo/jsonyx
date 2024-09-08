@@ -8,9 +8,9 @@
 [![docs](https://readthedocs.org/projects/jsonyx/badge/?version=stable)](https://jsonyx.readthedocs.io/en/stable/?badge=stable)
 [![downloads](https://img.shields.io/pypi/dm/jsonyx.svg)](http://pypi.org/project/jsonyx)
 
-`jsonyx` is a customizable [JSON](http://json.org) manipulator for Python
-3.10+. It is written in pure Python with an optional C extension for better
-performance and no dependencies
+`jsonyx` is a customizable [JSON](http://json.org) library for Python 3.10+. It
+is written in pure Python with an optional C extension for better performance
+and no dependencies
 
 ## Key Features
 
