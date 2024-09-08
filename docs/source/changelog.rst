@@ -5,9 +5,8 @@ v2.0.0 (unreleased)
 -------------------
 
 - Added the ``jsonyx`` command line utility
-- Added *commas*, *indent_leaves* and *unquoted_keys* to
-  :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
-  :func:`jsonyx.write`
+- Added *commas*, *indent_leaves* and *quoted_keys* to :class:`jsonyx.Encoder`,
+  :func:`jsonyx.dump`, :func:`jsonyx.dumps` and :func:`jsonyx.write`
 - Added :data:`jsonyx.allow.UNQUOTED_KEYS`
 - Added :func:`jsonyx.apply_patch` and :func:`jsonyx.make_patch`
 - Added :func:`jsonyx.load_query_value`
@@ -16,7 +15,7 @@ v2.0.0 (unreleased)
 - Added :option:`command`
 - Added :option:`old_input_filename` and :option:`patch_filename`
 - Added :option:`--indent-leaves` and its alias :option:`-l`
-- Added :option:`--unquoted-keys` and its alias :option:`-u`
+- Added :option:`--unquoted-keys` and its alias :option:`-q`
 - Added :option:`--version` and its alias :option:`-v`
 - Fixed comment detection
 - Fixed typo in error message

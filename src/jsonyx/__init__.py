@@ -204,10 +204,10 @@ def write(
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     indent_leaves: bool = False,
+    quoted_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
     sort_keys: bool = False,
     trailing_comma: bool = False,
-    unquoted_keys: bool = False,
 ) -> None:
     r"""Serialize a Python object to a JSON file.
 
@@ -229,6 +229,8 @@ def write(
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
     :type indent_leaves: bool, optional
+    :param quoted_keys: quote keys which are identifiers, defaults to ``True``
+    :type quoted_keys: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
@@ -236,9 +238,6 @@ def write(
     :param trailing_comma: add a trailing comma when indented, defaults to
                            ``False``
     :type trailing_comma: bool, optional
-    :param unquoted_keys: don't quote keys which are identifiers, defaults to
-                          ``False``
-    :type unquoted_keys: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
 
@@ -256,7 +255,7 @@ def write(
         The item separator is automatically stripped when indented.
 
     .. versionchanged:: 2.0
-        Added *commas*, *indent_leaves* and *unquoted_keys*.
+        Added *commas*, *indent_leaves* and *quoted_keys*.
         Merged *item_separator* and *key_separator* as *separators*.
     """
     return Encoder(
@@ -266,10 +265,10 @@ def write(
         ensure_ascii=ensure_ascii,
         indent=indent,
         indent_leaves=indent_leaves,
+        quoted_keys=quoted_keys,
         separators=separators,
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
-        unquoted_keys=unquoted_keys,
     ).write(obj, filename)
 
 
@@ -283,10 +282,10 @@ def dump(
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     indent_leaves: bool = False,
+    quoted_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
     sort_keys: bool = False,
     trailing_comma: bool = False,
-    unquoted_keys: bool = False,
 ) -> None:
     r"""Serialize a Python object to an open JSON file.
 
@@ -308,6 +307,8 @@ def dump(
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
     :type indent_leaves: bool, optional
+    :param quoted_keys: quote keys which are identifiers, defaults to ``True``
+    :type quoted_keys: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
@@ -315,9 +316,6 @@ def dump(
     :param trailing_comma: add a trailing comma when indented, defaults to
                            ``False``
     :type trailing_comma: bool, optional
-    :param unquoted_keys: don't quote keys which are identifiers, defaults to
-                          ``False``
-    :type unquoted_keys: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
 
@@ -338,7 +336,7 @@ def dump(
         :data:`jsonyx.allow.SURROGATES` and ``ensure_ascii=True``.
 
     .. versionchanged:: 2.0
-        Added *commas*, *indent_leaves* and *unquoted_keys*.
+        Added *commas*, *indent_leaves* and *quoted_keys*.
         Merged *item_separator* and *key_separator* as *separators*.
     """
     Encoder(
@@ -348,10 +346,10 @@ def dump(
         ensure_ascii=ensure_ascii,
         indent=indent,
         indent_leaves=indent_leaves,
+        quoted_keys=quoted_keys,
         separators=separators,
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
-        unquoted_keys=unquoted_keys,
     ).dump(obj, fp)
 
 
@@ -364,10 +362,10 @@ def dumps(
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     indent_leaves: bool = False,
+    quoted_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
     sort_keys: bool = False,
     trailing_comma: bool = False,
-    unquoted_keys: bool = False,
 ) -> str:
     r"""Serialize a Python object to a JSON string.
 
@@ -387,6 +385,8 @@ def dumps(
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
     :type indent_leaves: bool, optional
+    :param quoted_keys: quote keys which are identifiers, defaults to ``True``
+    :type quoted_keys: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
@@ -394,9 +394,6 @@ def dumps(
     :param trailing_comma: add a trailing comma when indented, defaults to
                            ``False``
     :type trailing_comma: bool, optional
-    :param unquoted_keys: don't quote keys which are identifiers, defaults to
-                          ``False``
-    :type unquoted_keys: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
     :return: a JSON string
@@ -410,7 +407,7 @@ def dumps(
         The item separator is automatically stripped when indented.
 
     .. versionchanged:: 2.0
-        Added *commas*, *indent_leaves* and *unquoted_keys*.
+        Added *commas*, *indent_leaves* and *quoted_keys*.
         Merged *item_separator* and *key_separator* as *separators*.
     """
     return Encoder(
@@ -420,10 +417,10 @@ def dumps(
         ensure_ascii=ensure_ascii,
         indent=indent,
         indent_leaves=indent_leaves,
+        quoted_keys=quoted_keys,
         separators=separators,
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
-        unquoted_keys=unquoted_keys,
     ).dumps(obj)
 
 

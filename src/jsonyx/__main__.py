@@ -27,11 +27,11 @@ class _Namespace:
     indent: int | str | None
     indent_leaves: bool
     input_filename: str | None
+    quoted_keys: bool
     nonstrict: bool
     output_filename: str | None
     sort_keys: bool
     trailing_comma: bool
-    unquoted_keys: bool
     use_decimal: bool
 
 
@@ -117,9 +117,10 @@ def _configure(parser: ArgumentParser) -> None:
         help="indent using tabs",
     )
     parent_parser.add_argument(
-        "-u",
+        "-q",
         "--unquoted-keys",
-        action="store_true",
+        action="store_false",
+        dest="quoted_keys",
         help="don't quote keys which are identifiers",
     )
     commands = parser.add_subparsers(title="commands", dest="command")
@@ -195,10 +196,10 @@ def _run(args: _Namespace) -> None:
         ensure_ascii=args.ensure_ascii,
         indent=args.indent,
         indent_leaves=args.indent_leaves,
+        quoted_keys=args.quoted_keys,
         separators=(",", ":") if args.compact else (", ", ": "),
         sort_keys=args.sort_keys,
         trailing_comma=args.trailing_comma,
-        unquoted_keys=args.unquoted_keys,
     )
     manipulator: Manipulator = Manipulator(
         allow=EVERYTHING if args.nonstrict else NOTHING,

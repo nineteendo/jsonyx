@@ -60,9 +60,9 @@ except ImportError:
         allow_surrogates: bool,  # noqa: FBT001
         ensure_ascii: bool,  # noqa: FBT001
         indent_leaves: bool,  # noqa: FBT001
+        quoted_keys: bool,  # noqa: FBT001
         sort_keys: bool,  # noqa: FBT001
         trailing_comma: bool,  # noqa: FBT001
-        unquoted_keys: bool,  # noqa: FBT001
     ) -> Callable[[object], str]:
         """Make JSON encoder."""
         float_repr: Callable[[float], str] = float.__repr__
@@ -197,7 +197,7 @@ except ImportError:
                 else:
                     write(current_item_separator)
 
-                if unquoted_keys and key.isidentifier() and (
+                if not quoted_keys and key.isidentifier() and (
                     not ensure_ascii or key.isascii()
                 ):
                     write(key)
@@ -280,6 +280,8 @@ class Encoder:
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
     :type indent_leaves: bool, optional
+    :param quoted_keys: quote keys which are identifiers, defaults to ``True``
+    :type quoted_keys: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
@@ -287,15 +289,12 @@ class Encoder:
     :param trailing_comma: add a trailing comma when indented, defaults to
                            ``False``
     :type trailing_comma: bool, optional
-    :param unquoted_keys: don't quote keys which are identifiers, defaults to
-                          ``False``
-    :type unquoted_keys: bool, optional
 
     .. note::
         The item separator is automatically stripped when indented.
 
     .. versionchanged:: 2.0
-        Added *commas*, *indent_leaves* and *unquoted_keys*.
+        Added *commas*, *indent_leaves* and *quoted_keys*.
         Merged *item_separator* and *key_separator* as *separators*.
     """
 
@@ -308,10 +307,10 @@ class Encoder:
         ensure_ascii: bool = False,
         indent: int | str | None = None,
         indent_leaves: bool = False,
+        quoted_keys: bool = True,
         separators: tuple[str, str] = (", ", ": "),
         sort_keys: bool = False,
         trailing_comma: bool = False,
-        unquoted_keys: bool = False,
     ) -> None:
         """Create a new JSON encoder."""
         allow_nan_and_infinity: bool = "nan_and_infinity" in allow
@@ -345,8 +344,8 @@ class Encoder:
         self._encoder: Callable[[object], str] = make_encoder(
             encode_decimal, indent, end, item_separator, long_item_separator,
             key_separator, allow_nan_and_infinity, allow_surrogates,
-            ensure_ascii, indent_leaves, sort_keys, commas and trailing_comma,
-            unquoted_keys,
+            ensure_ascii, indent_leaves, quoted_keys, sort_keys,
+            commas and trailing_comma,
         )
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 
