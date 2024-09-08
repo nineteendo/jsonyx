@@ -178,3 +178,11 @@ def test_expecting_value(s: str) -> None:
         load_query_value(s)
 
     _check_syntax_err(exc_info, "Expecting value")
+
+
+def test_end_of_file() -> None:
+    """Test end of file."""
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        load_query_value("1 2 3")
+
+    _check_syntax_err(exc_info, "Expecting end of file", 2)

@@ -699,7 +699,8 @@ class Manipulator:
         """
         obj, end = self._scan_query_value(s)
         if end < len(s):
-            raise SyntaxError
+            msg = "Expecting end of file"
+            raise _errmsg(msg, s, end)
 
         return obj
 
