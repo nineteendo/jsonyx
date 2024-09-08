@@ -1,6 +1,7 @@
 # Copyright (C) 2024 Nice Zombies
 """Customizable JSON library for Python."""
 # TODO(Nice Zombies): link to v2.0.0 in changelog
+# TODO(Nice Zombies): update raised exceptions
 from __future__ import annotations
 
 __all__: list[str] = [

@@ -201,20 +201,24 @@ class Manipulator:
                         integer + (frac or "") + (exp or ""),
                     )
                 except InvalidOperation:
-                    raise SyntaxError from None
+                    msg = "Number is too big"
+                    raise _errmsg(msg, s, idx, end) from None
 
                 if not self._use_decimal and isinf(value):
-                    raise SyntaxError
+                    msg = "Big numbers require decimal"
+                    raise _errmsg(msg, s, idx, end)
         elif nextchar == "I" and s[idx:idx + 8] == "Infinity":
             if not self._allow_nan_and_infinity:
-                raise SyntaxError
+                msg = "Infinity is not allowed"
+                raise _errmsg(msg, s, idx, idx + 8)
 
-            value, end = float("Infinity"), idx + 8
+            value, end = self._parse_float("Infinity"), idx + 8
         elif nextchar == "-" and s[idx:idx + 9] == "-Infinity":
             if not self._allow_nan_and_infinity:
-                raise SyntaxError
+                msg = "-Infinity is not allowed"
+                raise _errmsg(msg, s, idx, idx + 9)
 
-            value, end = float("-Infinity"), idx + 9
+            value, end = self._parse_float("-Infinity"), idx + 9
         else:
             msg = "Expecting value"
             raise _errmsg(msg, s, idx) from None
