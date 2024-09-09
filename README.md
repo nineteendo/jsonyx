@@ -58,7 +58,7 @@ We recommend to use `orjson` for performance critical applications:
 | List of 256 doubles                         |  24.72 |    24.65 |     1.00 |        24.90 |        8.39 |
 | Medium complex object                       |  10.14 |    12.76 |     1.00 |        16.06 |       14.08 |
 | List of 256 strings                         |  24.91 |    11.64 |     1.00 |        19.59 |       14.22 |
-| Complex object                              |   1.17 |     1.00 |   inf    |         1.48 |     1390.97 |
+| Complex object                              |   1.17 |     1.00 |  inf[^1] |         1.48 |     1390.97 |
 | Dict with 256 lists of 256 dicts with 1 int |   9.70 |    20.34 |     1.00 |        31.16 |     2538.13 |
 
 | decode                                      |   json |   jsonyx |   orjson |   simplejson |   unit (μs) |
@@ -72,4 +72,4 @@ We recommend to use `orjson` for performance critical applications:
 | Complex object                              |   1.13 |     1.07 |     1.00 |         1.22 |     1068.31 |
 | Dict with 256 lists of 256 dicts with 1 int |   1.57 |     1.82 |     1.00 |         1.92 |    18632.05 |
 
-[^1]: recursion error
+[^1]: failed due to recursion error
