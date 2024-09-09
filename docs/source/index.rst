@@ -60,7 +60,7 @@ List of 256 dicts with 1 int                  11.01     24.97      1.00         
 List of 256 doubles                           24.72     24.65      1.00         24.90         8.39
 Medium complex object                         10.14     12.76      1.00         16.06        14.08
 List of 256 strings                           24.91     11.64      1.00         19.59        14.22
-Complex object                                 1.17      1.00   inf[1]_          1.48      1390.97
+Complex object                                 1.17      1.00  inf [1]_          1.48      1390.97
 Dict with 256 lists of 256 dicts with 1 int    9.70     20.34      1.00         31.16      2538.13
 ===========================================  ======  ========  ========  ============  ===========
 
