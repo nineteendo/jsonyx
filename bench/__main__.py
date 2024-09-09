@@ -15,7 +15,6 @@ from typing import TYPE_CHECKING, Any
 import msgspec
 import orjson
 import rapidjson
-import simplejson  # type: ignore
 from tabulate import tabulate  # type: ignore
 
 import jsonyx
@@ -45,7 +44,7 @@ _ENCODE_CASES: dict[str, Any] = {
         {str(random() * 20): int(random() * 1_000_000)}  # noqa: S311
         for _ in range(256)
     ],
-    "List of 256 doubles": [
+    "List of 256 floats": [
         maxsize * random() for _ in range(256)  # noqa: S311
     ],
     "Medium complex object": [[_USER, _FRIENDS]] * 6,
@@ -81,7 +80,6 @@ _ENCODE_FUNCS: dict[str, Callable[[Any], Any]] = {
     "orjson": orjson.dumps,
     # pylint: disable-next=I1101
     "rapidjson": rapidjson.Encoder(),  # type: ignore
-    "simplejson": simplejson.JSONEncoder().encode,
 }
 _DECODE_CASES: dict[str, Any] = {
     case: jsonyx.dumps(obj) for case, obj in _ENCODE_CASES.items()
@@ -94,7 +92,6 @@ _DECODE_FUNCS: dict[str, Callable[[Any], Any]] = {
     "orjson": orjson.loads,
     # pylint: disable-next=I1101
     "rapidjson": rapidjson.Decoder(),
-    "simplejson": simplejson.JSONDecoder().decode,
 }
 
 
