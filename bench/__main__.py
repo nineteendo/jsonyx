@@ -12,6 +12,7 @@ from sys import maxsize
 from timeit import Timer
 from typing import TYPE_CHECKING, Any
 
+import msgspec
 import orjson
 import simplejson  # type: ignore
 from tabulate import tabulate  # type: ignore
@@ -74,6 +75,7 @@ _ENCODE_CASES: dict[str, Any] = {
 _ENCODE_FUNCS: dict[str, Callable[[Any], Any]] = {
     "json": json.JSONEncoder().encode,
     "jsonyx": jsonyx.Encoder().dumps,
+    "msgspec": msgspec.json.Encoder().encode,
     # pylint: disable-next=E1101
     "orjson": orjson.dumps,
     "simplejson": simplejson.JSONEncoder().encode,
@@ -84,6 +86,7 @@ _DECODE_CASES: dict[str, Any] = {
 _DECODE_FUNCS: dict[str, Callable[[Any], Any]] = {
     "json": json.JSONDecoder().decode,
     "jsonyx": jsonyx.Decoder().loads,
+    "msgspec": msgspec.json.Decoder().decode,
     # pylint: disable-next=E1101
     "orjson": orjson.loads,
     "simplejson": simplejson.JSONDecoder().decode,
