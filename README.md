@@ -50,26 +50,26 @@ https://jsonyx.readthedocs.io/en/stable/usage.html
 
 We recommend to use `orjson` for performance critical applications:
 
-| encode                                                |   json |   jsonyx |   orjson |   simplejson |   unit (μs) |
-|-------------------------------------------------------|--------|----------|----------|--------------|-------------|
-| Array with 256 doubles                                |  22.67 |    22.22 |     1.00 |        23.98 |        9.07 |
-| Array with 256 UTF-8 strings                          |  20.64 |     9.07 |     1.00 |        15.72 |       17.76 |
-| Array with 256 strings                                |  12.39 |    11.28 |     1.00 |        13.32 |        4.26 |
-| Medium complex object                                 |   9.97 |    12.54 |     1.00 |        15.95 |       14.27 |
-| Array with 256 True values                            |   4.73 |     4.23 |     1.00 |         6.97 |        1.80 |
-| Array with 256 dict{string, int} pairs                |  11.31 |    24.53 |     1.00 |        34.79 |        8.34 |
-| Dict with 256 arrays with 256 dict{string, int} pairs |   9.26 |    20.32 |     1.00 |        29.77 |     2594.64 |
-| Complex object                                        |   1.16 |     1.00 |  inf[^1] |         1.56 |     1384.86 |
+| encode                                      |   json |   jsonyx |   orjson |   simplejson |   unit (μs) |
+|---------------------------------------------|--------|----------|----------|--------------|-------------|
+| List of 256 booleans                        |   4.25 |     3.77 |     1.00 |         6.04 |        2.02 |
+| List of 256 ASCII strings                   |  15.04 |    13.59 |     1.00 |        15.62 |        3.59 |
+| List of 256 dicts with 1 int                |  11.01 |    24.97 |     1.00 |        33.83 |        8.21 |
+| List of 256 doubles                         |  24.72 |    24.65 |     1.00 |        24.90 |        8.39 |
+| Medium complex object                       |  10.14 |    12.76 |     1.00 |        16.06 |       14.08 |
+| List of 256 strings                         |  24.91 |    11.64 |     1.00 |        19.59 |       14.22 |
+| Complex object                              |   1.17 |     1.00 |   inf    |         1.48 |     1390.97 |
+| Dict with 256 lists of 256 dicts with 1 int |   9.70 |    20.34 |     1.00 |        31.16 |     2538.13 |
 
-| decode                                                |   json |   jsonyx |   orjson |   simplejson |   unit (μs) |
-|-------------------------------------------------------|--------|----------|----------|--------------|-------------|
-| Array with 256 doubles                                |   6.84 |     7.19 |     1.00 |         6.86 |        9.95 |
-| Array with 256 UTF-8 strings                          |   1.17 |     1.00 |     2.02 |         1.31 |       64.42 |
-| Array with 256 strings                                |   1.70 |     1.74 |     1.00 |         2.39 |       12.80 |
-| Medium complex object                                 |   2.92 |     3.60 |     1.00 |         3.67 |       34.57 |
-| Array with 256 True values                            |   3.07 |     4.94 |     1.00 |         7.25 |        2.18 |
-| Array with 256 dict{string, int} pairs                |   3.38 |     2.83 |     1.00 |         3.44 |       36.09 |
-| Dict with 256 arrays with 256 dict{string, int} pairs |   1.61 |     1.91 |     1.00 |         1.80 |    19592.58 |
-| Complex object                                        |   1.16 |     1.06 |     1.00 |         1.29 |     1075.54 |
+| decode                                      |   json |   jsonyx |   orjson |   simplejson |   unit (μs) |
+|---------------------------------------------|--------|----------|----------|--------------|-------------|
+| List of 256 booleans                        |   3.42 |     4.98 |     1.00 |         4.29 |        2.00 |
+| List of 256 ASCII strings                   |   1.67 |     1.71 |     1.00 |         2.39 |       13.00 |
+| List of 256 dicts with 1 int                |   2.28 |     2.76 |     1.00 |         3.22 |       33.16 |
+| List of 256 doubles                         |   6.69 |     7.59 |     1.00 |         6.67 |       10.11 |
+| Medium complex object                       |   2.93 |     3.66 |     1.00 |         3.69 |       33.71 |
+| List of 256 strings                         |   1.02 |     1.00 |     2.02 |         1.30 |       64.05 |
+| Complex object                              |   1.13 |     1.07 |     1.00 |         1.22 |     1068.31 |
+| Dict with 256 lists of 256 dicts with 1 int |   1.57 |     1.82 |     1.00 |         1.92 |    18632.05 |
 
 [^1]: recursion error

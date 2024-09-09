@@ -35,10 +35,19 @@ _USER: dict[str, Any] = {
 }
 _FRIENDS: list[dict[str, Any]] = [_USER] * 8
 _ENCODE_CASES: dict[str, Any] = {
-    "Array with 256 doubles": [
+    "List of 256 booleans": [True] * 256,
+    "List of 256 ASCII strings": [
+        "A pretty long string which is in a list",
+    ] * 256,
+    "List of 256 dicts with 1 int": [
+        {str(random() * 20): int(random() * 1_000_000)}  # noqa: S311
+        for _ in range(256)
+    ],
+    "List of 256 doubles": [
         maxsize * random() for _ in range(256)  # noqa: S311
     ],
-    "Array with 256 UTF-8 strings": [
+    "Medium complex object": [[_USER, _FRIENDS]] * 6,
+    "List of 256 strings": [
         "\u0646\u0638\u0627\u0645 \u0627\u0644\u062d\u0643\u0645 \u0633\u0644"
         "\u0637\u0627\u0646\u064a \u0648\u0631\u0627\u062b\u064a \u0641\u064a "
         "\u0627\u0644\u0630\u0643\u0648\u0631 \u0645\u0646 \u0630\u0631\u064a"
@@ -53,23 +62,14 @@ _ENCODE_CASES: dict[str, Any] = {
         "\u0644\u0627\u0628\u0648\u064a\u0646 \u0639\u0645\u0627\u0646\u064a"
         "\u064a\u0646 ",
     ] * 256,
-    "Array with 256 strings": [
-        "A pretty long string which is in a list",
-    ] * 256,
-    "Medium complex object": [[_USER, _FRIENDS]] * 6,
-    "Array with 256 True values": [True] * 256,
-    "Array with 256 dict{string, int} pairs": [
-        {str(random() * 20): int(random() * 1_000_000)}  # noqa: S311
-        for _ in range(256)
-    ],
-    "Dict with 256 arrays with 256 dict{string, int} pairs": {
+    "Complex object": jsonyx.read(Path(__file__).parent / "sample.json"),
+    "Dict with 256 lists of 256 dicts with 1 int": {
         str(random() * 20): [  # noqa: S311
             {str(random() * 20): int(random() * 1_000_000)}  # noqa: S311
             for _ in range(256)
         ]
         for _ in range(256)
     },
-    "Complex object": jsonyx.read(Path(__file__).parent / "sample.json"),
 }
 _ENCODE_FUNCS: dict[str, Callable[[Any], Any]] = {
     "json": json.JSONEncoder().encode,
