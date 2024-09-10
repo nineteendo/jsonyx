@@ -249,7 +249,7 @@ def test_list_recursion(json: ModuleType) -> None:
 )
 def test_seq_types(json: ModuleType, obj: Sequence[object]) -> None:
     """Test seq_types."""
-    s: str = json.dumps(obj, end="", seq_types=(UserList, range, tuple))
+    s: str = json.dumps(obj, end="", seq_types=(UserList, range))
     assert s == "[1, 2, 3]"
 
 
@@ -372,7 +372,7 @@ def test_unquoted_ascii_keys(
     0, Decimal(0), 0.0, Decimal("0.0"), True, False, None,
 
     # No JSON values
-    b"", 0j, frozenset(), memoryview(b""), object(),
+    b"", 0j, (), frozenset(), memoryview(b""), object(),
 ])  # type: ignore
 def test_unserializable_key(json: ModuleType, key: object) -> None:
     """Test unserializable key."""
@@ -422,7 +422,7 @@ def test_dict_recursion(json: ModuleType) -> None:
 
 
 @pytest.mark.parametrize("obj", [
-    b"", 0j, (), bytearray(), frozenset(), memoryview(b""), object(), range(0),
+    b"", 0j, bytearray(), frozenset(), memoryview(b""), object(), range(0),
     set(), slice(0),
 ])  # type: ignore
 def test_unserializable_value(json: ModuleType, obj: object) -> None:

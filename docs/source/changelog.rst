@@ -21,6 +21,7 @@ v2.0.0 (unreleased)
 - Fixed comment detection
 - Fixed typo in error message
 - Improved documentation
+- Make :class:`tuple` JSON serializable
 - Merged *item_separator* and *key_separator* as *separators* for
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
   :func:`jsonyx.write`

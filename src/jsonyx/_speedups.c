@@ -676,9 +676,9 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
             else {
                 next_idx = idx;
                 next_idx++;
-                while (next_idx <= end_idx && (Py_UNICODE_ISALNUM(PyUnicode_READ(kind, str, next_idx))
-                                               || PyUnicode_READ(kind, str, next_idx) == '_'
-                                               || PyUnicode_READ(kind, str, next_idx) > '\x7f'))
+                while (next_idx <= end_idx && (Py_UNICODE_ISALNUM(PyUnicode_READ(kind, str, next_idx)) ||
+                                               PyUnicode_READ(kind, str, next_idx) == '_' ||
+                                               PyUnicode_READ(kind, str, next_idx) > '\x7f'))
                 {
                     next_idx++;
                 }
@@ -1454,7 +1454,9 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
             return -1;
         return _steal_accumulate(writer, encoded);
     }
-    else if (PyList_Check(obj) || PyObject_IsInstance(obj, s->seq_types)) {
+    else if (PyList_Check(obj) || PyTuple_Check(obj) ||
+             PyObject_IsInstance(obj, s->seq_types))
+    {
         // See https://github.com/python/cpython/issues/123593 
         if (PyErr_Occurred())
             return -1;
@@ -1520,8 +1522,8 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
         }
     }
 
-    if (!s->quoted_keys && PyUnicode_IsIdentifier(keystr) && (!s->ensure_ascii
-                                                              || PyUnicode_IS_ASCII(key)))
+    if (!s->quoted_keys && PyUnicode_IsIdentifier(keystr) &&
+        (!s->ensure_ascii || PyUnicode_IS_ASCII(key)))
     {
         encoded = keystr;
     }
