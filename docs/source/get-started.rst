@@ -9,17 +9,23 @@ Installation
 To use :mod:`jsonyx`, first install it using pip, `conda <https://conda.org>`_
 or `mamba <https://mamba.readthedocs.io>`_:
 
-.. code-block:: console
+.. tab:: pip
 
-    (.venv) $ pip install -U jsonyx
+    .. code-block:: console
 
-.. code-block:: console
+        (.venv) $ pip install -U jsonyx
 
-    $ conda install conda-forge::jsonyx
+.. tab:: conda
 
-.. code-block:: console
+    .. code-block:: console
 
-    $ mamba install conda-forge::jsonyx
+        $ conda install conda-forge::jsonyx
+
+.. tab:: mamba
+
+    .. code-block:: console
+
+        $ mamba install conda-forge::jsonyx
 
 Check if you have installed the correct version:
 

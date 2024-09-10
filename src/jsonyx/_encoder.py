@@ -158,7 +158,7 @@ except ImportError:
 
             write("]")
 
-        def write_dict(
+        def write_mapping(
             mapping: Any, write: Callable[[str], object], old_indent: str,
         ) -> None:
             if not mapping:
@@ -234,7 +234,7 @@ except ImportError:
             elif isinstance(obj, (list, seq_types)):
                 write_sequence(obj, write, current_indent)
             elif isinstance(obj, (dict, mapping_types)):
-                write_dict(obj, write, current_indent)
+                write_mapping(obj, write, current_indent)
             elif isinstance(obj, Decimal):
                 write(encode_decimal(obj))
             else:
