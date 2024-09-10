@@ -48,7 +48,9 @@ https://jsonyx.readthedocs.io/en/stable/usage.html
 
 ## Benchmark
 
-We recommend to use `orjson` or `msgspec` for performance critical applications:
+We recommend to use [`orjson`](https://pypi.org/project/orjson) or
+[`msgspec`](https://pypi.org/project/msgspec) for performance critical
+applications:
 
 | encode                                      |  json | jsonyx | msgspec |  orjson | rapidjson | unit (us) |
 |:--------------------------------------------| -----:|-------:|--------:|--------:|----------:|----------:|
