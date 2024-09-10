@@ -5,8 +5,9 @@ v2.0.0 (unreleased)
 -------------------
 
 - Added the ``jsonyx`` command line utility
-- Added *commas*, *indent_leaves* and *quoted_keys* to :class:`jsonyx.Encoder`,
-  :func:`jsonyx.dump`, :func:`jsonyx.dumps` and :func:`jsonyx.write`
+- Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
+  *quoted_keys* to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
+  :func:`jsonyx.dumps` and :func:`jsonyx.write`
 - Added :data:`jsonyx.allow.UNQUOTED_KEYS`
 - Added :func:`jsonyx.apply_patch` and :func:`jsonyx.make_patch`
 - Added :func:`jsonyx.load_query_value`
@@ -20,8 +21,6 @@ v2.0.0 (unreleased)
 - Fixed comment detection
 - Fixed typo in error message
 - Improved documentation
-- Made :class:`collections.abc.Mapping` and :class:`collections.abc.Sequence`
-  JSON serializable
 - Merged *item_separator* and *key_separator* as *separators* for
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
   :func:`jsonyx.write`

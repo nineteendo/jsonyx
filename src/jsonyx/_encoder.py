@@ -5,14 +5,13 @@ from __future__ import annotations
 __all__: list[str] = ["Encoder"]
 
 import re
-from collections.abc import Mapping, Sequence
 from decimal import Decimal
 from io import StringIO
 from math import inf, isfinite
 from pathlib import Path
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from sys import stdout
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from jsonyx.allow import NOTHING
 
@@ -52,6 +51,8 @@ except ImportError:
     def make_encoder(
         encode_decimal: Callable[[Decimal], str],
         indent: str | None,
+        mapping_types: type | tuple[type],
+        seq_types: type | tuple[type],
         end: str,
         item_separator: str,
         long_item_separator: str,
@@ -114,8 +115,7 @@ except ImportError:
             return "NaN"
 
         def write_sequence(
-            seq: Sequence[object], write: Callable[[str], object],
-            old_indent: str,
+            seq: Any, write: Callable[[str], object], old_indent: str,
         ) -> None:
             if not seq:
                 write("[]")
@@ -159,8 +159,7 @@ except ImportError:
             write("]")
 
         def write_dict(
-            mapping: Mapping[object, object], write: Callable[[str], object],
-            old_indent: str,
+            mapping: Any, write: Callable[[str], object], old_indent: str,
         ) -> None:
             if not mapping:
                 write("{}")
@@ -232,12 +231,10 @@ except ImportError:
                     write(int_repr(obj))
             elif isinstance(obj, float):
                 write(floatstr(obj))
-            elif isinstance(obj, Sequence) and not isinstance(
-                obj, (bytearray, bytes, memoryview, str),
-            ):
-                write_sequence(obj, write, current_indent)  # type: ignore
-            elif isinstance(obj, Mapping):
-                write_dict(obj, write, current_indent)  # type: ignore
+            elif isinstance(obj, seq_types):
+                write_sequence(obj, write, current_indent)
+            elif isinstance(obj, mapping_types):
+                write_dict(obj, write, current_indent)
             elif isinstance(obj, Decimal):
                 write(encode_decimal(obj))
             else:
@@ -280,10 +277,16 @@ class Encoder:
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
     :type indent_leaves: bool, optional
+    :param mapping_types: the mapping type or tuple of mapping types, defaults
+                          to :class:`dict`
+    :type mapping_types: type | tuple[type], optional
     :param quoted_keys: quote keys which are identifiers, defaults to ``True``
     :type quoted_keys: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
+    :param seq_types: the sequence type or tuple of sequence types, defaults
+                      to :class:`list`
+    :type seq_types: type | tuple[type], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to
@@ -294,7 +297,8 @@ class Encoder:
         The item separator is automatically stripped when indented.
 
     .. versionchanged:: 2.0
-        Added *commas*, *indent_leaves* and *quoted_keys*.
+        Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
+        *quoted_keys*.
         Merged *item_separator* and *key_separator* as *separators*.
     """
 
@@ -307,8 +311,10 @@ class Encoder:
         ensure_ascii: bool = False,
         indent: int | str | None = None,
         indent_leaves: bool = False,
+        mapping_types: type | tuple[type] = dict,
         quoted_keys: bool = True,
         separators: tuple[str, str] = (", ", ": "),
+        seq_types: type | tuple[type] = list,
         sort_keys: bool = False,
         trailing_comma: bool = False,
     ) -> None:
@@ -342,10 +348,10 @@ class Encoder:
             return decimal_str(decimal)
 
         self._encoder: Callable[[object], str] = make_encoder(
-            encode_decimal, indent, end, item_separator, long_item_separator,
-            key_separator, allow_nan_and_infinity, allow_surrogates,
-            ensure_ascii, indent_leaves, quoted_keys, sort_keys,
-            commas and trailing_comma,
+            encode_decimal, indent, mapping_types, seq_types, end,
+            item_separator, long_item_separator, key_separator,
+            allow_nan_and_infinity, allow_surrogates, ensure_ascii,
+            indent_leaves, quoted_keys, sort_keys, commas and trailing_comma,
         )
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 

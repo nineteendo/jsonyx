@@ -34,10 +34,10 @@ typedef struct _PyScannerObject {
 typedef struct _PyEncoderObject {
     PyObject_HEAD
     PyObject *Decimal;
-    PyObject *Mapping;
-    PyObject *Sequence;
     PyObject *encode_decimal;
     PyObject *indent;
+    PyObject *mapping_types;
+    PyObject *seq_types;
     PyObject *end;
     PyObject *item_separator;
     PyObject *long_item_separator;
@@ -1273,21 +1273,21 @@ static PyType_Spec PyScannerType_spec = {
 static PyObject *
 encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    static char *kwlist[] = {"encode_decimal", "indent", "end",
-                             "item_separator", "long_item_separator",
-                             "key_separator", "allow_nan_and_infinity",
-                             "allow_surrogates", "ensure_ascii",
-                             "indent_leaves", "quoted_keys", "sort_keys",
-                             "trailing_comma", NULL};
+    static char *kwlist[] = {"encode_decimal", "indent", "mapping_types",
+                             "seq_types", "end", "item_separator",
+                             "long_item_separator", "key_separator",
+                             "allow_nan_and_infinity", "allow_surrogates",
+                             "ensure_ascii", "indent_leaves", "quoted_keys",
+                             "sort_keys", "trailing_comma", NULL};
 
     PyEncoderObject *s;
-    PyObject *encode_decimal, *indent;
+    PyObject *encode_decimal, *indent, *mapping_types, *seq_types;
     PyObject *end, *item_separator, *long_item_separator, *key_separator;
     int allow_nan_and_infinity, allow_surrogates, ensure_ascii, indent_leaves;
     int quoted_keys, sort_keys, trailing_comma;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOUUUUppppppp:make_encoder", kwlist,
-        &encode_decimal, &indent,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOUUUUppppppp:make_encoder", kwlist,
+        &encode_decimal, &indent, &mapping_types, &seq_types,
         &end, &item_separator, &long_item_separator, &key_separator,
         &allow_nan_and_infinity, &allow_surrogates, &ensure_ascii,
         &indent_leaves, &quoted_keys, &sort_keys, &trailing_comma))
@@ -1306,18 +1306,10 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     if (s->Decimal == NULL) {
         goto bail;
     }
-    PyObject *collections_abc = PyImport_ImportModule((char *) "collections.abc");
-    if (collections_abc == NULL) {
-        goto bail;
-    }
-    s->Mapping = PyObject_GetAttrString(collections_abc, (char *) "Mapping");
-    s->Sequence = PyObject_GetAttrString(collections_abc, (char *) "Sequence");
-    Py_DECREF(collections_abc);
-    if (s->Mapping == NULL || s->Sequence == NULL) {
-        goto bail;
-    }
     s->encode_decimal = Py_NewRef(encode_decimal);
     s->indent = Py_NewRef(indent);
+    s->mapping_types = Py_NewRef(mapping_types);
+    s->seq_types = Py_NewRef(seq_types);
     s->end = Py_NewRef(end);
     s->item_separator = Py_NewRef(item_separator);
     s->long_item_separator = Py_NewRef(long_item_separator);
@@ -1462,11 +1454,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
             return -1;
         return _steal_accumulate(writer, encoded);
     }
-    else if (PyObject_IsInstance(obj, (PyObject *)s->Sequence)
-             && !PyByteArray_Check(obj) && !PyBytes_Check(obj)
-             && !PyMemoryView_Check(obj) && !PyUnicode_Check(obj))
-    {
-        // See https://github.com/python/cpython/issues/123593 
+    else if (PyObject_TypeCheck(obj, (PyTypeObject *)s->seq_types)) {
         if (PyErr_Occurred())
             return -1;
 
@@ -1476,7 +1464,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         _Py_LeaveRecursiveCall();
         return rv;
     }
-    else if (PyObject_IsInstance(obj, (PyObject *)s->Mapping)) {
+    else if (PyObject_TypeCheck(obj, (PyTypeObject *)s->mapping_types)) {
         if (PyErr_Occurred())
             return -1;
 
@@ -1833,6 +1821,8 @@ encoder_traverse(PyEncoderObject *self, visitproc visit, void *arg)
     Py_VISIT(Py_TYPE(self));
     Py_VISIT(self->encode_decimal);
     Py_VISIT(self->indent);
+    Py_VISIT(self->mapping_types);
+    Py_VISIT(self->seq_types);
     Py_VISIT(self->end);
     Py_VISIT(self->key_separator);
     Py_VISIT(self->item_separator);
@@ -1846,6 +1836,8 @@ encoder_clear(PyEncoderObject *self)
     /* Deallocate Encoder */
     Py_CLEAR(self->encode_decimal);
     Py_CLEAR(self->indent);
+    Py_CLEAR(self->mapping_types);
+    Py_CLEAR(self->seq_types);
     Py_CLEAR(self->end);
     Py_CLEAR(self->key_separator);
     Py_CLEAR(self->item_separator);

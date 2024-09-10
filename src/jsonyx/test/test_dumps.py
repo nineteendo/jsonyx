@@ -1,10 +1,11 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON dumps tests."""
+# TODO(Nice Zombies): test mapping_types
+# TODO(Nice Zombies): test seq_types
 from __future__ import annotations
 
 __all__: list[str] = []
 
-from collections import UserDict, UserList
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
@@ -190,7 +191,7 @@ def test_surrogate_escapes_not_allowed(json: ModuleType, obj: str) -> None:
         json.dumps(obj, ensure_ascii=True)
 
 
-@pytest.mark.parametrize(("seq", "expected"), [
+@pytest.mark.parametrize(("obj", "expected"), [
     # Empty list
     ([], "[]"),
 
@@ -204,15 +205,9 @@ def test_surrogate_escapes_not_allowed(json: ModuleType, obj: str) -> None:
     ([[]] * 3, "[[], [], []]"),
     ([{}] * 3, "[{}, {}, {}]"),
 ])  # type: ignore
-@pytest.mark.parametrize("seq_type", [UserList, list])
-def test_sequence(
-    json: ModuleType,
-    seq: list[object],
-    seq_type: type[UserList[object] | list[object]],
-    expected: str,
-) -> None:
-    """Test sequence."""
-    assert json.dumps(seq_type(seq), end="") == expected
+def test_list(json: ModuleType, obj: list[object], expected: str) -> None:
+    """Test list."""
+    assert json.dumps(obj, end="") == expected
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
@@ -249,7 +244,7 @@ def test_list_recursion(json: ModuleType) -> None:
         json.dumps(obj)
 
 
-@pytest.mark.parametrize(("mapping", "expected"), [
+@pytest.mark.parametrize(("obj", "expected"), [
     # Empty dict
     ({}, "{}"),
 
@@ -259,15 +254,11 @@ def test_list_recursion(json: ModuleType) -> None:
     # Multiple values
     ({"a": 1, "b": 2, "c": 3}, '{"a": 1, "b": 2, "c": 3}'),
 ])
-@pytest.mark.parametrize("mapping_type", [UserDict, dict])
 def test_mapping(
-    json: ModuleType,
-    mapping: dict[str, object],
-    mapping_type: type[UserDict[str, object] | dict[str, object]],
-    expected: str,
+    json: ModuleType, obj: dict[str, object], expected: str,
 ) -> None:
     """Test mapping."""
-    assert json.dumps(mapping_type(mapping), end="") == expected
+    assert json.dumps(obj, end="") == expected
 
 
 @pytest.mark.parametrize("key", [
@@ -422,8 +413,8 @@ def test_dict_recursion(json: ModuleType) -> None:
 
 
 @pytest.mark.parametrize("obj", [
-    b"", 0j, bytearray(), frozenset(), memoryview(b""), object(), set(),
-    slice(0),
+    b"", 0j, (), bytearray(), frozenset(), memoryview(b""), object(), range(0),
+    set(), slice(0),
 ])  # type: ignore
 def test_unserializable_value(json: ModuleType, obj: object) -> None:
     """Test unserializable value."""
