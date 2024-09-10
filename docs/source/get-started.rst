@@ -77,7 +77,8 @@ Compact encoding
     '{"a":1,"b":2,"c":3}'
 
 .. tip::
-    Use ``quoted_keys=False`` for even more compact encoding.
+    Use ``quoted_keys=False`` for even more compact encoding, but this isn't
+    widely supported.
 
 Pretty printing
 ^^^^^^^^^^^^^^^
