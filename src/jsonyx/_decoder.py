@@ -438,7 +438,7 @@ except ImportError:
 
                     key = match.group()
                 else:
-                    msg = "Expecting string"
+                    msg = "Expecting key"
                     raise _errmsg(msg, filename, s, end)
 
                 if key not in result:

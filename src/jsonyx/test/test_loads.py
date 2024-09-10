@@ -424,7 +424,6 @@ def test_object_comments(
 
 @pytest.mark.parametrize(("s", "msg", "colno", "end_colno"), [
     ("{", "Unterminated object", 1, 2),
-    ("{0: 0}", "Expecting string", 2, -1),
     ('{"": 1, "": 2, "": 3}', "Duplicate keys are not allowed", 9, 11),
     ('{""}', "Expecting colon", 4, -1),
     ('{"": 0', "Unterminated object", 1, 7),
@@ -470,6 +469,21 @@ def test_unquoted_keys_not_allowed(json: ModuleType, key: str) -> None:
     _check_syntax_err(
         exc_info, "Unquoted keys are not allowed", 2, 2 + len(key),
     )
+
+
+@pytest.mark.parametrize("key", [
+    # First character
+    "\x00", "!", "$", "0", "\xb2", "\u0300", "\u037a", "\u0488",
+
+    # Remaining characters
+    "A\xb2", "A\u037a", "A\u0488",
+])
+def test_invalid_unquoted_key(json: ModuleType, key: str) -> None:
+    """Test invalid unquoted key."""
+    with pytest.raises(json.JSONSyntaxError) as exc_info:
+        json.loads(f"{{{key}: 0}}")
+
+    _check_syntax_err(exc_info, "Expecting key", 2)
 
 
 def test_duplicate_keys(json: ModuleType) -> None:

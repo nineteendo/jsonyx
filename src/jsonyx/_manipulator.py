@@ -62,8 +62,8 @@ _match_whitespace: Callable[[str, int], Match[str] | None] = re.compile(
 ).match
 
 
-def _errmsg(msg: str, doc: str, start: int, end: int = 0) -> JSONSyntaxError:
-    return JSONSyntaxError(msg, "<query>", doc, start, end)
+def _errmsg(msg: str, query: str, start: int, end: int = 0) -> JSONSyntaxError:
+    return JSONSyntaxError(msg, "<query>", query, start, end)
 
 
 def _check_query_key(
@@ -304,22 +304,20 @@ class Manipulator:
         relative: bool = False,
         mapping: bool = False,
     ) -> tuple[list[_Node], int]:
-        try:
-            key: _Key = query[end]
-        except IndexError:
-            raise SyntaxError from None
+        if relative:
+            if query[end:end + 1] != "@":
+                msg: str = "Expecting a relative query"
+                raise _errmsg(msg, query, end)
+        elif query[end:end + 1] != "$":
+            msg = "Expecting an absolute query"
+            raise _errmsg(msg, query, end)
 
         end += 1
-        if relative and key != "@":
-            raise SyntaxError
-
-        if not relative and key != "$":
-            raise SyntaxError
-
         while True:
             if query[end:end + 1] == "?":
                 if mapping:
-                    raise ValueError
+                    msg = "Unexpected optional marker"
+                    raise _errmsg(msg, query, end, end + 1)
 
                 end += 1
                 nodes = [
@@ -329,12 +327,14 @@ class Manipulator:
                 ]
 
             if (terminator := query[end:end + 1]) == ".":
+                end += 1
                 if (
-                    match := _match_unquoted_key(query, end + 1)
+                    match := _match_unquoted_key(query, end)
                 ) and match.group().isidentifier():
                     key, end = match.group(), match.end()
                 else:
-                    raise SyntaxError
+                    msg = "Expecting key"
+                    raise _errmsg(msg, query, end)
 
                 nodes = [
                     (target, key)
@@ -369,7 +369,8 @@ class Manipulator:
                         for target in _get_query_targets(node, mapping=mapping)
                     ]
                 elif mapping:
-                    raise SyntaxError
+                    msg = "Expecting key"
+                    raise _errmsg(msg, query, end)
                 else:
                     nodes = [
                         (target, key)
@@ -383,12 +384,7 @@ class Manipulator:
                     ]
                     nodes, end = self._run_filter_query(nodes, query, end)
 
-                try:
-                    terminator = query[end]
-                except IndexError:
-                    raise SyntaxError from None
-
-                if terminator != "]":
+                if query[end:end + 1] != "]":
                     raise SyntaxError
 
                 end += 1

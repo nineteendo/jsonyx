@@ -670,7 +670,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
                      && PyUnicode_READ(kind, str, idx) != '_'
                      && PyUnicode_READ(kind, str, idx) <= '\x7f')
             {
-                raise_errmsg("Expecting string", pyfilename, pystr, idx, 0);
+                raise_errmsg("Expecting key", pyfilename, pystr, idx, 0);
                 goto bail;
             }
             else {
@@ -684,7 +684,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
                 }
                 key = PyUnicode_Substring(pystr, idx, next_idx);
                 if (!PyUnicode_IsIdentifier(key)) {
-                    raise_errmsg("Expecting string", pyfilename, pystr, idx, 0);
+                    raise_errmsg("Expecting key", pyfilename, pystr, idx, 0);
                     goto bail;
                 }
                 if (!s->allow_unquoted_keys) {
