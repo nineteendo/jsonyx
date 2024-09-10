@@ -86,10 +86,6 @@ Pretty printing
     Use ``indent_leaves=True`` to indent everything and ``sort_keys=True`` to
     sort the keys of objects.
 
-.. warning::
-    To pretty-print unpaired surrogates, you need to use
-    :data:`jsonyx.allow.SURROGATES` and ``ensure_ascii=True``.
-
 .. seealso::
     The built-in :mod:`pprint` module for pretty-printing arbitrary Python data
     structures.

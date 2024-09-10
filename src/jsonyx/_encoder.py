@@ -400,10 +400,6 @@ class Encoder:
         >>> encoder.dump(["streaming API"], io)
         >>> io.getvalue()
         '["streaming API"]\n'
-
-        .. warning::
-            To pretty-print unpaired surrogates, you need to use
-            :data:`jsonyx.allow.SURROGATES` and ``ensure_ascii=True``.
         """
         fp.write(self._encoder(obj))
 
