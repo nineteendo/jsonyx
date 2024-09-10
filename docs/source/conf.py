@@ -25,6 +25,7 @@ extensions: list[str] = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
     "sphinx_copybutton",
+    "sphinx_inline_tabs",
 ]
 
 intersphinx_mapping: dict[str, tuple[str, None]] = {
