@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON benchmark."""
-# TODO(Nice Zombies): re-run benchmark
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -121,10 +120,10 @@ def _run_benchmark(
         row.append(1_000_000 * unit)
         results.append(row)
 
-    headers: list[str] = [name, *funcs.keys(), "unit (μs)"]
+    headers: list[str] = [name, *funcs.keys(), "unit\u00a0(\u03bcs)"]
     print()
     print(tabulate(results, headers, tablefmt="pipe", floatfmt=".02f"))
-    print(tabulate(results, headers, tablefmt="grid", floatfmt=".02f"))
+    print(tabulate(results, headers, tablefmt="rst", floatfmt=".02f"))
 
 
 if __name__ == "__main__":
