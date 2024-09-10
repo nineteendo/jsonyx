@@ -43,7 +43,8 @@ Encoding basic Python object hierarchies
 ::
 
     >>> import jsonyx as json
-    >>> json.dumps({"foo": ["bar", None, 1.0, 2]})
+    >>> json.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
+    '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
     '{"foo": ["bar", null, 1.0, 2]}\n'
     >>> json.dump('"foo\bar')
     "\"foo\bar"
@@ -99,15 +100,6 @@ Pretty printing
 .. seealso::
     The built-in :mod:`pprint` module for pretty-printing arbitrary Python data
     structures.
-
-Encoding :class:`tuple`
-^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    >>> import jsonyx as json
-    >>> json.dump((1, 2, 3), seq_types=tuple)
-    [1, 2, 3]
 
 Decoding JSON
 ^^^^^^^^^^^^^
