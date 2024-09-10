@@ -56,6 +56,10 @@ autodoc_typehints: str = "none"
 
 copybutton_exclude: str = ".linenos, .gp, .go"
 
+# -- Options for sphinx_issues
+
+issues_github_path: str = "nineteendo/jsonyx"
+
 # -- Options for HTML output
 
 html_context: dict[str, Any] = {

@@ -30,8 +30,7 @@ v2.0.0 (unreleased)
 -------------------------------------------------
 
 - First conda release
-- Fixed `#2 <https://github.com/nineteendo/jsonyx/issues/2>`_: Middle of error
-  context is truncated incorrectly
+- Fixed :issue:`2`: Middle of error context is truncated incorrectly
 
 `v1.2.0 <https://pypi.org/project/jsonyx/1.2.0>`_
 -------------------------------------------------
