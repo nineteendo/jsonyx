@@ -52,25 +52,24 @@ We recommend to use `orjson` or `msgspec` for performance critical applications:
 
 | encode                                      |  json | jsonyx | msgspec |  orjson | rapidjson | unit (μs) |
 |:--------------------------------------------| -----:|-------:|--------:|--------:|----------:|----------:|
-| List of 256 booleans                        |  4.94 |   4.15 |    1.14 |    1.00 |      3.16 |      1.85 |
-| List of 256 ASCII strings                   | 14.71 |  12.79 |    1.71 |    1.00 |     10.33 |      3.61 |
-| List of 256 floats                          | 23.31 |  23.15 |    1.36 |    1.00 |     24.79 |      8.67 |
-| List of 256 dicts with 1 int                | 11.02 |  12.28 |    1.50 |    1.00 |      6.49 |      8.32 |
-| Medium complex object                       | 10.02 |  10.01 |    1.27 |    1.00 |      7.52 |     14.17 |
-| List of 256 strings                         | 26.59 |  15.08 |    2.24 |    1.00 |     33.19 |     13.74 |
-| Complex object                              |  7.72 |   5.53 |    1.00 | inf[^1] |      6.84 |    207.87 |
-| Dict with 256 lists of 256 dicts with 1 int |  9.91 |  10.96 |    1.32 |    1.00 |      5.92 |   2449.84 |
-
+| List of 256 booleans                        |  4.82 |   4.11 |    1.16 |    1.00 |      3.12 |      1.85 |
+| List of 256 ASCII strings                   | 14.71 |  12.73 |    1.67 |    1.00 |     10.12 |      3.64 |
+| List of 256 floats                          | 23.47 |  23.54 |    1.38 |    1.00 |     24.87 |      8.57 |
+| List of 256 dicts with 1 int                | 10.87 |  11.17 |    1.48 |    1.00 |      6.30 |      8.54 |
+| Medium complex object                       |  9.90 |   9.76 |    1.24 |    1.00 |      7.31 |     14.48 |
+| List of 256 strings                         | 26.73 |  14.99 |    2.26 |    1.00 |     34.28 |     13.69 |
+| Complex object                              |  7.80 |   5.55 |    1.00 | inf[^1] |      6.92 |    205.10 |
+| Dict with 256 lists of 256 dicts with 1 int |  9.58 |  10.23 |    1.27 |    1.00 |      5.32 |   2517.22 |
 
 | decode                                      | json | jsonyx | msgspec | orjson | rapidjson | unit (μs) |
 |:--------------------------------------------|-----:|-------:|--------:|-------:|----------:|----------:|
-| List of 256 booleans                        | 3.40 |   4.96 |    2.03 |   1.00 |      2.44 |      2.04 |
-| List of 256 ASCII strings                   | 1.71 |   2.08 |    1.13 |   1.00 |      1.60 |     12.81 |
-| List of 256 floats                          | 6.26 |   6.96 |    1.40 |   1.00 |      5.40 |     10.79 |
-| List of 256 dicts with 1 int                | 2.44 |   2.88 |    1.39 |   1.00 |      2.15 |     33.17 |
-| Medium complex object                       | 2.94 |   3.72 |    1.25 |   1.00 |      2.89 |     33.55 |
-| List of 256 strings                         | 1.02 |   1.00 |    2.62 |   2.02 |      2.99 |     64.47 |
-| Complex object                              | 1.12 |   1.05 |    1.07 |   1.00 |      1.23 |   1057.24 |
-| Dict with 256 lists of 256 dicts with 1 int | 1.53 |   1.80 |    1.12 |   1.00 |      9.69 |  18954.53 |
+| List of 256 booleans                        | 3.40 |   5.24 |    2.06 |   1.00 |      2.42 |      2.03 |
+| List of 256 ASCII strings                   | 1.68 |   2.05 |    1.12 |   1.00 |      1.59 |     13.11 |
+| List of 256 floats                          | 6.58 |   7.38 |    1.45 |   1.00 |      5.71 |     10.25 |
+| List of 256 dicts with 1 int                | 2.36 |   2.84 |    1.38 |   1.00 |      2.22 |     32.11 |
+| Medium complex object                       | 2.89 |   3.70 |    1.23 |   1.00 |      2.62 |     33.99 |
+| List of 256 strings                         | 1.02 |   1.00 |    2.74 |   2.04 |      2.99 |     64.38 |
+| Complex object                              | 1.12 |   1.04 |    1.06 |   1.00 |      1.23 |   1061.41 |
+| Dict with 256 lists of 256 dicts with 1 int | 1.66 |   1.91 |    1.14 |   1.00 |      1.47 |  17536.25 |
 
 [^1]: failed due to recursion error
