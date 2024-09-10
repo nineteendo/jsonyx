@@ -296,6 +296,10 @@ class Encoder:
     .. note::
         The item separator is automatically stripped when indented.
 
+    .. warning::
+        Avoid specifying ABCs for *mapping_types* or *seq_types*, this is very
+        slow.
+
     .. versionchanged:: 2.0
         Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
         *quoted_keys*.
