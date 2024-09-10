@@ -265,7 +265,7 @@ def write(
         The item separator is automatically stripped when indented.
 
     .. warning::
-        Avoid specifying ABCs for *mapping_types* or *seq_types*, this is very
+        Avoid specifying ABCs for *mapping_types* or *seq_types*, that is very
         slow.
 
     .. versionchanged:: 2.0
@@ -357,7 +357,7 @@ def dump(
         The item separator is automatically stripped when indented.
 
     .. warning::
-        Avoid specifying ABCs for *mapping_types* or *seq_types*, this is very
+        Avoid specifying ABCs for *mapping_types* or *seq_types*, that is very
         slow.
 
     .. versionchanged:: 2.0
@@ -443,7 +443,7 @@ def dumps(
         The item separator is automatically stripped when indented.
 
     .. warning::
-        Avoid specifying ABCs for *mapping_types* or *seq_types*, this is very
+        Avoid specifying ABCs for *mapping_types* or *seq_types*, that is very
         slow.
 
     .. versionchanged:: 2.0

@@ -125,6 +125,19 @@ Using :class:`decimal.Decimal` instead of :class:`float`
 .. note::
     :class:`decimal.Decimal` can be natively serialized.
 
+
+Encoding :class:`tuple`
+^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    >>> import jsonyx as json
+    >>> json.dump((1, 2, 3), seq_types=tuple)
+    [1, 2, 3]
+
+.. warning::
+    Avoid specifying ABCs for *seq_types*, that is very slow.
+
 Making a patch from two Python objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

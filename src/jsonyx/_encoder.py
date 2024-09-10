@@ -297,7 +297,7 @@ class Encoder:
         The item separator is automatically stripped when indented.
 
     .. warning::
-        Avoid specifying ABCs for *mapping_types* or *seq_types*, this is very
+        Avoid specifying ABCs for *mapping_types* or *seq_types*, that is very
         slow.
 
     .. versionchanged:: 2.0

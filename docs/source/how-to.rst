@@ -42,10 +42,6 @@ Specializing JSON object encoding
     >>> json.dump(to_json(1 + 2j))
     {"__complex__": true, "real": 1.0, "imag": 2.0}
 
-.. note::
-    This simple example doesn't convert :class:`collections.abc.Mapping` and
-    :class:`collections.abc.Sequence`.
-
 Specializing JSON object decoding
 ---------------------------------
 
@@ -107,6 +103,3 @@ After installing ``multidict``, it can be used like this::
     ...     '{"key": "value 1", "key": "value 2"}', allow=jsonyx.allow.DUPLICATE_KEYS
     ... ))
     <MultiDict('key': 'value 1', 'key': 'value 2')>
-
-.. note::
-    :class:`multidict.MultiDict` can be natively serialized.
