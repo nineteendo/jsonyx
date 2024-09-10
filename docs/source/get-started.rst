@@ -76,6 +76,9 @@ Compact encoding
     >>> json.dumps({"a": 1, "b": 2, "c": 3}, end="", separators=(",", ":"))
     '{"a":1,"b":2,"c":3}'
 
+.. tip::
+    Use ``quoted_keys=False`` for even more compact encoding.
+
 Pretty printing
 ^^^^^^^^^^^^^^^
 
@@ -95,6 +98,15 @@ Pretty printing
 .. seealso::
     The built-in :mod:`pprint` module for pretty-printing arbitrary Python data
     structures.
+
+Encoding :class:`tuple`
+^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    >>> import jsonyx as json
+    >>> json.dump((1, 2, 3), seq_types=tuple)
+    [1, 2, 3]
 
 Decoding JSON
 ^^^^^^^^^^^^^
@@ -130,19 +142,6 @@ Using :class:`decimal.Decimal` instead of :class:`float`
 
 .. note::
     :class:`decimal.Decimal` can be natively serialized.
-
-
-Encoding :class:`tuple`
-^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    >>> import jsonyx as json
-    >>> json.dump((1, 2, 3), seq_types=tuple)
-    [1, 2, 3]
-
-.. warning::
-    Avoid specifying ABCs for *seq_types*, that is very slow.
 
 Making a patch from two Python objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

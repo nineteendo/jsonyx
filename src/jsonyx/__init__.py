@@ -2,7 +2,6 @@
 """Customizable JSON library for Python."""
 # TODO(Nice Zombies): link to v2.0.0 in changelog
 # TODO(Nice Zombies): update raised exceptions
-# TODO(Nice Zombies): add example with mapping_types and seq_types
 from __future__ import annotations
 
 __all__: list[str] = [
