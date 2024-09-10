@@ -19,13 +19,13 @@ or `mamba <https://mamba.readthedocs.io>`_:
 
     .. code-block:: console
 
-        $ conda install conda-forge::jsonyx
+        (base) $ conda install conda-forge::jsonyx
 
 .. tab:: mamba
 
     .. code-block:: console
 
-        $ mamba install conda-forge::jsonyx
+        (base) $ mamba install conda-forge::jsonyx
 
 Check if you have installed the correct version:
 
