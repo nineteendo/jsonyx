@@ -142,7 +142,8 @@ Using :class:`decimal.Decimal` instead of :class:`float`
     [Decimal('1.0000000000000001'), Decimal('1E+400')]
 
 .. note::
-    :class:`decimal.Decimal` can be natively serialized.
+    :class:`decimal.Decimal` can be natively serialized, but not as fast as
+    :class:`float`.
 
 Making a patch from two Python objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
