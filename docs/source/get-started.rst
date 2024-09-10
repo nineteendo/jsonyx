@@ -49,8 +49,8 @@ Encoding basic Python object hierarchies
     "\"foo\bar"
     >>> json.dump("\\")
     "\\"
-    >>> json.dump("\u1234", ensure_ascii=True)
-    "\u1234"
+    >>> json.dump("\u1234")
+    "ሴ"
     >>> json.dump({"c": 3, "b": 2, "a": 1}, sort_keys=True)
     {"a": 1, "b": 2, "c": 3}
     >>> from io import StringIO
@@ -93,8 +93,9 @@ Pretty printing
     }
 
 .. tip::
-    Use ``indent_leaves=True`` to indent everything and ``sort_keys=True`` to
-    sort the keys of objects.
+    Use ``ensure_ascii=True`` to escape non-ASCII characters,
+    ``indent_leaves=True`` to indent everything and ``sort_keys=True`` to sort
+    the keys of objects.
 
 .. seealso::
     The built-in :mod:`pprint` module for pretty-printing arbitrary Python data

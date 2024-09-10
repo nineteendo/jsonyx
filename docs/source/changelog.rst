@@ -18,7 +18,7 @@ v2.0.0 (unreleased)
 - Added :option:`--indent-leaves` and its alias :option:`-l`
 - Added :option:`--unquoted-keys` and its alias :option:`-q`
 - Added :option:`--version` and its alias :option:`-v`
-- Fixed comment detection
+- Fixed line comment detection
 - Fixed typo in error message
 - Improved documentation
 - Make :class:`tuple` JSON serializable
