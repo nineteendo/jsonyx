@@ -51,8 +51,8 @@ except ImportError:
     def make_encoder(
         encode_decimal: Callable[[Decimal], str],
         indent: str | None,
-        mapping_types: type | tuple[type],
-        seq_types: type | tuple[type],
+        mapping_types: type | tuple[type, ...],
+        seq_types: type | tuple[type, ...],
         end: str,
         item_separator: str,
         long_item_separator: str,
@@ -231,9 +231,9 @@ except ImportError:
                     write(int_repr(obj))
             elif isinstance(obj, float):
                 write(floatstr(obj))
-            elif isinstance(obj, seq_types):
+            elif isinstance(obj, (list, seq_types)):
                 write_sequence(obj, write, current_indent)
-            elif isinstance(obj, mapping_types):
+            elif isinstance(obj, (dict, mapping_types)):
                 write_dict(obj, write, current_indent)
             elif isinstance(obj, Decimal):
                 write(encode_decimal(obj))
@@ -277,16 +277,16 @@ class Encoder:
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
     :type indent_leaves: bool, optional
-    :param mapping_types: the mapping type or tuple of mapping types, defaults
-                          to :class:`dict`
-    :type mapping_types: type | tuple[type], optional
+    :param mapping_types: an additional mapping type or tuple of additional
+                          mapping types, defaults to ``()``
+    :type mapping_types: type | tuple[type, ...], optional
     :param quoted_keys: quote keys which are identifiers, defaults to ``True``
     :type quoted_keys: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
-    :param seq_types: the sequence type or tuple of sequence types, defaults
-                      to :class:`list`
-    :type seq_types: type | tuple[type], optional
+    :param seq_types: an additional sequence type or tuple of additional
+                      sequence types, defaults to ``()``
+    :type seq_types: type | tuple[type, ...], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to
@@ -311,10 +311,10 @@ class Encoder:
         ensure_ascii: bool = False,
         indent: int | str | None = None,
         indent_leaves: bool = False,
-        mapping_types: type | tuple[type] = dict,
+        mapping_types: type | tuple[type, ...] = (),
         quoted_keys: bool = True,
         separators: tuple[str, str] = (", ", ": "),
-        seq_types: type | tuple[type] = list,
+        seq_types: type | tuple[type, ...] = (),
         sort_keys: bool = False,
         trailing_comma: bool = False,
     ) -> None:

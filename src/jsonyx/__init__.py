@@ -206,10 +206,10 @@ def write(
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     indent_leaves: bool = False,
-    mapping_types: type | tuple[type] = dict,
+    mapping_types: type | tuple[type, ...] = (),
     quoted_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
-    seq_types: type | tuple[type] = list,
+    seq_types: type | tuple[type, ...] = (),
     sort_keys: bool = False,
     trailing_comma: bool = False,
 ) -> None:
@@ -233,16 +233,16 @@ def write(
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
     :type indent_leaves: bool, optional
-    :param mapping_types: the mapping type or tuple of mapping types, defaults
-                          to :class:`dict`
-    :type mapping_types: type | tuple[type], optional
+    :param mapping_types: an additional mapping type or tuple of additional
+                          mapping types, defaults to ``()``
+    :type mapping_types: type | tuple[type, ...], optional
     :param quoted_keys: quote keys which are identifiers, defaults to ``True``
     :type quoted_keys: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
-    :param seq_types: the sequence type or tuple of sequence types, defaults
-                      to :class:`list`
-    :type seq_types: type | tuple[type], optional
+    :param seq_types: an additional sequence type or tuple of additional
+                      sequence types, defaults to ``()``
+    :type seq_types: type | tuple[type, ...], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to
@@ -295,10 +295,10 @@ def dump(
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     indent_leaves: bool = False,
-    mapping_types: type | tuple[type] = dict,
+    mapping_types: type | tuple[type, ...] = (),
     quoted_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
-    seq_types: type | tuple[type] = list,
+    seq_types: type | tuple[type, ...] = (),
     sort_keys: bool = False,
     trailing_comma: bool = False,
 ) -> None:
@@ -322,16 +322,16 @@ def dump(
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
     :type indent_leaves: bool, optional
-    :param mapping_types: the mapping type or tuple of mapping types, defaults
-                          to :class:`dict`
-    :type mapping_types: type | tuple[type], optional
+    :param mapping_types: an additional mapping type or tuple of additional
+                          mapping types, defaults to ``()``
+    :type mapping_types: type | tuple[type, ...], optional
     :param quoted_keys: quote keys which are identifiers, defaults to ``True``
     :type quoted_keys: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
-    :param seq_types: the sequence type or tuple of sequence types, defaults
-                      to :class:`list`
-    :type seq_types: type | tuple[type], optional
+    :param seq_types: an additional sequence type or tuple of additional
+                      sequence types, defaults to ``()``
+    :type seq_types: type | tuple[type, ...], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to
@@ -386,10 +386,10 @@ def dumps(
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     indent_leaves: bool = False,
-    mapping_types: type | tuple[type] = dict,
+    mapping_types: type | tuple[type, ...] = (),
     quoted_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
-    seq_types: type | tuple[type] = list,
+    seq_types: type | tuple[type, ...] = (),
     sort_keys: bool = False,
     trailing_comma: bool = False,
 ) -> str:
@@ -411,16 +411,16 @@ def dumps(
     :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
     :type indent_leaves: bool, optional
-    :param mapping_types: the mapping type or tuple of mapping types, defaults
-                          to :class:`dict`
-    :type mapping_types: type | tuple[type], optional
+    :param mapping_types: an additional mapping type or tuple of additional
+                          mapping types, defaults to ``()``
+    :type mapping_types: type | tuple[type, ...], optional
     :param quoted_keys: quote keys which are identifiers, defaults to ``True``
     :type quoted_keys: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
     :type separators: tuple[str, str], optional
-    :param seq_types: the sequence type or tuple of sequence types, defaults
-                      to :class:`list`
-    :type seq_types: type | tuple[type], optional
+    :param seq_types: an additional sequence type or tuple of additional
+                      sequence types, defaults to ``()``
+    :type seq_types: type | tuple[type, ...], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
     :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to

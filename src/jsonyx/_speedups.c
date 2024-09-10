@@ -1454,7 +1454,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
             return -1;
         return _steal_accumulate(writer, encoded);
     }
-    else if (PyObject_IsInstance(obj, s->seq_types)) {
+    else if (PyList_Check(obj) || PyObject_IsInstance(obj, s->seq_types)) {
         // See https://github.com/python/cpython/issues/123593 
         if (PyErr_Occurred())
             return -1;
@@ -1465,7 +1465,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         _Py_LeaveRecursiveCall();
         return rv;
     }
-    else if (PyObject_IsInstance(obj, s->mapping_types)) {
+    else if (PyDict_Check(obj) || PyObject_IsInstance(obj, s->mapping_types)) {
         if (PyErr_Occurred())
             return -1;
 
