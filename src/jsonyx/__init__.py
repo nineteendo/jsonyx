@@ -341,8 +341,8 @@ def dump(
     :raises ValueError: for invalid values
 
     >>> import jsonyx as json
-    >>> json.dump(["foo", {"bar": ("baz", None, 1.0, 2)}])
-    ["foo", {"bar": ["baz", null, 1.0, 2]}]
+    >>> json.dump({"foo": ["bar", None, 1.0, 2]})
+    {"foo": ["bar", null, 1.0, 2]}
     >>> from io import StringIO
     >>> io = StringIO()
     >>> json.dump(["streaming API"], io)
@@ -432,8 +432,8 @@ def dumps(
     :rtype: str
 
     >>> import jsonyx as json
-    >>> json.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
-    '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
+    >>> json.dumps({"foo": ["bar", None, 1.0, 2]})
+    '{"foo": ["bar", null, 1.0, 2]}\n'
 
     .. note::
         The item separator is automatically stripped when indented.

@@ -389,8 +389,8 @@ class Encoder:
 
         >>> import jsonyx as json
         >>> encoder = json.Encoder()
-        >>> encoder.dump(["foo", {"bar": ("baz", None, 1.0, 2)}])
-        ["foo", {"bar": ["baz", null, 1.0, 2]}]
+        >>> encoder.dump({"foo": ["bar", None, 1.0, 2]})
+        {"foo": ["bar", null, 1.0, 2]}
         >>> from io import StringIO
         >>> io = StringIO()
         >>> encoder.dump(["streaming API"], io)
@@ -414,8 +414,8 @@ class Encoder:
         :rtype: str
 
         >>> import jsonyx as json
-        >>> json.Encoder().dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
-        '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
+        >>> json.Encoder().dumps({"foo": ["bar", None, 1.0, 2]})
+        '{"foo": ["bar", null, 1.0, 2]}\n'
         """
         return self._encoder(obj)
 
