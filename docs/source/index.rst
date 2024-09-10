@@ -49,7 +49,7 @@ performance and no dependencies.
 
 .. rubric:: Benchmark
 
-We recommend to use ``orjson`` or ``msgspec`` for performance critical
+We recommend to use :pypi:`orjson` or :pypi:`msgspec` for performance critical
 applications:
 
 ===========================================  =====  ======  =======  ========  =========  =========
