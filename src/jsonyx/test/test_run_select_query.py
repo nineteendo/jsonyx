@@ -5,11 +5,14 @@ from __future__ import annotations
 
 __all__: list[str] = []
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
 from jsonyx import JSONSyntaxError, run_select_query
+
+if TYPE_CHECKING:
+    _Node = tuple[dict[Any, Any] | list[Any], int | slice | str]
 
 
 def _check_syntax_err(
@@ -27,18 +30,38 @@ def _check_syntax_err(
     assert exc.end_colno == end_colno
 
 
-@pytest.mark.parametrize(("query", "msg", "colno", "end_colno"), [
-    ("", "Expecting an absolute query", 1, -1),
-    ("@", "Expecting an absolute query", 1, -1),
-])
-def test_invalid_query(
-    query: str, msg: str, colno: int, end_colno: int,
+@pytest.mark.parametrize(("nodes", "query", "expected"), [
+    # Root
+    (([], 0), "$", ([], 0)),
+
+    # Optional marker
+    (([], slice(0)), "$?", ([], slice(0))),
+    (([], 0), "$?", []),
+    (([0], 0), "$?", ([0], 0)),
+    (({"": 0}, ""), "$?", ({"": 0}, "")),
+])  # type: ignore
+def test_query(
+    nodes: _Node | list[_Node], query: str, expected: _Node | list[_Node],
 ) -> None:
+    """Test query."""
+    if isinstance(expected, tuple):
+        expected = [expected]
+
+    assert run_select_query(nodes, query, allow_slice=True) == expected
+
+
+@pytest.mark.parametrize(("query", "msg", "colno"), [
+    ("", "Expecting an absolute query", 1),
+    ("@", "Expecting an absolute query", 1),
+    ("$[0", "Expecting a closing bracket", 4),
+    ("$ $ $", "Expecting end of file", 2),
+])
+def test_invalid_query(query: str, msg: str, colno: int) -> None:
     """Test invalid query."""
     with pytest.raises(JSONSyntaxError) as exc_info:
         run_select_query([], query)
 
-    _check_syntax_err(exc_info, msg, colno, end_colno)
+    _check_syntax_err(exc_info, msg, colno)
 
 
 @pytest.mark.parametrize("key", [
@@ -48,12 +71,12 @@ def test_invalid_query(
     # Remaining characters
     "A\xb2", "A\u037a", "A\u0488",
 ])
-def test_invalid_unquoted_key(key: str) -> None:
-    """Test invalid unquoted key."""
+def test_invalid_property(key: str) -> None:
+    """Test invalid property."""
     with pytest.raises(JSONSyntaxError) as exc_info:
         run_select_query([], f"$.{key}")
 
-    _check_syntax_err(exc_info, "Expecting key", 3)
+    _check_syntax_err(exc_info, "Expecting property", 3)
 
 
 @pytest.mark.parametrize(("query", "msg", "colno", "end_colno"), [

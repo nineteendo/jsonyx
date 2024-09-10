@@ -39,8 +39,8 @@ def _check_syntax_err(
 @pytest.mark.parametrize(
     "string", ["\ud800", "\ud800$", "\udf48"],  # noqa: PT014
 )
-def test_surrogates(json: ModuleType, string: str) -> None:
-    """Test surrogates."""
+def test_surrogate(json: ModuleType, string: str) -> None:
+    """Test surrogate."""
     b: bytes = f'"{string}"'.encode(errors="surrogatepass")
     assert json.loads(b, allow=SURROGATES) == string
 
@@ -48,8 +48,8 @@ def test_surrogates(json: ModuleType, string: str) -> None:
 @pytest.mark.parametrize(
     "string", ["\ud800", "\ud800$", "\udf48"],  # noqa: PT014
 )
-def test_surrogates_not_allowed(json: ModuleType, string: str) -> None:
-    """Test surrogates when not allowed."""
+def test_surrogate_not_allowed(json: ModuleType, string: str) -> None:
+    """Test surrogate when not allowed."""
     b: bytes = f'"{string}"'.encode(errors="surrogatepass")
     with pytest.raises(UnicodeDecodeError):
         json.loads(b)
@@ -234,8 +234,8 @@ def test_string(json: ModuleType, s: str, expected: str) -> None:
     (r"\ud800\u0024", "\ud800$"),
     (r"\udf48", "\udf48"),
 ])
-def test_surrogate_escapes(json: ModuleType, s: str, expected: str) -> None:
-    """Test surrogate escapes."""
+def test_surrogate_escape(json: ModuleType, s: str, expected: str) -> None:
+    """Test surrogate escape."""
     assert json.loads(f'"{s}"', allow=SURROGATES) == expected
 
 
@@ -449,8 +449,8 @@ def test_invalid_object(
     # Remaining characters
     "A0", "AA", "A_", "A\u0300", "A\u2118",
 ])
-def test_unquoted_keys(json: ModuleType, key: str) -> None:
-    """Test unquoted keys."""
+def test_unquoted_key(json: ModuleType, key: str) -> None:
+    """Test unquoted key."""
     assert json.loads(f"{{{key}: 0}}", allow=UNQUOTED_KEYS) == {key: 0}
 
 
@@ -461,8 +461,8 @@ def test_unquoted_keys(json: ModuleType, key: str) -> None:
     # Remaining characters
     "A0", "AA", "A_", "A\u0300", "A\u2118",
 ])
-def test_unquoted_keys_not_allowed(json: ModuleType, key: str) -> None:
-    """Test unquoted keys when not allowed."""
+def test_unquoted_key_not_allowed(json: ModuleType, key: str) -> None:
+    """Test unquoted key when not allowed."""
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(f"{{{key}: 0}}")
 
@@ -486,8 +486,8 @@ def test_invalid_unquoted_key(json: ModuleType, key: str) -> None:
     _check_syntax_err(exc_info, "Expecting key", 2)
 
 
-def test_duplicate_keys(json: ModuleType) -> None:
-    """Test duplicate keys."""
+def test_duplicate_key(json: ModuleType) -> None:
+    """Test duplicate key."""
     s: str = '{"": 1, "": 2, "": 3}'
     dct: dict[str, int] = json.loads(s, allow=DUPLICATE_KEYS)
     assert all(not key for key in dct)
@@ -514,10 +514,10 @@ def test_expecting_value(json: ModuleType, s: str) -> None:
     ("[1 2 3]", [1, 2, 3]),
     ('{"a": 1 "b": 2 "c": 3}', {"a": 1, "b": 2, "c": 3}),
 ])
-def test_missing_commas(
+def test_missing_comma(
     json: ModuleType, s: str, expected: dict[str, object] | list[object],
 ) -> None:
-    """Test missing commas."""
+    """Test missing comma."""
     assert json.loads(s, allow=MISSING_COMMAS) == expected
 
 

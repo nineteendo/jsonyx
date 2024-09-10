@@ -333,7 +333,7 @@ class Manipulator:
                 ) and match.group().isidentifier():
                     key, end = match.group(), match.end()
                 else:
-                    msg = "Expecting key"
+                    msg = "Expecting property"
                     raise _errmsg(msg, query, end)
 
                 nodes = [
@@ -385,7 +385,8 @@ class Manipulator:
                     nodes, end = self._run_filter_query(nodes, query, end)
 
                 if query[end:end + 1] != "]":
-                    raise SyntaxError
+                    msg = "Expecting a closing bracket"
+                    raise _errmsg(msg, query, end)
 
                 end += 1
             else:
@@ -650,7 +651,8 @@ class Manipulator:
         )
 
         if end < len(query):
-            raise SyntaxError
+            msg: str = "Expecting end of file"
+            raise _errmsg(msg, query, end)
 
         return nodes
 
