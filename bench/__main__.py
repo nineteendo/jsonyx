@@ -40,12 +40,12 @@ _ENCODE_CASES: dict[str, Any] = {
     "List of 256 ASCII strings": [
         "A pretty long string which is in a list",
     ] * 256,
+    "List of 256 floats": [
+        maxsize * random() for _ in range(256)  # noqa: S311
+    ],
     "List of 256 dicts with 1 int": [
         {str(random() * 20): int(random() * 1_000_000)}  # noqa: S311
         for _ in range(256)
-    ],
-    "List of 256 floats": [
-        maxsize * random() for _ in range(256)  # noqa: S311
     ],
     "Medium complex object": [[_USER, _FRIENDS]] * 6,
     "List of 256 strings": [

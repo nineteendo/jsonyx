@@ -57,8 +57,8 @@ encode                                       json  jsonyx  msgspec    orjson  ra
 =========================================== =====  ======  =======  ========  =========  =========
 List of 256 booleans                         4.94    4.15     1.14      1.00       3.16       1.85
 List of 256 ASCII strings                   14.71   12.79     1.71      1.00      10.33       3.61
-List of 256 dicts with 1 int                11.02   12.28     1.50      1.00       6.49       8.32
 List of 256 floats                          23.31   23.15     1.36      1.00      24.79       8.67
+List of 256 dicts with 1 int                11.02   12.28     1.50      1.00       6.49       8.32
 Medium complex object                       10.02   10.01     1.27      1.00       7.52      14.17
 List of 256 strings                         26.59   15.08     2.24      1.00      33.19      13.74
 Complex object                               7.72    5.53     1.00  inf [1]_       6.84     207.87
@@ -72,8 +72,8 @@ decode                                       json  jsonyx  msgspec  orjson  rapi
 ===========================================  ====  ======  =======  ======  =========  =========
 List of 256 booleans                         3.40    4.96     2.03    1.00       2.44       2.04
 List of 256 ASCII strings                    1.71    2.08     1.13    1.00       1.60      12.81
-List of 256 dicts with 1 int                 2.44    2.88     1.39    1.00       2.15      33.17
 List of 256 floats                           6.26    6.96     1.40    1.00       5.40      10.79
+List of 256 dicts with 1 int                 2.44    2.88     1.39    1.00       2.15      33.17
 Medium complex object                        2.94    3.72     1.25    1.00       2.89      33.55
 List of 256 strings                          1.02    1.00     2.62    2.02       2.99      64.47
 Complex object                               1.12    1.05     1.07    1.00       1.23    1057.24

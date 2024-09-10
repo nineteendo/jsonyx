@@ -1455,6 +1455,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         return _steal_accumulate(writer, encoded);
     }
     else if (PyObject_IsInstance(obj, s->seq_types)) {
+        // See https://github.com/python/cpython/issues/123593 
         if (PyErr_Occurred())
             return -1;
 
