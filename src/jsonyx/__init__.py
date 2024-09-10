@@ -270,8 +270,8 @@ def write(
 
     .. versionchanged:: 2.0
         Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
-        *quoted_keys*.
-        Merged *item_separator* and *key_separator* as *separators*.
+        *quoted_keys*. Merged *item_separator* and *key_separator* as
+        *separators*.
     """
     return Encoder(
         allow=allow,
@@ -358,15 +358,13 @@ def dump(
 
     .. warning::
         Avoid specifying ABCs for *mapping_types* or *seq_types*, this is very
-        slow.
-
-        To pretty-print unpaired surrogates, you need to use
+        slow. To pretty-print unpaired surrogates, you need to use
         :data:`jsonyx.allow.SURROGATES` and ``ensure_ascii=True``.
 
     .. versionchanged:: 2.0
         Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
-        *quoted_keys*.
-        Merged *item_separator* and *key_separator* as *separators*.
+        *quoted_keys*. Merged *item_separator* and *key_separator* as
+        *separators*.
     """
     Encoder(
         allow=allow,
@@ -451,8 +449,8 @@ def dumps(
 
     .. versionchanged:: 2.0
         Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
-        *quoted_keys*.
-        Merged *item_separator* and *key_separator* as *separators*.
+        *quoted_keys*. Merged *item_separator* and *key_separator* as
+        *separators*.
     """
     return Encoder(
         allow=allow,

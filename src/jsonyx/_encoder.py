@@ -302,8 +302,8 @@ class Encoder:
 
     .. versionchanged:: 2.0
         Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
-        *quoted_keys*.
-        Merged *item_separator* and *key_separator* as *separators*.
+        *quoted_keys*. Merged *item_separator* and *key_separator* as
+        *separators*.
     """
 
     def __init__(
