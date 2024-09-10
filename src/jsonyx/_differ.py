@@ -5,6 +5,7 @@ from __future__ import annotations
 __all__: list[str] = ["make_patch"]
 
 import re
+from decimal import Decimal
 from itertools import starmap
 from math import isnan
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
@@ -41,7 +42,7 @@ def _eq(a: Any, b: Any) -> bool:
             result = False
         else:
             result = all(starmap(_eq, zip(a, b, strict=True)))  # type: ignore
-    elif isinstance(a, float) and isnan(a):
+    elif isinstance(a, (Decimal, float)) and isnan(a):
         result = isnan(b)
     else:
         result = a == b

@@ -244,9 +244,7 @@ def test_list_recursion(json: ModuleType) -> None:
         json.dumps(obj)
 
 
-@pytest.mark.parametrize(
-    "obj", [UserList([1, 2, 3]), range(1, 4), (1, 2, 3)],
-)
+@pytest.mark.parametrize("obj", [UserList([1, 2, 3]), range(1, 4), (1, 2, 3)])
 def test_seq_types(json: ModuleType, obj: Sequence[object]) -> None:
     """Test seq_types."""
     s: str = json.dumps(obj, end="", seq_types=(UserList, range))

@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 pyjson: ModuleType | None = import_fresh_module("jsonyx", blocked=["_jsonyx"])
 if cjson := import_fresh_module("jsonyx", fresh=["_jsonyx"]):
-    # JSONSyntaxError is cached inside the _jsonyx module
+    # JSONSyntaxError is not cached inside the _jsonyx module
     cjson.JSONSyntaxError = JSONSyntaxError  # type: ignore
 
 
