@@ -1,11 +1,10 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON dumps tests."""
-# TODO(Nice Zombies): test mapping_types
-# TODO(Nice Zombies): test seq_types
 from __future__ import annotations
 
 __all__: list[str] = []
 
+from collections import UserDict, UserList
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
@@ -16,6 +15,7 @@ from jsonyx.allow import NAN_AND_INFINITY, SURROGATES
 from jsonyx.test import get_json  # type: ignore # noqa: F401
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
     from types import ModuleType
 
 _CIRCULAR_DICT: dict[str, object] = {}
@@ -244,6 +244,15 @@ def test_list_recursion(json: ModuleType) -> None:
         json.dumps(obj)
 
 
+@pytest.mark.parametrize(
+    "obj", [UserList([1, 2, 3]), range(1, 4), (1, 2, 3)],
+)
+def test_seq_types(json: ModuleType, obj: Sequence[object]) -> None:
+    """Test seq_types."""
+    s: str = json.dumps(obj, end="", seq_types=(UserList, range, tuple))
+    assert s == "[1, 2, 3]"
+
+
 @pytest.mark.parametrize(("obj", "expected"), [
     # Empty dict
     ({}, "{}"),
@@ -268,7 +277,7 @@ def test_mapping(
     # Remaining characters
     "A\xb2", "A\u037a", "A\u0488",
 ])
-def test_quoted_keys(json: ModuleType, key: object) -> None:
+def test_quoted_keys(json: ModuleType, key: str) -> None:
     """Test quoted keys."""
     assert json.dumps({key: 0}, end="", quoted_keys=False) == f'{{"{key}": 0}}'
 
@@ -291,7 +300,7 @@ def test_quoted_keys(json: ModuleType, key: object) -> None:
     ("A\u2118", r"A\u2118"),
 ])
 def test_quoted_keys_ensure_ascii(
-    json: ModuleType, key: object, expected: str,
+    json: ModuleType, key: str, expected: str,
 ) -> None:
     """Test quoted keys with ensure_ascii."""
     assert json.dumps(
@@ -319,7 +328,7 @@ def test_quoted_keys_ensure_ascii(
 @pytest.mark.parametrize("ensure_ascii", [True, False])
 def test_quoted_ascii_keys(
     json: ModuleType,
-    key: object,
+    key: str,
     ensure_ascii: bool,  # noqa: FBT001
     expected: str,
 ) -> None:
@@ -336,7 +345,7 @@ def test_quoted_ascii_keys(
     # Remaining characters
     "A\u0300", "A\u2118",
 ])
-def test_unquoted_keys(json: ModuleType, key: object) -> None:
+def test_unquoted_keys(json: ModuleType, key: str) -> None:
     """Test unquoted keys."""
     assert json.dumps({key: 0}, end="", quoted_keys=False) == f"{{{key}: 0}}"
 
@@ -350,7 +359,7 @@ def test_unquoted_keys(json: ModuleType, key: object) -> None:
 ])
 @pytest.mark.parametrize("ensure_ascii", [True, False])
 def test_unquoted_ascii_keys(
-    json: ModuleType, key: object, ensure_ascii: bool,  # noqa: FBT001
+    json: ModuleType, key: str, ensure_ascii: bool,  # noqa: FBT001
 ) -> None:
     """Test unquoted ascii keys."""
     assert json.dumps(
@@ -420,6 +429,13 @@ def test_unserializable_value(json: ModuleType, obj: object) -> None:
     """Test unserializable value."""
     with pytest.raises(TypeError, match="is not JSON serializable"):
         json.dumps(obj)
+
+
+def test_mapping_types(json: ModuleType) -> None:
+    """Test mapping_types."""
+    assert json.dumps(
+        UserDict({"a": 1, "b": 2, "c": 3}), end="", mapping_types=UserDict,
+    ) == '{"a": 1, "b": 2, "c": 3}'
 
 
 @pytest.mark.parametrize("obj", [_CIRCULAR_DICT, _CIRCULAR_LIST])
