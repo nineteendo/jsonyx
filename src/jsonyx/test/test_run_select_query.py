@@ -12,7 +12,9 @@ import pytest
 from jsonyx import JSONSyntaxError, run_select_query
 
 if TYPE_CHECKING:
-    _Node = tuple[dict[Any, Any] | list[Any], int | slice | str]
+    _Target = dict[Any, Any] | list[Any]
+    _Key = int | slice | str
+    _Node = tuple[_Target, _Key]
 
 
 def _check_syntax_err(
@@ -30,24 +32,111 @@ def _check_syntax_err(
     assert exc.end_colno == end_colno
 
 
-@pytest.mark.parametrize(("nodes", "query", "expected"), [
-    # Root
-    (([], 0), "$", ([], 0)),
+# pylint: disable-next=R0903
+class _Slicer:
+    def __class_getitem__(cls, item: Any) -> Any:
+        return item
 
-    # Optional marker
+
+def test_root() -> None:
+    """Test root."""
+    assert run_select_query(([0], 0), "$") == [([0], 0)]
+
+
+@pytest.mark.parametrize(("nodes", "query", "expected"), [
+    # List
     (([], slice(0)), "$?", ([], slice(0))),
     (([], 0), "$?", []),
     (([0], 0), "$?", ([0], 0)),
+
+    # Dict
+    (({}, ""), "$?", []),
     (({"": 0}, ""), "$?", ({"": 0}, "")),
 ])  # type: ignore
-def test_query(
+def test_optional_marker(
     nodes: _Node | list[_Node], query: str, expected: _Node | list[_Node],
 ) -> None:
-    """Test query."""
+    """Test optional marker."""
     if isinstance(expected, tuple):
         expected = [expected]
 
     assert run_select_query(nodes, query, allow_slice=True) == expected
+
+
+@pytest.mark.parametrize("key", [
+    # First character
+    "A", "_", "\u16ee", "\u1885", "\u2118",
+
+    # Remaining characters
+    "A0", "AA", "A_", "A\u0300", "A\u2118",
+])
+def test_property(key: str) -> None:
+    """Test query."""
+    assert run_select_query(([{}], 0), f"$.{key}") == [({}, key)]
+
+
+@pytest.mark.parametrize(("query", "expected"), [
+    # Slice
+    ("$[:]", _Slicer[:]),
+    ("$[:-1]", _Slicer[:-1]),
+    ("$[:0]", _Slicer[:0]),
+    ("$[:1]", _Slicer[:1]),
+    ("$[:10]", _Slicer[:10]),
+    ("$[:11]", _Slicer[:11]),
+    ("$[-1:]", _Slicer[-1:]),
+    ("$[0:]", _Slicer[0:]),
+    ("$[1:]", _Slicer[1:]),
+    ("$[10:]", _Slicer[10:]),
+    ("$[11:]", _Slicer[11:]),
+
+    # Extended slice
+    ("$[::]", _Slicer[::]),
+    ("$[::-1]", _Slicer[::-1]),
+    ("$[::0]", _Slicer[::0]),
+    ("$[::1]", _Slicer[::1]),
+    ("$[::10]", _Slicer[::10]),
+    ("$[::11]", _Slicer[::11]),
+    ("$[:-1:]", _Slicer[:-1:]),
+    ("$[:0:]", _Slicer[:0:]),
+    ("$[:1:]", _Slicer[:1:]),
+    ("$[:10:]", _Slicer[:10:]),
+    ("$[:11:]", _Slicer[:11:]),
+    ("$[-1::]", _Slicer[-1::]),
+    ("$[0::]", _Slicer[0::]),
+    ("$[1::]", _Slicer[1::]),
+    ("$[10::]", _Slicer[10::]),
+    ("$[11::]", _Slicer[11::]),
+])
+def test_slice(query: str, expected: slice) -> None:
+    """Test slice."""
+    node: _Node = [[]], 0
+    assert run_select_query(node, query, allow_slice=True) == [([], expected)]
+
+
+@pytest.mark.parametrize("num", [
+    # Sign
+    "-1",
+
+    # Integer
+    "0", "1", "10", "11",
+])
+def test_index(num: str) -> None:
+    """Test index."""
+    assert run_select_query(([[]], 0), f"$[{num}]") == [([], int(num))]
+
+
+def test_key() -> None:
+    """Test key."""
+    assert run_select_query(([{}], 0), "$['']") == [({}, "")]
+
+
+@pytest.mark.parametrize(("obj", "query", "keys"), [
+    ([1, 2, 3], "$[@]", [0, 1, 2]),
+    ({"a": 1, "b": 2, "c": 3}, "$[@]", ["a", "b", "c"]),
+])
+def test_filter(obj: _Target, query: str, keys: list[_Key]) -> None:
+    """Test filter."""
+    assert run_select_query(([obj], 0), query) == [(obj, key) for key in keys]
 
 
 @pytest.mark.parametrize(("query", "msg", "colno"), [
