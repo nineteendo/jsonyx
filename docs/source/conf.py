@@ -61,10 +61,6 @@ copybutton_exclude: str = ".linenos, .gp, .go"
 
 issues_github_path: str = "nineteendo/jsonyx"
 
-# -- Options for sphinx_last_updated_by_git
-
-git_untracked_show_sourcelink: bool = True
-
 # -- Options for HTML output
 
 html_context: dict[str, Any] = {
