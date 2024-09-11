@@ -3,7 +3,7 @@
 # TODO(Nice Zombies): update version
 from __future__ import annotations
 
-from os import environ, getenv
+from os import environ
 from typing import Any
 
 # -- Project information
@@ -78,15 +78,19 @@ issues_github_path: str = "nineteendo/jsonyx"
 
 ogp_enable_meta_description: bool = True
 
+# -- Options for sphinx_last_updated_by_git
+
+git_untracked_show_sourcelink: bool = True
+
 # -- Options for HTML output
 
 html_baseurl: str = "http://jsonyx.readthedocs.io/"
 html_context: dict[str, Any] = {
-    "conf_py_path": "/docs/source/",
-    "display_github": True,
-    "github_user": "nineteendo",
-    "github_repo": "jsonyx",
-    "github_version": getenv("READTHEDOCS_GIT_IDENTIFIER", "main"),
+    # "conf_py_path": "/docs/source/",
+    # "display_github": True,
+    # "github_user": "nineteendo",
+    # "github_repo": "jsonyx",
+    # "github_version": getenv("READTHEDOCS_GIT_IDENTIFIER", "main"),
     "slug": "jsonyx",
 }
 if "READTHEDOCS" in environ:
@@ -97,9 +101,9 @@ html_static_path = ["_static"]
 html_theme: str = "furo"
 html_theme_options: dict[str, Any] = {
     "navigation_with_keys": True,
-    "source_repository": "https://github.com/nineteendo/jsonyx/",
-    "source_branch": getenv("READTHEDOCS_GIT_IDENTIFIER", "main"),
-    "source_directory": "docs/source/",
+    # "source_repository": "https://github.com/nineteendo/jsonyx/",
+    # "source_branch": getenv("READTHEDOCS_GIT_IDENTIFIER", "main"),
+    # "source_directory": "docs/source/",
 }
 
 # -- Options for EPUB output
