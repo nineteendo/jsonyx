@@ -28,6 +28,7 @@ extensions: list[str] = [
     "sphinx_inline_tabs",
     "sphinx_issues",
     "sphinx_last_updated_by_git",
+    "sphinx_sitemap",
     "sphinxext.opengraph",
 ]
 
