@@ -55,6 +55,10 @@ templates_path = ["_templates"]
 autodoc_preserve_defaults: bool = True
 autodoc_typehints: str = "none"
 
+# -- Options for sphinx_autodoc_typehints
+
+typehints_defaults: str | None = "comma"
+
 # -- Options for sphinx_copybutton
 
 copybutton_exclude: str = ".linenos, .gp, .go"

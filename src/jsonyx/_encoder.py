@@ -266,23 +266,20 @@ except ImportError:
 class Encoder:
     r"""A configurable JSON encoder.
 
-    :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.allow.NOTHING`
-    :param commas: separate items by commas when indented, defaults to ``True``
-    :param end: the string to append at the end, defaults to ``"\n"``
-    :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
-    :param indent: the number of spaces or string to indent with, defaults to
-                   ``None``
-    :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
+    :param allow: the allowed JSON deviations
+    :param commas: separate items by commas when indented
+    :param end: the string to append at the end
+    :param ensure_ascii: escape non-ASCII characters
+    :param indent: the number of spaces or string to indent with
+    :param indent_leaves: indent leaf objects and arrays
     :param mapping_types: an additional mapping type or tuple of additional
-                          mapping types, defaults to ``()``
-    :param quoted_keys: quote keys which are identifiers, defaults to ``True``
-    :param separators: the item and key separator, defaults to ``(", ", ": ")``
+                          mapping types
+    :param quoted_keys: quote keys which are identifiers
+    :param separators: the item and key separator
     :param seq_types: an additional sequence type or tuple of additional
-                      sequence types, defaults to ``()``
-    :param sort_keys: sort the keys of objects, defaults to ``False``
-    :param trailing_comma: add a trailing comma when indented, defaults to
-                           ``False``
+                      sequence types
+    :param sort_keys: sort the keys of objects
+    :param trailing_comma: add a trailing comma when indented
 
     .. note::
         The item separator is automatically stripped when indented.
@@ -374,7 +371,7 @@ class Encoder:
         r"""Serialize a Python object to an open JSON file.
 
         :param obj: a Python object
-        :param fp: an open JSON file, defaults to :data:`sys.stdout`
+        :param fp: an open JSON file
         :raises TypeError: for unserializable values
         :raises ValueError: for invalid values
 

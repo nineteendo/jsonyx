@@ -110,8 +110,7 @@ def read(
     """Deserialize a JSON file to a Python object.
 
     :param filename: the path to the JSON file
-    :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.allow.NOTHING`
+    :param allow: the allowed JSON deviations
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
     :raises JSONSyntaxError: if the JSON file is invalid
@@ -140,10 +139,8 @@ def load(
     """Deserialize an open JSON file to a Python object.
 
     :param fp: an open JSON file
-    :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.allow.NOTHING`
-    :param root: the path to the archive containing this JSON file, defaults to
-                 ``"."``
+    :param allow: the allowed JSON deviations
+    :param root: the path to the archive containing this JSON file
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
     :raises JSONSyntaxError: if the JSON file is invalid
@@ -168,9 +165,8 @@ def loads(
     """Deserialize a JSON string to a Python object.
 
     :param s: a JSON string
-    :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.allow.NOTHING`
-    :param filename: the path to the JSON file, defaults to ``"<string>"``
+    :param allow: the allowed JSON deviations
+    :param filename: the path to the JSON file
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
     :raises JSONSyntaxError: if the JSON string is invalid
@@ -209,23 +205,20 @@ def write(
 
     :param obj: a Python object
     :param filename: the path to the JSON file
-    :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.allow.NOTHING`
-    :param commas: separate items by commas when indented, defaults to ``True``
-    :param end: the string to append at the end, defaults to ``"\n"``
-    :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
-    :param indent: the number of spaces or string to indent with, defaults to
-                   ``None``
-    :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
+    :param allow: the allowed JSON deviations
+    :param commas: separate items by commas when indented
+    :param end: the string to append at the end
+    :param ensure_ascii: escape non-ASCII characters
+    :param indent: the number of spaces or string to indent with
+    :param indent_leaves: indent leaf objects and arrays
     :param mapping_types: an additional mapping type or tuple of additional
-                          mapping types, defaults to ``()``
-    :param quoted_keys: quote keys which are identifiers, defaults to ``True``
-    :param separators: the item and key separator, defaults to ``(", ", ": ")``
+                          mapping types
+    :param quoted_keys: quote keys which are identifiers
+    :param separators: the item and key separator
     :param seq_types: an additional sequence type or tuple of additional
-                      sequence types, defaults to ``()``
-    :param sort_keys: sort the keys of objects, defaults to ``False``
-    :param trailing_comma: add a trailing comma when indented, defaults to
-                           ``False``
+                      sequence types
+    :param sort_keys: sort the keys of objects
+    :param trailing_comma: add a trailing comma when indented
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
 
@@ -287,24 +280,21 @@ def dump(
     r"""Serialize a Python object to an open JSON file.
 
     :param obj: a Python object
-    :param fp: an open JSON file, defaults to :data:`sys.stdout`
-    :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.allow.NOTHING`
-    :param commas: separate items by commas when indented, defaults to ``True``
-    :param end: the string to append at the end, defaults to ``"\n"``
-    :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
-    :param indent: the number of spaces or string to indent with, defaults to
-                   ``None``
-    :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
+    :param fp: an open JSON file
+    :param allow: the allowed JSON deviations
+    :param commas: separate items by commas when indented
+    :param end: the string to append at the end
+    :param ensure_ascii: escape non-ASCII characters
+    :param indent: the number of spaces or string to indent with
+    :param indent_leaves: indent leaf objects and arrays
     :param mapping_types: an additional mapping type or tuple of additional
-                          mapping types, defaults to ``()``
-    :param quoted_keys: quote keys which are identifiers, defaults to ``True``
-    :param separators: the item and key separator, defaults to ``(", ", ": ")``
+                          mapping types
+    :param quoted_keys: quote keys which are identifiers
+    :param separators: the item and key separator
     :param seq_types: an additional sequence type or tuple of additional
-                      sequence types, defaults to ``()``
-    :param sort_keys: sort the keys of objects, defaults to ``False``
-    :param trailing_comma: add a trailing comma when indented, defaults to
-                           ``False``
+                      sequence types
+    :param sort_keys: sort the keys of objects
+    :param trailing_comma: add a trailing comma when indented
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
 
@@ -364,23 +354,20 @@ def dumps(
     r"""Serialize a Python object to a JSON string.
 
     :param obj: a Python object
-    :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.allow.NOTHING`
-    :param commas: separate items by commas when indented, defaults to ``True``
-    :param end: the string to append at the end, defaults to ``"\n"``
-    :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
-    :param indent: the number of spaces or string to indent with, defaults to
-                   ``None``
-    :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
+    :param allow: the allowed JSON deviations
+    :param commas: separate items by commas when indented
+    :param end: the string to append at the end
+    :param ensure_ascii: escape non-ASCII characters
+    :param indent: the number of spaces or string to indent with
+    :param indent_leaves: indent leaf objects and arrays
     :param mapping_types: an additional mapping type or tuple of additional
-                          mapping types, defaults to ``()``
-    :param quoted_keys: quote keys which are identifiers, defaults to ``True``
-    :param separators: the item and key separator, defaults to ``(", ", ": ")``
+                          mapping types
+    :param quoted_keys: quote keys which are identifiers
+    :param separators: the item and key separator
     :param seq_types: an additional sequence type or tuple of additional
-                      sequence types, defaults to ``()``
-    :param sort_keys: sort the keys of objects, defaults to ``False``
-    :param trailing_comma: add a trailing comma when indented, defaults to
-                           ``False``
+                      sequence types
+    :param sort_keys: sort the keys of objects
+    :param trailing_comma: add a trailing comma when indented
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
     :return: a JSON string
@@ -428,8 +415,7 @@ def apply_patch(
 
     :param obj: a Python object
     :param patch: a JSON patch
-    :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.allow.NOTHING`
+    :param allow: the allowed JSON deviations
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
     :raises AssertionError: if an assertion fails
@@ -466,11 +452,9 @@ def run_select_query(
 
     :param nodes: a node or a list of nodes
     :param query: a JSON select query
-    :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.allow.NOTHING`
-    :param allow_slice: allow slice, defaults to ``False``
-    :param mapping: map every input node to a single output node, defaults to
-                    ``False``
+    :param allow: the allowed JSON deviations
+    :param allow_slice: allow slice
+    :param mapping: map every input node to a single output node
     :param relative: query must start with ``"@"`` instead of ``"$"``, defaults
                      to ``False``
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
@@ -513,8 +497,7 @@ def run_filter_query(
 
     :param nodes: a node or a list of nodes
     :param query: a JSON filter query
-    :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.allow.NOTHING`
+    :param allow: the allowed JSON deviations
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
     :raises SyntaxError: if the filter query is invalid
@@ -540,8 +523,7 @@ def load_query_value(
     """Deserialize a JSON query value to a Python object.
 
     :param s: a JSON query value
-    :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.allow.NOTHING`
+    :param allow: the allowed JSON deviations
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
     :raises JSONSyntaxError: if the query value is invalid

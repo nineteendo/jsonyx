@@ -159,7 +159,7 @@ class JSONSyntaxError(SyntaxError):
     :param filename: the path to the JSON file
     :param doc: a JSON string
     :param start: the start position
-    :param end: the end position, defaults to ``0``
+    :param end: the end position
 
     >>> import jsonyx as json
     >>> raise json.JSONSyntaxError("Expecting value", "<string>", "[,]", 1)
@@ -628,8 +628,7 @@ except ImportError:
 class Decoder:
     """A configurable JSON decoder.
 
-    :param allow: the allowed JSON deviations, defaults to
-                  :data:`jsonyx.allow.NOTHING`
+    :param allow: the allowed JSON deviations
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
     """
@@ -695,7 +694,7 @@ class Decoder:
         """Deserialize a JSON string to a Python object.
 
         :param s: a JSON string
-        :param filename: the path to the JSON file, defaults to ``"<string>"``
+        :param filename: the path to the JSON file
         :raises JSONSyntaxError: if the JSON string is invalid
         :return: a Python object
 
