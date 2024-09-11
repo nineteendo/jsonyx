@@ -148,15 +148,10 @@ class JSONSyntaxError(SyntaxError):
     """Invalid JSON (query) syntax.
 
     :param msg: an error message
-    :type msg: str
     :param filename: the path to the JSON file
-    :type filename: str
     :param doc: a JSON string
-    :type doc: str
     :param start: the start position
-    :type start: int
     :param end: the end position, defaults to ``0``
-    :type end: int, optional
 
     >>> import jsonyx as json
     >>> raise json.JSONSyntaxError("Expecting value", "<string>", "[,]", 1)
@@ -232,9 +227,7 @@ def detect_encoding(b: bytearray | bytes) -> str:
     r"""Detect the JSON encoding.
 
     :param b: a JSON string
-    :type b: bytearray | bytes
     :return: the detected encoding
-    :rtype: str
 
     >>> import jsonyx as json
     >>> b = b'\x00"\x00f\x00o\x00o\x00"'
@@ -629,10 +622,8 @@ class Decoder:
 
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
-    :type allow: Container[str], optional
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
-    :type use_decimal: bool, optional
     """
 
     def __init__(
@@ -652,10 +643,8 @@ class Decoder:
         """Deserialize a JSON file to a Python object.
 
         :param filename: the path to the JSON file
-        :type filename: StrPath
         :raises JSONSyntaxError: if the JSON file is invalid
         :return: a Python object
-        :rtype: Any
 
         >>> import jsonyx as json
         >>> from pathlib import Path
@@ -675,13 +664,10 @@ class Decoder:
         """Deserialize an open JSON file to a Python object.
 
         :param fp: an open JSON file
-        :type fp: SupportsRead[bytes | str]
         :param root: the path to the archive containing this JSON file,
                      defaults to ``"."``
-        :type root: StrPath, optional
         :raises JSONSyntaxError: if the JSON file is invalid
         :return: a Python object
-        :rtype: Any
 
         >>> import jsonyx as json
         >>> from io import StringIO
@@ -701,12 +687,9 @@ class Decoder:
         """Deserialize a JSON string to a Python object.
 
         :param s: a JSON string
-        :type s: bytearray | bytes | str
         :param filename: the path to the JSON file, defaults to ``"<string>"``
-        :type filename: StrPath, optional
         :raises JSONSyntaxError: if the JSON string is invalid
         :return: a Python object
-        :rtype: Any
 
         >>> import jsonyx as json
         >>> json.Decoder().loads('{"foo": ["bar", null, 1.0, 2]}')

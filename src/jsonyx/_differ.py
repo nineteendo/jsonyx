@@ -129,11 +129,8 @@ def make_patch(old: Any, new: Any) -> list[dict[str, Any]]:
     """Make a JSON patch from two Python objects.
 
     :param old: the old Python object
-    :type old: Any
     :param new: the new Python object
-    :type new: Any
     :return: the JSON patch
-    :rtype: list[dict[str, Any]]
 
     >>> import jsonyx as json
     >>> json.make_patch([1, 2, 3], [1, 3])

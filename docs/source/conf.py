@@ -19,18 +19,19 @@ version: str = "latest"
 # -- General configuration
 
 extensions: list[str] = [
-    "sphinx.ext.duration",
-    "sphinx.ext.doctest",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
+    "sphinx.ext.doctest",
+    "sphinx.ext.duration",
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
+    "sphinxext.opengraph",
+    "sphinx_autodoc_annotation",
     "sphinx_copybutton",
     "sphinx_inline_tabs",
     "sphinx_issues",
     "sphinx_last_updated_by_git",
     "sphinx_sitemap",
-    "sphinxext.opengraph",
 ]
 
 intersphinx_mapping: dict[str, tuple[str, None]] = {

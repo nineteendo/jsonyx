@@ -163,10 +163,8 @@ class Manipulator:
 
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
-    :type allow: Container[str], optional
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
-    :type use_decimal: bool, optional
 
     .. versionadded:: 2.0
     """
@@ -578,15 +576,12 @@ class Manipulator:
         """Apply a JSON patch to a Python object.
 
         :param obj: a Python object
-        :type obj: Any
         :param patch: a JSON patch
-        :type patch: dict[str, Any] | list[dict[str, Any]]
         :raises AssertionError: if an assertion fails
         :raises SyntaxError: if a query is invalid
         :raises TypeError: if a value has the wrong type
         :raises ValueError: if a value is invalid
         :return: the patched Python object
-        :rtype: Any
 
         >>> import jsonyx as json
         >>> json.Manipulator().apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
@@ -614,21 +609,15 @@ class Manipulator:
         """Run a JSON select query on a node or a list of nodes.
 
         :param nodes: a node or a list of nodes
-        :type nodes: _Node | list[_Node]
         :param query: a JSON select query
-        :type query: str
         :param allow_slice: allow slice, defaults to ``False``
-        :type allow_slice: bool, optional
         :param mapping: map every input node to a single output node, defaults
                         to ``False``
-        :type mapping: bool, optional
         :param relative: query must start with ``"@"`` instead of ``"$"``,
                          defaults to ``False``
-        :type relative: bool, optional
         :raises SyntaxError: if the select query is invalid
         :raises ValueError: if a value is invalid
         :return: the selected list of nodes
-        :rtype: list[_Node]
 
         >>> import jsonyx as json
         >>> root = [[1, 2, 3, 4, 5, 6]]
@@ -665,12 +654,9 @@ class Manipulator:
         """Run a JSON filter query on a node or a list of nodes.
 
         :param nodes: a node or a list of nodes
-        :type nodes: _Node | list[_Node]
         :param query: a JSON filter query
-        :type query: str
         :raises SyntaxError: if the filter query is invalid
         :return: the filtered list of nodes
-        :rtype: list[_Node]
 
         >>> import jsonyx as json
         >>> node = [None], 0
@@ -689,10 +675,8 @@ class Manipulator:
         """Deserialize a JSON query value to a Python object.
 
         :param s: a JSON query value
-        :type s: str
         :raises SyntaxError: if the query value is invalid
         :return: a Python object
-        :rtype: Any
 
         >>> import jsonyx as json
         >>> json.Manipulator().load_query_value("'~'foo'")

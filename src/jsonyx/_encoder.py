@@ -260,33 +260,21 @@ class Encoder:
 
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
-    :type allow: Container[str], optional
     :param commas: separate items by commas when indented, defaults to ``True``
-    :type commas: bool, optional
     :param end: the string to append at the end, defaults to ``"\n"``
-    :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
-    :type ensure_ascii: bool, optional
     :param indent: the number of spaces or string to indent with, defaults to
                    ``None``
-    :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
-    :type indent_leaves: bool, optional
     :param mapping_types: an additional mapping type or tuple of additional
                           mapping types, defaults to ``()``
-    :type mapping_types: type | tuple[type, ...], optional
     :param quoted_keys: quote keys which are identifiers, defaults to ``True``
-    :type quoted_keys: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
-    :type separators: tuple[str, str], optional
     :param seq_types: an additional sequence type or tuple of additional
                       sequence types, defaults to ``()``
-    :type seq_types: type | tuple[type, ...], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
-    :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to
                            ``False``
-    :type trailing_comma: bool, optional
 
     .. note::
         The item separator is automatically stripped when indented.
@@ -358,9 +346,7 @@ class Encoder:
         r"""Serialize a Python object to a JSON file.
 
         :param obj: a Python object
-        :type obj: object
         :param filename: the path to the JSON file
-        :type filename: StrPath
         :raises TypeError: for unserializable values
         :raises ValueError: for invalid values
 
@@ -380,9 +366,7 @@ class Encoder:
         r"""Serialize a Python object to an open JSON file.
 
         :param obj: a Python object
-        :type obj: object
         :param fp: an open JSON file, defaults to :data:`sys.stdout`
-        :type fp: SupportsWrite[str], optional
         :raises TypeError: for unserializable values
         :raises ValueError: for invalid values
 
@@ -402,11 +386,9 @@ class Encoder:
         r"""Serialize a Python object to a JSON string.
 
         :param obj: a Python object
-        :type obj: object
         :raises TypeError: for unserializable values
         :raises ValueError: for invalid values
         :return: a JSON string
-        :rtype: str
 
         >>> import jsonyx as json
         >>> json.Encoder().dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])

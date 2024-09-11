@@ -49,9 +49,7 @@ def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
     """Format a JSON syntax error.
 
     :param exc: a JSON syntax error
-    :type exc: JSONSyntaxError
     :return: a list of strings, each ending in a newline
-    :rtype: list[str]
 
     >>> import jsonyx as json
     >>> try:
@@ -99,16 +97,12 @@ def read(
     """Deserialize a JSON file to a Python object.
 
     :param filename: the path to the JSON file
-    :type filename: StrPath
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
-    :type allow: Container[str], optional
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
-    :type use_decimal: bool, optional
     :raises JSONSyntaxError: if the JSON file is invalid
     :return: a Python object.
-    :rtype: Any
 
     >>> import jsonyx as json
     >>> from pathlib import Path
@@ -133,19 +127,14 @@ def load(
     """Deserialize an open JSON file to a Python object.
 
     :param fp: an open JSON file
-    :type fp: SupportsRead[bytes | str]
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
-    :type allow: Container[str], optional
     :param root: the path to the archive containing this JSON file, defaults to
                  ``"."``
-    :type root: StrPath, optional
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
-    :type use_decimal: bool, optional
     :raises JSONSyntaxError: if the JSON file is invalid
     :return: a Python object
-    :rtype: Any
 
     >>> import jsonyx as json
     >>> from io import StringIO
@@ -166,18 +155,13 @@ def loads(
     """Deserialize a JSON string to a Python object.
 
     :param s: a JSON string
-    :type s: bytearray | bytes | str
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
-    :type allow: Container[str], optional
     :param filename: the path to the JSON file, defaults to ``"<string>"``
-    :type filename: StrPath, optional
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
-    :type use_decimal: bool, optional
     :raises JSONSyntaxError: if the JSON string is invalid
     :return: a Python object
-    :rtype: Any
 
     >>> import jsonyx as json
     >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
@@ -211,38 +195,24 @@ def write(
     r"""Serialize a Python object to a JSON file.
 
     :param obj: a Python object
-    :type obj: object
     :param filename: the path to the JSON file
-    :type filename: StrPath
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
-    :type allow: Container[str], optional
     :param commas: separate items by commas when indented, defaults to ``True``
-    :type commas: bool, optional
     :param end: the string to append at the end, defaults to ``"\n"``
-    :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
-    :type ensure_ascii: bool, optional
     :param indent: the number of spaces or string to indent with, defaults to
                    ``None``
-    :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
-    :type indent_leaves: bool, optional
     :param mapping_types: an additional mapping type or tuple of additional
                           mapping types, defaults to ``()``
-    :type mapping_types: type | tuple[type, ...], optional
     :param quoted_keys: quote keys which are identifiers, defaults to ``True``
-    :type quoted_keys: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
-    :type separators: tuple[str, str], optional
     :param seq_types: an additional sequence type or tuple of additional
                       sequence types, defaults to ``()``
-    :type seq_types: type | tuple[type, ...], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
-    :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to
                            ``False``
-    :type trailing_comma: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
 
@@ -304,38 +274,24 @@ def dump(
     r"""Serialize a Python object to an open JSON file.
 
     :param obj: a Python object
-    :type obj: object
     :param fp: an open JSON file, defaults to :data:`sys.stdout`
-    :type fp: SupportsWrite[str], optional
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
-    :type allow: Container[str], optional
     :param commas: separate items by commas when indented, defaults to ``True``
-    :type commas: bool, optional
     :param end: the string to append at the end, defaults to ``"\n"``
-    :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
-    :type ensure_ascii: bool, optional
     :param indent: the number of spaces or string to indent with, defaults to
                    ``None``
-    :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
-    :type indent_leaves: bool, optional
     :param mapping_types: an additional mapping type or tuple of additional
                           mapping types, defaults to ``()``
-    :type mapping_types: type | tuple[type, ...], optional
     :param quoted_keys: quote keys which are identifiers, defaults to ``True``
-    :type quoted_keys: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
-    :type separators: tuple[str, str], optional
     :param seq_types: an additional sequence type or tuple of additional
                       sequence types, defaults to ``()``
-    :type seq_types: type | tuple[type, ...], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
-    :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to
                            ``False``
-    :type trailing_comma: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
 
@@ -395,40 +351,26 @@ def dumps(
     r"""Serialize a Python object to a JSON string.
 
     :param obj: a Python object
-    :type obj: object
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
-    :type allow: Container[str], optional
     :param commas: separate items by commas when indented, defaults to ``True``
-    :type commas: bool, optional
     :param end: the string to append at the end, defaults to ``"\n"``
-    :type end: str, optional
     :param ensure_ascii: escape non-ASCII characters, defaults to ``False``
-    :type ensure_ascii: bool, optional
     :param indent: the number of spaces or string to indent with, defaults to
                    ``None``
-    :type indent: int | str | None, optional
     :param indent_leaves: indent leaf objects and arrays, defaults to ``False``
-    :type indent_leaves: bool, optional
     :param mapping_types: an additional mapping type or tuple of additional
                           mapping types, defaults to ``()``
-    :type mapping_types: type | tuple[type, ...], optional
     :param quoted_keys: quote keys which are identifiers, defaults to ``True``
-    :type quoted_keys: bool, optional
     :param separators: the item and key separator, defaults to ``(", ", ": ")``
-    :type separators: tuple[str, str], optional
     :param seq_types: an additional sequence type or tuple of additional
                       sequence types, defaults to ``()``
-    :type seq_types: type | tuple[type, ...], optional
     :param sort_keys: sort the keys of objects, defaults to ``False``
-    :type sort_keys: bool, optional
     :param trailing_comma: add a trailing comma when indented, defaults to
                            ``False``
-    :type trailing_comma: bool, optional
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
     :return: a JSON string
-    :rtype: str
 
     >>> import jsonyx as json
     >>> json.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
@@ -472,21 +414,16 @@ def apply_patch(
     """Apply a JSON patch to a Python object.
 
     :param obj: a Python object
-    :type obj: Any
     :param patch: a JSON patch
-    :type patch: dict[str, Any] | list[dict[str, Any]]
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
-    :type allow: Container[str], optional
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
-    :type use_decimal: bool, optional
     :raises AssertionError: if an assertion fails
     :raises SyntaxError: if a query is invalid
     :raises TypeError: if a value has the wrong type
     :raises ValueError: if a value is invalid
     :return: the patched Python object
-    :rtype: Any
 
     >>> import jsonyx as json
     >>> json.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
@@ -515,27 +452,19 @@ def run_select_query(
     """Run a JSON select query on a node or a list of nodes.
 
     :param nodes: a node or a list of nodes
-    :type nodes: _Node | list[_Node]
     :param query: a JSON select query
-    :type query: str
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
-    :type allow: Container[str], optional
     :param allow_slice: allow slice, defaults to ``False``
-    :type allow_slice: bool, optional
     :param mapping: map every input node to a single output node, defaults to
                     ``False``
-    :type mapping: bool, optional
     :param relative: query must start with ``"@"`` instead of ``"$"``, defaults
                      to ``False``
-    :type relative: bool, optional
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
-    :type use_decimal: bool, optional
     :raises SyntaxError: if the select query is invalid
     :raises ValueError: if a value is invalid
     :return: the selected list of nodes
-    :rtype: list[_Node]
 
     >>> import jsonyx as json
     >>> root = [[1, 2, 3, 4, 5, 6]]
@@ -570,18 +499,13 @@ def run_filter_query(
     """Run a JSON filter query on a node or a list of nodes.
 
     :param nodes: a node or a list of nodes
-    :type nodes: _Node | list[_Node]
     :param query: a JSON filter query
-    :type query: str
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
-    :type allow: Container[str], optional
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
-    :type use_decimal: bool, optional
     :raises SyntaxError: if the filter query is invalid
     :return: the filtered list of nodes
-    :rtype: list[_Node]
 
     >>> import jsonyx as json
     >>> node = [None], 0
@@ -603,16 +527,12 @@ def load_query_value(
     """Deserialize a JSON query value to a Python object.
 
     :param s: a JSON query value
-    :type s: str
     :param allow: the allowed JSON deviations, defaults to
                   :data:`jsonyx.allow.NOTHING`
-    :type allow: Container[str], optional
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
                         defaults to ``False``
-    :type use_decimal: bool, optional
     :raises JSONSyntaxError: if the query value is invalid
     :return: a Python object
-    :rtype: Any
 
     >>> import jsonyx as json
     >>> json.load_query_value("'~'foo'")
