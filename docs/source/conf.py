@@ -27,6 +27,7 @@ extensions: list[str] = [
     "sphinx_copybutton",
     "sphinx_inline_tabs",
     "sphinx_issues",
+    "sphinx_last_updated_by_git",
 ]
 
 intersphinx_mapping: dict[str, tuple[str, None]] = {
