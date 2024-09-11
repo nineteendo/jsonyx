@@ -32,9 +32,8 @@ def test_infinity(s: str, use_decimal: bool) -> None:  # noqa: FBT001
         s, allow=NAN_AND_INFINITY, use_decimal=use_decimal,
     )
     expected_type: type[Decimal | float] = Decimal if use_decimal else float
-    expected: Decimal | float = expected_type(s)
     assert isinstance(obj, expected_type)
-    assert obj == expected
+    assert obj == expected_type(s)
 
 
 @pytest.mark.parametrize("s", ["Infinity", "-Infinity"])

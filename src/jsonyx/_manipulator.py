@@ -66,14 +66,20 @@ def _check_query_key(
     target: _Target, key: _Key, *, allow_slice: bool = False,
 ) -> None:
     if isinstance(target, dict) and not isinstance(key, str):
-        raise TypeError
+        msg: str = f"Dict key must be str, not {type(target).__name__}"
+        raise TypeError(msg)
 
     if isinstance(target, list):
-        if allow_slice and isinstance(key, str):
-            raise TypeError
-
-        if not (allow_slice or isinstance(key, int)):
-            raise TypeError
+        if allow_slice:
+            if isinstance(key, str):
+                msg = (
+                    "List index must be int or slice, not "
+                    f"{type(target).__name__}"
+                )
+                raise TypeError(msg)
+        elif not isinstance(key, int):
+            msg = f"List index must be int, not {type(target).__name__}"
+            raise TypeError(msg)
 
 
 def _get_query_targets(node: _Node, *, mapping: bool = False) -> list[_Target]:
@@ -85,7 +91,8 @@ def _get_query_targets(node: _Node, *, mapping: bool = False) -> list[_Target]:
         targets = [target[key]]  # type: ignore
 
     if not all(isinstance(target, (dict, list)) for target in targets):
-        raise TypeError
+        msg: str = f"Target must be dict or list, not {type(target).__name__}"
+        raise TypeError(msg)
 
     return targets
 

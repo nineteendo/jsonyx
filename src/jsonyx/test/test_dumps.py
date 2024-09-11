@@ -367,10 +367,10 @@ def test_unquoted_ascii_keys(
 
 @pytest.mark.parametrize("key", [
     # JSON values
-    0, Decimal(0), 0.0, Decimal("0.0"), True, False, None,
+    0, Decimal(0), 0.0, Decimal("0.0"), (), True, False, None,
 
     # No JSON values
-    b"", 0j, (), frozenset(), memoryview(b""), object(),
+    b"", 0j, frozenset(), memoryview(b""), object(),
 ])  # type: ignore
 def test_unserializable_key(json: ModuleType, key: object) -> None:
     """Test unserializable key."""

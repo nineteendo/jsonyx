@@ -24,11 +24,6 @@ class _Slicer:
         return item
 
 
-def test_root() -> None:
-    """Test root."""
-    assert run_select_query(([0], 0), "$") == [([0], 0)]
-
-
 @pytest.mark.parametrize(("node", "query", "expected"), [
     # List
     (([], slice(0)), "$?", ([], slice(0))),
@@ -59,6 +54,21 @@ def test_optional_marker(
 def test_property(key: str) -> None:
     """Test query."""
     assert run_select_query(([{}], 0), f"$.{key}") == [({}, key)]
+
+
+@pytest.mark.parametrize("key", [
+    # First character
+    "\x00", " ", "!", "$", "0", "\xb2", "\u0300", "\u037a", "\u0488",
+
+    # Remaining characters
+    "A\xb2", "A\u037a", "A\u0488",
+])
+def test_invalid_property(key: str) -> None:
+    """Test invalid property."""
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        run_select_query([], f"$.{key}")
+
+    check_syntax_err(exc_info, "Expecting property", 3)
 
 
 @pytest.mark.parametrize(("query", "expected"), [
@@ -111,11 +121,6 @@ def test_index(num: str) -> None:
     assert run_select_query(([[]], 0), f"$[{num}]") == [([], int(num))]
 
 
-def test_key() -> None:
-    """Test key."""
-    assert run_select_query(([{}], 0), "$['']") == [({}, "")]
-
-
 @pytest.mark.parametrize(("obj", "query", "keys"), [
     ([1, 2, 3], "$[@]", [0, 1, 2]),
     ({"a": 1, "b": 2, "c": 3}, "$[@]", ["a", "b", "c"]),
@@ -123,6 +128,21 @@ def test_key() -> None:
 def test_filter(obj: _Target, query: str, keys: list[_Key]) -> None:
     """Test filter."""
     assert run_select_query(([obj], 0), query) == [(obj, key) for key in keys]
+
+
+@pytest.mark.parametrize(("obj", "query", "expected"), [
+    # Root
+    (0, "$", ([0], 0)),
+
+    # Key
+    ({}, "$['']", ({}, "")),
+
+    # Multiple levels
+    ([[[0]]], "$[0][0][0]", ([0], 0)),
+])  # type: ignore
+def test_query(obj: _Target, query: str, expected: _Node) -> None:
+    """Test root."""
+    assert run_select_query(([obj], 0), query) == [expected]
 
 
 @pytest.mark.parametrize(("query", "msg", "colno"), [
@@ -137,21 +157,6 @@ def test_invalid_query(query: str, msg: str, colno: int) -> None:
         run_select_query([], query)
 
     check_syntax_err(exc_info, msg, colno)
-
-
-@pytest.mark.parametrize("key", [
-    # First character
-    "\x00", " ", "!", "$", "0", "\xb2", "\u0300", "\u037a", "\u0488",
-
-    # Remaining characters
-    "A\xb2", "A\u037a", "A\u0488",
-])
-def test_invalid_property(key: str) -> None:
-    """Test invalid property."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query([], f"$.{key}")
-
-    check_syntax_err(exc_info, "Expecting property", 3)
 
 
 @pytest.mark.parametrize(("query", "msg", "colno", "end_colno"), [
