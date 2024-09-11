@@ -69,6 +69,7 @@ ogp_enable_meta_description: bool = True
 
 # -- Options for HTML output
 
+html_baseurl: str = "http://jsonyx.readthedocs.io/"
 html_context: dict[str, Any] = {
     "conf_py_path": "/docs/source/",
     "display_github": True,
