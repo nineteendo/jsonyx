@@ -1,8 +1,8 @@
 Changelog
 =========
 
-v2.0.0 (unreleased)
--------------------
+jsonyx 2.0.0 (unreleased)
+-------------------------
 
 - Added the ``jsonyx`` command line utility
 - Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
@@ -27,14 +27,14 @@ v2.0.0 (unreleased)
   :func:`jsonyx.write`
 - Removed :mod:`!jsonyx.tool`
 
-`v1.2.1 <https://pypi.org/project/jsonyx/1.2.1>`_
--------------------------------------------------
+jsonyx 1.2.1 (Aug 3, 2024)
+--------------------------
 
 - First conda release
 - Fixed :issue:`2`: Middle of error context is truncated incorrectly
 
-`v1.2.0 <https://pypi.org/project/jsonyx/1.2.0>`_
--------------------------------------------------
+jsonyx 1.2.0 (Aug 3, 2024)
+--------------------------
 
 - Added :option:`output_filename`
 - Added :option:`-a` as an alias to :option:`--ensure-ascii`
@@ -48,7 +48,7 @@ v2.0.0 (unreleased)
 - Added :option:`-T` as an alias to :option:`--indent-tab`
 - Renamed :option:`!filename` to :option:`input_filename`
 
-`v1.1.0 <https://pypi.org/project/jsonyx/1.1.0>`_
--------------------------------------------------
+jsonyx 1.1.0 (Aug 3, 2024)
+--------------------------
 
 - Allowed ``python -m jsonyx`` instead of ``python -m jsonyx.tool``
