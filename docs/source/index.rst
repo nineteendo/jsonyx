@@ -92,6 +92,7 @@ to :ref:`install <installation>` the project.
     how-to
     api/index
     cli
+    genindex
 
 .. toctree::
     :caption: About the Project
