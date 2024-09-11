@@ -1,3 +1,6 @@
 button.copybtn {
     opacity: 1;
 }
+sphinx_autodoc_typehints-type {
+    font-style: italic;
+}
