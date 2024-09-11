@@ -62,6 +62,10 @@ copybutton_exclude: str = ".linenos, .gp, .go"
 
 issues_github_path: str = "nineteendo/jsonyx"
 
+# -- Options for sphinxext.opengraph
+
+ogp_enable_meta_description: bool = True
+
 # -- Options for HTML output
 
 html_context: dict[str, Any] = {
