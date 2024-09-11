@@ -162,8 +162,7 @@ class Manipulator:
     """A configurable JSON manipulator.
 
     :param allow: the allowed JSON deviations
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
-                        defaults to ``False``
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
 
     .. versionadded:: 2.0
     """
@@ -610,10 +609,8 @@ class Manipulator:
         :param nodes: a node or a list of nodes
         :param query: a JSON select query
         :param allow_slice: allow slice
-        :param mapping: map every input node to a single output node, defaults
-                        to ``False``
-        :param relative: query must start with ``"@"`` instead of ``"$"``,
-                         defaults to ``False``
+        :param mapping: map every input node to a single output node
+        :param relative: query must start with ``"@"`` instead of ``"$"``
         :raises SyntaxError: if the select query is invalid
         :raises ValueError: if a value is invalid
         :return: the selected list of nodes

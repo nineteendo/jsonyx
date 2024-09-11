@@ -111,8 +111,7 @@ def read(
 
     :param filename: the path to the JSON file
     :param allow: the allowed JSON deviations
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
-                        defaults to ``False``
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON file is invalid
     :return: a Python object.
 
@@ -141,8 +140,7 @@ def load(
     :param fp: an open JSON file
     :param allow: the allowed JSON deviations
     :param root: the path to the archive containing this JSON file
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
-                        defaults to ``False``
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON file is invalid
     :return: a Python object
 
@@ -167,8 +165,7 @@ def loads(
     :param s: a JSON string
     :param allow: the allowed JSON deviations
     :param filename: the path to the JSON file
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
-                        defaults to ``False``
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON string is invalid
     :return: a Python object
 
@@ -416,8 +413,7 @@ def apply_patch(
     :param obj: a Python object
     :param patch: a JSON patch
     :param allow: the allowed JSON deviations
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
-                        defaults to ``False``
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises AssertionError: if an assertion fails
     :raises SyntaxError: if a query is invalid
     :raises TypeError: if a value has the wrong type
@@ -455,10 +451,8 @@ def run_select_query(
     :param allow: the allowed JSON deviations
     :param allow_slice: allow slice
     :param mapping: map every input node to a single output node
-    :param relative: query must start with ``"@"`` instead of ``"$"``, defaults
-                     to ``False``
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
-                        defaults to ``False``
+    :param relative: query must start with ``"@"`` instead of ``"$"``
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises SyntaxError: if the select query is invalid
     :raises ValueError: if a value is invalid
     :return: the selected list of nodes
@@ -498,8 +492,7 @@ def run_filter_query(
     :param nodes: a node or a list of nodes
     :param query: a JSON filter query
     :param allow: the allowed JSON deviations
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
-                        defaults to ``False``
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises SyntaxError: if the filter query is invalid
     :return: the filtered list of nodes
 
@@ -524,8 +517,7 @@ def load_query_value(
 
     :param s: a JSON query value
     :param allow: the allowed JSON deviations
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
-                        defaults to ``False``
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the query value is invalid
     :return: a Python object
 

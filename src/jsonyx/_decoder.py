@@ -629,8 +629,7 @@ class Decoder:
     """A configurable JSON decoder.
 
     :param allow: the allowed JSON deviations
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`,
-                        defaults to ``False``
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     """
 
     def __init__(
@@ -671,8 +670,7 @@ class Decoder:
         """Deserialize an open JSON file to a Python object.
 
         :param fp: an open JSON file
-        :param root: the path to the archive containing this JSON file,
-                     defaults to ``"."``
+        :param root: the path to the archive containing this JSON file
         :raises JSONSyntaxError: if the JSON file is invalid
         :return: a Python object
 
