@@ -26,7 +26,7 @@ extensions: list[str] = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
     "sphinxext.opengraph",
-    "sphinx_autodoc_annotation",
+    "sphinx_autodoc_typehints",
     "sphinx_copybutton",
     "sphinx_inline_tabs",
     "sphinx_issues",
