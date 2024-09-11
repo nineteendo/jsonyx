@@ -11,7 +11,7 @@ from math import inf, isfinite
 from pathlib import Path
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from sys import stdout
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any
 
 from jsonyx.allow import NOTHING
 
@@ -19,11 +19,6 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Container, ItemsView
 
     from _typeshed import StrPath, SupportsWrite
-
-    _AllowList = Container[Literal[
-        "comments", "duplicate_keys", "missing_commas", "nan_and_infinity",
-        "surrogates", "trailing_comma",
-    ] | str]
 
 
 _ESCAPE_DCT: dict[str, str] = {chr(i): f"\\u{i:04x}" for i in range(0x20)} | {
@@ -309,7 +304,7 @@ class Encoder:
     def __init__(
         self,
         *,
-        allow: _AllowList = NOTHING,
+        allow: Container[str] = NOTHING,
         commas: bool = True,
         end: str = "\n",
         ensure_ascii: bool = False,

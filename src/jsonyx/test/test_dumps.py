@@ -419,6 +419,13 @@ def test_dict_recursion(json: ModuleType) -> None:
         json.dumps(obj)
 
 
+def test_mapping_types(json: ModuleType) -> None:
+    """Test mapping_types."""
+    assert json.dumps(
+        UserDict({"a": 1, "b": 2, "c": 3}), end="", mapping_types=UserDict,
+    ) == '{"a": 1, "b": 2, "c": 3}'
+
+
 @pytest.mark.parametrize("obj", [
     b"", 0j, bytearray(), frozenset(), memoryview(b""), object(), range(0),
     set(), slice(0),
@@ -427,13 +434,6 @@ def test_unserializable_value(json: ModuleType, obj: object) -> None:
     """Test unserializable value."""
     with pytest.raises(TypeError, match="is not JSON serializable"):
         json.dumps(obj)
-
-
-def test_mapping_types(json: ModuleType) -> None:
-    """Test mapping_types."""
-    assert json.dumps(
-        UserDict({"a": 1, "b": 2, "c": 3}), end="", mapping_types=UserDict,
-    ) == '{"a": 1, "b": 2, "c": 3}'
 
 
 @pytest.mark.parametrize("obj", [_CIRCULAR_DICT, _CIRCULAR_LIST])

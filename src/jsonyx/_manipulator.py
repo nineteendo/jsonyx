@@ -14,7 +14,7 @@ from decimal import Decimal, InvalidOperation
 from math import isinf
 from operator import eq, ge, gt, le, lt, ne
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any
 
 from jsonyx import JSONSyntaxError
 from jsonyx.allow import NOTHING
@@ -22,10 +22,6 @@ from jsonyx.allow import NOTHING
 if TYPE_CHECKING:
     from collections.abc import Callable, Container
 
-    _AllowList = Container[Literal[
-        "comments", "duplicate_keys", "missing_commas", "nan_and_infinity",
-        "surrogates", "trailing_comma",
-    ] | str]
     _Target = dict[Any, Any] | list[Any]
     _Key = int | slice | str
     _Node = tuple[_Target, _Key]
@@ -169,7 +165,7 @@ class Manipulator:
     """
 
     def __init__(
-        self, *, allow: _AllowList = NOTHING, use_decimal: bool = False,
+        self, *, allow: Container[str] = NOTHING, use_decimal: bool = False,
     ) -> None:
         """Create a new JSON manipulator."""
         self._allow_nan_and_infinity: bool = "nan_and_infinity" in allow

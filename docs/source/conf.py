@@ -37,7 +37,6 @@ intersphinx_mapping: dict[str, tuple[str, None]] = {
 intersphinx_disabled_domains: list[str] = ["std"]
 nitpicky: bool = True
 nitpick_ignore: list[tuple[str, str]] = [
-    ("py:class", "_AllowList"),
     ("py:class", "_Node"),
 
     ("py:class", "StrPath"),
