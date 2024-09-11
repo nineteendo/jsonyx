@@ -29,10 +29,7 @@ or `mamba <https://mamba.readthedocs.io>`_:
 
 Check if you have installed the correct version:
 
-.. code-block:: console
-
-    $ jsonyx --version
-    jsonyx 2.0.0
+.. command-output:: jsonyx --version
 
 Quick start
 -----------
