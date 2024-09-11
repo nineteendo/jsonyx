@@ -43,9 +43,10 @@ intersphinx_disabled_domains: list[str] = ["std"]
 nitpicky: bool = True
 nitpick_ignore: list[tuple[str, str]] = [
     ("py:class", "_Node"),
-    ("py:class", "_StrPath"),
-    ("py:class", "_SupportsRead"),
-    ("py:class", "_SupportsWrite"),
+    ("py:class", "jsonyx._decoder._SupportsRead"),
+    ("py:class", "jsonyx._encoder._SupportsWrite"),
+    ("py:class", "jsonyx._SupportsRead"),
+    ("py:class", "jsonyx._SupportsWrite"),
 ]
 templates_path = ["_templates"]
 
