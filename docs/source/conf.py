@@ -28,7 +28,7 @@ extensions: list[str] = [
     "sphinx_inline_tabs",
     "sphinx_issues",
     "sphinx_last_updated_by_git",
-    "sphinxext-opengraph",
+    "sphinxext.opengraph",
 ]
 
 intersphinx_mapping: dict[str, tuple[str, None]] = {
