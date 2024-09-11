@@ -65,6 +65,7 @@ autodoc_typehints: str = "none"
 
 always_use_bars_union: bool = True
 typehints_defaults: str | None = "comma"
+typehints_use_rtype: bool = False
 
 # -- Options for sphinx_copybutton
 
