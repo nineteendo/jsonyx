@@ -6,11 +6,14 @@ __all__: list[str] = []
 
 from decimal import Decimal
 from math import nan
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
 from jsonyx import make_patch
+
+if TYPE_CHECKING:
+    _Operation = dict[str, Any]
 
 
 @pytest.mark.parametrize("obj", [
@@ -56,7 +59,7 @@ def test_equal(obj: object) -> None:
     (1, 2, [{"op": "set", "path": "$", "value": 2}]),
 ])  # type: ignore
 def test_not_equal(
-    old: object, new: object, expected: list[dict[str, Any]],
+    old: object, new: object, expected: list[_Operation],
 ) -> None:
     """Test not equal."""
     assert make_patch(old, new) == expected

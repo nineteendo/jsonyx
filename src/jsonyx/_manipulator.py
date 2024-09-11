@@ -25,6 +25,7 @@ if TYPE_CHECKING:
     _Target = dict[Any, Any] | list[Any]
     _Key = int | slice | str
     _Node = tuple[_Target, _Key]
+    _Operation = dict[str, Any]
 
 
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
@@ -397,7 +398,7 @@ class Manipulator:
     def _paste_values(
         self,
         current_nodes: list[_Node],
-        operation: dict[str, Any],
+        operation: _Operation,
         values: list[Any],
     ) -> None:
         if (mode := operation["mode"]) == "append":
@@ -453,7 +454,7 @@ class Manipulator:
             raise ValueError
 
     def _apply_patch(
-        self, root: list[Any], operations: list[dict[str, Any]],
+        self, root: list[Any], operations: list[_Operation],
     ) -> None:
         node: _Node = root, 0
         for operation in operations:
@@ -569,7 +570,7 @@ class Manipulator:
                 raise ValueError
 
     def apply_patch(
-        self, obj: Any, patch: dict[str, Any] | list[dict[str, Any]],
+        self, obj: Any, patch: _Operation | list[_Operation],
     ) -> Any:
         """Apply a JSON patch to a Python object.
 

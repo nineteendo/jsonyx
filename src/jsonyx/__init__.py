@@ -55,6 +55,7 @@ if TYPE_CHECKING:
             """Write string."""
 
     _Node = tuple[dict[Any, Any] | list[Any], int | slice | str]
+    _Operation = dict[str, Any]
     _StrPath = PathLike[str] | str
 
 
@@ -403,7 +404,7 @@ def dumps(
 
 def apply_patch(
     obj: Any,
-    patch: dict[str, Any] | list[dict[str, Any]],
+    patch: _Operation | list[_Operation],
     *,
     allow: Container[str] = NOTHING,
     use_decimal: bool = False,

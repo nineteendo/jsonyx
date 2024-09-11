@@ -14,6 +14,8 @@ from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:
     from collections.abc import Callable, KeysView
 
+    _Operation = dict[str, Any]
+
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
 _escape: Callable[[Callable[[Match[str]], str], str], str] = re.compile(
@@ -75,7 +77,7 @@ def _get_lcs(old: list[Any], new: list[Any]) -> list[Any]:
 
 
 def _make_patch(
-    old: Any, new: Any, patch: list[dict[str, Any]], path: str = "$",
+    old: Any, new: Any, patch: list[_Operation], path: str = "$",
 ) -> None:
     if _eq(old, new):
         return
@@ -125,7 +127,7 @@ def _make_patch(
         patch.append({"op": "set", "path": path, "value": new})
 
 
-def make_patch(old: Any, new: Any) -> list[dict[str, Any]]:
+def make_patch(old: Any, new: Any) -> list[_Operation]:
     """Make a JSON patch from two Python objects.
 
     :param old: the old Python object
@@ -138,7 +140,7 @@ def make_patch(old: Any, new: Any) -> list[dict[str, Any]]:
 
     .. versionadded:: 2.0
     """
-    patch: list[dict[str, Any]] = []
+    patch: list[_Operation] = []
     _make_patch(old, new, patch)
     return patch
 

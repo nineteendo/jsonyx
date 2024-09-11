@@ -44,7 +44,10 @@ nitpicky: bool = True
 nitpick_ignore: list[tuple[str, str]] = [
     ("py:class", "_Node"),
     ("py:class", "jsonyx._decoder._SupportsRead"),
+    ("py:class", "jsonyx._differ._Operation"),
     ("py:class", "jsonyx._encoder._SupportsWrite"),
+    ("py:class", "jsonyx._manipulator._Operation"),
+    ("py:class", "jsonyx._Operation"),
     ("py:class", "jsonyx._SupportsRead"),
     ("py:class", "jsonyx._SupportsWrite"),
 ]
@@ -54,12 +57,13 @@ templates_path = ["_templates"]
 
 autodoc_preserve_defaults: bool = True
 autodoc_type_aliases: dict[str, str] = {
-    name: name for name in ["_Node", "_StrPath"]
+    name: name for name in ["_Node", "_Operation", "_StrPath"]
 }
 autodoc_typehints: str = "none"
 
 # -- Options for sphinx_autodoc_typehints
 
+always_use_bars_union: bool = True
 typehints_defaults: str | None = "comma"
 
 # -- Options for sphinx_copybutton
