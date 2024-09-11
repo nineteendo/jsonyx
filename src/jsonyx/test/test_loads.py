@@ -6,7 +6,7 @@ __all__: list[str] = []
 
 from decimal import Decimal
 from math import isnan
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 import pytest
 
@@ -15,25 +15,10 @@ from jsonyx.allow import (
     TRAILING_COMMA, UNQUOTED_KEYS,
 )
 # pylint: disable-next=W0611
-from jsonyx.test import get_json  # type: ignore # noqa: F401
+from jsonyx.test import check_syntax_err, get_json  # type: ignore # noqa: F401
 
 if TYPE_CHECKING:
     from types import ModuleType
-
-
-def _check_syntax_err(
-    exc_info: pytest.ExceptionInfo[Any], msg: str, colno: int = 1,
-    end_colno: int = -1,
-) -> None:
-    exc: Any = exc_info.value
-    if end_colno < 0:
-        end_colno = colno
-
-    assert exc.msg == msg
-    assert exc.lineno == 1
-    assert exc.end_lineno == 1
-    assert exc.colno == colno
-    assert exc.end_colno == end_colno
 
 
 @pytest.mark.parametrize(
@@ -60,7 +45,7 @@ def test_utf8_bom(json: ModuleType) -> None:
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads("\ufeff0")
 
-    _check_syntax_err(exc_info, "Unexpected UTF-8 BOM")
+    check_syntax_err(exc_info, "Unexpected UTF-8 BOM")
 
 
 @pytest.mark.parametrize(("s", "expected"), [
@@ -102,7 +87,7 @@ def test_nan_and_infinity_not_allowed(
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(s, use_decimal=use_decimal)
 
-    _check_syntax_err(exc_info, f"{s} is not allowed", 1, len(s) + 1)
+    check_syntax_err(exc_info, f"{s} is not allowed", 1, len(s) + 1)
 
 
 @pytest.mark.parametrize("s", [
@@ -167,7 +152,7 @@ def test_big_number_float(json: ModuleType, s: str) -> None:
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(s)
 
-    _check_syntax_err(exc_info, "Big numbers require decimal", 1, len(s) + 1)
+    check_syntax_err(exc_info, "Big numbers require decimal", 1, len(s) + 1)
 
 
 @pytest.mark.parametrize(
@@ -178,7 +163,7 @@ def test_too_big_number(json: ModuleType, s: str) -> None:
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(s, use_decimal=True)
 
-    _check_syntax_err(exc_info, "Number is too big", 1, len(s) + 1)
+    check_syntax_err(exc_info, "Number is too big", 1, len(s) + 1)
 
 
 @pytest.mark.parametrize(("s", "expected"), [
@@ -267,7 +252,7 @@ def test_invalid_string(
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(s)
 
-    _check_syntax_err(exc_info, msg, colno, end_colno)
+    check_syntax_err(exc_info, msg, colno, end_colno)
 
 
 @pytest.mark.parametrize(("s", "expected"), [
@@ -346,7 +331,7 @@ def test_invalid_array(
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(s)
 
-    _check_syntax_err(exc_info, msg, colno, end_colno)
+    check_syntax_err(exc_info, msg, colno, end_colno)
 
 
 @pytest.mark.parametrize(("s", "expected"), [
@@ -439,7 +424,7 @@ def test_invalid_object(
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(s)
 
-    _check_syntax_err(exc_info, msg, colno, end_colno)
+    check_syntax_err(exc_info, msg, colno, end_colno)
 
 
 @pytest.mark.parametrize("key", [
@@ -466,7 +451,7 @@ def test_unquoted_key_not_allowed(json: ModuleType, key: str) -> None:
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(f"{{{key}: 0}}")
 
-    _check_syntax_err(
+    check_syntax_err(
         exc_info, "Unquoted keys are not allowed", 2, 2 + len(key),
     )
 
@@ -483,7 +468,7 @@ def test_invalid_unquoted_key(json: ModuleType, key: str) -> None:
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(f"{{{key}: 0}}")
 
-    _check_syntax_err(exc_info, "Expecting key", 2)
+    check_syntax_err(exc_info, "Expecting key", 2)
 
 
 def test_duplicate_key(json: ModuleType) -> None:
@@ -507,7 +492,7 @@ def test_expecting_value(json: ModuleType, s: str) -> None:
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(s)
 
-    _check_syntax_err(exc_info, "Expecting value")
+    check_syntax_err(exc_info, "Expecting value")
 
 
 @pytest.mark.parametrize(("s", "expected"), [
@@ -603,7 +588,7 @@ def test_invalid_comment(json: ModuleType) -> None:
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads("/*unterminated comment", allow=COMMENTS)
 
-    _check_syntax_err(exc_info, "Unterminated comment", 1, 23)
+    check_syntax_err(exc_info, "Unterminated comment", 1, 23)
 
 
 @pytest.mark.parametrize(("s", "end_colno"), [
@@ -623,7 +608,7 @@ def test_comments_not_allowed(
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(s)
 
-    _check_syntax_err(exc_info, "Comments are not allowed", 1, end_colno)
+    check_syntax_err(exc_info, "Comments are not allowed", 1, end_colno)
 
 
 def test_end_of_file(json: ModuleType) -> None:
@@ -631,4 +616,4 @@ def test_end_of_file(json: ModuleType) -> None:
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads("1 2 3")
 
-    _check_syntax_err(exc_info, "Expecting end of file", 3)
+    check_syntax_err(exc_info, "Expecting end of file", 3)

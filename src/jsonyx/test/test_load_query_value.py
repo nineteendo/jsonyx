@@ -5,28 +5,13 @@ from __future__ import annotations
 __all__: list[str] = []
 
 from decimal import Decimal
-from typing import Any
 
 import pytest
 
 # pylint: disable-next=W0611
 from jsonyx import JSONSyntaxError, load_query_value
 from jsonyx.allow import NAN_AND_INFINITY
-
-
-def _check_syntax_err(
-    exc_info: pytest.ExceptionInfo[Any], msg: str, colno: int = 1,
-    end_colno: int = -1,
-) -> None:
-    exc: Any = exc_info.value
-    if end_colno < 0:
-        end_colno = colno
-
-    assert exc.msg == msg
-    assert exc.lineno == 1
-    assert exc.end_lineno == 1
-    assert exc.colno == colno
-    assert exc.end_colno == end_colno
+from jsonyx.test import check_syntax_err
 
 
 @pytest.mark.parametrize(("s", "expected"), [
@@ -61,7 +46,7 @@ def test_infinity_not_allowed(
     with pytest.raises(JSONSyntaxError) as exc_info:
         load_query_value(s, use_decimal=use_decimal)
 
-    _check_syntax_err(exc_info, f"{s} is not allowed", 1, len(s) + 1)
+    check_syntax_err(exc_info, f"{s} is not allowed", 1, len(s) + 1)
 
 
 @pytest.mark.parametrize("s", [
@@ -124,7 +109,7 @@ def test_big_number_float(s: str) -> None:
     with pytest.raises(JSONSyntaxError) as exc_info:
         load_query_value(s)
 
-    _check_syntax_err(exc_info, "Big numbers require decimal", 1, len(s) + 1)
+    check_syntax_err(exc_info, "Big numbers require decimal", 1, len(s) + 1)
 
 
 @pytest.mark.parametrize(
@@ -135,7 +120,7 @@ def test_too_big_number(s: str) -> None:
     with pytest.raises(JSONSyntaxError) as exc_info:
         load_query_value(s, use_decimal=True)
 
-    _check_syntax_err(exc_info, "Number is too big", 1, len(s) + 1)
+    check_syntax_err(exc_info, "Number is too big", 1, len(s) + 1)
 
 
 @pytest.mark.parametrize(("s", "expected"), [
@@ -168,7 +153,7 @@ def test_invalid_string(s: str, msg: str, colno: int, end_colno: int) -> None:
     with pytest.raises(JSONSyntaxError) as exc_info:
         load_query_value(s)
 
-    _check_syntax_err(exc_info, msg, colno, end_colno)
+    check_syntax_err(exc_info, msg, colno, end_colno)
 
 
 @pytest.mark.parametrize("s", ["", "foo"])
@@ -177,7 +162,7 @@ def test_expecting_value(s: str) -> None:
     with pytest.raises(JSONSyntaxError) as exc_info:
         load_query_value(s)
 
-    _check_syntax_err(exc_info, "Expecting value")
+    check_syntax_err(exc_info, "Expecting value")
 
 
 def test_end_of_file() -> None:
@@ -185,4 +170,4 @@ def test_end_of_file() -> None:
     with pytest.raises(JSONSyntaxError) as exc_info:
         load_query_value("1 2 3")
 
-    _check_syntax_err(exc_info, "Expecting end of file", 2)
+    check_syntax_err(exc_info, "Expecting end of file", 2)
