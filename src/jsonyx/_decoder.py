@@ -16,19 +16,27 @@ from codecs import (
 )
 from decimal import Decimal, InvalidOperation
 from math import isinf
-from os import fspath
+from os import PathLike, fspath
 from os.path import realpath
 from pathlib import Path
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from shutil import get_terminal_size
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
 from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Container
 
-    from _typeshed import StrPath, SupportsRead
+    _T_co = TypeVar("_T_co", covariant=True)
+
+    # pylint: disable-next=R0903
+    class _SupportsRead(Protocol[_T_co]):
+        def read(self, length: int = ..., /) -> _T_co:  # type: ignore
+            """Read string."""
+
+    _StrPath = PathLike[str] | str
+
 
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 _UNESCAPE: dict[str, str] = {
@@ -639,7 +647,7 @@ class Decoder:
             "unquoted_keys" in allow, use_decimal,
         )
 
-    def read(self, filename: StrPath) -> Any:
+    def read(self, filename: _StrPath) -> Any:
         """Deserialize a JSON file to a Python object.
 
         :param filename: the path to the JSON file
@@ -659,7 +667,7 @@ class Decoder:
         return self.loads(Path(filename).read_bytes(), filename=filename)
 
     def load(
-        self, fp: SupportsRead[bytes | str], *, root: StrPath = ".",
+        self, fp: _SupportsRead[bytes | str], *, root: _StrPath = ".",
     ) -> Any:
         """Deserialize an open JSON file to a Python object.
 
@@ -682,7 +690,7 @@ class Decoder:
         return self.loads(fp.read())
 
     def loads(
-        self, s: bytearray | bytes | str, *, filename: StrPath = "<string>",
+        self, s: bytearray | bytes | str, *, filename: _StrPath = "<string>",
     ) -> Any:
         """Deserialize a JSON string to a Python object.
 

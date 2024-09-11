@@ -11,14 +11,22 @@ from math import inf, isfinite
 from pathlib import Path
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from sys import stdout
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
 from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Container, ItemsView
+    from os import PathLike
 
-    from _typeshed import StrPath, SupportsWrite
+    _T_contra = TypeVar("_T_contra", contravariant=True)
+
+    # pylint: disable-next=R0903
+    class _SupportsWrite(Protocol[_T_contra]):
+        def write(self, s: _T_contra, /) -> object:
+            """Write string."""
+
+    _StrPath = PathLike[str] | str
 
 
 _ESCAPE_DCT: dict[str, str] = {chr(i): f"\\u{i:04x}" for i in range(0x20)} | {
@@ -342,7 +350,7 @@ class Encoder:
         )
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 
-    def write(self, obj: object, filename: StrPath) -> None:
+    def write(self, obj: object, filename: _StrPath) -> None:
         r"""Serialize a Python object to a JSON file.
 
         :param obj: a Python object
@@ -362,7 +370,7 @@ class Encoder:
         """
         Path(filename).write_text(self._encoder(obj), "utf_8", self._errors)
 
-    def dump(self, obj: object, fp: SupportsWrite[str] = stdout) -> None:
+    def dump(self, obj: object, fp: _SupportsWrite[str] = stdout) -> None:
         r"""Serialize a Python object to an open JSON file.
 
         :param obj: a Python object

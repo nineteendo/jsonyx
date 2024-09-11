@@ -27,7 +27,7 @@ __all__: list[str] = [
 __version__: str = "2.0.0"
 
 from sys import stdout
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
 from jsonyx._decoder import (
     Decoder, DuplicateKey, JSONSyntaxError, detect_encoding,
@@ -39,10 +39,23 @@ from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
     from collections.abc import Container
+    from os import PathLike
 
-    from _typeshed import StrPath, SupportsRead, SupportsWrite
+    _T_co = TypeVar("_T_co", covariant=True)
+    _T_contra = TypeVar("_T_contra", contravariant=True)
+
+    # pylint: disable-next=R0903
+    class _SupportsRead(Protocol[_T_co]):
+        def read(self, length: int = ..., /) -> _T_co:  # type: ignore
+            """Read string."""
+
+    # pylint: disable-next=R0903
+    class _SupportsWrite(Protocol[_T_contra]):
+        def write(self, s: _T_contra, /) -> object:
+            """Write string."""
 
     _Node = tuple[dict[Any, Any] | list[Any], int | slice | str]
+    _StrPath = PathLike[str] | str
 
 
 def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
@@ -89,7 +102,7 @@ def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
 
 
 def read(
-    filename: StrPath,
+    filename: _StrPath,
     *,
     allow: Container[str] = NOTHING,
     use_decimal: bool = False,
@@ -118,10 +131,10 @@ def read(
 
 
 def load(
-    fp: SupportsRead[bytes | str],
+    fp: _SupportsRead[bytes | str],
     *,
     allow: Container[str] = NOTHING,
-    root: StrPath = ".",
+    root: _StrPath = ".",
     use_decimal: bool = False,
 ) -> Any:
     """Deserialize an open JSON file to a Python object.
@@ -149,7 +162,7 @@ def loads(
     s: bytearray | bytes | str,
     *,
     allow: Container[str] = NOTHING,
-    filename: StrPath = "<string>",
+    filename: _StrPath = "<string>",
     use_decimal: bool = False,
 ) -> Any:
     """Deserialize a JSON string to a Python object.
@@ -177,7 +190,7 @@ def loads(
 
 def write(
     obj: object,
-    filename: StrPath,
+    filename: _StrPath,
     *,
     allow: Container[str] = NOTHING,
     commas: bool = True,
@@ -256,7 +269,7 @@ def write(
 
 def dump(
     obj: object,
-    fp: SupportsWrite[str] = stdout,
+    fp: _SupportsWrite[str] = stdout,
     *,
     allow: Container[str] = NOTHING,
     commas: bool = True,
