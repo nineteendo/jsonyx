@@ -1,5 +1,6 @@
 # Copyright (C) 2024 Nice Zombies
 """Configuration file for the Sphinx documentation builder."""
+# TODO(Nice Zombies): update version
 from __future__ import annotations
 
 from os import environ, getenv
@@ -13,7 +14,7 @@ copyright: str = "2024, Nice Zombies"  # noqa: A001
 author: str = "Nice Zombies"
 
 release: str = "2.0"
-version: str = "2.0.0"
+version: str = "latest"
 
 # -- General configuration
 
