@@ -53,6 +53,10 @@ templates_path = ["_templates"]
 # -- Options for autodoc
 
 autodoc_preserve_defaults: bool = True
+autodoc_type_aliases: dict[str, str] = {
+    name: name
+    for name in ["_Node", "_StrPath", "_SupportsRead", "_SupportsWrite"]
+}
 autodoc_typehints: str = "none"
 
 # -- Options for sphinx_autodoc_typehints
