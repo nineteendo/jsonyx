@@ -35,9 +35,9 @@ extensions: list[str] = [
 ]
 
 intersphinx_mapping: dict[str, tuple[str, None]] = {
-    "multidict": ("https://multidict.aio-libs.org/en/stable/", None),
-    "python": ("https://docs.python.org/3/", None),
-    "sphinx": ("https://www.sphinx-doc.org/en/master/", None),
+    "multidict": ("https://multidict.aio-libs.org/en/stable", None),
+    "python": ("https://docs.python.org/3", None),
+    "sphinx": ("https://www.sphinx-doc.org/en/master", None),
 }
 intersphinx_disabled_domains: list[str] = ["std"]
 nitpicky: bool = True
