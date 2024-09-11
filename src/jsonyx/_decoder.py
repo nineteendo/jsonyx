@@ -23,7 +23,7 @@ from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from shutil import get_terminal_size
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
-import jsonyx.allow
+from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Container
@@ -633,11 +633,7 @@ class Decoder:
     """
 
     def __init__(
-        self,
-        *,
-        allow:
-        Container[str] = jsonyx.allow.NOTHING,
-        use_decimal: bool = False,
+        self, *, allow: Container[str] = NOTHING, use_decimal: bool = False,
     ) -> None:
         """Create a new JSON decoder."""
         allow_surrogates: bool = "surrogates" in allow
