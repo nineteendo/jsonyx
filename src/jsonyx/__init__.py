@@ -260,7 +260,7 @@ def write(
 
 def dump(
     obj: object,
-    fp: _SupportsWrite[str] = stdout,
+    fp: _SupportsWrite[str] | None = None,
     *,
     allow: Container[str] = NOTHING,
     commas: bool = True,

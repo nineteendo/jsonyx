@@ -2,6 +2,8 @@
 """JSON encoder."""
 from __future__ import annotations
 
+import sys
+
 __all__: list[str] = ["Encoder"]
 
 import re
@@ -10,7 +12,6 @@ from io import StringIO
 from math import inf, isfinite
 from pathlib import Path
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
-from sys import stdout
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
 from jsonyx.allow import NOTHING
@@ -367,7 +368,7 @@ class Encoder:
         """
         Path(filename).write_text(self._encoder(obj), "utf_8", self._errors)
 
-    def dump(self, obj: object, fp: _SupportsWrite[str] = stdout) -> None:
+    def dump(self, obj: object, fp: _SupportsWrite[str] | None = None) -> None:
         r"""Serialize a Python object to an open JSON file.
 
         :param obj: a Python object
@@ -385,7 +386,11 @@ class Encoder:
         >>> io.getvalue()
         '["streaming API"]\n'
         """
-        fp.write(self._encoder(obj))
+        s: str = self._encoder(obj)
+        if fp is None:
+            sys.stdout.write(s)  # Use sys.stdout to work with doctest
+        else:
+            fp.write(s)
 
     def dumps(self, obj: object) -> str:
         r"""Serialize a Python object to a JSON string.
