@@ -26,16 +26,16 @@ __all__: list[str] = [
 ]
 __version__: str = "2.0.0"
 
-from sys import stdout
+import sys
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
+import jsonyx.allow
 from jsonyx._decoder import (
     Decoder, DuplicateKey, JSONSyntaxError, detect_encoding,
 )
 from jsonyx._differ import make_patch
 from jsonyx._encoder import Encoder
 from jsonyx._manipulator import Manipulator
-from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
     from collections.abc import Container
@@ -105,7 +105,7 @@ def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
 def read(
     filename: _StrPath,
     *,
-    allow: Container[str] = NOTHING,
+    allow: Container[str] = jsonyx.allow.NOTHING,
     use_decimal: bool = False,
 ) -> Any:
     """Deserialize a JSON file to a Python object.
@@ -132,7 +132,7 @@ def read(
 def load(
     fp: _SupportsRead[bytes | str],
     *,
-    allow: Container[str] = NOTHING,
+    allow: Container[str] = jsonyx.allow.NOTHING,
     root: _StrPath = ".",
     use_decimal: bool = False,
 ) -> Any:
@@ -157,7 +157,7 @@ def load(
 def loads(
     s: bytearray | bytes | str,
     *,
-    allow: Container[str] = NOTHING,
+    allow: Container[str] = jsonyx.allow.NOTHING,
     filename: _StrPath = "<string>",
     use_decimal: bool = False,
 ) -> Any:
@@ -186,7 +186,7 @@ def write(
     obj: object,
     filename: _StrPath,
     *,
-    allow: Container[str] = NOTHING,
+    allow: Container[str] = jsonyx.allow.NOTHING,
     commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
@@ -260,9 +260,9 @@ def write(
 
 def dump(
     obj: object,
-    fp: _SupportsWrite[str] = stdout,
+    fp: _SupportsWrite[str] = sys.stdout,
     *,
-    allow: Container[str] = NOTHING,
+    allow: Container[str] = jsonyx.allow.NOTHING,
     commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
@@ -336,7 +336,7 @@ def dump(
 def dumps(
     obj: object,
     *,
-    allow: Container[str] = NOTHING,
+    allow: Container[str] = jsonyx.allow.NOTHING,
     commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
@@ -406,7 +406,7 @@ def apply_patch(
     obj: Any,
     patch: _Operation | list[_Operation],
     *,
-    allow: Container[str] = NOTHING,
+    allow: Container[str] = jsonyx.allow.NOTHING,
     use_decimal: bool = False,
 ) -> Any:
     """Apply a JSON patch to a Python object.
@@ -439,7 +439,7 @@ def run_select_query(
     nodes: _Node | list[_Node],
     query: str,
     *,
-    allow: Container[str] = NOTHING,
+    allow: Container[str] = jsonyx.allow.NOTHING,
     allow_slice: bool = False,
     mapping: bool = False,
     relative: bool = False,
@@ -485,7 +485,7 @@ def run_filter_query(
     nodes: _Node | list[_Node],
     query: str,
     *,
-    allow: Container[str] = NOTHING,
+    allow: Container[str] = jsonyx.allow.NOTHING,
     use_decimal: bool = False,
 ) -> list[_Node]:
     """Run a JSON filter query on a node or a list of nodes.
@@ -511,7 +511,7 @@ def run_filter_query(
 def load_query_value(
     s: str,
     *,
-    allow: Container[str] = NOTHING,
+    allow: Container[str] = jsonyx.allow.NOTHING,
     use_decimal: bool = False,
 ) -> Any:
     """Deserialize a JSON query value to a Python object.

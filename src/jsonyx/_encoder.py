@@ -5,15 +5,15 @@ from __future__ import annotations
 __all__: list[str] = ["Encoder"]
 
 import re
+import sys
 from decimal import Decimal
 from io import StringIO
 from math import inf, isfinite
 from pathlib import Path
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
-from sys import stdout
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
-from jsonyx.allow import NOTHING
+import jsonyx.allow
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Container, ItemsView
@@ -297,7 +297,7 @@ class Encoder:
     def __init__(
         self,
         *,
-        allow: Container[str] = NOTHING,
+        allow: Container[str] = jsonyx.allow.NOTHING,
         commas: bool = True,
         end: str = "\n",
         ensure_ascii: bool = False,
@@ -367,7 +367,7 @@ class Encoder:
         """
         Path(filename).write_text(self._encoder(obj), "utf_8", self._errors)
 
-    def dump(self, obj: object, fp: _SupportsWrite[str] = stdout) -> None:
+    def dump(self, obj: object, fp: _SupportsWrite[str] = sys.stdout) -> None:
         r"""Serialize a Python object to an open JSON file.
 
         :param obj: a Python object

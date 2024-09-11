@@ -16,8 +16,8 @@ from operator import eq, ge, gt, le, lt, ne
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from typing import TYPE_CHECKING, Any
 
+import jsonyx.allow
 from jsonyx import JSONSyntaxError
-from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Container
@@ -169,7 +169,10 @@ class Manipulator:
     """
 
     def __init__(
-        self, *, allow: Container[str] = NOTHING, use_decimal: bool = False,
+        self,
+        *,
+        allow: Container[str] = jsonyx.allow.NOTHING,
+        use_decimal: bool = False,
     ) -> None:
         """Create a new JSON manipulator."""
         self._allow_nan_and_infinity: bool = "nan_and_infinity" in allow
