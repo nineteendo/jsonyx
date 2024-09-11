@@ -120,7 +120,7 @@ def _run_benchmark(
         row.append(1_000_000 * unit)
         results.append(row)
 
-    headers: list[str] = [name, *funcs.keys(), "unit\u00a0(us)"]
+    headers: list[str] = [name, *funcs.keys(), "unit\u00a0(\u03bcs)"]
     print()
     print(tabulate(results, headers, tablefmt="pipe", floatfmt=".02f"))
     print(tabulate(results, headers, tablefmt="rst", floatfmt=".02f"))

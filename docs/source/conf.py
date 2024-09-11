@@ -105,3 +105,7 @@ html_theme_options: dict[str, Any] = {
 
 # -- Options for EPUB output
 epub_show_urls: str = "no"
+
+# -- Options for PDF output
+
+latex_engine: str = "xelatex"
