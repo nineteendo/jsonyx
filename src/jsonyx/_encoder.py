@@ -355,6 +355,7 @@ class Encoder:
         :param filename: the path to the JSON file
         :raises TypeError: for unserializable values
         :raises ValueError: for invalid values
+        :return:
 
         >>> import jsonyx as json
         >>> from pathlib import Path
@@ -375,6 +376,7 @@ class Encoder:
         :param fp: an open JSON file
         :raises TypeError: for unserializable values
         :raises ValueError: for invalid values
+        :return:
 
         >>> import jsonyx as json
         >>> encoder = json.Encoder()
