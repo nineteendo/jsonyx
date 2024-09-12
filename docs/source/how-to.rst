@@ -36,7 +36,7 @@ Specializing JSON object encoding
     ...         return {"__complex__": True, "real": obj.real, "imag": obj.imag}
     ...     return obj
     ... 
-    >>> 
+    >>>
     >>> json.dump(to_json(1 + 2j))
     {"__complex__": true, "real": 1.0, "imag": 2.0}
 
@@ -71,7 +71,7 @@ Specializing JSON object decoding
     ...         return {key: from_json(value) for key, value in obj.items()}
     ...     return obj
     ... 
-    >>> 
+    >>>
     >>> from_json(json.loads('{"__complex__": true, "real": 1.0, "imag": 2.0}'))
     (1+2j)
 
@@ -121,7 +121,7 @@ Removing duplicate keys
     ...         return {str(key): from_json(value) for key, value in obj.items()}
     ...     return obj
     ... 
-    >>> 
+    >>>
     >>> decoder = json.Decoder(allow=jsonyx.allow.DUPLICATE_KEYS)
     >>> from_json(decoder.loads('{"key": "value 1", "key": "value 2"}'))
     {'key': 'value 2'}
@@ -162,7 +162,7 @@ After installing :pypi:`multidict`, it can be used like this:
     ...         return MultiDict({key: from_json(value) for key, value in obj.items()})
     ...     return obj
     ... 
-    >>> 
+    >>>
     >>> decoder = json.Decoder(allow=jsonyx.allow.DUPLICATE_KEYS)
     >>> from_json(decoder.loads('{"key": "value 1", "key": "value 2"}'))
     <MultiDict('key': 'value 1', 'key': 'value 2')>

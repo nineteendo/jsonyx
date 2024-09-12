@@ -43,7 +43,7 @@ Encoding basic Python object hierarchies
 .. tab:: without classes
 
     >>> import jsonyx as json
-    >>> 
+    >>>
     >>> json.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
     '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
     >>> json.dump('"foo\bar')
@@ -98,7 +98,7 @@ Compact encoding
 .. tab:: without classes
 
     >>> import jsonyx as json
-    >>> 
+    >>>
     >>> json.dumps({"a": 1, "b": 2, "c": 3}, end="", separators=(",", ":"))
     '{"a":1,"b":2,"c":3}'
 
@@ -119,7 +119,7 @@ Pretty printing
 .. tab:: without classes
 
     >>> import jsonyx as json
-    >>> 
+    >>>
     >>> json.dump({"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}, indent=4)
     {
         "foo": [1, 2, 3],
@@ -151,7 +151,7 @@ Decoding JSON
 .. tab:: without classes
 
     >>> import jsonyx as json
-    >>> 
+    >>>
     >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
     {'foo': ['bar', None, 1.0, 2]}
     >>> json.loads(r'"\"foo\bar"')
@@ -196,7 +196,7 @@ Using :class:`decimal.Decimal` instead of :class:`float`
 .. tab:: without classes
 
     >>> import jsonyx as json
-    >>> 
+    >>>
     >>> json.loads("[1.0000000000000001, 1e400]", use_decimal=True)
     [Decimal('1.0000000000000001'), Decimal('1E+400')]
 
@@ -224,7 +224,7 @@ Applying a patch
 .. tab:: without classes
 
     >>> import jsonyx as json
-    >>> 
+    >>>
     >>> json.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
     [1, 3]
 
