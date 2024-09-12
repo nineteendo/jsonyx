@@ -11,7 +11,7 @@
 `jsonyx` is a customizable [JSON](http://json.org) library for Python 3.10+. It
 is written in pure Python with an optional C extension for better performance
 and no dependencies. The documentation for `jsonyx` is available online at:
-https://jsonyx.readthedocs.io/en/stable/usage.html
+https://jsonyx.readthedocs.io
 
 ## Key Features
 
