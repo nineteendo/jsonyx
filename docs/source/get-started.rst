@@ -29,10 +29,19 @@ or `mamba <https://mamba.readthedocs.io>`_:
 
 Check if you have installed the correct version:
 
-.. code-block:: console
+.. tab:: long options
 
-    $ jsonyx --version
-    jsonyx 2.0.0
+    .. code-block:: console
+
+        $ jsonyx --version
+        jsonyx 2.0.0
+
+.. tab:: short options
+
+    .. code-block:: console
+
+        $ jsonyx -v
+        jsonyx 2.0.0
 
 Quick start
 -----------
@@ -241,17 +250,34 @@ Applying a patch
 Using the ``jsonyx`` command line utility
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block:: shell-session
+.. tab:: long options
 
-    $ echo '{"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}' | jsonyx format --indent 4
-    {
-        "foo": [1, 2, 3],
-        "bar": {"a": 1, "b": 2, "c": 3}
-    }
-    $ echo '{1.2: 3.4}' | jsonyx format
-      File "<stdin>", line 1, column 2
-        {1.2: 3.4}
-         ^
-    jsonyx.JSONSyntaxError: Expecting string
+    .. code-block:: shell-session
+
+        $ echo '{"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}' | jsonyx format --indent 4
+        {
+            "foo": [1, 2, 3],
+            "bar": {"a": 1, "b": 2, "c": 3}
+        }
+        $ echo '{1.2: 3.4}' | jsonyx format
+        File "<stdin>", line 1, column 2
+            {1.2: 3.4}
+            ^
+        jsonyx.JSONSyntaxError: Expecting string
+
+.. tab:: short options
+
+    .. code-block:: shell-session
+
+        $ echo '{"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}' | jsonyx format -i 4
+        {
+            "foo": [1, 2, 3],
+            "bar": {"a": 1, "b": 2, "c": 3}
+        }
+        $ echo '{1.2: 3.4}' | jsonyx format
+        File "<stdin>", line 1, column 2
+            {1.2: 3.4}
+            ^
+        jsonyx.JSONSyntaxError: Expecting string
 
 See :doc:`api/index` and :doc:`cli` for more details.
