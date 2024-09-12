@@ -105,7 +105,6 @@ Removing duplicate keys
     ...         return {str(key): from_json(value) for key, value in obj.items()}
     ...     return obj
     ... 
-    >>> 
     >>> from_json(json.loads(
     ...     '{"key": "value 1", "key": "value 2"}', allow=jsonyx.allow.DUPLICATE_KEYS
     ... ))
@@ -122,10 +121,9 @@ Removing duplicate keys
     ...         return {str(key): from_json(value) for key, value in obj.items()}
     ...     return obj
     ... 
-    >>> decoder = json.Decoder()
-    >>> from_json(decoder.loads(
-    ...     '{"key": "value 1", "key": "value 2"}', allow=jsonyx.allow.DUPLICATE_KEYS
-    ... ))
+    >>> 
+    >>> decoder = json.Decoder(allow=jsonyx.allow.DUPLICATE_KEYS)
+    >>> from_json(decoder.loads('{"key": "value 1", "key": "value 2"}'))
     {'key': 'value 2'}
 
 .. _use_multidict:
@@ -147,7 +145,6 @@ After installing :pypi:`multidict`, it can be used like this:
     ...         return MultiDict({key: from_json(value) for key, value in obj.items()})
     ...     return obj
     ... 
-    >>> 
     >>> from_json(json.loads(
     ...     '{"key": "value 1", "key": "value 2"}', allow=jsonyx.allow.DUPLICATE_KEYS
     ... ))
@@ -165,8 +162,7 @@ After installing :pypi:`multidict`, it can be used like this:
     ...         return MultiDict({key: from_json(value) for key, value in obj.items()})
     ...     return obj
     ... 
-    >>> decoder = json.Decoder()
-    >>> from_json(decoder.loads(
-    ...     '{"key": "value 1", "key": "value 2"}', allow=jsonyx.allow.DUPLICATE_KEYS
-    ... ))
+    >>> 
+    >>> decoder = json.Decoder(allow=jsonyx.allow.DUPLICATE_KEYS)
+    >>> from_json(decoder.loads('{"key": "value 1", "key": "value 2"}'))
     <MultiDict('key': 'value 1', 'key': 'value 2')>

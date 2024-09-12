@@ -105,8 +105,8 @@ Compact encoding
 .. tab:: with classes
 
     >>> import jsonyx as json
-    >>> encoder = json.Encoder()
-    >>> encoder.dumps({"a": 1, "b": 2, "c": 3}, end="", separators=(",", ":"))
+    >>> encoder = json.Encoder(end="", separators=(",", ":"))
+    >>> encoder.dumps({"a": 1, "b": 2, "c": 3})
     '{"a":1,"b":2,"c":3}'
 
 .. tip::
@@ -129,8 +129,8 @@ Pretty printing
 .. tab:: with classes
 
     >>> import jsonyx as json
-    >>> encoder = json.Encoder()
-    >>> encoder.dump({"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}, indent=4)
+    >>> encoder = json.Encoder(indent=4)
+    >>> encoder.dump({"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}})
     {
         "foo": [1, 2, 3],
         "bar": {"a": 1, "b": 2, "c": 3}
@@ -203,8 +203,8 @@ Using :class:`decimal.Decimal` instead of :class:`float`
 .. tab:: with classes
 
     >>> import jsonyx as json
-    >>> decoder = json.Decoder()
-    >>> decoder.loads("[1.0000000000000001, 1e400]", use_decimal=True)
+    >>> decoder = json.Decoder(use_decimal=True)
+    >>> decoder.loads("[1.0000000000000001, 1e400]")
     [Decimal('1.0000000000000001'), Decimal('1E+400')]
 
 .. note::
