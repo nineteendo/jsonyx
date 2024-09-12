@@ -26,6 +26,10 @@ Specializing JSON object encoding
 
 .. tab:: without classes
 
+    .. only:: latex
+
+        .. rubric:: without classes
+
     >>> import jsonyx as json
     >>> def to_json(obj):
     ...     if isinstance(obj, list):
@@ -41,6 +45,10 @@ Specializing JSON object encoding
     {"__complex__": true, "real": 1.0, "imag": 2.0}
 
 .. tab:: with classes
+
+    .. only:: latex
+
+        .. rubric:: with classes
 
     >>> import jsonyx as json
     >>> def to_json(obj):
@@ -61,6 +69,10 @@ Specializing JSON object decoding
 
 .. tab:: without classes
 
+    .. only:: latex
+
+        .. rubric:: without classes
+
     >>> import jsonyx as json
     >>> def from_json(obj):
     ...     if isinstance(obj, list):
@@ -76,6 +88,10 @@ Specializing JSON object decoding
     (1+2j)
 
 .. tab:: with classes
+
+    .. only:: latex
+
+        .. rubric:: with classes
 
     >>> import jsonyx as json
     >>> def from_json(obj):
@@ -96,6 +112,10 @@ Removing duplicate keys
 
 .. tab:: without classes
 
+    .. only:: latex
+
+        .. rubric:: without classes
+
     >>> import jsonyx as json
     >>> import jsonyx.allow
     >>> def from_json(obj):
@@ -111,6 +131,10 @@ Removing duplicate keys
     {'key': 'value 2'}
 
 .. tab:: with classes
+
+    .. only:: latex
+
+        .. rubric:: with classes
 
     >>> import jsonyx as json
     >>> import jsonyx.allow
@@ -135,6 +159,10 @@ After installing :pypi:`multidict`, it can be used like this:
 
 .. tab:: without classes
 
+    .. only:: latex
+
+        .. rubric:: without classes
+
     >>> import jsonyx as json
     >>> import jsonyx.allow
     >>> from multidict import MultiDict
@@ -151,6 +179,10 @@ After installing :pypi:`multidict`, it can be used like this:
     <MultiDict('key': 'value 1', 'key': 'value 2')>
 
 .. tab:: with classes
+
+    .. only:: latex
+
+        .. rubric:: with classes
 
     >>> import jsonyx as json
     >>> import jsonyx.allow

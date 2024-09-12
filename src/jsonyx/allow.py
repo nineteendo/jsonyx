@@ -21,6 +21,10 @@ NOTHING: frozenset[str] = frozenset()
 #:
 #: .. tab:: without classes
 #:
+#:     .. only:: latex
+#:
+#:         .. rubric:: without classes
+#:
 #:     >>> import jsonyx as json
 #:     >>> import jsonyx.allow
 #:     >>>
@@ -28,6 +32,10 @@ NOTHING: frozenset[str] = frozenset()
 #:     0
 #:
 #: .. tab:: with classes
+#:
+#:     .. only:: latex
+#:
+#:         .. rubric:: with classes
 #:
 #:     >>> import jsonyx as json
 #:     >>> import jsonyx.allow
@@ -40,6 +48,10 @@ COMMENTS: frozenset[str] = frozenset({"comments"})
 #:
 #: .. tab:: without classes
 #:
+#:     .. only:: latex
+#:
+#:         .. rubric:: without classes
+#:
 #:     >>> import jsonyx as json
 #:     >>> import jsonyx.allow
 #:     >>> json.loads(
@@ -48,6 +60,10 @@ COMMENTS: frozenset[str] = frozenset({"comments"})
 #:     {'key': 'value 1', 'key': 'value 2'}
 #:
 #: .. tab:: with classes
+#:
+#:     .. only:: latex
+#:
+#:         .. rubric:: with classes
 #:
 #:     >>> import jsonyx as json
 #:     >>> import jsonyx.allow
@@ -63,6 +79,10 @@ DUPLICATE_KEYS: frozenset[str] = frozenset({"duplicate_keys"})
 #:
 #: .. tab:: without classes
 #:
+#:     .. only:: latex
+#:
+#:         .. rubric:: without classes
+#:
 #:     >>> import jsonyx as json
 #:     >>> import jsonyx.allow
 #:     >>>
@@ -70,6 +90,10 @@ DUPLICATE_KEYS: frozenset[str] = frozenset({"duplicate_keys"})
 #:     [1, 2, 3]
 #:
 #: .. tab:: with classes
+#:
+#:     .. only:: latex
+#:
+#:         .. rubric:: with classes
 #:
 #:     >>> import jsonyx as json
 #:     >>> import jsonyx.allow
@@ -83,6 +107,10 @@ MISSING_COMMAS: frozenset[str] = frozenset({"missing_commas"})
 #:
 #: .. tab:: without classes
 #:
+#:     .. only:: latex
+#:
+#:         .. rubric:: without classes
+#:
 #:     >>> import jsonyx as json
 #:     >>> import jsonyx.allow
 #:     >>>
@@ -94,6 +122,10 @@ MISSING_COMMAS: frozenset[str] = frozenset({"missing_commas"})
 #:     [NaN, Infinity, -Infinity]
 #:
 #: .. tab:: with classes
+#:
+#:     .. only:: latex
+#:
+#:         .. rubric:: with classes
 #:
 #:     >>> import jsonyx as json
 #:     >>> import jsonyx.allow
@@ -113,6 +145,10 @@ NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
 #:
 #: .. tab:: without classes
 #:
+#:     .. only:: latex
+#:
+#:         .. rubric:: without classes
+#:
 #:     >>> import jsonyx as json
 #:     >>> import jsonyx.allow
 #:     >>>
@@ -123,6 +159,10 @@ NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
 #:     "\ud800"
 #:
 #: .. tab:: with classes
+#:
+#:     .. only:: latex
+#:
+#:         .. rubric:: with classes
 #:
 #:     >>> import jsonyx as json
 #:     >>> import jsonyx.allow
@@ -142,6 +182,10 @@ SURROGATES: frozenset[str] = frozenset({"surrogates"})
 #:
 #: .. tab:: without classes
 #:
+#:     .. only:: latex
+#:
+#:         .. rubric:: without classes
+#:
 #:    >>> import jsonyx as json
 #:    >>> import jsonyx.allow
 #:    >>>
@@ -149,6 +193,10 @@ SURROGATES: frozenset[str] = frozenset({"surrogates"})
 #:    [0]
 #:
 #: .. tab:: with classes
+#:
+#:     .. only:: latex
+#:
+#:         .. rubric:: with classes
 #:
 #:    >>> import jsonyx as json
 #:    >>> import jsonyx.allow
@@ -161,6 +209,10 @@ TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
 #:
 #: .. tab:: without classes
 #:
+#:     .. only:: latex
+#:
+#:         .. rubric:: without classes
+#:
 #:     >>> import jsonyx as json
 #:     >>> import jsonyx.allow
 #:     >>>
@@ -168,6 +220,10 @@ TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
 #:     {'key': 'value'}
 #:
 #: .. tab:: with classes
+#:
+#:     .. only:: latex
+#:
+#:         .. rubric:: with classes
 #:
 #:     >>> import jsonyx as json
 #:     >>> import jsonyx.allow

@@ -11,17 +11,29 @@ or `mamba <https://mamba.readthedocs.io>`_:
 
 .. tab:: pip
 
+    .. only:: latex
+
+        .. rubric:: pip
+
     .. code-block:: console
 
         (.venv) $ pip install -U jsonyx
 
 .. tab:: conda
 
+    .. only:: latex
+
+        .. rubric:: conda
+
     .. code-block:: console
 
         (base) $ conda install conda-forge::jsonyx
 
 .. tab:: mamba
+
+    .. only:: latex
+
+        .. rubric:: mamba
 
     .. code-block:: console
 
@@ -31,12 +43,21 @@ Check if you have installed the correct version:
 
 .. tab:: long options
 
+
+    .. only:: latex
+
+        .. rubric:: long options
+
     .. code-block:: console
 
         $ jsonyx --version
         jsonyx 2.0.0
 
 .. tab:: short options
+
+    .. only:: latex
+
+        .. rubric:: short options
 
     .. code-block:: console
 
@@ -50,6 +71,10 @@ Encoding basic Python object hierarchies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. tab:: without classes
+
+    .. only:: latex
+
+        .. rubric:: without classes
 
     >>> import jsonyx as json
     >>>
@@ -76,6 +101,10 @@ Encoding basic Python object hierarchies
     '["filesystem API"]\n'
 
 .. tab:: with classes
+
+    .. only:: latex
+
+        .. rubric:: with classes
 
     >>> import jsonyx as json
     >>> encoder = json.Encoder()
@@ -106,12 +135,20 @@ Compact encoding
 
 .. tab:: without classes
 
+    .. only:: latex
+
+        .. rubric:: without classes
+
     >>> import jsonyx as json
     >>>
     >>> json.dumps({"a": 1, "b": 2, "c": 3}, end="", separators=(",", ":"))
     '{"a":1,"b":2,"c":3}'
 
 .. tab:: with classes
+
+    .. only:: latex
+
+        .. rubric:: with classes
 
     >>> import jsonyx as json
     >>> encoder = json.Encoder(end="", separators=(",", ":"))
@@ -127,6 +164,10 @@ Pretty printing
 
 .. tab:: without classes
 
+    .. only:: latex
+
+        .. rubric:: without classes
+
     >>> import jsonyx as json
     >>>
     >>> json.dump({"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}, indent=4)
@@ -136,6 +177,10 @@ Pretty printing
     }
 
 .. tab:: with classes
+
+    .. only:: latex
+
+        .. rubric:: with classes
 
     >>> import jsonyx as json
     >>> encoder = json.Encoder(indent=4)
@@ -159,6 +204,10 @@ Decoding JSON
 
 .. tab:: without classes
 
+    .. only:: latex
+
+        .. rubric:: without classes
+
     >>> import jsonyx as json
     >>>
     >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
@@ -179,6 +228,10 @@ Decoding JSON
     ['filesystem API']
 
 .. tab:: with classes
+
+    .. only:: latex
+
+        .. rubric:: with classes
 
     >>> import jsonyx as json
     >>> decoder = json.Decoder()
@@ -204,12 +257,20 @@ Using :class:`decimal.Decimal` instead of :class:`float`
 
 .. tab:: without classes
 
+    .. only:: latex
+
+        .. rubric:: without classes
+
     >>> import jsonyx as json
     >>>
     >>> json.loads("[1.0000000000000001, 1e400]", use_decimal=True)
     [Decimal('1.0000000000000001'), Decimal('1E+400')]
 
 .. tab:: with classes
+
+    .. only:: latex
+
+        .. rubric:: with classes
 
     >>> import jsonyx as json
     >>> decoder = json.Decoder(use_decimal=True)
@@ -232,12 +293,20 @@ Applying a patch
 
 .. tab:: without classes
 
+    .. only:: latex
+
+        .. rubric:: without classes
+
     >>> import jsonyx as json
     >>>
     >>> json.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
     [1, 3]
 
 .. tab:: with classes
+
+    .. only:: latex
+
+        .. rubric:: with classes
 
     >>> import jsonyx as json
     >>> manipulator = json.Manipulator()
@@ -251,6 +320,10 @@ Using the ``jsonyx`` command line utility
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. tab:: long options
+
+    .. only:: latex
+
+        .. rubric:: long options
 
     .. code-block:: shell-session
 
@@ -266,6 +339,10 @@ Using the ``jsonyx`` command line utility
         jsonyx.JSONSyntaxError: Expecting string
 
 .. tab:: short options
+
+    .. only:: latex
+
+        .. rubric:: short options
 
     .. code-block:: shell-session
 
