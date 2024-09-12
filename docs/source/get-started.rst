@@ -260,9 +260,9 @@ Using the ``jsonyx`` command line utility
             "bar": {"a": 1, "b": 2, "c": 3}
         }
         $ echo '{1.2: 3.4}' | jsonyx format
-        File "<stdin>", line 1, column 2
+          File "<stdin>", line 1, column 2
             {1.2: 3.4}
-            ^
+             ^
         jsonyx.JSONSyntaxError: Expecting string
 
 .. tab:: short options
@@ -275,9 +275,9 @@ Using the ``jsonyx`` command line utility
             "bar": {"a": 1, "b": 2, "c": 3}
         }
         $ echo '{1.2: 3.4}' | jsonyx format
-        File "<stdin>", line 1, column 2
+          File "<stdin>", line 1, column 2
             {1.2: 3.4}
-            ^
+             ^
         jsonyx.JSONSyntaxError: Expecting string
 
 See :doc:`api/index` and :doc:`cli` for more details.
