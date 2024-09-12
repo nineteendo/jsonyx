@@ -583,7 +583,8 @@ class Manipulator:
         :return: the patched Python object
 
         >>> import jsonyx as json
-        >>> json.Manipulator().apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
+        >>> manipulator = json.Manipulator()
+        >>> manipulator.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
         [1, 3]
 
         .. tip::
@@ -617,9 +618,10 @@ class Manipulator:
         :return: the selected list of nodes
 
         >>> import jsonyx as json
+        >>> manipulator = json.Manipulator()
         >>> root = [[1, 2, 3, 4, 5, 6]]
         >>> node = root, 0
-        >>> for target, key in json.Manipulator().run_select_query(node, "$[@ > 3]"):
+        >>> for target, key in manipulator.run_select_query(node, "$[@ > 3]"):
         ...     target[key] = None
         ...
         >>> root[0]
@@ -656,8 +658,9 @@ class Manipulator:
         :return: the filtered list of nodes
 
         >>> import jsonyx as json
+        >>> manipulator = json.Manipulator()
         >>> node = [None], 0
-        >>> assert json.Manipulator().run_filter_query(node, "@ == null")
+        >>> assert manipulator.run_filter_query(node, "@ == null")
         """
         if isinstance(nodes, tuple):
             nodes = [nodes]
@@ -676,7 +679,8 @@ class Manipulator:
         :return: a Python object
 
         >>> import jsonyx as json
-        >>> json.Manipulator().load_query_value("'~'foo'")
+        >>> manipulator = json.Manipulator()
+        >>> manipulator.load_query_value("'~'foo'")
         "'foo"
         """
         obj, end = self._scan_query_value(s)

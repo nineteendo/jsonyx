@@ -360,9 +360,10 @@ class Encoder:
         >>> import jsonyx as json
         >>> from pathlib import Path
         >>> from tempfile import TemporaryDirectory
+        >>> encoder = json.Encoder()
         >>> with TemporaryDirectory() as tmpdir:
         ...     filename = Path(tmpdir) / "file.json"
-        ...     json.Encoder().write(["filesystem API"], filename)
+        ...     encoder.write(["filesystem API"], filename)
         ...     filename.read_text("utf_8")
         ...
         '["filesystem API"]\n'
@@ -403,7 +404,8 @@ class Encoder:
         :return: a JSON string
 
         >>> import jsonyx as json
-        >>> json.Encoder().dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
+        >>> encoder = json.Encoder()
+        >>> encoder.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
         '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
         """
         return self._encoder(obj)

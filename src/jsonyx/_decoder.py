@@ -676,8 +676,9 @@ class Decoder:
 
         >>> import jsonyx as json
         >>> from io import StringIO
+        >>> decoder = json.Decoder()
         >>> io = StringIO('["streaming API"]')
-        >>> json.Decoder().load(io)
+        >>> decoder.load(io)
         ['streaming API']
         """
         name: str | None
@@ -697,7 +698,8 @@ class Decoder:
         :return: a Python object
 
         >>> import jsonyx as json
-        >>> json.Decoder().loads('{"foo": ["bar", null, 1.0, 2]}')
+        >>> decoder = json.Decoder()
+        >>> decoder.loads('{"foo": ["bar", null, 1.0, 2]}')
         {'foo': ['bar', None, 1.0, 2]}
 
         .. tip::
