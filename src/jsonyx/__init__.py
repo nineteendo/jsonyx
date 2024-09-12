@@ -238,7 +238,6 @@ def write(
     :param trailing_comma: add a trailing comma when indented
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
-    :return: nothing
 
     >>> import jsonyx as json
     >>> from pathlib import Path
@@ -315,7 +314,6 @@ def dump(
     :param trailing_comma: add a trailing comma when indented
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
-    :return: nothing
 
     >>> import jsonyx as json
     >>> json.dump(["foo", {"bar": ("baz", None, 1.0, 2)}])
