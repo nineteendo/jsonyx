@@ -11,21 +11,21 @@ or `mamba <https://mamba.readthedocs.io>`_:
 
 .. tab:: pip
 
-    .. code-block:: console
+.. code-block:: console
 
-        (.venv) $ pip install -U jsonyx
+    (.venv) $ pip install -U jsonyx
 
 .. tab:: conda
 
-    .. code-block:: console
+.. code-block:: console
 
-        (base) $ conda install conda-forge::jsonyx
+    (base) $ conda install conda-forge::jsonyx
 
 .. tab:: mamba
 
-    .. code-block:: console
+.. code-block:: console
 
-        (base) $ mamba install conda-forge::jsonyx
+    (base) $ mamba install conda-forge::jsonyx
 
 Check if you have installed the correct version:
 
@@ -49,8 +49,6 @@ Encoding basic Python object hierarchies
 "\\"
 >>> json.dump("\u1234")
 "ሴ"
->>> json.dump({"c": 3, "b": 2, "a": 1}, sort_keys=True)
-{"a": 1, "b": 2, "c": 3}
 >>> from io import StringIO
 >>> io = StringIO()
 >>> json.dump(["streaming API"], io)
