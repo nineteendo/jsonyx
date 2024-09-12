@@ -59,8 +59,8 @@ Encoding basic Python object hierarchies
     "\"foo\bar"
     >>> json.dump("\\")
     "\\"
-    >>> json.dump("\u1234")
-    "ሴ"
+    >>> json.dump("\u20AC")
+    "€"
     >>> from io import StringIO
     >>> io = StringIO()
     >>> json.dump(["streaming API"], io)
@@ -85,8 +85,8 @@ Encoding basic Python object hierarchies
     "\"foo\bar"
     >>> encoder.dump("\\")
     "\\"
-    >>> encoder.dump("\u1234")
-    "ሴ"
+    >>> encoder.dump("\u20AC")
+    "€"
     >>> from io import StringIO
     >>> io = StringIO()
     >>> encoder.dump(["streaming API"], io)

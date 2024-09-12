@@ -53,32 +53,6 @@ nitpick_ignore: list[tuple[str, str]] = [
 ]
 templates_path = ["_templates"]
 
-# -- Options for autodoc
-
-autodoc_preserve_defaults: bool = True
-autodoc_type_aliases: dict[str, str] = {
-    name: name for name in ["_Node", "_Operation", "_StrPath"]
-}
-autodoc_typehints: str = "none"
-
-# -- Options for sphinx_autodoc_typehints
-
-always_use_bars_union: bool = True
-typehints_defaults: str | None = "comma"
-typehints_use_rtype: bool = False
-
-# -- Options for sphinx_copybutton
-
-copybutton_exclude: str = ".linenos, .gp, .go"
-
-# -- Options for sphinx_issues
-
-issues_github_path: str = "nineteendo/jsonyx"
-
-# -- Options for sphinxext.opengraph
-
-ogp_enable_meta_description: bool = True
-
 # -- Options for HTML output
 
 html_baseurl: str = "http://jsonyx.readthedocs.io/"
@@ -109,3 +83,29 @@ epub_show_urls: str = "no"
 # -- Options for PDF output
 
 latex_engine: str = "xelatex"
+
+# -- Options for autodoc
+
+autodoc_preserve_defaults: bool = True
+autodoc_type_aliases: dict[str, str] = {
+    name: name for name in ["_Node", "_Operation", "_StrPath"]
+}
+autodoc_typehints: str = "none"
+
+# -- Options for sphinx_autodoc_typehints
+
+always_use_bars_union: bool = True
+typehints_defaults: str | None = "comma"
+typehints_use_rtype: bool = False
+
+# -- Options for sphinx_copybutton
+
+copybutton_exclude: str = ".linenos, .gp, .go"
+
+# -- Options for sphinx_issues
+
+issues_github_path: str = "nineteendo/jsonyx"
+
+# -- Options for sphinxext.opengraph
+
+ogp_enable_meta_description: bool = True
