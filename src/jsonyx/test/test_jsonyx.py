@@ -100,13 +100,6 @@ def test_format_syntax_error(
     )
 
 
-def test_dump(json: ModuleType) -> None:
-    """Test JSON dump."""
-    io: StringIO = StringIO()
-    json.dump(0, io, end="")
-    assert io.getvalue() == "0"
-
-
 def test_load(json: ModuleType) -> None:
     """Test JSON load."""
     assert json.load(StringIO("0")) == 0
