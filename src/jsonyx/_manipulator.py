@@ -316,7 +316,7 @@ class Manipulator:
         while True:
             if query[end:end + 1] == "?":
                 if mapping:
-                    msg = "Unexpected optional marker"
+                    msg = "Optional marker is not allowed"
                     raise _errmsg(msg, query, end, end + 1)
 
                 end += 1
@@ -370,7 +370,7 @@ class Manipulator:
                         for target in _get_query_targets(node, mapping=mapping)
                     ]
                 elif mapping:
-                    msg = "Expecting key"
+                    msg = "Filter is not allowed"
                     raise _errmsg(msg, query, end)
                 else:
                     nodes = [

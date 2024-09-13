@@ -48,6 +48,14 @@ def test_optional_marker(
     assert run_select_query(node, query, allow_slice=True) == expected
 
 
+def test_optional_marker_not_allowed() -> None:
+    """Test optional marker when not allowed."""
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        run_select_query([], "$?", mapping=True)
+
+    check_syntax_err(exc_info, "Optional marker is not allowed", 2, 3)
+
+
 @pytest.mark.parametrize("key", [
     # First character
     "A", "_", "\u16ee", "\u1885", "\u2118",
@@ -134,6 +142,14 @@ def test_filter(obj: _Target, query: str, keys: list[_Key]) -> None:
     assert run_select_query(([obj], 0), query) == [(obj, key) for key in keys]
 
 
+def test_filter_not_allowed() -> None:
+    """Test filter when not allowed."""
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        run_select_query([], "$[@]", mapping=True)
+
+    check_syntax_err(exc_info, "Filter is not allowed", 3)
+
+
 @pytest.mark.parametrize(("obj", "query", "expected"), [
     # Root
     (0, "$", ([0], 0)),
@@ -161,20 +177,6 @@ def test_invalid_query(query: str, msg: str, colno: int) -> None:
         run_select_query([], query)
 
     check_syntax_err(exc_info, msg, colno)
-
-
-@pytest.mark.parametrize(("query", "msg", "colno", "end_colno"), [
-    ("$?", "Unexpected optional marker", 2, 3),
-    ("$[@]", "Expecting key", 3, -1),
-])
-def test_invalid_mapping_query(
-    query: str, msg: str, colno: int, end_colno: int,
-) -> None:
-    """Test invalid mapping query."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query([], query, mapping=True)
-
-    check_syntax_err(exc_info, msg, colno, end_colno)
 
 
 @pytest.mark.parametrize("query", ["", "$"])
