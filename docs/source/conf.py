@@ -80,10 +80,6 @@ html_theme_options: dict[str, Any] = {
 # -- Options for EPUB output
 epub_show_urls: str = "no"
 
-# -- Options for PDF output
-
-latex_engine: str = "xelatex"
-
 # -- Options for autodoc
 
 autodoc_preserve_defaults: bool = True
@@ -109,3 +105,9 @@ issues_github_path: str = "nineteendo/jsonyx"
 # -- Options for sphinxext.opengraph
 
 ogp_enable_meta_description: bool = True
+
+# -- Options for sphinx_sitemap
+
+sitemap_excludes: list[str] = [
+    "_modules", "genindex.html", "py-modindex.html", "search.html",
+]
