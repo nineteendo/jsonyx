@@ -1,5 +1,6 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON load_query_value tests."""
+# TODO(Nice Zombies): test integer conversion
 from __future__ import annotations
 
 __all__: list[str] = []

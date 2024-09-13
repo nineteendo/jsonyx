@@ -1,6 +1,7 @@
 # Copyright (C) 2024 Nice Zombies
 """Customizable JSON library for Python."""
 # TODO(Nice Zombies): add release date in changelog
+# TODO(Nice Zomebies): explain how to use large numbers
 # TODO(Nice Zombies): update raised exceptions
 from __future__ import annotations
 

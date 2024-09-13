@@ -198,7 +198,11 @@ class Manipulator:
             integer, frac, exp = number.groups()
             end = number.end()
             if not frac and not exp:
-                value = int(integer)
+                try:
+                    value = int(integer)
+                except ValueError:
+                    msg = "Number is too big"
+                    raise _errmsg(msg, s, idx, end) from None
             else:
                 try:
                     value = self._parse_float(
@@ -346,17 +350,47 @@ class Manipulator:
                 end += 1
                 if match := _match_slice(query, end):
                     (start, stop, step), end = match.groups(), match.end()
-                    key = slice(
-                        start and int(start), stop and int(stop),
-                        step and int(step),
-                    )
+                    try:
+                        if start is not None:
+                            start = int(start)
+                    except ValueError:
+                        msg = "Start is too big"
+                        raise _errmsg(
+                            msg, query, match.start(1), match.end(1),
+                        ) from None
+
+                    try:
+                        if stop is not None:
+                            stop = int(stop)
+                    except ValueError:
+                        msg = "Stop is too big"
+                        raise _errmsg(
+                            msg, query, match.start(2), match.end(2),
+                        ) from None
+
+                    try:
+                        if step is not None:
+                            step = int(step)
+                    except ValueError:
+                        msg = "Step is too big"
+                        raise _errmsg(
+                            msg, query, match.start(3), match.end(3),
+                        ) from None
+
+                    key = slice(start, stop, step)
                     nodes = [
                         (target, key)
                         for node in nodes
                         for target in _get_query_targets(node, mapping=mapping)
                     ]
                 elif match := _match_idx(query, end):
-                    key, end = int(match.group()), match.end()
+                    end = match.end()
+                    try:
+                        key = int(match.group())
+                    except ValueError:
+                        msg = "Index is too big"
+                        raise _errmsg(msg, query, match.start(), end) from None
+
                     nodes = [
                         (target, key)
                         for node in nodes

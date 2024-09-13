@@ -566,7 +566,11 @@ except ImportError:
                 integer, frac, exp = number.groups()
                 end = number.end()
                 if not frac and not exp:
-                    value = int(integer)
+                    try:
+                        value = int(integer)
+                    except ValueError:
+                        msg = "Number is too big"
+                        raise _errmsg(msg, filename, s, idx, end) from None
                 else:
                     try:
                         value = parse_float(

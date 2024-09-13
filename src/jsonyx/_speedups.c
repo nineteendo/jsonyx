@@ -980,7 +980,7 @@ _match_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr,
         if (PyErr_ExceptionMatches(PyExc_ArithmeticError)) {
             PyErr_Clear();
             raise_errmsg("Number is too big", pyfilename, pystr, start, idx);
-            return NULL;
+            goto bail;
         }
     }
     else {
@@ -999,18 +999,26 @@ _match_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr,
         if (is_float) {
             rval = PyFloat_FromString(numstr);
             if (!isfinite(PyFloat_AS_DOUBLE(rval))) {
-                Py_DECREF(numstr);
                 Py_DECREF(rval);
                 raise_errmsg("Big numbers require decimal", pyfilename, pystr, start, idx);
-                return NULL;
+                goto bail;
             }
         }
-        else
+        else {
             rval = PyLong_FromString(buf, NULL, 10);
+            if (PyErr_ExceptionMatches(PyExc_ValueError)) {
+                PyErr_Clear();
+                raise_errmsg("Number is too big", pyfilename, pystr, start, idx);
+                goto bail;
+            }
+        }
     }
     Py_DECREF(numstr);
     *next_idx_ptr = idx;
     return rval;
+bail:
+    Py_DECREF(numstr);
+    return NULL;
 }
 
 static PyObject *
