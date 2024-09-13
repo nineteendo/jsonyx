@@ -26,7 +26,6 @@ __all__: list[str] = [
 ]
 __version__: str = "2.0.0"
 
-from sys import stdout
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
 from jsonyx._decoder import (
