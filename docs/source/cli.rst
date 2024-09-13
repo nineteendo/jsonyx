@@ -51,7 +51,7 @@ Command Line Interface
 
     Use :class:`decimal.Decimal` instead of :class:`float`.
 
-.. option:: -i SPACES, --indent SPACES
+.. option:: -i, --indent SPACES
 
     Indent using the specified number of spaces.
 
