@@ -3,6 +3,7 @@ updates:
   - package-ecosystem: pip
     directories:
     - /.github
+    - /bench
     - /docs
     schedule:
       interval: weekly

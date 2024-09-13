@@ -326,6 +326,7 @@ class Manipulator:
                     if isinstance(key, slice) or _has_key(target, key)
                 ]
 
+            key: _Key
             if (terminator := query[end:end + 1]) == ".":
                 end += 1
                 if (

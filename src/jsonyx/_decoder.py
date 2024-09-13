@@ -710,9 +710,9 @@ class Decoder:
             filename = realpath(filename)
 
         if not isinstance(s, str):
-            s = s.decode(detect_encoding(s), self._errors)
+            s = s.decode(detect_encoding(s), self._errors)  # type: ignore
 
-        return self._scanner(filename, s)
+        return self._scanner(filename, s)  # type: ignore
 
 
 Decoder.__module__ = "jsonyx"

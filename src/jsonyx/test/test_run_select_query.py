@@ -20,8 +20,12 @@ if TYPE_CHECKING:
 
 # pylint: disable-next=R0903
 class _Slicer:
-    def __class_getitem__(cls, item: Any) -> Any:
+    @staticmethod
+    def __getitem__(item: Any) -> Any:
         return item
+
+
+_slicer: _Slicer = _Slicer()
 
 
 @pytest.mark.parametrize(("node", "query", "expected"), [
@@ -73,35 +77,35 @@ def test_invalid_property(key: str) -> None:
 
 @pytest.mark.parametrize(("query", "expected"), [
     # Slice
-    ("$[:]", _Slicer[:]),
-    ("$[:-1]", _Slicer[:-1]),
-    ("$[:0]", _Slicer[:0]),
-    ("$[:1]", _Slicer[:1]),
-    ("$[:10]", _Slicer[:10]),
-    ("$[:11]", _Slicer[:11]),
-    ("$[-1:]", _Slicer[-1:]),
-    ("$[0:]", _Slicer[0:]),
-    ("$[1:]", _Slicer[1:]),
-    ("$[10:]", _Slicer[10:]),
-    ("$[11:]", _Slicer[11:]),
+    ("$[:]", _slicer[:]),
+    ("$[:-1]", _slicer[:-1]),
+    ("$[:0]", _slicer[:0]),
+    ("$[:1]", _slicer[:1]),
+    ("$[:10]", _slicer[:10]),
+    ("$[:11]", _slicer[:11]),
+    ("$[-1:]", _slicer[-1:]),
+    ("$[0:]", _slicer[0:]),
+    ("$[1:]", _slicer[1:]),
+    ("$[10:]", _slicer[10:]),
+    ("$[11:]", _slicer[11:]),
 
     # Extended slice
-    ("$[::]", _Slicer[::]),
-    ("$[::-1]", _Slicer[::-1]),
-    ("$[::0]", _Slicer[::0]),
-    ("$[::1]", _Slicer[::1]),
-    ("$[::10]", _Slicer[::10]),
-    ("$[::11]", _Slicer[::11]),
-    ("$[:-1:]", _Slicer[:-1:]),
-    ("$[:0:]", _Slicer[:0:]),
-    ("$[:1:]", _Slicer[:1:]),
-    ("$[:10:]", _Slicer[:10:]),
-    ("$[:11:]", _Slicer[:11:]),
-    ("$[-1::]", _Slicer[-1::]),
-    ("$[0::]", _Slicer[0::]),
-    ("$[1::]", _Slicer[1::]),
-    ("$[10::]", _Slicer[10::]),
-    ("$[11::]", _Slicer[11::]),
+    ("$[::]", _slicer[::]),
+    ("$[::-1]", _slicer[::-1]),
+    ("$[::0]", _slicer[::0]),
+    ("$[::1]", _slicer[::1]),
+    ("$[::10]", _slicer[::10]),
+    ("$[::11]", _slicer[::11]),
+    ("$[:-1:]", _slicer[:-1:]),
+    ("$[:0:]", _slicer[:0:]),
+    ("$[:1:]", _slicer[:1:]),
+    ("$[:10:]", _slicer[:10:]),
+    ("$[:11:]", _slicer[:11:]),
+    ("$[-1::]", _slicer[-1::]),
+    ("$[0::]", _slicer[0::]),
+    ("$[1::]", _slicer[1::]),
+    ("$[10::]", _slicer[10::]),
+    ("$[11::]", _slicer[11::]),
 ])
 def test_slice(query: str, expected: slice) -> None:
     """Test slice."""
