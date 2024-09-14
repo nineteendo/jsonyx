@@ -18,10 +18,11 @@ jsonyx 2.0.0 (unreleased)
 - Added :option:`--indent-leaves` and its alias :option:`-l`
 - Added :option:`--unquoted-keys` and its alias :option:`-q`
 - Added :option:`--version` and its alias :option:`-v`
+- Changed error for big integers to :exc:`jsonyx.JSONSyntaxError`
 - Fixed line comment detection
 - Fixed typo in error message
 - Improved documentation
-- Make :class:`tuple` JSON serializable
+- Made :class:`tuple` JSON serializable
 - Merged *item_separator* and *key_separator* as *separators* for
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
   :func:`jsonyx.write`
