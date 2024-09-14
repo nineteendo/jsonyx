@@ -15,9 +15,25 @@ or `mamba <https://mamba.readthedocs.io>`_:
 
         .. rubric:: pip
 
-    .. code-block:: console
+    .. tab:: PyPI
 
-        (.venv) $ pip install -U jsonyx
+        .. only:: latex
+
+            .. rubric:: PyPI
+
+        .. code-block:: console
+
+            (.venv) $ pip install -U jsonyx
+
+    .. tab:: GitHub
+
+        .. only:: latex
+
+            .. rubric:: GitHub
+
+        .. code-block:: console
+
+            (.venv) $ pip install --force-reinstall git+https://github.com/nineteendo/jsonyx
 
 .. tab:: conda
 
@@ -25,9 +41,15 @@ or `mamba <https://mamba.readthedocs.io>`_:
 
         .. rubric:: conda
 
-    .. code-block:: console
+    .. tab:: conda-forge
 
-        (base) $ conda install conda-forge::jsonyx
+        .. only:: latex
+
+            .. rubric:: conda-forge
+
+        .. code-block:: console
+
+            (base) $ conda install conda-forge::jsonyx
 
 .. tab:: mamba
 
@@ -35,9 +57,15 @@ or `mamba <https://mamba.readthedocs.io>`_:
 
         .. rubric:: mamba
 
-    .. code-block:: console
+    .. tab:: conda-forge
 
-        (base) $ mamba install conda-forge::jsonyx
+        .. only:: latex
+
+            .. rubric:: conda-forge
+
+        .. code-block:: console
+
+            (base) $ mamba install conda-forge::jsonyx
 
 Check if you have installed the correct version:
 
