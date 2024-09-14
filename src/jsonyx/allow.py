@@ -186,11 +186,11 @@ SURROGATES: frozenset[str] = frozenset({"surrogates"})
 #:
 #:         .. rubric:: without classes
 #:
-#:    >>> import jsonyx as json
-#:    >>> import jsonyx.allow
-#:    >>>
-#:    >>> json.loads('[0,]', allow=jsonyx.allow.TRAILING_COMMA)
-#:    [0]
+#:     >>> import jsonyx as json
+#:     >>> import jsonyx.allow
+#:     >>>
+#:     >>> json.loads('[0,]', allow=jsonyx.allow.TRAILING_COMMA)
+#:     [0]
 #:
 #: .. tab:: with classes
 #:
@@ -198,11 +198,11 @@ SURROGATES: frozenset[str] = frozenset({"surrogates"})
 #:
 #:         .. rubric:: with classes
 #:
-#:    >>> import jsonyx as json
-#:    >>> import jsonyx.allow
-#:    >>> decoder = json.Decoder(allow=jsonyx.allow.TRAILING_COMMA)
-#:    >>> decoder.loads('[0,]')
-#:    [0]
+#:     >>> import jsonyx as json
+#:     >>> import jsonyx.allow
+#:     >>> decoder = json.Decoder(allow=jsonyx.allow.TRAILING_COMMA)
+#:     >>> decoder.loads('[0,]')
+#:     [0]
 TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
 
 #: Allow unquoted keys in objects which are identifiers.
