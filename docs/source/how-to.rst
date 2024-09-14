@@ -198,3 +198,32 @@ After installing :pypi:`multidict`, it can be used like this:
     >>> decoder = json.Decoder(allow=jsonyx.allow.DUPLICATE_KEYS)
     >>> from_json(decoder.loads('{"key": "value 1", "key": "value 2"}'))
     <MultiDict('key': 'value 1', 'key': 'value 2')>
+
+Disabling the integer string conversion length limit
+----------------------------------------------------
+
+.. tab:: without classes
+
+    >>> import jsonyx as json
+    >>> from sys import set_int_max_str_digits
+    >>>
+    >>>
+    >>> set_int_max_str_digits(0)
+    >>> json.loads("9" * 5_000) == 10 ** 5_000 - 1
+    True
+    >>> len(json.dumps(10 ** 5_000))
+    5002
+
+.. tab:: with classes
+
+    >>> import jsonyx as json
+    >>> from sys import set_int_max_str_digits
+    >>> decoder = json.Decoder()
+    >>> encoder = json.Encoder()
+    >>> set_int_max_str_digits(0)
+    >>> decoder.loads("9" * 5_000) == 10 ** 5_000 - 1
+    True
+    >>> len(encoder.dumps(10 ** 5_000))
+    5002
+
+See :ref:`int_max_str_digits` for more information.
