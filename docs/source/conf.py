@@ -19,6 +19,7 @@ version: str = "latest"
 # -- General configuration
 
 extensions: list[str] = [
+    "notfound.extension",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.doctest",
