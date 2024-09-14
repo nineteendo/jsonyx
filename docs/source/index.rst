@@ -40,10 +40,10 @@ performance and no dependencies.
 .. code-block:: none
 
     Traceback (most recent call last):
-      File "C:\Users\wanne\Downloads\broken.json", line 2, column 15-19
-        "path": "c:\users"
-                     ^^^^
-    jsonyx.JSONSyntaxError: Expecting 4 hex digits
+      File "/Users/wannes/Downloads/broken.json", line 1, column 99-381
+        ...sList": {"GlossEntry": {"ID": "SGM..."GML", "XML"]}, "GlossSee": "markup"
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    jsonyx.JSONSyntaxError: Unterminated object
 
 - Dedicated functions for reading and writing files and pretty printing
 
