@@ -11,15 +11,11 @@ or `mamba <https://mamba.readthedocs.io>`_:
 
 .. tab:: pip
 
-    .. only:: latex
-
-        .. rubric:: pip
-
     .. tab:: PyPI
 
         .. only:: latex
 
-            .. rubric:: PyPI
+            .. rubric:: pip (PyPI)
 
         .. code-block:: console
 
@@ -29,7 +25,7 @@ or `mamba <https://mamba.readthedocs.io>`_:
 
         .. only:: latex
 
-            .. rubric:: GitHub
+            .. rubric:: pip (GitHub)
 
         .. code-block:: console
 
@@ -37,15 +33,11 @@ or `mamba <https://mamba.readthedocs.io>`_:
 
 .. tab:: conda
 
-    .. only:: latex
-
-        .. rubric:: conda
-
     .. tab:: conda-forge
 
         .. only:: latex
 
-            .. rubric:: conda-forge
+            .. rubric:: conda (conda-forge)
 
         .. code-block:: console
 
@@ -53,15 +45,11 @@ or `mamba <https://mamba.readthedocs.io>`_:
 
 .. tab:: mamba
 
-    .. only:: latex
-
-        .. rubric:: mamba
-
     .. tab:: conda-forge
 
         .. only:: latex
 
-            .. rubric:: conda-forge
+            .. rubric:: mamba (conda-forge)
 
         .. code-block:: console
 
