@@ -362,7 +362,7 @@ Using the ``jsonyx`` command line utility
 
     .. code-block:: shell-session
 
-        $ echo '{"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}' | jsonyx format -i 4
+        $ echo '{"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}' | jsonyx format -i4
         {
             "foo": [1, 2, 3],
             "bar": {"a": 1, "b": 2, "c": 3}

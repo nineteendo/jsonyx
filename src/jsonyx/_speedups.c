@@ -4,16 +4,6 @@
 #include <structmember.h>
 #include <stdbool.h> // bool
 
-#ifndef _Py_T_OBJECT
-#define _Py_T_OBJECT T_OBJECT
-#endif
-#ifndef Py_READONLY
-#define Py_READONLY READONLY
-#endif
-#ifndef Py_T_BOOL
-#define Py_T_BOOL T_BOOL
-#endif
-
 #define _Py_EnterRecursiveCall Py_EnterRecursiveCall
 #define _Py_LeaveRecursiveCall Py_LeaveRecursiveCall
 
@@ -1182,7 +1172,7 @@ scanner_call(PyScannerObject *self, PyObject *args, PyObject *kwds)
         return NULL;
     }
     len = PyUnicode_GET_LENGTH(pystr);
-    if (len > 0 && PyUnicode_ReadChar(pystr, 0) == L'\ufeff') {
+    if (len > 0 && PyUnicode_READ_CHAR(pystr, 0) == L'\ufeff') {
         raise_errmsg("Unexpected UTF-8 BOM", pyfilename, pystr, 0, 0);
         return NULL;
     }
