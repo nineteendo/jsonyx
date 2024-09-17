@@ -1,4 +1,5 @@
 /* JSON speedups */
+// TODO(Nice Zombies): speed up decoding
 
 #include <Python.h>
 #include <structmember.h>

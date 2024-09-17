@@ -360,6 +360,8 @@ Applying a patch
 Using the ``jsonyx`` command line utility
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. versionadded:: 2.0
+
 .. tab:: long options
 
     .. only:: latex

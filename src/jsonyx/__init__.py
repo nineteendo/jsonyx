@@ -223,6 +223,11 @@ def write(
 ) -> None:
     r"""Serialize a Python object to a JSON file.
 
+    .. versionchanged:: 2.0
+        Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
+        *quoted_keys*. Merged *item_separator* and *key_separator* as
+        *separators*.
+
     :param obj: a Python object
     :param filename: the path to the JSON file
     :param allow: the allowed JSON deviations
@@ -256,11 +261,6 @@ def write(
 
     .. warning:: Avoid specifying ABCs for *mapping_types* or *seq_types*, that
         is very slow.
-
-    .. versionchanged:: 2.0
-        Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
-        *quoted_keys*. Merged *item_separator* and *key_separator* as
-        *separators*.
     """
     return Encoder(
         allow=allow,
@@ -297,6 +297,11 @@ def dump(
 ) -> None:
     r"""Serialize a Python object to an open JSON file.
 
+    .. versionchanged:: 2.0
+        Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
+        *quoted_keys*. Merged *item_separator* and *key_separator* as
+        *separators*.
+
     :param obj: a Python object
     :param fp: an open JSON file
     :param allow: the allowed JSON deviations
@@ -329,11 +334,6 @@ def dump(
 
     .. warning:: Avoid specifying ABCs for *mapping_types* or *seq_types*, that
         is very slow.
-
-    .. versionchanged:: 2.0
-        Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
-        *quoted_keys*. Merged *item_separator* and *key_separator* as
-        *separators*.
     """
     Encoder(
         allow=allow,
@@ -369,6 +369,11 @@ def dumps(
 ) -> str:
     r"""Serialize a Python object to a JSON string.
 
+    .. versionchanged:: 2.0
+        Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
+        *quoted_keys*. Merged *item_separator* and *key_separator* as
+        *separators*.
+
     :param obj: a Python object
     :param allow: the allowed JSON deviations
     :param commas: separate items by commas when indented
@@ -396,11 +401,6 @@ def dumps(
 
     .. warning:: Avoid specifying ABCs for *mapping_types* or *seq_types*, that
         is very slow.
-
-    .. versionchanged:: 2.0
-        Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
-        *quoted_keys*. Merged *item_separator* and *key_separator* as
-        *separators*.
     """
     return Encoder(
         allow=allow,
@@ -427,6 +427,8 @@ def apply_patch(
 ) -> Any:
     """Apply a JSON patch to a Python object.
 
+    .. versionadded:: 2.0
+
     :param obj: a Python object
     :param patch: a JSON patch
     :param allow: the allowed JSON deviations
@@ -444,8 +446,6 @@ def apply_patch(
     .. tip:: Using queries instead of indices is more robust.
 
     .. todo:: Update raised exceptions.
-
-    .. versionadded:: 2.0
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).apply_patch(
         obj, patch,
@@ -463,6 +463,8 @@ def run_select_query(
     use_decimal: bool = False,
 ) -> list[_Node]:
     """Run a JSON select query on a node or a list of nodes.
+
+    .. versionadded:: 2.0
 
     :param nodes: a node or a list of nodes
     :param query: a JSON select query
@@ -487,8 +489,6 @@ def run_select_query(
     .. tip:: Using queries instead of indices is more robust.
 
     .. todo:: Update raised exceptions.
-
-    .. versionadded:: 2.0
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).run_select_query(
         nodes,
@@ -508,6 +508,8 @@ def run_filter_query(
 ) -> list[_Node]:
     """Run a JSON filter query on a node or a list of nodes.
 
+    .. versionadded:: 2.0
+
     :param nodes: a node or a list of nodes
     :param query: a JSON filter query
     :param allow: the allowed JSON deviations
@@ -520,8 +522,6 @@ def run_filter_query(
     >>> assert json.run_filter_query(node, "@ == null")
 
     .. todo:: Update raised exceptions.
-
-    .. versionadded:: 2.0
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).run_filter_query(
         nodes, query,
@@ -536,6 +536,8 @@ def load_query_value(
 ) -> Any:
     """Deserialize a JSON query value to a Python object.
 
+    .. versionadded:: 2.0
+
     :param s: a JSON query value
     :param allow: the allowed JSON deviations
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
@@ -545,8 +547,6 @@ def load_query_value(
     >>> import jsonyx as json
     >>> json.load_query_value("'~'foo'")
     "'foo"
-
-    .. versionadded:: 2.0
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).load_query_value(
         s,

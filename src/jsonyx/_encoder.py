@@ -267,6 +267,11 @@ except ImportError:
 class Encoder:
     r"""A configurable JSON encoder.
 
+    .. versionchanged:: 2.0
+        Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
+        *quoted_keys*. Merged *item_separator* and *key_separator* as
+        *separators*.
+
     :param allow: the allowed JSON deviations
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
@@ -286,11 +291,6 @@ class Encoder:
 
     .. warning:: Avoid specifying ABCs for *mapping_types* or *seq_types*, that
         is very slow.
-
-    .. versionchanged:: 2.0
-        Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
-        *quoted_keys*. Merged *item_separator* and *key_separator* as
-        *separators*.
     """
 
     def __init__(
