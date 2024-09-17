@@ -67,6 +67,10 @@ def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
 
     .. tab:: without classes
 
+        .. only:: latex
+
+            .. rubric:: without classes
+
         >>> import jsonyx as json
         >>>
         >>> try:
@@ -82,6 +86,10 @@ def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
         jsonyx.JSONSyntaxError: Expecting value
 
     .. tab:: with classes
+
+        .. only:: latex
+
+            .. rubric:: with classes
 
         >>> import jsonyx as json
         >>> decoder = json.Decoder()
