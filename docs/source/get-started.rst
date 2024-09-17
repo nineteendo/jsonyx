@@ -6,8 +6,9 @@ Getting Started
 Installation
 ------------
 
-To use :mod:`jsonyx`, first install it using pip, `conda <https://conda.org>`_
-or `mamba <https://mamba.readthedocs.io>`_:
+To use :mod:`jsonyx`, first install it using pip,
+`pipx <https://pipx.pypa.io>`_, `conda <https://docs.conda.io>`_ or
+`mamba <https://mamba.readthedocs.io>`_:
 
 .. tab:: pip
 
@@ -30,6 +31,18 @@ or `mamba <https://mamba.readthedocs.io>`_:
         .. code-block:: console
 
             (.venv) $ pip install --force-reinstall git+https://github.com/nineteendo/jsonyx
+
+.. tab:: pipx
+
+    .. tab:: GitHub
+
+        .. only:: latex
+
+            .. rubric:: pipx (GitHub)
+
+        .. code-block:: console
+
+            $ pipx install git+https://github.com/nineteendo/jsonyx
 
 .. tab:: conda
 
