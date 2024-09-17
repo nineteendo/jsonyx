@@ -4,6 +4,10 @@ Changelog
 jsonyx 2.0.0 (unreleased)
 -------------------------
 
+.. todo::
+
+    Add release date
+
 - Added the ``jsonyx`` command line utility
 - Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
   *quoted_keys* to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,

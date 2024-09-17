@@ -34,6 +34,16 @@ To use :mod:`jsonyx`, first install it using pip,
 
 .. tab:: pipx
 
+    .. tab:: PyPI
+
+        .. only:: latex
+
+            .. rubric:: pipx (PyPI)
+
+        .. todo::
+
+            Add command
+
     .. tab:: GitHub
 
         .. only:: latex

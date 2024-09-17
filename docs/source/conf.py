@@ -25,6 +25,7 @@ extensions: list[str] = [
     "sphinx.ext.doctest",
     "sphinx.ext.duration",
     "sphinx.ext.intersphinx",
+    "sphinx.ext.todo",
     "sphinx.ext.viewcode",
     "sphinxext.opengraph",
     "sphinx_autodoc_typehints",
@@ -86,13 +87,17 @@ epub_show_urls: str = "no"
 latex_engine: str = "xelatex"
 latex_use_xindy: bool = False
 
-# -- Options for autodoc
+# -- Options for sphinx.ext.autodoc
 
 autodoc_preserve_defaults: bool = True
 autodoc_type_aliases: dict[str, str] = {
     name: name for name in ["_Node", "_Operation", "_StrPath"]
 }
 autodoc_typehints: str = "none"
+
+# -- Options for sphinx.ext.todo
+
+todo_include_todos: bool = True
 
 # -- Options for sphinx_autodoc_typehints
 

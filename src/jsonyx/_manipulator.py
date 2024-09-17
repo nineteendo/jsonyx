@@ -624,6 +624,9 @@ class Manipulator:
 
         .. tip::
             Using queries instead of indices is more robust.
+
+        .. todo::
+            Update raised exceptions.
         """
         root: list[Any] = [obj]
         if isinstance(patch, dict):
@@ -664,6 +667,9 @@ class Manipulator:
 
         .. tip::
             Using queries instead of indices is more robust.
+
+        .. todo::
+            Update raised exceptions.
         """
         if isinstance(nodes, tuple):
             nodes = [nodes]
@@ -696,6 +702,9 @@ class Manipulator:
         >>> manipulator = json.Manipulator()
         >>> node = [None], 0
         >>> assert manipulator.run_filter_query(node, "@ == null")
+
+        .. todo::
+            Update raised exceptions.
         """
         if isinstance(nodes, tuple):
             nodes = [nodes]
@@ -710,7 +719,7 @@ class Manipulator:
         """Deserialize a JSON query value to a Python object.
 
         :param s: a JSON query value
-        :raises SyntaxError: if the query value is invalid
+        :raises JSONSyntaxError: if the query value is invalid
         :return: a Python object
 
         >>> import jsonyx as json
