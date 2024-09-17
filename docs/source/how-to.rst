@@ -18,8 +18,7 @@ Traceback (most recent call last):
      ^
 jsonyx.JSONSyntaxError: Expecting value
 
-.. seealso::
-    :func:`jsonyx.format_syntax_error` for formatting the exception.
+.. seealso:: :func:`jsonyx.format_syntax_error` for formatting the exception.
 
 Specializing JSON object encoding
 ---------------------------------

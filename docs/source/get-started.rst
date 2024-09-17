@@ -40,9 +40,7 @@ To use :mod:`jsonyx`, first install it using pip,
 
             .. rubric:: pipx (PyPI)
 
-        .. todo::
-
-            Add command
+        .. todo:: Add command
 
     .. tab:: GitHub
 
@@ -197,9 +195,8 @@ Compact encoding
     >>> encoder.dumps({"a": 1, "b": 2, "c": 3})
     '{"a":1,"b":2,"c":3}'
 
-.. tip::
-    Use ``quoted_keys=False`` for even more compact encoding, but this isn't
-    widely supported.
+.. tip:: Use ``quoted_keys=False`` for even more compact encoding, but this
+    isn't widely supported.
 
 Pretty printing
 ^^^^^^^^^^^^^^^
@@ -232,14 +229,12 @@ Pretty printing
         "bar": {"a": 1, "b": 2, "c": 3}
     }
 
-.. tip::
-    Use ``ensure_ascii=True`` to escape non-ASCII characters,
+.. tip:: Use ``ensure_ascii=True`` to escape non-ASCII characters,
     ``indent_leaves=True`` to indent everything and ``sort_keys=True`` to sort
     the keys of objects.
 
-.. seealso::
-    The built-in :mod:`pprint` module for pretty-printing arbitrary Python data
-    structures.
+.. seealso:: The built-in :mod:`pprint` module for pretty-printing arbitrary
+    Python data structures.
 
 Decoding JSON
 ^^^^^^^^^^^^^
@@ -319,9 +314,8 @@ Using :class:`decimal.Decimal` instead of :class:`float`
     >>> decoder.loads("[1.0000000000000001, 1e400]")
     [Decimal('1.0000000000000001'), Decimal('1E+400')]
 
-.. note::
-    :class:`decimal.Decimal` can be natively serialized, but not as fast as
-    :class:`float`.
+.. note:: :class:`decimal.Decimal` can be natively serialized, but not as fast
+    as :class:`float`.
 
 Making a patch from two Python objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -359,8 +353,7 @@ Applying a patch
     >>> manipulator.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
     [1, 3]
 
-.. tip::
-    Using queries instead of indices is more robust.
+.. tip:: Using queries instead of indices is more robust.
 
 Using the ``jsonyx`` command line utility
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

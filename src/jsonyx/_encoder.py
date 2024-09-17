@@ -282,12 +282,10 @@ class Encoder:
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
 
-    .. note::
-        The item separator is automatically stripped when indented.
+    .. note:: The item separator is automatically stripped when indented.
 
-    .. warning::
-        Avoid specifying ABCs for *mapping_types* or *seq_types*, that is very
-        slow.
+    .. warning:: Avoid specifying ABCs for *mapping_types* or *seq_types*, that
+        is very slow.
 
     .. versionchanged:: 2.0
         Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and

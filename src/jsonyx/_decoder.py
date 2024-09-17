@@ -134,13 +134,11 @@ except ImportError:
         >>> {json.DuplicateKey('key'): 'value 1', json.DuplicateKey('key'): 'value 2'}
         {'key': 'value 1', 'key': 'value 2'}
 
-        .. tip::
-            To retrieve the value of a duplicate key, you can
+        .. tip:: To retrieve the value of a duplicate key, you can
             :ref:`use a multi dict <use_multidict>`.
 
-        .. seealso::
-            :data:`jsonyx.allow.DUPLICATE_KEYS` for loading a dictionary with
-            duplicate keys.
+        .. seealso:: :data:`jsonyx.allow.DUPLICATE_KEYS` for loading a
+            dictionary with duplicate keys.
         """
 
         __slots__: tuple[()] = ()
@@ -170,8 +168,8 @@ class JSONSyntaxError(SyntaxError):
          ^
     jsonyx.JSONSyntaxError: Expecting value
 
-    .. seealso::
-        :func:`jsonyx.format_syntax_error` for formatting the exception.
+    .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the
+        exception.
     """
 
     def __init__(
@@ -242,8 +240,7 @@ def detect_encoding(b: bytearray | bytes) -> str:
     >>> b.decode(json.detect_encoding(b))
     '"foo"'
 
-    .. note::
-        Supports only ``"utf_8"``, ``"utf_8-sig"``, ``"utf_16"``,
+    .. note:: Supports only ``"utf_8"``, ``"utf_8-sig"``, ``"utf_16"``,
         ``"utf_16_be"``, ``"utf_16_le"``, ``"utf_32"``, ``"utf_32_be"`` and
         ``"utf_32_le"``.
     """
@@ -706,8 +703,7 @@ class Decoder:
         >>> decoder.loads('{"foo": ["bar", null, 1.0, 2]}')
         {'foo': ['bar', None, 1.0, 2]}
 
-        .. tip::
-            Specify *filename* to display the filename in error messages.
+        .. tip:: Specify *filename* to display the filename in error messages.
         """
         filename = fspath(filename)
         if not filename.startswith("<") and not filename.endswith(">"):

@@ -137,8 +137,7 @@ MISSING_COMMAS: frozenset[str] = frozenset({"missing_commas"})
 #:     >>> encoder.dump([nan, inf, -inf])
 #:     [NaN, Infinity, -Infinity]
 #:
-#: .. note::
-#:     ``Decimal("sNan")`` can't be (de)serialised this way.
+#: .. note:: ``Decimal("sNan")`` can't be (de)serialised this way.
 NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
 
 #: Allow unpaired surrogates in strings.
@@ -173,9 +172,8 @@ NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
 #:     >>> encoder.dump("\ud800")
 #:     "\ud800"
 #:
-#: .. tip::
-#:     If you're not using ``read()`` or ``write()``, you still need to set
-#:     the unicode error handler to ``"surrogatepass"``.
+#: .. tip:: If you're not using ``read()`` or ``write()``, you still need to
+#      set the unicode error handler to ``"surrogatepass"``.
 SURROGATES: frozenset[str] = frozenset({"surrogates"})
 
 #: Allow a trailing comma at the end of arrays and objects.

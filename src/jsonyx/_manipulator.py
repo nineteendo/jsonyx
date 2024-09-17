@@ -622,11 +622,9 @@ class Manipulator:
         >>> manipulator.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
         [1, 3]
 
-        .. tip::
-            Using queries instead of indices is more robust.
+        .. tip:: Using queries instead of indices is more robust.
 
-        .. todo::
-            Update raised exceptions.
+        .. todo:: Update raised exceptions.
         """
         root: list[Any] = [obj]
         if isinstance(patch, dict):
@@ -665,11 +663,9 @@ class Manipulator:
         >>> root[0]
         [1, 2, 3, None, None, None]
 
-        .. tip::
-            Using queries instead of indices is more robust.
+        .. tip:: Using queries instead of indices is more robust.
 
-        .. todo::
-            Update raised exceptions.
+        .. todo:: Update raised exceptions.
         """
         if isinstance(nodes, tuple):
             nodes = [nodes]
@@ -703,8 +699,7 @@ class Manipulator:
         >>> node = [None], 0
         >>> assert manipulator.run_filter_query(node, "@ == null")
 
-        .. todo::
-            Update raised exceptions.
+        .. todo:: Update raised exceptions.
         """
         if isinstance(nodes, tuple):
             nodes = [nodes]
