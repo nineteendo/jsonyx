@@ -159,7 +159,7 @@ class JSONSyntaxError(SyntaxError):
     :param filename: the path to the JSON file
     :param doc: a JSON string
     :param start: the start position
-    :param end: the end position
+    :param end: the end position or negative offset
 
     >>> import jsonyx as json
     >>> raise json.JSONSyntaxError("Expecting value", "<string>", "[,]", 1)
