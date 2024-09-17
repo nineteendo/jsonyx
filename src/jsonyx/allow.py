@@ -205,6 +205,8 @@ TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
 
 #: Allow unquoted keys in objects which are identifiers.
 #:
+#: .. versionadded:: 2.0
+#:
 #: .. tab:: without classes
 #:
 #:     .. only:: latex
@@ -228,8 +230,6 @@ TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
 #:     >>> decoder = json.Decoder(allow=jsonyx.allow.UNQUOTED_KEYS)
 #:     >>> decoder.loads('{key: "value"}')
 #:     {'key': 'value'}
-#:
-#: .. versionadded:: 2.0
 UNQUOTED_KEYS: frozenset[str] = frozenset({"unquoted_keys"})
 
 #: Allow all JSON deviations provided by :mod:`jsonyx`.

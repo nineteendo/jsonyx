@@ -161,10 +161,10 @@ def _scan_query_string(s: str, end: int) -> tuple[str, int]:
 class Manipulator:
     """A configurable JSON manipulator.
 
+    .. versionadded:: 2.0
+
     :param allow: the allowed JSON deviations
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
-
-    .. versionadded:: 2.0
     """
 
     def __init__(
