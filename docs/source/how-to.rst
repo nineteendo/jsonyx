@@ -204,6 +204,10 @@ Disabling the integer string conversion length limit
 
 .. tab:: without classes
 
+    .. only:: latex
+
+        .. rubric:: without classes
+
     >>> import jsonyx as json
     >>> from sys import set_int_max_str_digits
     >>>
@@ -215,6 +219,10 @@ Disabling the integer string conversion length limit
     5002
 
 .. tab:: with classes
+
+    .. only:: latex
+
+        .. rubric:: with classes
 
     >>> import jsonyx as json
     >>> from sys import set_int_max_str_digits
