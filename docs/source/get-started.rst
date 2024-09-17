@@ -68,7 +68,10 @@ To use :mod:`jsonyx`, first install it using pip,
 
             (base) $ mamba install conda-forge::jsonyx
 
-Check if you have installed the correct version:
+Check if the correct version is installed
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. versionadded:: 2.0
 
 .. tab:: long options
 
@@ -313,12 +316,16 @@ Using :class:`decimal.Decimal` instead of :class:`float`
 Making a patch from two Python objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. versionadded:: 2.0
+
 >>> import jsonyx as json
 >>> json.make_patch([1, 2, 3], [1, 3])
 [{'op': 'del', 'path': '$[1]'}]
 
 Applying a patch
 ^^^^^^^^^^^^^^^^
+
+.. versionadded:: 2.0
 
 .. tab:: without classes
 
