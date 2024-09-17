@@ -42,7 +42,7 @@ To use :mod:`jsonyx`, first install it using pip,
 
         .. code-block:: console
 
-            $ pipx install git+https://github.com/nineteendo/jsonyx
+            $ pipx install -f git+https://github.com/nineteendo/jsonyx
 
 .. tab:: conda
 
