@@ -40,7 +40,9 @@ To use :mod:`jsonyx`, first install it using pip,
 
             .. rubric:: pipx (PyPI)
 
-        .. todo:: Add command
+        .. code-block:: console
+
+            $ pipx install jsonyx
 
     .. tab:: GitHub
 

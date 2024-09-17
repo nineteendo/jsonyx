@@ -93,6 +93,8 @@ to :ref:`install <installation>` the project.
     api/index
     cli
 
+.. todo:: Add specification
+
 .. toctree::
     :caption: About the Project
     :hidden:
