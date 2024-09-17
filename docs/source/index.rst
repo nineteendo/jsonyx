@@ -8,6 +8,8 @@ Welcome to jsonyx's Documentation!
 3.10+. It is written in pure Python with an optional C extension for better
 performance and no dependencies.
 
+.. todo:: Add specification
+
 .. rubric:: Key Features
 
 - JSON decoding, encoding and patching
@@ -80,8 +82,6 @@ Dict with 256 lists of 256 dicts with 1 int  1.66    1.91     1.14    1.00      
 
 Check out the :doc:`get-started` section for further information, including how
 to :ref:`install <installation>` the project.
-
-.. todo:: Add specification
 
 .. rubric:: Footnotes
 
