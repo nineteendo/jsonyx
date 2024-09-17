@@ -81,6 +81,8 @@ Dict with 256 lists of 256 dicts with 1 int  1.66    1.91     1.14    1.00      
 Check out the :doc:`get-started` section for further information, including how
 to :ref:`install <installation>` the project.
 
+.. todo:: Add specification
+
 .. rubric:: Footnotes
 
 .. [1] failed due to recursion error
@@ -92,8 +94,6 @@ to :ref:`install <installation>` the project.
     how-to
     api/index
     cli
-
-.. todo:: Add specification
 
 .. toctree::
     :caption: About the Project
