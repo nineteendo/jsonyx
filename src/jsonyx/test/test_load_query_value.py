@@ -1,10 +1,10 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON load_query_value tests."""
-# TODO(Nice Zombies): test integer conversion
 from __future__ import annotations
 
 __all__: list[str] = []
 
+import sys
 from decimal import Decimal
 
 import pytest
@@ -61,6 +61,19 @@ def test_int(s: str) -> None:
     obj: object = load_query_value(s)
     assert isinstance(obj, int)
     assert obj == int(s)
+
+
+@pytest.mark.skipif(
+    hasattr(sys, "get_int_max_str_digits"),
+    reason="requires integer string conversion length limit",
+)
+def test_too_big_int() -> None:
+    """Test too big integer."""
+    s: str = "1" + "0" * sys.get_int_max_str_digits()
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        load_query_value(s, use_decimal=True)
+
+    check_syntax_err(exc_info, "Number is too big", 1, len(s) + 1)
 
 
 @pytest.mark.parametrize("s", [
