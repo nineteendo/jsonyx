@@ -24,7 +24,6 @@ def test_file(json: ModuleType) -> None:
 
 def test_stdout(json: ModuleType) -> None:
     """Test write to stdout."""
-    io: StringIO = StringIO()
-    with redirect_stdout(io):
+    with redirect_stdout(StringIO()) as io:
         json.dump(0, end="")
         assert io.getvalue() == "0"

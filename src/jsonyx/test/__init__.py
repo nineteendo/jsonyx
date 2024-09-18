@@ -21,7 +21,9 @@ if cjson := import_fresh_module("jsonyx", fresh=["_jsonyx"]):
 
 
 def check_syntax_err(
-    exc_info: pytest.ExceptionInfo[Any], msg: str, colno: int = 1,
+    exc_info: pytest.ExceptionInfo[Any],
+    msg: str,
+    colno: int = 1,
     end_colno: int = -1,
 ) -> None:
     """Check JSON syntax error."""
