@@ -268,9 +268,9 @@ class Encoder:
     r"""A configurable JSON encoder.
 
     .. versionchanged:: 2.0
-        Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
-        *quoted_keys*. Merged *item_separator* and *key_separator* as
-        *separators*.
+        Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types``
+        and ``quoted_keys``. Merged ``item_separator`` and ``key_separator`` as
+        ``separators``.
 
     :param allow: the allowed JSON deviations
     :param commas: separate items by commas when indented
@@ -289,8 +289,8 @@ class Encoder:
 
     .. note:: The item separator is automatically stripped when indented.
 
-    .. warning:: Avoid specifying ABCs for *mapping_types* or *seq_types*, that
-        is very slow.
+    .. warning:: Avoid specifying ABCs for ``mapping_types`` or ``seq_types``,
+        that is very slow.
     """
 
     def __init__(

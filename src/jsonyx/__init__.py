@@ -197,7 +197,7 @@ def loads(
     >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
     {'foo': ['bar', None, 1.0, 2]}
 
-    .. tip:: Specify *filename* to display the filename in error messages.
+    .. tip:: Specify ``filename`` to display the filename in error messages.
     """
     return Decoder(allow=allow, use_decimal=use_decimal).loads(
         s, filename=filename,
@@ -224,9 +224,9 @@ def write(
     r"""Serialize a Python object to a JSON file.
 
     .. versionchanged:: 2.0
-        Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
-        *quoted_keys*. Merged *item_separator* and *key_separator* as
-        *separators*.
+        Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types``
+        and ``quoted_keys``. Merged ``item_separator`` and ``key_separator`` as
+        ``separators``.
 
     :param obj: a Python object
     :param filename: the path to the JSON file
@@ -259,8 +259,8 @@ def write(
 
     .. note:: The item separator is automatically stripped when indented.
 
-    .. warning:: Avoid specifying ABCs for *mapping_types* or *seq_types*, that
-        is very slow.
+    .. warning:: Avoid specifying ABCs for ``mapping_types`` or ``seq_types``,
+        that is very slow.
     """
     return Encoder(
         allow=allow,
@@ -298,9 +298,9 @@ def dump(
     r"""Serialize a Python object to an open JSON file.
 
     .. versionchanged:: 2.0
-        Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
-        *quoted_keys*. Merged *item_separator* and *key_separator* as
-        *separators*.
+        Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types``
+        and ``quoted_keys``. Merged ``item_separator`` and ``key_separator`` as
+        ``separators``.
 
     :param obj: a Python object
     :param fp: an open JSON file
@@ -332,8 +332,8 @@ def dump(
 
     .. note:: The item separator is automatically stripped when indented.
 
-    .. warning:: Avoid specifying ABCs for *mapping_types* or *seq_types*, that
-        is very slow.
+    .. warning:: Avoid specifying ABCs for ``mapping_types`` or ``seq_types``,
+        that is very slow.
     """
     Encoder(
         allow=allow,
@@ -370,9 +370,9 @@ def dumps(
     r"""Serialize a Python object to a JSON string.
 
     .. versionchanged:: 2.0
-        Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
-        *quoted_keys*. Merged *item_separator* and *key_separator* as
-        *separators*.
+        Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types``
+        and ``quoted_keys``. Merged ``item_separator`` and ``key_separator`` as
+        ``separators``.
 
     :param obj: a Python object
     :param allow: the allowed JSON deviations
@@ -399,8 +399,8 @@ def dumps(
 
     .. note:: The item separator is automatically stripped when indented.
 
-    .. warning:: Avoid specifying ABCs for *mapping_types* or *seq_types*, that
-        is very slow.
+    .. warning:: Avoid specifying ABCs for ``mapping_types`` or ``seq_types``,
+        that is very slow.
     """
     return Encoder(
         allow=allow,

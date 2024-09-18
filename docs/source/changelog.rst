@@ -7,16 +7,14 @@ jsonyx 2.0.0 (unreleased)
 .. todo:: Add release date
 
 - Added the ``jsonyx`` command line utility
-- Added *commas*, *indent_leaves*, *mapping_types*, *seq_types* and
-  *quoted_keys* to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
+- Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types`` and
+  ``quoted_keys`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
   :func:`jsonyx.dumps` and :func:`jsonyx.write`
 - Added :data:`jsonyx.allow.UNQUOTED_KEYS`
 - Added :func:`jsonyx.apply_patch` and :func:`jsonyx.make_patch`
 - Added :func:`jsonyx.load_query_value`
 - Added :func:`jsonyx.run_filter_query` and :func:`jsonyx.run_select_query`
 - Added :func:`jsonyx.Manipulator`
-- Added :option:`!command`
-- Added :option:`!old_input_filename` and :option:`!patch_filename`
 - Added :option:`!--indent-leaves` and its alias :option:`!-l`
 - Added :option:`!--unquoted-keys` and its alias :option:`!-q`
 - Added :option:`!--version` and its alias :option:`!-v`
@@ -25,7 +23,7 @@ jsonyx 2.0.0 (unreleased)
 - Fixed typo in error message
 - Improved documentation
 - Made :class:`tuple` JSON serializable
-- Merged *item_separator* and *key_separator* as *separators* for
+- Merged ``item_separator`` and ``key_separator`` as ``separators`` for
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
   :func:`jsonyx.write`
 - Removed :mod:`!jsonyx.tool`
