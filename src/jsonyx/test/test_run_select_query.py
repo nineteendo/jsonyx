@@ -1,11 +1,11 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON run_select_query tests."""
 # TODO(Nice Zombies): add more tests
-# TODO(Nice Zombies): test integer conversion
 from __future__ import annotations
 
 __all__: list[str] = []
 
+import sys
 from typing import TYPE_CHECKING, Any
 
 import pytest
@@ -122,6 +122,45 @@ def test_slice(query: str, expected: slice) -> None:
     assert run_select_query(node, query, allow_slice=True) == [([], expected)]
 
 
+@pytest.mark.skipif(
+    not hasattr(sys, "get_int_max_str_digits"),
+    reason="requires integer string conversion length limit",
+)
+def test_too_big_start() -> None:
+    """Test too big start."""
+    num: str = "1" + "0" * sys.get_int_max_str_digits()
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        run_select_query(([[]], 0), f"$[{num}::]")
+
+    check_syntax_err(exc_info, "Start is too big", 3, 3 + len(num))
+
+
+@pytest.mark.skipif(
+    not hasattr(sys, "get_int_max_str_digits"),
+    reason="requires integer string conversion length limit",
+)
+def test_too_big_stop() -> None:
+    """Test too big stop."""
+    num: str = "1" + "0" * sys.get_int_max_str_digits()
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        run_select_query(([[]], 0), f"$[:{num}:]")
+
+    check_syntax_err(exc_info, "Stop is too big", 4, 4 + len(num))
+
+
+@pytest.mark.skipif(
+    not hasattr(sys, "get_int_max_str_digits"),
+    reason="requires integer string conversion length limit",
+)
+def test_too_big_step() -> None:
+    """Test too big step."""
+    num: str = "1" + "0" * sys.get_int_max_str_digits()
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        run_select_query(([[]], 0), f"$[::{num}]")
+
+    check_syntax_err(exc_info, "Step is too big", 5, 5 + len(num))
+
+
 @pytest.mark.parametrize("num", [
     # Sign
     "-1",
@@ -132,6 +171,19 @@ def test_slice(query: str, expected: slice) -> None:
 def test_index(num: str) -> None:
     """Test index."""
     assert run_select_query(([[]], 0), f"$[{num}]") == [([], int(num))]
+
+
+@pytest.mark.skipif(
+    not hasattr(sys, "get_int_max_str_digits"),
+    reason="requires integer string conversion length limit",
+)
+def test_too_big_int() -> None:
+    """Test too big integer."""
+    num: str = "1" + "0" * sys.get_int_max_str_digits()
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        run_select_query(([[]], 0), f"$[{num}]")
+
+    check_syntax_err(exc_info, "Index is too big", 3, 3 + len(num))
 
 
 @pytest.mark.parametrize(("obj", "query", "keys"), [

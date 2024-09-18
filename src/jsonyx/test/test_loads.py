@@ -113,7 +113,7 @@ def test_too_big_int(json: ModuleType) -> None:
     """Test too big integer."""
     s: str = "1" + "0" * sys.get_int_max_str_digits()
     with pytest.raises(json.JSONSyntaxError) as exc_info:
-        json.loads(s, use_decimal=True)
+        json.loads(s)
 
     check_syntax_err(exc_info, "Number is too big", 1, len(s) + 1)
 

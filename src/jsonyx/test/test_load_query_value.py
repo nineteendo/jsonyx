@@ -71,7 +71,7 @@ def test_too_big_int() -> None:
     """Test too big integer."""
     s: str = "1" + "0" * sys.get_int_max_str_digits()
     with pytest.raises(JSONSyntaxError) as exc_info:
-        load_query_value(s, use_decimal=True)
+        load_query_value(s)
 
     check_syntax_err(exc_info, "Number is too big", 1, len(s) + 1)
 
