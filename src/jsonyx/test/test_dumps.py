@@ -247,8 +247,7 @@ def test_list_recursion(json: ModuleType) -> None:
 @pytest.mark.parametrize("obj", [UserList([1, 2, 3]), range(1, 4), (1, 2, 3)])
 def test_seq_types(json: ModuleType, obj: Sequence[object]) -> None:
     """Test seq_types."""
-    s: str = json.dumps(obj, end="", seq_types=(UserList, range))
-    assert s == "[1, 2, 3]"
+    assert json.dumps(obj, end="", seq_types=(UserList, range)) == "[1, 2, 3]"
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
@@ -301,9 +300,8 @@ def test_quoted_keys_ensure_ascii(
     json: ModuleType, key: str, expected: str,
 ) -> None:
     """Test quoted keys with ensure_ascii."""
-    assert json.dumps(
-        {key: 0}, end="", ensure_ascii=True, quoted_keys=False,
-    ) == f'{{"{expected}": 0}}'
+    s: str = json.dumps({key: 0}, end="", ensure_ascii=True, quoted_keys=False)
+    assert s == f'{{"{expected}": 0}}'
 
 
 @pytest.mark.parametrize(("key", "expected"), [

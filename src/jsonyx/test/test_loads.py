@@ -496,8 +496,7 @@ def test_duplicate_key(json: ModuleType) -> None:
 def test_reuse_keys(json: ModuleType) -> None:
     """Test if keys are re-used."""
     dcts: list[dict[str, int]] = json.loads('[{"": 1}, {"": 2}, {"": 3}]')
-    ids: set[int] = {id(key) for dct in dcts for key in dct}
-    assert len(ids) == 1
+    assert len({id(key) for dct in dcts for key in dct}) == 1
 
 
 @pytest.mark.parametrize("s", ["", "-", "foo"])

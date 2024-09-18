@@ -176,6 +176,5 @@ def test_string(
 ) -> None:
     """Test string representation."""
     exc: JSONSyntaxError = JSONSyntaxError("msg", "<string>", doc, 5, end)
-    assert str(exc) == (
-        f"msg (<string>, line {line_range}, column {column_range})"
-    )
+    expected: str = f"msg (<string>, line {line_range}, column {column_range})"
+    assert str(exc) == expected
