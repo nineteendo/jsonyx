@@ -127,8 +127,8 @@ def _configure(parser: ArgumentParser) -> None:
 
     format_parser = commands.add_parser(
         "format",
-        help="re-format a JSON file",
-        description="re-format a JSON file",
+        help="re-format or validate a JSON file",
+        description="re-format or validate a JSON file",
         parents=[parent_parser],
     )
     format_parser.add_argument(

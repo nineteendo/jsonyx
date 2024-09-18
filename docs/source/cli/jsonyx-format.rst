@@ -3,7 +3,7 @@ jsonyx format
 
 .. program:: jsonyx format
 
-Re-format a JSON file.
+Re-format or validate a JSON file.
 
 Usage
 -----
