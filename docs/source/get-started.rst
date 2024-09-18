@@ -344,8 +344,8 @@ Applying a patch
 
 .. tip:: Using queries instead of indices is more robust.
 
-Using the ``jsonyx`` command line utility
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Using the ``jsonyx`` application
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. versionadded:: 2.0
 

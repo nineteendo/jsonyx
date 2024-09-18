@@ -6,18 +6,19 @@ jsonyx 2.0.0 (unreleased)
 
 .. todo:: Add release date
 
-- Added the ``jsonyx`` command line utility
+- Added the ``jsonyx`` application
+- Added ``python -m jsonyx diff`` and ``python -m jsonyx patch``
 - Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types`` and
   ``quoted_keys`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
   :func:`jsonyx.dumps` and :func:`jsonyx.write`
+- Added ``--indent-leaves`` and its alias ``-l`` to ``python -m jsonyx format``
+- Added ``--unquoted-keys`` and its alias ``-q`` to ``python -m jsonyx format``
+- Added ``--version`` and its alias ``-v`` to ``python -m jsonyx``
 - Added :data:`jsonyx.allow.UNQUOTED_KEYS`
 - Added :func:`jsonyx.apply_patch` and :func:`jsonyx.make_patch`
 - Added :func:`jsonyx.load_query_value`
 - Added :func:`jsonyx.run_filter_query` and :func:`jsonyx.run_select_query`
 - Added :func:`jsonyx.Manipulator`
-- Added :option:`!--indent-leaves` and its alias :option:`!-l`
-- Added :option:`!--unquoted-keys` and its alias :option:`!-q`
-- Added :option:`!--version` and its alias :option:`!-v`
 - Changed error for big integers to :exc:`jsonyx.JSONSyntaxError`
 - Fixed line comment detection
 - Fixed typo in error message
@@ -27,6 +28,7 @@ jsonyx 2.0.0 (unreleased)
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
   :func:`jsonyx.write`
 - Removed :mod:`!jsonyx.tool`
+- Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
 
 jsonyx 1.2.1 (Aug 3, 2024)
 --------------------------
@@ -52,4 +54,4 @@ jsonyx 1.2.0 (Aug 3, 2024)
 jsonyx 1.1.0 (Aug 3, 2024)
 --------------------------
 
-- Allowed ``python -m jsonyx`` instead of ``python -m jsonyx.tool``
+- Renamed ``python -m jsonyx.tool`` to ``python -m jsonyx``
