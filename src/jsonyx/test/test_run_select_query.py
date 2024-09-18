@@ -130,7 +130,7 @@ def test_too_big_start() -> None:
     """Test too big start."""
     num: str = "1" + "0" * sys.get_int_max_str_digits()
     with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query(([[]], 0), f"$[{num}::]")
+        run_select_query([], f"$[{num}::]")
 
     check_syntax_err(exc_info, "Start is too big", 3, 3 + len(num))
 
@@ -143,7 +143,7 @@ def test_too_big_stop() -> None:
     """Test too big stop."""
     num: str = "1" + "0" * sys.get_int_max_str_digits()
     with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query(([[]], 0), f"$[:{num}:]")
+        run_select_query([], f"$[:{num}:]")
 
     check_syntax_err(exc_info, "Stop is too big", 4, 4 + len(num))
 
@@ -156,7 +156,7 @@ def test_too_big_step() -> None:
     """Test too big step."""
     num: str = "1" + "0" * sys.get_int_max_str_digits()
     with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query(([[]], 0), f"$[::{num}]")
+        run_select_query([], f"$[::{num}]")
 
     check_syntax_err(exc_info, "Step is too big", 5, 5 + len(num))
 
@@ -181,7 +181,7 @@ def test_too_big_int() -> None:
     """Test too big integer."""
     num: str = "1" + "0" * sys.get_int_max_str_digits()
     with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query(([[]], 0), f"$[{num}]")
+        run_select_query([], f"$[{num}]")
 
     check_syntax_err(exc_info, "Index is too big", 3, 3 + len(num))
 
