@@ -64,7 +64,7 @@ def test_int(s: str) -> None:
 
 
 @pytest.mark.skipif(
-    hasattr(sys, "get_int_max_str_digits"),
+    not hasattr(sys, "get_int_max_str_digits"),
     reason="requires integer string conversion length limit",
 )
 def test_too_big_int() -> None:
