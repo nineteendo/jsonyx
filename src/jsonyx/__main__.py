@@ -144,8 +144,8 @@ def _configure(parser: ArgumentParser) -> None:
 
     patch_parser = commands.add_parser(
         "patch",
-        help="apply a JSON patch to the input file.",
-        description="apply a JSON patch to the input file.",
+        help="apply a JSON patch to the input file",
+        description="apply a JSON patch to the input file",
         parents=[parent_parser],
     )
     patch_parser.add_argument(
@@ -165,9 +165,9 @@ def _configure(parser: ArgumentParser) -> None:
     diff_parser = commands.add_parser(
         "diff",
         help="compare two JSON files and generate a diff in JSON patch "
-             "format.",
+             "format",
         description="compare two JSON files and generate a diff in JSON patch "
-                    "format.",
+                    "format",
         parents=[parent_parser],
     )
     diff_parser.add_argument(
@@ -243,7 +243,7 @@ def _run(args: _Namespace) -> None:
 def main() -> None:
     """Start jsonyx."""
     parser: ArgumentParser = ArgumentParser(
-        description="a command line utility to manipulate JSON files.",
+        description="a command line utility to manipulate JSON files",
     )
     _configure(parser)
     args: _Namespace = parser.parse_args(namespace=_Namespace())

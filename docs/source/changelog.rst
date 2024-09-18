@@ -15,11 +15,11 @@ jsonyx 2.0.0 (unreleased)
 - Added :func:`jsonyx.load_query_value`
 - Added :func:`jsonyx.run_filter_query` and :func:`jsonyx.run_select_query`
 - Added :func:`jsonyx.Manipulator`
-- Added :option:`command`
-- Added :option:`old_input_filename` and :option:`patch_filename`
-- Added :option:`--indent-leaves` and its alias :option:`-l`
-- Added :option:`--unquoted-keys` and its alias :option:`-q`
-- Added :option:`--version` and its alias :option:`-v`
+- Added :option:`!command`
+- Added :option:`!old_input_filename` and :option:`!patch_filename`
+- Added :option:`!--indent-leaves` and its alias :option:`!-l`
+- Added :option:`!--unquoted-keys` and its alias :option:`!-q`
+- Added :option:`!--version` and its alias :option:`!-v`
 - Changed error for big integers to :exc:`jsonyx.JSONSyntaxError`
 - Fixed line comment detection
 - Fixed typo in error message
@@ -39,17 +39,17 @@ jsonyx 1.2.1 (Aug 3, 2024)
 jsonyx 1.2.0 (Aug 3, 2024)
 --------------------------
 
-- Added :option:`output_filename`
-- Added :option:`-a` as an alias to :option:`--ensure-ascii`
-- Added :option:`-c` as an alias to :option:`--compact`
-- Added :option:`-C` as an alias to :option:`--no-commas`
-- Added :option:`-d` as an alias to :option:`--use-decimal`
-- Added :option:`-i` as an alias to :option:`--indent`
-- Added :option:`-s` as an alias to :option:`--sort-keys`
-- Added :option:`-S` as an alias to :option:`--nonstrict`
-- Added :option:`-t` as an alias to :option:`--trailing-comma`
-- Added :option:`-T` as an alias to :option:`--indent-tab`
-- Renamed :option:`!filename` to :option:`input_filename`
+- Added :option:`!output_filename`
+- Added :option:`!-a` as an alias to :option:`!--ensure-ascii`
+- Added :option:`!-c` as an alias to :option:`!--compact`
+- Added :option:`!-C` as an alias to :option:`!--no-commas`
+- Added :option:`!-d` as an alias to :option:`!--use-decimal`
+- Added :option:`!-i` as an alias to :option:`!--indent`
+- Added :option:`!-s` as an alias to :option:`!--sort-keys`
+- Added :option:`!-S` as an alias to :option:`!--nonstrict`
+- Added :option:`!-t` as an alias to :option:`!--trailing-comma`
+- Added :option:`!-T` as an alias to :option:`!--indent-tab`
+- Renamed :option:`!filename` to :option:`!input_filename`
 
 jsonyx 1.1.0 (Aug 3, 2024)
 --------------------------

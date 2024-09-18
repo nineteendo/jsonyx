@@ -1,25 +1,24 @@
-Command Line Interface
-======================
+jsonyx diff
+===========
 
-.. option:: command
+.. program:: jsonyx diff
 
-    - diff: compare two JSON files and generate a diff in JSON patch format.
-    - format: re-format a JSON file.
-    - patch: apply a JSON patch to the input file.
+Compare two JSON files and generate a diff in JSON patch format.
 
-    .. versionadded:: 2.0
+Usage
+-----
+
+.. code-block:: none
+
+    jsonyx diff [-h] [-a] [-c] [-C] [-d] [-i SPACES] [-l] [-s] [-S] [-t] [-T]
+                [-q] old_input_filename [input_filename] [output_filename]
+
+Positional arguments
+--------------------
 
 .. option:: old_input_filename
 
     The path to the old input JSON file.
-
-    .. versionadded:: 2.0
-
-.. option:: patch_filename
-
-    The path to the JSON patch file.
-
-    .. versionadded:: 2.0
 
 .. option:: input_filename
 
@@ -30,6 +29,9 @@ Command Line Interface
 
     The path to the output JSON file. If not specified, write to
     :data:`sys.stdout`.
+
+Options
+-------
 
 .. option:: -h, --help
 
@@ -59,13 +61,9 @@ Command Line Interface
 
     Indent leaf objects and arrays.
 
-    .. versionadded:: 2.0
-
 .. option:: -q, --unquoted-keys
 
     Don't quote keys which are identifiers.
-
-    .. versionadded:: 2.0
 
 .. option:: -s, --sort-keys
 
@@ -82,9 +80,3 @@ Command Line Interface
 .. option:: -T, --indent-tab
 
     Indent using tabs.
-
-.. option:: -v, --version
-
-    Show the version number.
-
-    .. versionadded:: 2.0

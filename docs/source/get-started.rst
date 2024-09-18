@@ -387,4 +387,4 @@ Using the ``jsonyx`` command line utility
              ^
         jsonyx.JSONSyntaxError: Expecting string
 
-See :doc:`api/index` and :doc:`cli` for more details.
+See :doc:`api/index` and :doc:`cli/index` for more details.

@@ -93,7 +93,7 @@ to :ref:`install <installation>` the project.
     get-started
     how-to
     api/index
-    cli
+    cli/index
 
 .. toctree::
     :caption: About the Project
