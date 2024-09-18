@@ -7,8 +7,7 @@ Installation
 ------------
 
 To use :mod:`jsonyx`, first install it using pip,
-`pipenv <https://pipenv.pypa.io>`_, `pipx <https://pipx.pypa.io>`_,
-`conda <https://docs.conda.io>`_ or `mamba <https://mamba.readthedocs.io>`_:
+`pipx <https://pipx.pypa.io>`_ or `conda <https://docs.conda.io>`_:
 
 .. tab:: pip
 
@@ -31,28 +30,6 @@ To use :mod:`jsonyx`, first install it using pip,
         .. code-block:: console
 
             (.venv) $ pip install --force-reinstall git+https://github.com/nineteendo/jsonyx
-
-.. tab:: pipenv
-
-    .. tab:: PyPI
-
-        .. only:: latex
-
-            .. rubric:: pipenv (PyPI)
-
-        .. code-block:: console
-
-            (.venv) $ pipenv install jsonyx
-
-    .. tab:: GitHub
-
-        .. only:: latex
-
-            .. rubric:: pipenv (GitHub)
-
-        .. code-block:: console
-
-            (.venv) $ pipenv install git+https://github.com/nineteendo/jsonyx
 
 .. tab:: pipx
 
@@ -87,18 +64,6 @@ To use :mod:`jsonyx`, first install it using pip,
         .. code-block:: console
 
             (base) $ conda install conda-forge::jsonyx
-
-.. tab:: mamba
-
-    .. tab:: conda-forge
-
-        .. only:: latex
-
-            .. rubric:: mamba (conda-forge)
-
-        .. code-block:: console
-
-            (base) $ mamba install conda-forge::jsonyx
 
 Check if the correct version is installed
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
