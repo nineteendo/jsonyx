@@ -269,6 +269,7 @@ class Manipulator:
                         )
                     ]
                 else:
+                    nodes = [node for node, _filter_node in filtered_pairs]
                     filter2_nodes, end = self._run_select_query(
                         nodes, query, end, mapping=True, relative=True,
                     )

@@ -5,28 +5,94 @@ from __future__ import annotations
 
 __all__: list[str] = []
 
+from typing import TYPE_CHECKING, Any
+
 import pytest
 
 from jsonyx import JSONSyntaxError, run_filter_query
 from jsonyx.test import check_syntax_err
 
-
-def test_exist() -> None:
-    """Test exist."""
-    assert run_filter_query(([], 0), "@") == []
+if TYPE_CHECKING:
+    _Node = tuple[dict[Any, Any] | list[Any], int | slice | str]
 
 
-def test_not_exist() -> None:
-    """Test not exist."""
-    assert run_filter_query(([], 0), "!@") == [([], 0)]
+@pytest.mark.parametrize(("obj", "keep"), [
+    # Missing key
+    ([], False),
+
+    # Key present
+    ([0], True),
+])
+def test_has_key(obj: list[Any], keep: bool) -> None:  # noqa: FBT001
+    """Test has key."""
+    expected: list[_Node] = [(obj, 0)] if keep else []
+    assert run_filter_query((obj, 0), "@") == expected
 
 
-@pytest.mark.parametrize(
-    "query", ["@ <= -1", "@ < -1", "@ == 1", "@ != 0", "@ >= 1", "@ > 1"],
-)
-def test_operator(query: str) -> None:
+@pytest.mark.parametrize(("obj", "keep"), [
+    # Missing second key
+    ({"a": 0}, False),
+
+    # Missing first key
+    ({"b": 0}, False),
+
+    # Both keys present
+    ({"a": 0, "b": 0}, True),
+])
+def test_has_two_keys(
+    obj: dict[Any, Any], keep: bool,  # noqa: FBT001
+) -> None:
+    """Test has two keys."""
+    expected: list[_Node] = [([obj], 0)] if keep else []
+    assert run_filter_query(([obj], 0), "@.a == @.b") == expected
+
+
+@pytest.mark.parametrize(("obj", "keep"), [
+    # Missing key
+    ([], True),
+
+    # Key present
+    ([0], False),
+])
+def test_has_not_key(obj: list[Any], keep: bool) -> None:  # noqa: FBT001
+    """Test has not key."""
+    expected: list[_Node] = [(obj, 0)] if keep else []
+    assert run_filter_query((obj, 0), "!@") == expected
+
+
+@pytest.mark.parametrize(("query", "keep"), [
+    # Less than or equal to
+    ("@ <= -1", False),
+    ("@ <= 0", True),
+    ("@ <= 1", True),
+
+    # Less than
+    ("@ < -1", False),
+    ("@ < 0", False),
+    ("@ < 1", True),
+
+    # Equal to
+    ("@ == 1", False),
+    ("@ == 0", True),
+
+    # Not equal to
+    ("@ != 0", False),
+    ("@ != 1", True),
+
+    # Greater than or equal to
+    ("@ >= 1", False),
+    ("@ >= 0", True),
+    ("@ >= -1", True),
+
+    # Greater than
+    ("@ > 1", False),
+    ("@ > 0", False),
+    ("@ > -1", True),
+])
+def test_operator(query: str, keep: bool) -> None:  # noqa: FBT001
     """Test operator."""
-    assert run_filter_query(([0], 0), query) == []
+    expected: list[_Node] = [([0], 0)] if keep else []
+    assert run_filter_query(([0], 0), query) == expected
 
 
 @pytest.mark.parametrize("query", [
