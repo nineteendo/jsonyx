@@ -32,20 +32,18 @@ _slicer: _Slicer = _Slicer()
 
 @pytest.mark.parametrize(("node", "query", "keep"), [
     # List
-    (([], slice(0)), "$?", True),
-    (([], 0), "$?", False),
-    (([0], 0), "$?", True),
+    (([], slice(0)), True),
+    (([], 0), False),
+    (([0], 0), True),
 
     # Dict
-    (({}, ""), "$?", False),
-    (({"": 0}, ""), "$?", True),
+    (({}, ""), False),
+    (({"": 0}, ""), True),
 ])  # type: ignore
-def test_optional_marker(
-    node: _Node, query: str, keep: bool,  # noqa: FBT001
-) -> None:
+def test_optional_marker(node: _Node, keep: bool) -> None:  # noqa: FBT001
     """Test optional marker."""
     expected: list[_Node] = [node] if keep else []
-    assert run_select_query(node, query, allow_slice=True) == expected
+    assert run_select_query(node, "$?", allow_slice=True) == expected
 
 
 def test_optional_marker_not_allowed() -> None:
@@ -68,18 +66,26 @@ def test_property(key: str) -> None:
     assert run_select_query(([{}], 0), f"$.{key}") == [({}, key)]
 
 
-@pytest.mark.parametrize(("query", "match"), [
+@pytest.mark.parametrize("query", ["$.a.b", "$.a[0]"])
+def test_list_property(query: str) -> None:
+    """Test property on a list."""
+    with pytest.raises(
+        TypeError, match="List index must be int or slice, not",
+    ):
+        run_select_query(([[]], 0), query)
+
+
+@pytest.mark.parametrize("query", [
     # At the end
-    ("$.a", "List index must be int, not"),
+    "$.a",
 
     # In the middle
-    ("$.a.b", "List index must be int or slice, not"),
-    ("$.a[0]", "List index must be int or slice, not"),
+    "$.a.b", "$.a[0]",
 ])
-def test_list_property(query: str, match: str) -> None:
+def test_list_property_mapping(query: str) -> None:
     """Test property on a list."""
-    with pytest.raises(TypeError, match=match):
-        run_select_query(([[]], 0), query)
+    with pytest.raises(TypeError, match="List index must be int, not"):
+        run_select_query(([[]], 0), query, mapping=True)
 
 
 @pytest.mark.parametrize("key", [
