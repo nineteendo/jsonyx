@@ -34,6 +34,8 @@ if TYPE_CHECKING:
         def read(self, length: int = ..., /) -> _T_co:  # type: ignore
             """Read string."""
 
+    _MatchFunc = Callable[[str, int], Match[str] | None]
+    _Scanner = Callable[[str, str], Any]
     _StrPath = PathLike[str] | str
 
 
@@ -49,25 +51,19 @@ _UNESCAPE: dict[str, str] = {
     "t": "\t",
 }
 
-_match_chunk: Callable[[str, int], Match[str] | None] = re.compile(
-    r'[^"\\\x00-\x1f]+', _FLAGS,
-).match
-_match_line_end: Callable[[str, int], Match[str] | None] = re.compile(
-    r"[^\n\r]+", _FLAGS,
-).match
-_match_number: Callable[[str, int], Match[str] | None] = re.compile(
+_match_chunk: _MatchFunc = re.compile(r'[^"\\\x00-\x1f]+', _FLAGS).match
+_match_line_end: _MatchFunc = re.compile(r"[^\n\r]+", _FLAGS).match
+_match_number: _MatchFunc = re.compile(
     r"""
     (-?0|-?[1-9]\d*) # integer
     (\.\d+)?         # [frac]
     ([eE][-+]?\d+)?  # [exp]
     """, _FLAGS,
 ).match
-_match_unquoted_key: Callable[[str, int], Match[str] | None] = re.compile(
+_match_unquoted_key: _MatchFunc = re.compile(
     r"(?:\w+|[^\x00-\x7f]+)+", _FLAGS,
 ).match
-_match_whitespace: Callable[[str, int], Match[str] | None] = re.compile(
-    r"[ \t\n\r]+", _FLAGS,
-).match
+_match_whitespace: _MatchFunc = re.compile(r"[ \t\n\r]+", _FLAGS).match
 
 
 def _get_err_context(doc: str, start: int, end: int) -> tuple[int, str, int]:
@@ -289,7 +285,7 @@ except ImportError:
         allow_trailing_comma: bool,  # noqa: FBT001
         allow_unquoted_keys: bool,  # noqa: FBT001
         use_decimal: bool,  # noqa: FBT001
-    ) -> Callable[[str, str], Any]:
+    ) -> _Scanner:
         """Make JSON scanner."""
         memo: dict[str, str] = {}
         memoize: Callable[[str, str], str] = memo.setdefault
@@ -638,7 +634,7 @@ class Decoder:
         """Create a new JSON decoder."""
         allow_surrogates: bool = "surrogates" in allow
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
-        self._scanner: Callable[[str, str], tuple[Any]] = make_scanner(
+        self._scanner: _Scanner = make_scanner(
             "comments" in allow, "duplicate_keys" in allow,
             "missing_commas" in allow, "nan_and_infinity" in allow,
             allow_surrogates, "trailing_comma" in allow,

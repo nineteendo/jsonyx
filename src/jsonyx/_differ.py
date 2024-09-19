@@ -8,19 +8,16 @@ import re
 from decimal import Decimal
 from itertools import starmap
 from math import isnan
-from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
+from re import DOTALL, MULTILINE, VERBOSE, Match
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from collections.abc import Callable, KeysView
 
     _Operation = dict[str, Any]
+    _SubFunc = Callable[[Callable[[Match[str]], str], str], str]
 
-_FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
-
-_escape: Callable[[Callable[[Match[str]], str], str], str] = re.compile(
-    r"['~]", _FLAGS,
-).sub
+_escape: _SubFunc = re.compile(r"['~]", VERBOSE | MULTILINE | DOTALL).sub
 
 
 def _replace(match: Match[str]) -> str:

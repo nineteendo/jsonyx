@@ -20,6 +20,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Container, ItemsView
     from os import PathLike
 
+    _T = TypeVar("_T")
     _T_contra = TypeVar("_T_contra", contravariant=True)
 
     # pylint: disable-next=R0903
@@ -27,7 +28,10 @@ if TYPE_CHECKING:
         def write(self, s: _T_contra, /) -> object:
             """Write string."""
 
+    _EncodeFunc = Callable[[_T], str]
     _StrPath = PathLike[str] | str
+    _SubFunc = Callable[[Callable[[Match[str]], str], str], str]
+    _WriteFunc = Callable[[str], object]
 
 
 _ESCAPE_DCT: dict[str, str] = {chr(i): f"\\u{i:04x}" for i in range(0x20)} | {
@@ -41,19 +45,15 @@ _ESCAPE_DCT: dict[str, str] = {chr(i): f"\\u{i:04x}" for i in range(0x20)} | {
 }
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
-_escape: Callable[[Callable[[Match[str]], str], str], str] = re.compile(
-    r'["\\\x00-\x1f]', _FLAGS,
-).sub
-_escape_ascii: Callable[[Callable[[Match[str]], str], str], str] = re.compile(
-    r'["\\]|[^\x20-\x7e]', _FLAGS,
-).sub
+_escape: _SubFunc = re.compile(r'["\\\x00-\x1f]', _FLAGS).sub
+_escape_ascii: _SubFunc = re.compile(r'["\\]|[^\x20-\x7e]', _FLAGS).sub
 
 try:
     if not TYPE_CHECKING:
         from _jsonyx import make_encoder
 except ImportError:
     def make_encoder(
-        encode_decimal: Callable[[Decimal], str],
+        encode_decimal: _EncodeFunc[Decimal],
         indent: str | None,
         mapping_types: type | tuple[type, ...],
         seq_types: type | tuple[type, ...],
@@ -68,10 +68,10 @@ except ImportError:
         quoted_keys: bool,  # noqa: FBT001
         sort_keys: bool,  # noqa: FBT001
         trailing_comma: bool,  # noqa: FBT001
-    ) -> Callable[[object], str]:
+    ) -> _EncodeFunc[object]:
         """Make JSON encoder."""
-        float_repr: Callable[[float], str] = float.__repr__
-        int_repr: Callable[[int], str] = int.__repr__
+        float_repr: _EncodeFunc[float] = float.__repr__
+        int_repr: _EncodeFunc[int] = int.__repr__
         markers: dict[int, object] = {}
 
         if not ensure_ascii:
@@ -119,7 +119,7 @@ except ImportError:
             return "NaN"
 
         def write_sequence(
-            seq: Any, write: Callable[[str], object], old_indent: str,
+            seq: Any, write: _WriteFunc, old_indent: str,
         ) -> None:
             if not seq:
                 write("[]")
@@ -163,7 +163,7 @@ except ImportError:
             write("]")
 
         def write_mapping(
-            mapping: Any, write: Callable[[str], object], old_indent: str,
+            mapping: Any, write: _WriteFunc, old_indent: str,
         ) -> None:
             if not mapping:
                 write("{}")
@@ -220,7 +220,7 @@ except ImportError:
             write("}")
 
         def write_value(
-            obj: object, write: Callable[[str], object], current_indent: str,
+            obj: object, write: _WriteFunc, current_indent: str,
         ) -> None:
             if isinstance(obj, str):
                 write(encode_string(obj))
@@ -250,7 +250,7 @@ except ImportError:
 
         def encoder(obj: object) -> str:
             io: StringIO = StringIO()
-            write: Callable[[str], object] = io.write
+            write: _WriteFunc = io.write
             try:
                 write_value(obj, write, "\n")
             except (ValueError, TypeError) as exc:
@@ -312,7 +312,7 @@ class Encoder:
         """Create a new JSON encoder."""
         allow_nan_and_infinity: bool = "nan_and_infinity" in allow
         allow_surrogates: bool = "surrogates" in allow
-        decimal_str: Callable[[Decimal], str] = Decimal.__str__
+        decimal_str: _EncodeFunc[Decimal] = Decimal.__str__
 
         long_item_separator, key_separator = separators
         if commas:
@@ -338,7 +338,7 @@ class Encoder:
 
             return decimal_str(decimal)
 
-        self._encoder: Callable[[object], str] = make_encoder(
+        self._encoder: _EncodeFunc[object] = make_encoder(
             encode_decimal, indent, mapping_types, seq_types, end,
             item_separator, long_item_separator, key_separator,
             allow_nan_and_infinity, allow_surrogates, ensure_ascii,

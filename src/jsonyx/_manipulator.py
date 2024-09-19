@@ -24,22 +24,22 @@ if TYPE_CHECKING:
     _Target = dict[Any, Any] | list[Any]
     _Key = int | slice | str
     _Node = tuple[_Target, _Key]
+    _MatchFunc = Callable[[str, int], Match[str] | None]
     _Operation = dict[str, Any]
+    _Operator = Callable[[Any, Any], Any]
 
 
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
-_match_idx: Callable[[str, int], Match[str] | None] = re.compile(
-    r"-?0|-?[1-9]\d*", _FLAGS,
-).match
-_match_number: Callable[[str, int], Match[str] | None] = re.compile(
+_match_idx: _MatchFunc = re.compile(r"-?0|-?[1-9]\d*", _FLAGS).match
+_match_number: _MatchFunc = re.compile(
     r"""
     (-?0|-?[1-9]\d*) # integer
     (\.\d+)?         # [frac]
     ([eE][-+]?\d+)?  # [exp]
     """, _FLAGS,
 ).match
-_match_slice: Callable[[str, int], Match[str] | None] = re.compile(
+_match_slice: _MatchFunc = re.compile(
     r"""
     (-?0|-?[1-9]\d*)?       # [start]
     :                       # ":"
@@ -47,15 +47,11 @@ _match_slice: Callable[[str, int], Match[str] | None] = re.compile(
     (?::(-?0|-?[1-9]\d*)?)? # [":" [step]]
     """, _FLAGS,
 ).match
-_match_str_chunk: Callable[[str, int], Match[str] | None] = re.compile(
-    r"[^'~]*", _FLAGS,
-).match
-_match_unquoted_key: Callable[[str, int], Match[str] | None] = re.compile(
+_match_str_chunk: _MatchFunc = re.compile(r"[^'~]*", _FLAGS).match
+_match_unquoted_key: _MatchFunc = re.compile(
     r"(?:\w+|[^\x00-\x7f]+)+", _FLAGS,
 ).match
-_match_whitespace: Callable[[str, int], Match[str] | None] = re.compile(
-    r"\ +", _FLAGS,
-).match
+_match_whitespace: _MatchFunc = re.compile(r"\ +", _FLAGS).match
 
 
 def _errmsg(msg: str, query: str, start: int, end: int = 0) -> JSONSyntaxError:
@@ -104,9 +100,7 @@ def _has_key(target: _Target, key: _Key) -> bool:
     return -len(target) <= key < len(target)  # type: ignore
 
 
-def _scan_query_operator(
-    query: str, end: int,
-) -> tuple[Callable[[Any, Any], Any] | None, int]:
+def _scan_query_operator(query: str, end: int) -> tuple[_Operator | None, int]:
     if query[end:end + 2] == "<=":
         operator, end = le, end + 2
     elif query[end:end + 1] == "<":

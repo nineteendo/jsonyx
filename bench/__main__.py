@@ -22,6 +22,8 @@ import jsonyx
 if TYPE_CHECKING:
     from collections.abc import Callable
 
+    _Func = Callable[[Any], Any]
+
 seed(0)
 _USER: dict[str, Any] = {
     "userId": 3381293,
@@ -72,7 +74,7 @@ _ENCODE_CASES: dict[str, Any] = {
         for _ in range(256)
     },
 }
-_ENCODE_FUNCS: dict[str, Callable[[Any], Any]] = {
+_ENCODE_FUNCS: dict[str, _Func] = {
     "json": json.JSONEncoder().encode,
     "jsonyx": jsonyx.Encoder().dumps,
     "msgspec": msgspec.json.Encoder().encode,
@@ -84,7 +86,7 @@ _ENCODE_FUNCS: dict[str, Callable[[Any], Any]] = {
 _DECODE_CASES: dict[str, Any] = {
     case: jsonyx.dumps(obj) for case, obj in _ENCODE_CASES.items()
 }
-_DECODE_FUNCS: dict[str, Callable[[Any], Any]] = {
+_DECODE_FUNCS: dict[str, _Func] = {
     "json": json.JSONDecoder().decode,
     "jsonyx": jsonyx.Decoder().loads,
     "msgspec": msgspec.json.Decoder().decode,
@@ -96,7 +98,7 @@ _DECODE_FUNCS: dict[str, Callable[[Any], Any]] = {
 
 
 def _run_benchmark(
-    name: str, cases: dict[str, Any], funcs: dict[str, Callable[[Any], Any]],
+    name: str, cases: dict[str, Any], funcs: dict[str, _Func],
 ) -> None:
     results: list[list[str]] = []
     for case, obj in cases.items():
