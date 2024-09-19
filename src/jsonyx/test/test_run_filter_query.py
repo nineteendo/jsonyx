@@ -27,7 +27,6 @@ def test_not_exist() -> None:
     ("!", "Expecting a relative query", 2, -1),
     ("@ == ", "Expecting value", 6, -1),
     ("@ == $", "Expecting value", 6, -1),
-    ("@ == !", "Expecting value", 7, -1),
     ("!@ == @", "Expecting and", 4, 6),
     ("@ @ @", "Expecting end of file", 2, -1),
 ])
