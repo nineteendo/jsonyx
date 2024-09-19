@@ -30,24 +30,6 @@ def test_has_key(obj: list[Any], keep: bool) -> None:  # noqa: FBT001
 
 
 @pytest.mark.parametrize(("obj", "keep"), [
-    # Missing second key
-    ({"a": 0}, False),
-
-    # Missing first key
-    ({"b": 0}, False),
-
-    # Both keys present
-    ({"a": 0, "b": 0}, True),
-])
-def test_has_two_keys(
-    obj: dict[Any, Any], keep: bool,  # noqa: FBT001
-) -> None:
-    """Test has two keys."""
-    expected: list[_Node] = [([obj], 0)] if keep else []
-    assert run_filter_query(([obj], 0), "@.a == @.b") == expected
-
-
-@pytest.mark.parametrize(("obj", "keep"), [
     # Missing key
     ([], True),
 
@@ -105,6 +87,25 @@ def test_operator(query: str, keep: bool) -> None:  # noqa: FBT001
 def test_operator_whitespace(query: str) -> None:
     """Test whitespace around operator."""
     assert run_filter_query([], query) == []
+
+
+@pytest.mark.parametrize(("obj", "keep"), [
+    # Missing first key
+    ({"b": 0}, False),
+
+    # Missing second key
+    ({"a": 0}, False),
+
+    # Both keys present
+    ({"a": 0, "b": 1}, False),  # Different value
+    ({"a": 0, "b": 0}, True),  # Same value
+])
+def test_value_comparison(
+    obj: dict[Any, Any], keep: bool,  # noqa: FBT001
+) -> None:
+    """Test comparison of two values."""
+    expected: list[_Node] = [([obj], 0)] if keep else []
+    assert run_filter_query(([obj], 0), "@.a == @.b") == expected
 
 
 def test_and() -> None:
