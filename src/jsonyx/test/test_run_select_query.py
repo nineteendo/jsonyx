@@ -66,6 +66,21 @@ def test_property(key: str) -> None:
     assert run_select_query(([{}], 0), f"$.{key}") == [({}, key)]
 
 
+@pytest.mark.parametrize("key", [
+    # First character
+    "\x00", " ", "!", "$", "0", "\xb2", "\u0300", "\u037a", "\u0488",
+
+    # Remaining characters
+    "A\xb2", "A\u037a", "A\u0488",
+])
+def test_invalid_property(key: str) -> None:
+    """Test invalid property."""
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        run_select_query([], f"$.{key}")
+
+    check_syntax_err(exc_info, "Expecting property", 3)
+
+
 @pytest.mark.parametrize("query", ["$.a.b", "$.a[0]"])
 def test_list_property(query: str) -> None:
     """Test property on a list."""
@@ -85,21 +100,6 @@ def test_list_property_mapping(query: str) -> None:
     """Test property on a list."""
     with pytest.raises(TypeError, match="List index must be int, not"):
         run_select_query(([[]], 0), query, mapping=True)
-
-
-@pytest.mark.parametrize("key", [
-    # First character
-    "\x00", " ", "!", "$", "0", "\xb2", "\u0300", "\u037a", "\u0488",
-
-    # Remaining characters
-    "A\xb2", "A\u037a", "A\u0488",
-])
-def test_invalid_property(key: str) -> None:
-    """Test invalid property."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query([], f"$.{key}")
-
-    check_syntax_err(exc_info, "Expecting property", 3)
 
 
 @pytest.mark.parametrize(("query", "expected"), [
@@ -140,6 +140,28 @@ def test_slice(query: str, expected: slice) -> None:
     assert run_select_query(node, query, allow_slice=True) == [([], expected)]
 
 
+@pytest.mark.parametrize(("query", "msg", "colno"), [
+    # Start
+    ("$[{big_num}:]", "Start is too big", 3),
+    ("$[{big_num}::]", "Start is too big", 3),
+
+    # Stop
+    ("$[:{big_num}]", "Stop is too big", 4),
+    ("$[:{big_num}:]", "Stop is too big", 4),
+
+    # Step
+    ("$[::{big_num}]", "Step is too big", 5),
+])
+def test_too_big_slice_idx(
+    big_num: str, query: str, msg: str, colno: int,
+) -> None:
+    """Test too big slice index."""
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        run_select_query([], query.format(big_num=big_num))
+
+    check_syntax_err(exc_info, msg, colno, colno + len(big_num))
+
+
 @pytest.mark.parametrize("query", [
     # At the end
     "$[:]",
@@ -166,28 +188,6 @@ def test_dict_slice(query: str) -> None:
         run_select_query(([{}], 0), query)
 
 
-@pytest.mark.parametrize(("query", "msg", "colno"), [
-    # Start
-    ("$[{big_num}:]", "Start is too big", 3),
-    ("$[{big_num}::]", "Start is too big", 3),
-
-    # Stop
-    ("$[:{big_num}]", "Stop is too big", 4),
-    ("$[:{big_num}:]", "Stop is too big", 4),
-
-    # Step
-    ("$[::{big_num}]", "Step is too big", 5),
-])
-def test_too_big_slice_idx(
-    big_num: str, query: str, msg: str, colno: int,
-) -> None:
-    """Test too big slice index."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query([], query.format(big_num=big_num))
-
-    check_syntax_err(exc_info, msg, colno, colno + len(big_num))
-
-
 @pytest.mark.parametrize("num", [
     # Sign
     "-1",
@@ -198,6 +198,14 @@ def test_too_big_slice_idx(
 def test_idx(num: str) -> None:
     """Test index."""
     assert run_select_query(([[]], 0), f"$[{num}]") == [([], int(num))]
+
+
+def test_too_big_idx(big_num: str) -> None:
+    """Test too big index."""
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        run_select_query([], f"$[{big_num}]")
+
+    check_syntax_err(exc_info, "Index is too big", 3, 3 + len(big_num))
 
 
 @pytest.mark.parametrize("query", [
@@ -211,14 +219,6 @@ def test_dict_idx(query: str) -> None:
     """Test index on a dict."""
     with pytest.raises(TypeError, match="Dict key must be str, not"):
         run_select_query(([{}], 0), query)
-
-
-def test_too_big_idx(big_num: str) -> None:
-    """Test too big index."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query([], f"$[{big_num}]")
-
-    check_syntax_err(exc_info, "Index is too big", 3, 3 + len(big_num))
 
 
 @pytest.mark.parametrize(("obj", "query", "keys"), [

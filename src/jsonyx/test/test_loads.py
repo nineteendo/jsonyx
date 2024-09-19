@@ -417,26 +417,6 @@ def test_object_comments(
     assert json.loads(s, allow=COMMENTS) == expected
 
 
-@pytest.mark.parametrize(("s", "msg", "colno", "end_colno"), [
-    ("{", "Unterminated object", 1, 2),
-    ('{"": 1, "": 2, "": 3}', "Duplicate keys are not allowed", 9, 11),
-    ('{""}', "Expecting colon", 4, -1),
-    ('{"": 0', "Unterminated object", 1, 7),
-    ('{"a": 1"b": 2"c": 3}', "Expecting comma", 8, -1),
-    ('{"a": 1 "b": 2 "c": 3}', "Missing commas are not allowed", 8, -1),
-    ('{"": 0,', "Unterminated object", 1, 8),
-    ('{"": 0,}', "Trailing comma is not allowed", 7, 8),
-])
-def test_invalid_object(
-    json: ModuleType, s: str, msg: str, colno: int, end_colno: int,
-) -> None:
-    """Test invalid JSON object."""
-    with pytest.raises(json.JSONSyntaxError) as exc_info:
-        json.loads(s)
-
-    check_syntax_err(exc_info, msg, colno, end_colno)
-
-
 @pytest.mark.parametrize("key", [
     # First character
     "A", "_", "\u16ee", "\u1885", "\u2118",
@@ -479,6 +459,26 @@ def test_invalid_unquoted_key(json: ModuleType, key: str) -> None:
         json.loads(f"{{{key}: 0}}")
 
     check_syntax_err(exc_info, "Expecting key", 2)
+
+
+@pytest.mark.parametrize(("s", "msg", "colno", "end_colno"), [
+    ("{", "Unterminated object", 1, 2),
+    ('{"": 1, "": 2, "": 3}', "Duplicate keys are not allowed", 9, 11),
+    ('{""}', "Expecting colon", 4, -1),
+    ('{"": 0', "Unterminated object", 1, 7),
+    ('{"a": 1"b": 2"c": 3}', "Expecting comma", 8, -1),
+    ('{"a": 1 "b": 2 "c": 3}', "Missing commas are not allowed", 8, -1),
+    ('{"": 0,', "Unterminated object", 1, 8),
+    ('{"": 0,}', "Trailing comma is not allowed", 7, 8),
+])
+def test_invalid_object(
+    json: ModuleType, s: str, msg: str, colno: int, end_colno: int,
+) -> None:
+    """Test invalid JSON object."""
+    with pytest.raises(json.JSONSyntaxError) as exc_info:
+        json.loads(s)
+
+    check_syntax_err(exc_info, msg, colno, end_colno)
 
 
 def test_duplicate_key(json: ModuleType) -> None:
