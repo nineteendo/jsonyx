@@ -30,7 +30,7 @@ class _Slicer:
 _slicer: _Slicer = _Slicer()
 
 
-@pytest.mark.parametrize(("node", "query", "keep"), [
+@pytest.mark.parametrize(("node", "keep"), [
     # List
     (([], slice(0)), True),
     (([], 0), False),
