@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON run_select_query tests."""
-# TODO(Nice Zombies): add more tests
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -274,3 +273,16 @@ def test_invalid_relative_query(query: str) -> None:
         run_select_query([], query, relative=True)
 
     check_syntax_err(exc_info, "Expecting a relative query")
+
+
+@pytest.mark.parametrize("query", [
+    # At the end
+    "$[0]",
+
+    # In the middle
+    "$[0].b", "$[0][0]",
+])
+def test_invalid_target(query: str) -> None:
+    """Test invalid target."""
+    with pytest.raises(TypeError, match="Target must be dict or list, not"):
+        run_select_query(([0], 0), query)
