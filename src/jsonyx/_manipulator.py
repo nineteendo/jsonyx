@@ -253,7 +253,7 @@ class Manipulator:
             if operator is None:
                 nodes = [node for node, _filter_node in filtered_pairs]
             elif negate_filter:
-                msg: str = "Expecting and"
+                msg: str = "Unexpected operator"
                 raise _errmsg(msg, query, operator_idx, end)
             else:
                 if match := _match_whitespace(query, end):
