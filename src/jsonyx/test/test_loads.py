@@ -47,7 +47,7 @@ def test_utf8_bom(json: ModuleType) -> None:
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads("\ufeff0")
 
-    check_syntax_err(exc_info, "Unexpected UTF-8 BOM")
+    check_syntax_err(exc_info, "Unexpected UTF-8 BOM", 0, 1)
 
 
 @pytest.mark.parametrize(("s", "expected"), [

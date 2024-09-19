@@ -1172,7 +1172,7 @@ scanner_call(PyScannerObject *self, PyObject *args, PyObject *kwds)
     }
     len = PyUnicode_GET_LENGTH(pystr);
     if (len > 0 && PyUnicode_READ_CHAR(pystr, 0) == L'\ufeff') {
-        raise_errmsg("Unexpected UTF-8 BOM", pyfilename, pystr, 0, 0);
+        raise_errmsg("Unexpected UTF-8 BOM", pyfilename, pystr, 0, 1);
         return NULL;
     }
     if (_skip_comments(self, pyfilename, pystr, &idx) < 0)

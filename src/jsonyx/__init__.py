@@ -435,7 +435,7 @@ def apply_patch(
     :param allow: the allowed JSON deviations
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises AssertionError: if an assertion fails
-    :raises SyntaxError: if a query is invalid
+    :raises JSONSyntaxError: if a query is invalid
     :raises TypeError: if a value has the wrong type
     :raises ValueError: if a value is invalid
     :return: the patched Python object
@@ -445,8 +445,6 @@ def apply_patch(
     [1, 3]
 
     .. tip:: Using queries instead of indices is more robust.
-
-    .. todo:: Update raised exceptions.
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).apply_patch(
         obj, patch,
@@ -474,7 +472,7 @@ def run_select_query(
     :param mapping: map every input node to a single output node
     :param relative: query must start with ``"@"`` instead of ``"$"``
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
-    :raises SyntaxError: if the select query is invalid
+    :raises JSONSyntaxError: if the select query is invalid
     :raises ValueError: if a value is invalid
     :return: the selected list of nodes
 
@@ -488,8 +486,6 @@ def run_select_query(
     [1, 2, 3, None, None, None]
 
     .. tip:: Using queries instead of indices is more robust.
-
-    .. todo:: Update raised exceptions.
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).run_select_query(
         nodes,
@@ -515,14 +511,12 @@ def run_filter_query(
     :param query: a JSON filter query
     :param allow: the allowed JSON deviations
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
-    :raises SyntaxError: if the filter query is invalid
+    :raises JSONSyntaxError: if the filter query is invalid
     :return: the filtered list of nodes
 
     >>> import jsonyx as json
     >>> node = [None], 0
     >>> assert json.run_filter_query(node, "@ == null")
-
-    .. todo:: Update raised exceptions.
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).run_filter_query(
         nodes, query,

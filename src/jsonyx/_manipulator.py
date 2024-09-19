@@ -248,11 +248,13 @@ class Manipulator:
             if match := _match_whitespace(query, end):
                 end = match.end()
 
+            operator_idx: int = end
             operator, end = _scan_query_operator(query, end)
             if operator is None:
                 nodes = [node for node, _filter_node in filtered_pairs]
             elif negate_filter:
-                raise SyntaxError
+                msg: str = "Expecting and"
+                raise _errmsg(msg, query, operator_idx, end)
             else:
                 if match := _match_whitespace(query, end):
                     end = match.end()
@@ -599,7 +601,7 @@ class Manipulator:
         :param obj: a Python object
         :param patch: a JSON patch
         :raises AssertionError: if an assertion fails
-        :raises SyntaxError: if a query is invalid
+        :raises JSONSyntaxError: if a query is invalid
         :raises TypeError: if a value has the wrong type
         :raises ValueError: if a value is invalid
         :return: the patched Python object
@@ -610,8 +612,6 @@ class Manipulator:
         [1, 3]
 
         .. tip:: Using queries instead of indices is more robust.
-
-        .. todo:: Update raised exceptions.
         """
         root: list[Any] = [obj]
         if isinstance(patch, dict):
@@ -636,7 +636,7 @@ class Manipulator:
         :param allow_slice: allow slice
         :param mapping: map every input node to a single output node
         :param relative: query must start with ``"@"`` instead of ``"$"``
-        :raises SyntaxError: if the select query is invalid
+        :raises JSONSyntaxError: if the select query is invalid
         :raises ValueError: if a value is invalid
         :return: the selected list of nodes
 
@@ -651,8 +651,6 @@ class Manipulator:
         [1, 2, 3, None, None, None]
 
         .. tip:: Using queries instead of indices is more robust.
-
-        .. todo:: Update raised exceptions.
         """
         if isinstance(nodes, tuple):
             nodes = [nodes]
@@ -678,22 +676,21 @@ class Manipulator:
 
         :param nodes: a node or a list of nodes
         :param query: a JSON filter query
-        :raises SyntaxError: if the filter query is invalid
+        :raises JSONSyntaxError: if the filter query is invalid
         :return: the filtered list of nodes
 
         >>> import jsonyx as json
         >>> manipulator = json.Manipulator()
         >>> node = [None], 0
         >>> assert manipulator.run_filter_query(node, "@ == null")
-
-        .. todo:: Update raised exceptions.
         """
         if isinstance(nodes, tuple):
             nodes = [nodes]
 
         nodes, end = self._run_filter_query(nodes, query, 0)
         if end < len(query):
-            raise SyntaxError
+            msg: str = "Expecting end of file"
+            raise _errmsg(msg, query, end)
 
         return nodes
 
@@ -711,7 +708,7 @@ class Manipulator:
         """
         obj, end = self._scan_query_value(s)
         if end < len(s):
-            msg = "Expecting end of file"
+            msg: str = "Expecting end of file"
             raise _errmsg(msg, s, end)
 
         return obj

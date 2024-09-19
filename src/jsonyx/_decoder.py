@@ -602,7 +602,7 @@ except ImportError:
         def scanner(filename: str, s: str) -> Any:
             if s.startswith("\ufeff"):
                 msg: str = "Unexpected UTF-8 BOM"
-                raise _errmsg(msg, filename, s)
+                raise _errmsg(msg, filename, s, 0, 1)
 
             end: int = skip_comments(filename, s, 0)
             try:
