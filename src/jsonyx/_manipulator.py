@@ -243,8 +243,8 @@ class Manipulator:
             filter_nodes, end = self._run_select_query(
                 nodes, query, end, mapping=True, relative=True,
             )
-            filtered_pairs: list[tuple[_Node, Any]] = [
-                (node, filter_target[filter_key])  # type: ignore
+            filtered_pairs: list[tuple[_Node, _Node]] = [
+                (node, (filter_target, filter_key))  # type: ignore
                 for node, (filter_target, filter_key) in zip(
                     nodes, filter_nodes, strict=True,
                 )
@@ -256,7 +256,7 @@ class Manipulator:
 
             operator, end = _scan_query_operator(query, end)
             if operator is None:
-                nodes = [node for node, _filter_target in filtered_pairs]
+                nodes = [node for node, _filter_node in filtered_pairs]
             elif negate_filter:
                 raise SyntaxError
             else:
@@ -267,8 +267,10 @@ class Manipulator:
                     value, end = self._scan_query_value(query, end)
                     nodes = [
                         node
-                        for node, filter_target in filtered_pairs
-                        if operator(filter_target, value)
+                        for node, (filter_target, filter_key) in filtered_pairs
+                        if operator(
+                            filter_target[filter_key], value,  # type: ignore
+                        )
                     ]
                 else:
                     filter2_nodes, end = self._run_select_query(
@@ -277,11 +279,11 @@ class Manipulator:
                     nodes = [
                         node
                         for (
-                            (node, filter_target),
+                            (node, (filter_target, filter_key)),
                             (filter2_target, filter2_key),
                         ) in zip(filtered_pairs, filter2_nodes, strict=True)
                         if _has_key(filter2_target, filter2_key) and operator(
-                            filter_target,
+                            filter_target[filter_key],  # type: ignore
                             filter2_target[filter2_key],  # type: ignore
                         )
                     ]
