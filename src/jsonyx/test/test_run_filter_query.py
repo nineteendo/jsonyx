@@ -41,6 +41,24 @@ def test_operator_whitespace(query: str) -> None:
     assert run_filter_query([], query) == []
 
 
+def test_and() -> None:
+    """Test and."""
+    query: str = "@ != 1 && @ != 2 && @ != 3"
+    assert run_filter_query(([0], 0), query) == [([0], 0)]
+
+
+@pytest.mark.parametrize("query", [
+    # Before and
+    "@!=1 &&@!=2 &&@!=3",
+
+    # After and
+    "@!=1&& @!=2&& @!=3",
+])
+def test_whitespace(query: str) -> None:
+    """Test whitespace around and."""
+    assert run_filter_query(([0], 0), query) == [([0], 0)]
+
+
 @pytest.mark.parametrize(("query", "msg", "colno", "end_colno"), [
     ("", "Expecting a relative query", 1, -1),
     ("$", "Expecting a relative query", 1, -1),
@@ -51,6 +69,7 @@ def test_operator_whitespace(query: str) -> None:
     ("@ == $", "Expecting value", 6, -1),
     ("@ == @?", "Optional marker is not allowed", 7, 8),
     ("@ == @[@]", "Filter is not allowed", 8, -1),
+    ("@ && ", "Expecting a relative query", 6, -1),
     ("!@ == @", "Unexpected operator", 4, 6),
     ("@ @ @", "Expecting end of file", 2, -1),
 ])
