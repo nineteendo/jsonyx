@@ -4,14 +4,14 @@ from __future__ import annotations
 
 __all__: list[str] = []
 
-import sys
 from decimal import Decimal
 
 import pytest
 
-# pylint: disable-next=W0611
 from jsonyx import JSONSyntaxError, load_query_value
 from jsonyx.allow import NAN_AND_INFINITY
+# pylint: disable-next=W0611
+from jsonyx.test import get_big_num  # type: ignore # noqa: F401
 from jsonyx.test import check_syntax_err
 
 
@@ -63,17 +63,12 @@ def test_int(s: str) -> None:
     assert obj == int(s)
 
 
-@pytest.mark.skipif(
-    not hasattr(sys, "get_int_max_str_digits"),
-    reason="requires integer string conversion length limit",
-)
-def test_too_big_int() -> None:
+def test_too_big_int(big_num: str) -> None:
     """Test too big integer."""
-    s: str = "1" + "0" * sys.get_int_max_str_digits()
     with pytest.raises(JSONSyntaxError) as exc_info:
-        load_query_value(s)
+        load_query_value(big_num)
 
-    check_syntax_err(exc_info, "Number is too big", 1, len(s) + 1)
+    check_syntax_err(exc_info, "Number is too big", 1, len(big_num) + 1)
 
 
 @pytest.mark.parametrize("s", [

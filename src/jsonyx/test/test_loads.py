@@ -4,7 +4,6 @@ from __future__ import annotations
 
 __all__: list[str] = []
 
-import sys
 from decimal import Decimal
 from math import isnan
 from typing import TYPE_CHECKING
@@ -15,8 +14,10 @@ from jsonyx.allow import (
     COMMENTS, DUPLICATE_KEYS, MISSING_COMMAS, NAN_AND_INFINITY, SURROGATES,
     TRAILING_COMMA, UNQUOTED_KEYS,
 )
-# pylint: disable-next=W0611
-from jsonyx.test import check_syntax_err, get_json  # type: ignore # noqa: F401
+from jsonyx.test import check_syntax_err
+
+# pylint: disable-next=W0611 # isort: split
+from jsonyx.test import get_big_num, get_json  # type: ignore # noqa: F401
 
 if TYPE_CHECKING:
     from types import ModuleType
@@ -105,17 +106,12 @@ def test_int(json: ModuleType, s: str) -> None:
     assert obj == int(s)
 
 
-@pytest.mark.skipif(
-    not hasattr(sys, "get_int_max_str_digits"),
-    reason="requires integer string conversion length limit",
-)
-def test_too_big_int(json: ModuleType) -> None:
+def test_too_big_int(json: ModuleType, big_num: str) -> None:
     """Test too big integer."""
-    s: str = "1" + "0" * sys.get_int_max_str_digits()
     with pytest.raises(json.JSONSyntaxError) as exc_info:
-        json.loads(s)
+        json.loads(big_num)
 
-    check_syntax_err(exc_info, "Number is too big", 1, len(s) + 1)
+    check_syntax_err(exc_info, "Number is too big", 1, len(big_num) + 1)
 
 
 @pytest.mark.parametrize("s", [

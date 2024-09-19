@@ -5,12 +5,13 @@ from __future__ import annotations
 
 __all__: list[str] = []
 
-import sys
 from typing import TYPE_CHECKING, Any
 
 import pytest
 
 from jsonyx import JSONSyntaxError, run_select_query
+# pylint: disable-next=W0611
+from jsonyx.test import get_big_num  # type: ignore # noqa: F401
 from jsonyx.test import check_syntax_err
 
 if TYPE_CHECKING:
@@ -22,7 +23,7 @@ if TYPE_CHECKING:
 # pylint: disable-next=R0903
 class _Slicer:
     @staticmethod
-    def __getitem__(item: Any) -> Any:
+    def __getitem__(item: slice) -> slice:
         return item
 
 
@@ -87,34 +88,34 @@ def test_invalid_property(key: str) -> None:
 @pytest.mark.parametrize(("query", "expected"), [
     # Slice
     ("$[:]", _slicer[:]),
-    ("$[:-1]", _slicer[:-1]),
-    ("$[:0]", _slicer[:0]),
-    ("$[:1]", _slicer[:1]),
-    ("$[:10]", _slicer[:10]),
-    ("$[:11]", _slicer[:11]),
     ("$[-1:]", _slicer[-1:]),
     ("$[0:]", _slicer[0:]),
     ("$[1:]", _slicer[1:]),
     ("$[10:]", _slicer[10:]),
     ("$[11:]", _slicer[11:]),
+    ("$[:-1]", _slicer[:-1]),
+    ("$[:0]", _slicer[:0]),
+    ("$[:1]", _slicer[:1]),
+    ("$[:10]", _slicer[:10]),
+    ("$[:11]", _slicer[:11]),
 
     # Extended slice
     ("$[::]", _slicer[::]),
-    ("$[::-1]", _slicer[::-1]),
-    ("$[::0]", _slicer[::0]),
-    ("$[::1]", _slicer[::1]),
-    ("$[::10]", _slicer[::10]),
-    ("$[::11]", _slicer[::11]),
-    ("$[:-1:]", _slicer[:-1:]),
-    ("$[:0:]", _slicer[:0:]),
-    ("$[:1:]", _slicer[:1:]),
-    ("$[:10:]", _slicer[:10:]),
-    ("$[:11:]", _slicer[:11:]),
     ("$[-1::]", _slicer[-1::]),
     ("$[0::]", _slicer[0::]),
     ("$[1::]", _slicer[1::]),
     ("$[10::]", _slicer[10::]),
     ("$[11::]", _slicer[11::]),
+    ("$[:-1:]", _slicer[:-1:]),
+    ("$[:0:]", _slicer[:0:]),
+    ("$[:1:]", _slicer[:1:]),
+    ("$[:10:]", _slicer[:10:]),
+    ("$[:11:]", _slicer[:11:]),
+    ("$[::-1]", _slicer[::-1]),
+    ("$[::0]", _slicer[::0]),
+    ("$[::1]", _slicer[::1]),
+    ("$[::10]", _slicer[::10]),
+    ("$[::11]", _slicer[::11]),
 ])
 def test_slice(query: str, expected: slice) -> None:
     """Test slice."""
@@ -122,43 +123,26 @@ def test_slice(query: str, expected: slice) -> None:
     assert run_select_query(node, query, allow_slice=True) == [([], expected)]
 
 
-@pytest.mark.skipif(
-    not hasattr(sys, "get_int_max_str_digits"),
-    reason="requires integer string conversion length limit",
-)
-def test_too_big_start() -> None:
-    """Test too big start."""
-    num: str = "1" + "0" * sys.get_int_max_str_digits()
+@pytest.mark.parametrize(("query", "msg", "colno"), [
+    # Start
+    ("$[{big_num}:]", "Start is too big", 3),
+    ("$[{big_num}::]", "Start is too big", 3),
+
+    # Stop
+    ("$[:{big_num}]", "Stop is too big", 4),
+    ("$[:{big_num}:]", "Stop is too big", 4),
+
+    # Step
+    ("$[::{big_num}]", "Step is too big", 5),
+])
+def test_too_big_slice_idx(
+    big_num: str, query: str, msg: str, colno: int,
+) -> None:
+    """Test too big slice index."""
     with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query([], f"$[{num}::]")
+        run_select_query([], query.format(big_num=big_num))
 
-    check_syntax_err(exc_info, "Start is too big", 3, 3 + len(num))
-
-
-@pytest.mark.skipif(
-    not hasattr(sys, "get_int_max_str_digits"),
-    reason="requires integer string conversion length limit",
-)
-def test_too_big_stop() -> None:
-    """Test too big stop."""
-    num: str = "1" + "0" * sys.get_int_max_str_digits()
-    with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query([], f"$[:{num}:]")
-
-    check_syntax_err(exc_info, "Stop is too big", 4, 4 + len(num))
-
-
-@pytest.mark.skipif(
-    not hasattr(sys, "get_int_max_str_digits"),
-    reason="requires integer string conversion length limit",
-)
-def test_too_big_step() -> None:
-    """Test too big step."""
-    num: str = "1" + "0" * sys.get_int_max_str_digits()
-    with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query([], f"$[::{num}]")
-
-    check_syntax_err(exc_info, "Step is too big", 5, 5 + len(num))
+    check_syntax_err(exc_info, msg, colno, colno + len(big_num))
 
 
 @pytest.mark.parametrize("num", [
@@ -168,22 +152,17 @@ def test_too_big_step() -> None:
     # Integer
     "0", "1", "10", "11",
 ])
-def test_index(num: str) -> None:
+def test_idx(num: str) -> None:
     """Test index."""
     assert run_select_query(([[]], 0), f"$[{num}]") == [([], int(num))]
 
 
-@pytest.mark.skipif(
-    not hasattr(sys, "get_int_max_str_digits"),
-    reason="requires integer string conversion length limit",
-)
-def test_too_big_int() -> None:
-    """Test too big integer."""
-    num: str = "1" + "0" * sys.get_int_max_str_digits()
+def test_too_big_idx(big_num: str) -> None:
+    """Test too big index."""
     with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query([], f"$[{num}]")
+        run_select_query([], f"$[{big_num}]")
 
-    check_syntax_err(exc_info, "Index is too big", 3, 3 + len(num))
+    check_syntax_err(exc_info, "Index is too big", 3, 3 + len(big_num))
 
 
 @pytest.mark.parametrize(("obj", "query", "keys"), [

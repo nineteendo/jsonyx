@@ -2,8 +2,9 @@
 """JSON test utils."""
 from __future__ import annotations
 
-__all__: list[str] = ["check_syntax_err", "get_json"]
+__all__: list[str] = ["check_syntax_err", "get_big_num", "get_json"]
 
+import sys
 from test.support.import_helper import import_fresh_module  # type: ignore
 from typing import TYPE_CHECKING, Any
 
@@ -13,6 +14,16 @@ from jsonyx import JSONSyntaxError
 
 if TYPE_CHECKING:
     from types import ModuleType
+
+
+@pytest.fixture(name="big_num")
+def get_big_num() -> str:
+    """Get big number."""
+    if not hasattr(sys, "get_int_max_str_digits"):
+        pytest.skip("requires integer string conversion length limit")
+
+    return "1" + "0" * sys.get_int_max_str_digits()
+
 
 pyjson: ModuleType | None = import_fresh_module("jsonyx", blocked=["_jsonyx"])
 if cjson := import_fresh_module("jsonyx", fresh=["_jsonyx"]):
