@@ -222,16 +222,16 @@ def test_list_indent(
 
 
 @pytest.mark.parametrize(("indent", "expected"), [
-    (0, "[\n1,\n2,\n3\n]"),
-    (1, "[\n 1,\n 2,\n 3\n]"),
-    ("\t", "[\n\t1,\n\t2,\n\t3\n]"),
+    (0, ""),
+    (1, " "),
+    ("\t", "\t"),
 ])
 def test_list_indent_leaves(
     json: ModuleType, indent: int | str, expected: str,
 ) -> None:
     """Test list indent with indent_leaves."""
     s: str = json.dumps([1, 2, 3], end="", indent=indent, indent_leaves=True)
-    assert s == expected
+    assert s == f"[\n{expected}1,\n{expected}2,\n{expected}3\n]"
 
 
 def test_list_recursion(json: ModuleType) -> None:
@@ -394,9 +394,9 @@ def test_dict_indent(
 
 
 @pytest.mark.parametrize(("indent", "expected"), [
-    (0, '{\n"a": 1,\n"b": 2,\n"c": 3\n}'),
-    (1, '{\n "a": 1,\n "b": 2,\n "c": 3\n}'),
-    ("\t", '{\n\t"a": 1,\n\t"b": 2,\n\t"c": 3\n}'),
+    (0, ""),
+    (1, " "),
+    ("\t", "\t"),
 ])
 def test_dict_indent_leaves(
     json: ModuleType, indent: int | str, expected: str,
@@ -404,7 +404,9 @@ def test_dict_indent_leaves(
     """Test dict indent with indent_leaves."""
     obj: dict[str, object] = {"a": 1, "b": 2, "c": 3}
     s: str = json.dumps(obj, end="", indent=indent, indent_leaves=True)
-    assert s == expected
+    assert s == (
+        f'{{\n{expected}"a": 1,\n{expected}"b": 2,\n{expected}"c": 3\n}}'
+    )
 
 
 def test_dict_recursion(json: ModuleType) -> None:
@@ -419,9 +421,9 @@ def test_dict_recursion(json: ModuleType) -> None:
 
 def test_mapping_types(json: ModuleType) -> None:
     """Test mapping_types."""
-    assert json.dumps(
-        UserDict({"a": 1, "b": 2, "c": 3}), end="", mapping_types=UserDict,
-    ) == '{"a": 1, "b": 2, "c": 3}'
+    obj: UserDict[str, object] = UserDict({"a": 1, "b": 2, "c": 3})
+    s: str = json.dumps(obj, end="", mapping_types=UserDict)
+    assert s == '{"a": 1, "b": 2, "c": 3}'
 
 
 @pytest.mark.parametrize("obj", [

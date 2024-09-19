@@ -154,7 +154,7 @@ def test_string(s: str, expected: str) -> None:
 @pytest.mark.parametrize(("s", "msg", "colno", "end_colno"), [
     ("'foo", "Unterminated string", 1, 5),
     ("'~", "Expecting escaped character", 3, -1),
-    ("'~a", "Invalid tilde escape", 2, 4),
+    ("'~a'", "Invalid tilde escape", 2, 4),
 ])
 def test_invalid_string(s: str, msg: str, colno: int, end_colno: int) -> None:
     """Test invalid JSON string."""

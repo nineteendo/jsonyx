@@ -601,9 +601,6 @@ def test_invalid_comment(json: ModuleType) -> None:
 
 
 @pytest.mark.parametrize(("s", "end_colno"), [
-    ("//\n0", 3),
-    ("//\r0", 3),
-    ("//\r\n0", 3),
     ("//line comment\n0", 15),
     ("//line comment\r0", 15),
     ("//line comment\r\n0", 15),

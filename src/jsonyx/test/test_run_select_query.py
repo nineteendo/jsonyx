@@ -69,9 +69,8 @@ def test_property(key: str) -> None:
 @pytest.mark.parametrize("query", ["$.a.b", "$.a[0]"])
 def test_list_property(query: str) -> None:
     """Test property on a list."""
-    with pytest.raises(
-        TypeError, match="List index must be int or slice, not",
-    ):
+    match: str = "List index must be int or slice, not"
+    with pytest.raises(TypeError, match=match):
         run_select_query(([[]], 0), query)
 
 
