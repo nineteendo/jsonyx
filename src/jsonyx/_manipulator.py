@@ -347,6 +347,11 @@ class Manipulator:
                 ]
             elif terminator == "[":
                 end += 1
+                targets: list[_Target] = [
+                    target
+                    for node in nodes
+                    for target in _get_query_targets(node, mapping=mapping)
+                ]
                 if match := _match_slice(query, end):
                     (start, stop, step), end = match.groups(), match.end()
                     try:
@@ -377,11 +382,7 @@ class Manipulator:
                         ) from None
 
                     key = slice(start, stop, step)
-                    nodes = [
-                        (target, key)
-                        for node in nodes
-                        for target in _get_query_targets(node, mapping=mapping)
-                    ]
+                    nodes = [(target, key) for target in targets]
                 elif match := _match_idx(query, end):
                     end = match.end()
                     try:
@@ -390,26 +391,17 @@ class Manipulator:
                         msg = "Index is too big"
                         raise _errmsg(msg, query, match.start(), end) from None
 
-                    nodes = [
-                        (target, key)
-                        for node in nodes
-                        for target in _get_query_targets(node, mapping=mapping)
-                    ]
+                    nodes = [(target, key) for target in targets]
                 elif query[end:end + 1] == "'":
                     key, end = _scan_query_string(query, end + 1)
-                    nodes = [
-                        (target, key)
-                        for node in nodes
-                        for target in _get_query_targets(node, mapping=mapping)
-                    ]
+                    nodes = [(target, key) for target in targets]
                 elif mapping:
                     msg = "Filter is not allowed"
                     raise _errmsg(msg, query, end)
                 else:
                     nodes = [
                         (target, key)
-                        for node in nodes
-                        for target in _get_query_targets(node, mapping=True)
+                        for target in targets
                         for key in (
                             target.keys()
                             if isinstance(target, dict) else

@@ -16,15 +16,6 @@ if TYPE_CHECKING:
     from types import ModuleType
 
 
-@pytest.fixture(name="big_num")
-def get_big_num() -> str:
-    """Get big number."""
-    if not hasattr(sys, "get_int_max_str_digits"):
-        pytest.skip("requires integer string conversion length limit")
-
-    return "1" + "0" * sys.get_int_max_str_digits()
-
-
 pyjson: ModuleType | None = import_fresh_module("jsonyx", blocked=["_jsonyx"])
 if cjson := import_fresh_module("jsonyx", fresh=["_jsonyx"]):
     # JSONSyntaxError is not cached inside the _jsonyx module
@@ -47,6 +38,15 @@ def check_syntax_err(
     assert exc.end_lineno == 1
     assert exc.colno == colno
     assert exc.end_colno == end_colno
+
+
+@pytest.fixture(name="big_num")
+def get_big_num() -> str:
+    """Get big number."""
+    if not hasattr(sys, "get_int_max_str_digits"):
+        pytest.skip("requires integer string conversion length limit")
+
+    return "1" + "0" * sys.get_int_max_str_digits()
 
 
 @pytest.fixture(params=[cjson, pyjson], ids=["cjson", "pyjson"], name="json")
