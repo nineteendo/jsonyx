@@ -222,8 +222,11 @@ def test_list_indent(
 
 
 @pytest.mark.parametrize(("indent", "expected"), [
+    # Integer
     (0, ""),
     (1, " "),
+
+    # String
     ("\t", "\t"),
 ])
 def test_list_indent_leaves(
@@ -394,8 +397,11 @@ def test_dict_indent(
 
 
 @pytest.mark.parametrize(("indent", "expected"), [
+    # Integer
     (0, ""),
     (1, " "),
+
+    # String
     ("\t", "\t"),
 ])
 def test_dict_indent_leaves(

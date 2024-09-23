@@ -281,6 +281,10 @@ def test_array(json: ModuleType, s: str, expected: list[object]) -> None:
 
 
 @pytest.mark.parametrize(("s", "expected"), [
+    # No whitespace
+    ("[]", []),
+    ("[1,2,3]", [1, 2, 3]),
+
     # In empty array
     ("[ ]", []),
 
@@ -360,6 +364,10 @@ def test_object(json: ModuleType, s: str, expected: dict[str, object]) -> None:
 
 
 @pytest.mark.parametrize(("s", "expected"), [
+    # No whitespace
+    ("{}", {}),
+    ('{"a":1,"b":2,"c":3}', {"a": 1, "b": 2, "c": 3}),
+
     # In empty object
     ("{ }", {}),
 
@@ -534,6 +542,9 @@ def test_recursion(json: ModuleType, start: str) -> None:
 
 
 @pytest.mark.parametrize("s", [
+    # No whitespace
+    "0",
+
     # Before value
     " 0",
 

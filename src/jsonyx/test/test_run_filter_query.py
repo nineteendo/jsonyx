@@ -78,6 +78,9 @@ def test_operator(query: str, keep: bool) -> None:  # noqa: FBT001
 
 
 @pytest.mark.parametrize("query", [
+    # No whitespace
+    "@==0",
+
     # Before operator
     "@ ==0",
 
@@ -86,7 +89,7 @@ def test_operator(query: str, keep: bool) -> None:  # noqa: FBT001
 ])
 def test_operator_whitespace(query: str) -> None:
     """Test whitespace around operator."""
-    assert run_filter_query([], query) == []
+    assert not run_filter_query([], query)
 
 
 @pytest.mark.parametrize(("obj", "keep"), [
@@ -131,11 +134,9 @@ def test_whitespace(query: str) -> None:
     ("$", "Expecting a relative query", 1, -1),
     ("!", "Expecting a relative query", 2, -1),
     ("@?", "Optional marker is not allowed", 2, 3),
-    ("@[@]", "Filter is not allowed", 3, -1),
     ("@ == ", "Expecting value", 6, -1),
     ("@ == $", "Expecting value", 6, -1),
     ("@ == @?", "Optional marker is not allowed", 7, 8),
-    ("@ == @[@]", "Filter is not allowed", 8, -1),
     ("@ && ", "Expecting a relative query", 6, -1),
     ("!@ == @", "Unexpected operator", 4, 6),
     ("@ @ @", "Expecting end of file", 2, -1),

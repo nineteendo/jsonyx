@@ -1,5 +1,6 @@
 /* JSON speedups */
 // TODO(Nice Zombies): speed up decoding
+// https://github.com/benfred/py-spy#can-py-spy-profile-native-extensions
 
 #include <Python.h>
 #include <structmember.h>

@@ -164,7 +164,7 @@ def test_invalid_string(s: str, msg: str, colno: int, end_colno: int) -> None:
     check_syntax_err(exc_info, msg, colno, end_colno)
 
 
-@pytest.mark.parametrize("s", ["", "foo"])
+@pytest.mark.parametrize("s", ["", "NaN"])
 def test_expecting_value(s: str) -> None:
     """Test expecting JSON value."""
     with pytest.raises(JSONSyntaxError) as exc_info:
