@@ -6,6 +6,7 @@ jsonyx 2.0.0 (unreleased)
 
 .. todo:: Add release date
 
+- Added support for Python 3.8 and Python 3.9
 - Added the ``jsonyx`` application
 - Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types`` and
   ``quoted_keys`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,

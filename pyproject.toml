@@ -2,10 +2,10 @@
 name = "jsonyx"
 version = "2.0.0"
 authors = [
-  { name="Nice Zombies", email="nineteendo19d0@gmail.com" },
+    { name="Nice Zombies", email="nineteendo19d0@gmail.com" },
 ]
 maintainers = [
-  { name="Nice Zombies", email="nineteendo19d0@gmail.com" },
+    { name="Nice Zombies", email="nineteendo19d0@gmail.com" },
 ]
 description = "Customizable JSON manipulator for Python"
 readme = "README.md"
@@ -39,3 +39,29 @@ Sponser = "https://paypal.me/nineteendo"
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[tool.ruff.lint]
+ignore = [
+    "ANN401", # any-type
+    "C901", # complex-structure
+    "DOC201", # docstring-missing-returns
+    "DOC501", # docstring-missing-exception
+    "I001", # unsorted-imports
+    "INP001", # implicit-namespace-package
+    "PGH003", # blanket-type-ignore
+    "PLR0912", # too-many-branches
+    "PLR0913", # too-many-arguments
+    "PLR0915", # too-many-statements
+    "PLR0917", # too-many-positional-arguments
+    "PLR1702", # too-many-nested-blocks
+    "PLR2004", # magic-value-comparison
+    "PYI051", # redundant-literal-union
+    "SIM108", # if-else-block-instead-of-if-exp
+    "T201", # print
+    "TD003", # missing-todo-link
+]
+preview = true
+select = ["ALL"]
+
+[tool.ruff.lint.extend-per-file-ignores]
+"**/test*.py" = ["S101"] # assert
