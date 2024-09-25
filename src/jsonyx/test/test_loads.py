@@ -246,11 +246,11 @@ def test_surrogate_escape(json: ModuleType, s: str, expected: str) -> None:
     ('"\\\r\n', "Expecting escaped character", 3, -1),
     (r'"\a"', "Invalid backslash escape", 2, 4),
     (r'"\u"', "Expecting 4 hex digits", 4, 5),
-    (r'"\u0xff"', "Expecting 4 hex digits", 4, 8),
+    (r'"\u0xff"', "Expecting 4 hex digits", 4, 8),  # Reject prefix
     (r'"\u????"', "Expecting 4 hex digits", 4, 8),
     (r'"\ud800"', "Surrogates are not allowed", 2, 8),
     (r'"\ud800\u"', "Expecting 4 hex digits", 10, 11),
-    (r'"\ud800\u0xff"', "Expecting 4 hex digits", 10, 14),
+    (r'"\ud800\u0xff"', "Expecting 4 hex digits", 10, 14),  # Reject prefix
     (r'"\ud800\u????"', "Expecting 4 hex digits", 10, 14),
     (r'"\ud800\u0024"', "Surrogates are not allowed", 2, 8),
     (r'"\udf48"', "Surrogates are not allowed", 2, 8),

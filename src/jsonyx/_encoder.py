@@ -53,7 +53,6 @@ try:
         from _jsonyx import make_encoder
 except ImportError:
     def make_encoder(
-        encode_decimal: _EncodeFunc[Decimal],
         indent: str | None,
         mapping_types: type | tuple[type, ...],
         seq_types: type | tuple[type, ...],
@@ -70,6 +69,7 @@ except ImportError:
         trailing_comma: bool,  # noqa: FBT001
     ) -> _EncodeFunc[object]:
         """Make JSON encoder."""
+        decimal_str: _EncodeFunc[Decimal] = Decimal.__str__
         float_repr: _EncodeFunc[float] = float.__repr__
         int_repr: _EncodeFunc[int] = int.__repr__
         markers: dict[int, object] = {}
@@ -117,6 +117,21 @@ except ImportError:
                 return "-Infinity"
 
             return "NaN"
+
+        def decimalstr(decimal: Decimal) -> str:
+            if not decimal.is_finite():
+                if decimal.is_snan():
+                    msg: str = f"{decimal!r} is not JSON serializable"
+                    raise ValueError(msg)
+
+                if not allow_nan_and_infinity:
+                    msg = f"{decimal!r} is not allowed"
+                    raise ValueError(msg)
+
+                if decimal.is_qnan():
+                    return "NaN"
+
+            return decimal_str(decimal)
 
         def write_sequence(
             seq: Any, write: _WriteFunc, old_indent: str,
@@ -240,7 +255,7 @@ except ImportError:
             elif isinstance(obj, (dict, mapping_types)):
                 write_mapping(obj, write, current_indent)
             elif isinstance(obj, Decimal):
-                write(encode_decimal(obj))
+                write(decimalstr(obj))
             else:
                 msg: str = (
                     f"{type(obj).__name__} is not JSON "  # type: ignore
@@ -312,10 +327,7 @@ class Encoder:
         trailing_comma: bool = False,
     ) -> None:
         """Create a new JSON encoder."""
-        allow_nan_and_infinity: bool = "nan_and_infinity" in allow
         allow_surrogates: bool = "surrogates" in allow
-        decimal_str: _EncodeFunc[Decimal] = Decimal.__str__
-
         long_item_separator, key_separator = separators
         if commas:
             item_separator: str = long_item_separator.rstrip()
@@ -325,26 +337,11 @@ class Encoder:
         if indent is not None and isinstance(indent, int):
             indent = " " * indent
 
-        def encode_decimal(decimal: Decimal) -> str:
-            if not decimal.is_finite():
-                if decimal.is_snan():
-                    msg: str = f"{decimal!r} is not JSON serializable"
-                    raise ValueError(msg)
-
-                if not allow_nan_and_infinity:
-                    msg = f"{decimal!r} is not allowed"
-                    raise ValueError(msg)
-
-                if decimal.is_qnan():
-                    return "NaN"
-
-            return decimal_str(decimal)
-
         self._encoder: _EncodeFunc[object] = make_encoder(
-            encode_decimal, indent, mapping_types, seq_types, end,
-            item_separator, long_item_separator, key_separator,
-            allow_nan_and_infinity, allow_surrogates, ensure_ascii,
-            indent_leaves, quoted_keys, sort_keys, commas and trailing_comma,
+            indent, mapping_types, seq_types, end, item_separator,
+            long_item_separator, key_separator, "nan_and_infinity" in allow,
+            allow_surrogates, ensure_ascii, indent_leaves, quoted_keys,
+            sort_keys, commas and trailing_comma,
         )
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 

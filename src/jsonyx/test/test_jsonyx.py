@@ -33,8 +33,10 @@ def test_duplicate_key(json: ModuleType) -> None:
     # JSON must start with ASCII character (not NULL)
     # Strings can't contain control characters (including NULL)
 
+    # Empty string
+    ("", "utf_8"),
+
     # utf_8
-    ("", "utf_8"),  # Empty JSON (prefer utf_8)
     ("XX", "utf_8"),  # 1 ASCII character
     ("XX XX", "utf_8"),  # 2 ASCII characters
     ("XX XX XX", "utf_8"),  # 3 ASCII characters

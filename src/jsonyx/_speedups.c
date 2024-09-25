@@ -26,7 +26,6 @@ typedef struct _PyScannerObject {
 typedef struct _PyEncoderObject {
     PyObject_HEAD
     PyObject *Decimal;
-    PyObject *encode_decimal;
     PyObject *indent;
     PyObject *mapping_types;
     PyObject *seq_types;
@@ -1271,21 +1270,21 @@ static PyType_Spec PyScannerType_spec = {
 static PyObject *
 encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    static char *kwlist[] = {"encode_decimal", "indent", "mapping_types",
-                             "seq_types", "end", "item_separator",
-                             "long_item_separator", "key_separator",
-                             "allow_nan_and_infinity", "allow_surrogates",
-                             "ensure_ascii", "indent_leaves", "quoted_keys",
-                             "sort_keys", "trailing_comma", NULL};
+    static char *kwlist[] = {"indent", "mapping_types", "seq_types", "end",
+                             "item_separator", "long_item_separator",
+                             "key_separator", "allow_nan_and_infinity",
+                             "allow_surrogates", "ensure_ascii",
+                             "indent_leaves", "quoted_keys", "sort_keys",
+                             "trailing_comma", NULL};
 
     PyEncoderObject *s;
-    PyObject *encode_decimal, *indent, *mapping_types, *seq_types;
+    PyObject *indent, *mapping_types, *seq_types;
     PyObject *end, *item_separator, *long_item_separator, *key_separator;
     int allow_nan_and_infinity, allow_surrogates, ensure_ascii, indent_leaves;
     int quoted_keys, sort_keys, trailing_comma;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOUUUUppppppp:make_encoder", kwlist,
-        &encode_decimal, &indent, &mapping_types, &seq_types,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOUUUUppppppp:make_encoder", kwlist,
+        &indent, &mapping_types, &seq_types,
         &end, &item_separator, &long_item_separator, &key_separator,
         &allow_nan_and_infinity, &allow_surrogates, &ensure_ascii,
         &indent_leaves, &quoted_keys, &sort_keys, &trailing_comma))
@@ -1304,7 +1303,6 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     if (s->Decimal == NULL) {
         goto bail;
     }
-    s->encode_decimal = Py_NewRef(encode_decimal);
     s->indent = Py_NewRef(indent);
     s->mapping_types = Py_NewRef(mapping_types);
     s->seq_types = Py_NewRef(seq_types);
@@ -1398,6 +1396,51 @@ encoder_encode_float(PyEncoderObject *s, PyObject *obj)
 }
 
 static PyObject *
+encoder_encode_decimal(PyEncoderObject *s, PyObject *obj)
+{
+    /* Return the JSON representation of a Decimal. */
+    PyObject *is_finite = PyObject_CallMethod(obj, "is_finite", NULL);
+    if (is_finite == NULL) {
+        return NULL;
+    }
+
+    if (!PyObject_IsTrue(is_finite)) {
+        Py_DECREF(is_finite);
+        PyObject *is_snan = PyObject_CallMethod(obj, "is_snan", NULL);
+        if (is_snan == NULL) {
+            return NULL;
+        }
+
+        if (PyObject_IsTrue(is_snan)) {
+            Py_DECREF(is_snan);
+            PyErr_Format(PyExc_ValueError, "%R is not JSON serializable", obj);
+            return NULL;
+        }
+
+        Py_DECREF(is_snan);
+        if (!s->allow_nan_and_infinity) {
+            PyErr_Format(PyExc_ValueError, "%R is not allowed", obj);
+            return NULL;
+        }
+
+        PyObject *is_qnan = PyObject_CallMethod(obj, "is_qnan", NULL);
+        if (is_qnan == NULL) {
+            return NULL;
+        }
+
+        if (PyObject_IsTrue(is_qnan)) {
+            Py_DECREF(is_qnan);
+            return PyUnicode_FromString("NaN");
+        }
+
+        Py_DECREF(is_qnan);
+    }
+
+    Py_DECREF(is_finite);
+    return ((PyTypeObject *)s->Decimal)->tp_str(obj);
+}
+
+static PyObject *
 encoder_encode_string(PyEncoderObject *s, PyObject *obj)
 {
     /* Return the JSON representation of a string */
@@ -1476,7 +1519,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         return rv;
     }
     else if (PyObject_TypeCheck(obj, (PyTypeObject *)s->Decimal)) {
-        PyObject *encoded = PyObject_CallOneArg(s->encode_decimal, obj);
+        PyObject *encoded = encoder_encode_decimal(s, obj);
         if (encoded == NULL)
             return -1;
         return _steal_accumulate(writer, encoded);
@@ -1820,7 +1863,6 @@ static int
 encoder_traverse(PyEncoderObject *self, visitproc visit, void *arg)
 {
     Py_VISIT(Py_TYPE(self));
-    Py_VISIT(self->encode_decimal);
     Py_VISIT(self->indent);
     Py_VISIT(self->mapping_types);
     Py_VISIT(self->seq_types);
@@ -1835,7 +1877,6 @@ static int
 encoder_clear(PyEncoderObject *self)
 {
     /* Deallocate Encoder */
-    Py_CLEAR(self->encode_decimal);
     Py_CLEAR(self->indent);
     Py_CLEAR(self->mapping_types);
     Py_CLEAR(self->seq_types);
