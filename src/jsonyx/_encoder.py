@@ -69,7 +69,6 @@ except ImportError:
         trailing_comma: bool,  # noqa: FBT001
     ) -> _EncodeFunc[object]:
         """Make JSON encoder."""
-        decimal_str: _EncodeFunc[Decimal] = Decimal.__str__
         float_repr: _EncodeFunc[float] = float.__repr__
         int_repr: _EncodeFunc[int] = int.__repr__
         markers: dict[int, object] = {}
@@ -131,7 +130,7 @@ except ImportError:
                 if decimal.is_qnan():
                     return "NaN"
 
-            return decimal_str(decimal)
+            return str(decimal)
 
         def write_sequence(
             seq: Any, write: _WriteFunc, old_indent: str,

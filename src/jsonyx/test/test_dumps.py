@@ -6,6 +6,7 @@ __all__: list[str] = []
 
 from collections import UserDict, UserList
 from decimal import Decimal
+from enum import IntEnum, ReprEnum
 from typing import TYPE_CHECKING
 
 import pytest
@@ -24,19 +25,12 @@ _CIRCULAR_LIST: list[object] = []
 _CIRCULAR_LIST.append(_CIRCULAR_LIST)
 
 
-class _BadDecimal(Decimal):
-    def __str__(self) -> str:
-        return f"_BadDecimal({super().__str__()})"
+class _FloatEnum(float, ReprEnum):
+    ZERO = 0.0
 
 
-class _BadFloat(float):
-    def __repr__(self) -> str:
-        return f"_BadFloat({super().__repr__()})"
-
-
-class _BadInt(int):
-    def __repr__(self) -> str:
-        return f"_BadInt({super().__repr__()})"
+class _IntEnum(IntEnum):
+    ZERO = 0
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
@@ -52,7 +46,7 @@ def test_singletons(
 
 
 @pytest.mark.parametrize("num", [0, 1])
-@pytest.mark.parametrize("num_type", [_BadDecimal, _BadInt, Decimal, int])
+@pytest.mark.parametrize("num_type", [Decimal, int])
 def test_int(
     json: ModuleType, num: int, num_type: type[Decimal | int],
 ) -> None:
@@ -60,7 +54,12 @@ def test_int(
     assert json.dumps(num_type(num), end="") == repr(num)
 
 
-@pytest.mark.parametrize("num_type", [_BadDecimal, _BadFloat, Decimal, float])
+def test_int_enum(json: ModuleType) -> None:
+    """Test int enum."""
+    assert json.dumps(_IntEnum.ZERO, end="") == "0"
+
+
+@pytest.mark.parametrize("num_type", [Decimal, float])
 def test_rational_number(
     json: ModuleType, num_type: type[Decimal | float],
 ) -> None:
@@ -68,8 +67,13 @@ def test_rational_number(
     assert json.dumps(num_type("0.0"), end="") == "0.0"
 
 
+def test_float_enum(json: ModuleType) -> None:
+    """Test float enum."""
+    assert json.dumps(_FloatEnum.ZERO, end="") == "0.0"
+
+
 @pytest.mark.parametrize("num", ["NaN", "Infinity", "-Infinity"])
-@pytest.mark.parametrize("num_type", [_BadDecimal, _BadFloat, Decimal, float])
+@pytest.mark.parametrize("num_type", [Decimal, float])
 def test_nan_and_infinity(
     json: ModuleType, num: str, num_type: type[Decimal | float],
 ) -> None:
@@ -78,7 +82,7 @@ def test_nan_and_infinity(
 
 
 @pytest.mark.parametrize("num", ["NaN", "Infinity", "-Infinity"])
-@pytest.mark.parametrize("num_type", [_BadDecimal, _BadFloat, Decimal, float])
+@pytest.mark.parametrize("num_type", [Decimal, float])
 def test_nan_and_infinity_not_allowed(
     json: ModuleType, num: str, num_type: type[Decimal | float],
 ) -> None:
@@ -88,29 +92,22 @@ def test_nan_and_infinity_not_allowed(
 
 
 @pytest.mark.parametrize("num", ["NaN2", "-NaN", "-NaN2"])
-@pytest.mark.parametrize("num_type", [_BadDecimal, Decimal])
-def test_nan_payload(
-    json: ModuleType, num: str, num_type: type[Decimal],
-) -> None:
+def test_nan_payload(json: ModuleType, num: str) -> None:
     """Test NaN payload."""
-    assert json.dumps(num_type(num), allow=NAN_AND_INFINITY, end="") == "NaN"
+    assert json.dumps(Decimal(num), allow=NAN_AND_INFINITY, end="") == "NaN"
 
 
 @pytest.mark.parametrize("num", ["NaN2", "-NaN", "-NaN2"])
-@pytest.mark.parametrize("num_type", [_BadDecimal, Decimal])
-def test_nan_payload_not_allowed(
-    json: ModuleType, num: str, num_type: type[Decimal],
-) -> None:
+def test_nan_payload_not_allowed(json: ModuleType, num: str) -> None:
     """Test NaN payload when not allowed."""
     with pytest.raises(ValueError, match="is not allowed"):
-        json.dumps(num_type(num))
+        json.dumps(Decimal(num))
 
 
-@pytest.mark.parametrize("num_type", [_BadDecimal, Decimal])
-def test_signaling_nan(json: ModuleType, num_type: type[Decimal]) -> None:
+def test_signaling_nan(json: ModuleType) -> None:
     """Test signaling NaN."""
     with pytest.raises(ValueError, match="is not JSON serializable"):
-        json.dumps(num_type("sNaN"))
+        json.dumps(Decimal("sNaN"))
 
 
 @pytest.mark.parametrize("obj", [

@@ -1437,7 +1437,7 @@ encoder_encode_decimal(PyEncoderObject *s, PyObject *obj)
     }
 
     Py_DECREF(is_finite);
-    return ((PyTypeObject *)s->Decimal)->tp_str(obj);
+    return PyObject_Str(obj);
 }
 
 static PyObject *
