@@ -306,7 +306,7 @@ class Manipulator:
 
                 end += 1
                 for target, key in nodes:
-                    _check_query_key(target, key)
+                    _check_query_key(target, key, allow_slice=True)
 
                 nodes = [
                     (target, key)
