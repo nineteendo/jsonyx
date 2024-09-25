@@ -225,9 +225,11 @@ def write(
     r"""Serialize a Python object to a JSON file.
 
     .. versionchanged:: 2.0
-        Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types``
-        and ``quoted_keys``. Merged ``item_separator`` and ``key_separator`` as
-        ``separators``.
+
+        - Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types``
+          and ``quoted_keys``.
+        - Made :class:`tuple` JSON serializable.
+        - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
     :param obj: a Python object
     :param filename: the path to the JSON file
@@ -299,9 +301,11 @@ def dump(
     r"""Serialize a Python object to an open JSON file.
 
     .. versionchanged:: 2.0
-        Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types``
-        and ``quoted_keys``. Merged ``item_separator`` and ``key_separator`` as
-        ``separators``.
+
+        - Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types``
+          and ``quoted_keys``.
+        - Made :class:`tuple` JSON serializable.
+        - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
     :param obj: a Python object
     :param fp: an open JSON file
@@ -371,9 +375,11 @@ def dumps(
     r"""Serialize a Python object to a JSON string.
 
     .. versionchanged:: 2.0
-        Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types``
-        and ``quoted_keys``. Merged ``item_separator`` and ``key_separator`` as
-        ``separators``.
+
+        - Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types``
+          and ``quoted_keys``.
+        - Made :class:`tuple` JSON serializable.
+        - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
     :param obj: a Python object
     :param allow: the allowed JSON deviations

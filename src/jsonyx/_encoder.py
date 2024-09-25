@@ -268,9 +268,11 @@ class Encoder:
     r"""A configurable JSON encoder.
 
     .. versionchanged:: 2.0
-        Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types``
-        and ``quoted_keys``. Merged ``item_separator`` and ``key_separator`` as
-        ``separators``.
+
+        - Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types``
+          and ``quoted_keys``.
+        - Made :class:`tuple` JSON serializable.
+        - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
     :param allow: the allowed JSON deviations
     :param commas: separate items by commas when indented

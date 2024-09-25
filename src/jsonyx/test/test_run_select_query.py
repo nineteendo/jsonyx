@@ -1,5 +1,6 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON run_select_query tests."""
+# TODO(Nice Zombies): test type error optional marker
 from __future__ import annotations
 
 __all__: list[str] = []
