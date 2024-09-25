@@ -40,6 +40,9 @@ Sponser = "https://paypal.me/nineteendo"
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
+[tool.ruff]
+line-length = 79
+
 [tool.ruff.lint]
 ignore = [
     "ANN401", # any-type
