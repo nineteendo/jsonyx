@@ -34,7 +34,8 @@ if TYPE_CHECKING:
     _WriteFunc = Callable[[str], object]
 
 
-_ESCAPE_DCT: dict[str, str] = {chr(i): f"\\u{i:04x}" for i in range(0x20)} | {
+_ESCAPE_DCT: dict[str, str] = {
+    **{chr(i): f"\\u{i:04x}" for i in range(0x20)},
     '"': '\\"',
     "\\": "\\\\",
     "\b": "\\b",
