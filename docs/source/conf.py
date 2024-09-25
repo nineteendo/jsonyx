@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """Configuration file for the Sphinx documentation builder."""
-# TODO(Nice Zombies): update version
 from __future__ import annotations
 
 from os import environ, getenv
@@ -8,13 +7,14 @@ from typing import Any
 
 # -- Project information
 
+branch: str = getenv("READTHEDOCS_GIT_IDENTIFIER", "main")
 project: str = "jsonyx"
 # pylint: disable-next=W0622
 copyright: str = "2024, Nice Zombies"  # noqa: A001
 author: str = "Nice Zombies"
 
 release: str = "2.0"
-version: str = "latest"
+version: str = "latest" if branch == "main" else branch
 
 # -- General configuration
 
@@ -63,7 +63,7 @@ html_context: dict[str, Any] = {
     "display_github": True,
     "github_user": "nineteendo",
     "github_repo": "jsonyx",
-    "github_version": getenv("READTHEDOCS_GIT_IDENTIFIER", "main"),
+    "github_version": branch,
     "slug": "jsonyx",
 }
 if "READTHEDOCS" in environ:
@@ -75,7 +75,7 @@ html_theme: str = "furo"
 html_theme_options: dict[str, Any] = {
     "navigation_with_keys": True,
     "source_repository": "https://github.com/nineteendo/jsonyx/",
-    "source_branch": getenv("READTHEDOCS_GIT_IDENTIFIER", "main"),
+    "source_branch": branch,
     "source_directory": "docs/source/",
 }
 
