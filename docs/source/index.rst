@@ -5,7 +5,7 @@ Welcome to jsonyx's Documentation!
     :google-site-verification: Htf0oc5j12UrWDfRoSv2B_0mn4S_mJ2P7eFiE63wwgg
 
 :mod:`jsonyx` is a customizable `JSON <http://json.org>`_ library for Python
-3.10+. It is written in pure Python with an optional C extension for better
+3.8+. It is written in pure Python with an optional C extension for better
 performance and no dependencies.
 
 .. todo:: Add specification
