@@ -240,7 +240,7 @@ class Manipulator:
             filtered_pairs: list[tuple[_Node, _Node]] = [
                 (node, (filter_target, filter_key))  # type: ignore
                 for node, (filter_target, filter_key) in zip(
-                    nodes, filter_nodes, strict=True,
+                    nodes, filter_nodes,
                 )
                 if _has_key(filter_target, filter_key) != negate_filter
             ]
@@ -416,14 +416,14 @@ class Manipulator:
             dst_nodes: list[_Node] = self.run_select_query(
                 current_nodes, dst, mapping=True, relative=True,
             )
-            for (target, key), value in zip(dst_nodes, values, strict=True):
+            for (target, key), value in zip(dst_nodes, values):
                 list.append(target[key], value)  # type: ignore
         elif mode == "extend":
             dst = operation.get("to", "@")
             dst_nodes = self.run_select_query(
                 current_nodes, dst, mapping=True, relative=True,
             )
-            for (target, key), value in zip(dst_nodes, values, strict=True):
+            for (target, key), value in zip(dst_nodes, values):
                 list.extend(target[key], value)  # type: ignore
         elif mode == "insert":
             dst = operation["to"]
@@ -433,10 +433,7 @@ class Manipulator:
 
             # Reverse to preserve indices for queries
             for (current_target, _current_key), (target, key), value in zip(
-                current_nodes[::-1],
-                dst_nodes[::-1],
-                values[::-1],
-                strict=True,
+                current_nodes[::-1], dst_nodes[::-1], values[::-1],
             ):
                 if target is current_target:
                     raise ValueError
@@ -451,14 +448,14 @@ class Manipulator:
                 mapping=True,
                 relative=True,
             )
-            for (target, key), value in zip(dst_nodes, values, strict=True):
+            for (target, key), value in zip(dst_nodes, values):
                 target[key] = value  # type: ignore
         elif mode == "update":
             dst = operation.get("to", "@")
             dst_nodes = self.run_select_query(
                 current_nodes, dst, mapping=True, relative=True,
             )
-            for (target, key), value in zip(dst_nodes, values, strict=True):
+            for (target, key), value in zip(dst_nodes, values):
                 dict.update(target[key], value)  # type: ignore
         else:
             raise ValueError
@@ -543,7 +540,7 @@ class Manipulator:
 
                 # Reverse to preserve indices for queries
                 for (current_target, _current_key), (target, key) in zip(
-                    current_nodes[::-1], src_nodes[::-1], strict=True,
+                    current_nodes[::-1], src_nodes[::-1],
                 ):
                     if target is current_target:
                         raise ValueError

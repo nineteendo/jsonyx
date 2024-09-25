@@ -40,7 +40,7 @@ def _eq(a: Any, b: Any) -> bool:
         if len(a) != len(b):  # type: ignore
             result = False
         else:
-            result = all(starmap(_eq, zip(a, b, strict=True)))  # type: ignore
+            result = all(starmap(_eq, zip(a, b)))  # type: ignore
     elif isinstance(a, (Decimal, float)) and isnan(a):
         result = isnan(b)
     else:
