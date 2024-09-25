@@ -6,7 +6,7 @@ __all__: list[str] = []
 
 from collections import UserDict, UserList
 from decimal import Decimal
-from enum import IntEnum, ReprEnum
+from enum import Enum
 from typing import TYPE_CHECKING
 
 import pytest
@@ -25,11 +25,11 @@ _CIRCULAR_LIST: list[object] = []
 _CIRCULAR_LIST.append(_CIRCULAR_LIST)
 
 
-class _FloatEnum(float, ReprEnum):
+class _FloatEnum(float, Enum):
     ZERO = 0.0
 
 
-class _IntEnum(IntEnum):
+class _IntEnum(int, Enum):
     ZERO = 0
 
 
