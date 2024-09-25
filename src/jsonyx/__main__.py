@@ -7,7 +7,7 @@ __all__: list[str] = ["main"]
 
 import sys
 from argparse import ArgumentParser
-from sys import stderr, stdin
+from sys import modules, stderr, stdin
 from traceback import format_exception_only
 from typing import Any, Literal, cast
 
@@ -46,9 +46,10 @@ class _PatchNameSpace(_Namespace):
 
 
 def _configure(parser: ArgumentParser) -> None:
-    parser.add_argument(
-        "-v", "--version", action="version", version=f"jsonyx {__version__}",
-    )
+    parser.add_argument("-v", "--version", action="version", version=(
+        f"jsonyx {__version__} "
+        f"({'C extension' if '_jsonyx' in modules else 'Python'})"
+    ))
     parent_parser: ArgumentParser = ArgumentParser(add_help=False)
     parent_parser.add_argument(
         "-a",

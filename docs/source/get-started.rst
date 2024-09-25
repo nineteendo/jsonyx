@@ -80,7 +80,7 @@ Check if the correct version is installed
     .. code-block:: console
 
         $ jsonyx --version
-        jsonyx 2.0.0
+        jsonyx 2.0.0 (C extension)
 
 .. tab:: short options
 
@@ -91,7 +91,10 @@ Check if the correct version is installed
     .. code-block:: console
 
         $ jsonyx -v
-        jsonyx 2.0.0
+        jsonyx 2.0.0 (C extension)
+
+.. note:: If the version number is followed by ``(Python)``, the C extension is
+    not installed.
 
 Quick start
 -----------

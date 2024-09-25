@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """Customizable JSON library for Python."""
-# TODO(Nice Zombies): test on Python 3.8
 # TODO(Nice Zombies): update badge branch
 from __future__ import annotations
 
