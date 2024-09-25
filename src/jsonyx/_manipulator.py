@@ -63,7 +63,7 @@ def _check_query_key(
     target: _Target, key: _Key, *, allow_slice: bool = False,
 ) -> None:
     if isinstance(target, dict) and not isinstance(key, str):
-        msg: str = f"Dict key must be str, not {type(target).__name__}"
+        msg: str = f"Dict key must be str, not {type(key).__name__}"
         raise TypeError(msg)
 
     if isinstance(target, list):
@@ -71,11 +71,11 @@ def _check_query_key(
             if isinstance(key, str):
                 msg = (
                     "List index must be int or slice, not "
-                    f"{type(target).__name__}"
+                    f"{type(key).__name__}"
                 )
                 raise TypeError(msg)
         elif not isinstance(key, int):
-            msg = f"List index must be int, not {type(target).__name__}"
+            msg = f"List index must be int, not {type(key).__name__}"
             raise TypeError(msg)
 
 

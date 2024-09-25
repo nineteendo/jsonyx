@@ -149,9 +149,9 @@ def test_invalid_query(
 
     check_syntax_err(exc_info, msg, colno, end_colno)
 
-    ("@[:]", "Filter is not allowed", 3, -1),
-    ("@ == @[:]", "Filter is not allowed", 8, -1),
 
-
-def test_slice() -> None:
+@pytest.mark.parametrize("query", ["@[:]", "@ == @[:]"])
+def test_slice(query: str) -> None:
     """Test slice."""
+    with pytest.raises(TypeError, match="List index must be int"):
+        run_filter_query(([[]], 0), query)
