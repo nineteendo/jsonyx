@@ -1303,13 +1303,13 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     if (s->Decimal == NULL) {
         goto bail;
     }
-    s->indent = Py_NewRef(indent);
-    s->mapping_types = Py_NewRef(mapping_types);
-    s->seq_types = Py_NewRef(seq_types);
-    s->end = Py_NewRef(end);
-    s->item_separator = Py_NewRef(item_separator);
-    s->long_item_separator = Py_NewRef(long_item_separator);
-    s->key_separator = Py_NewRef(key_separator);
+    s->indent = indent;
+    s->mapping_types = mapping_types;
+    s->seq_types = seq_types;
+    s->end = end;
+    s->item_separator = item_separator;
+    s->long_item_separator = long_item_separator;
+    s->key_separator = key_separator;
     s->allow_nan_and_infinity = allow_nan_and_infinity;
     s->allow_surrogates = allow_surrogates;
     s->ensure_ascii = ensure_ascii;
@@ -1317,6 +1317,13 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->quoted_keys = quoted_keys;
     s->sort_keys = sort_keys;
     s->trailing_comma = trailing_comma;
+    Py_INCREF(s->indent);
+    Py_INCREF(s->mapping_types);
+    Py_INCREF(s->seq_types);
+    Py_INCREF(s->end);
+    Py_INCREF(s->item_separator);
+    Py_INCREF(s->long_item_separator);
+    Py_INCREF(s->key_separator);
     return (PyObject *)s;
 
 bail:
@@ -1541,7 +1548,8 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
     PyObject *encoded;
 
     if (PyUnicode_Check(key)) {
-        keystr = Py_NewRef(key);
+        keystr = key;
+        Py_INCREF(keystr);
     }
     else {
         PyErr_Format(PyExc_TypeError,
@@ -1914,22 +1922,16 @@ static int
 _json_exec(PyObject *module)
 {
     PyObject *PyScannerType = PyType_FromSpec(&PyScannerType_spec);
-    if (PyScannerType == NULL) {
-        return -1;
-    }
-    int rc = PyModule_AddObjectRef(module, "make_scanner", PyScannerType);
-    Py_DECREF(PyScannerType);
+    int rc = PyModule_AddObject(module, "make_scanner", PyScannerType);
     if (rc < 0) {
+        Py_XDECREF(PyScannerType);
         return -1;
     }
 
     PyObject *PyEncoderType = PyType_FromSpec(&PyEncoderType_spec);
-    if (PyEncoderType == NULL) {
-        return -1;
-    }
-    rc = PyModule_AddObjectRef(module, "make_encoder", PyEncoderType);
-    Py_DECREF(PyEncoderType);
+    rc = PyModule_AddObject(module, "make_encoder", PyEncoderType);
     if (rc < 0) {
+        Py_XDECREF(PyEncoderType);
         return -1;
     }
 
@@ -1937,7 +1939,6 @@ _json_exec(PyObject *module)
     if (PyType_Ready(&PyDuplicateKeyType) < 0) {
         return -1;
     }
-    Py_INCREF(&PyDuplicateKeyType);
     rc = PyModule_AddObject(module, "DuplicateKey", (PyObject *) &PyDuplicateKeyType);
     if (rc < 0) {
         Py_DECREF(&PyDuplicateKeyType);
