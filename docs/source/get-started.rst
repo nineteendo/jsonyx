@@ -99,8 +99,7 @@ Quick start
 Encoding basic Python object hierarchies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. versionchanged:: 2.0
-    Made :class:`tuple` JSON serializable
+.. versionchanged:: 2.0 Made :class:`tuple` JSON serializable.
 
 .. tab:: without classes
 
@@ -198,8 +197,7 @@ Compact encoding
 Pretty printing
 ^^^^^^^^^^^^^^^
 
-.. versionchanged:: 2.0
-    Added ``indent_leaves``.
+.. versionchanged:: 2.0 Added ``indent_leaves``.
 
 .. tab:: without classes
 
