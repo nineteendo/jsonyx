@@ -5,7 +5,6 @@ from __future__ import annotations
 __all__: list[str] = ["check_syntax_err", "get_big_num", "get_json"]
 
 import sys
-from test.support.import_helper import import_fresh_module  # type: ignore
 from typing import TYPE_CHECKING, Any
 
 import pytest
@@ -15,6 +14,10 @@ from jsonyx import JSONSyntaxError
 if TYPE_CHECKING:
     from types import ModuleType
 
+if sys.version_info >= (3, 10):
+    from test.support.import_helper import import_fresh_module  # type: ignore
+else:
+    from test.support import import_fresh_module
 
 pyjson: ModuleType | None = import_fresh_module("jsonyx", blocked=["_jsonyx"])
 if cjson := import_fresh_module("jsonyx", fresh=["_jsonyx"]):
