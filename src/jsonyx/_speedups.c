@@ -9,6 +9,12 @@
 #define _Py_EnterRecursiveCall Py_EnterRecursiveCall
 #define _Py_LeaveRecursiveCall Py_LeaveRecursiveCall
 
+#if PY_VERSION_HEX < 0x03090000
+#if !defined(PyObject_CallOneArg)
+#define PyObject_CallOneArg(callable, arg) PyObject_CallFunctionObjArgs(callable, arg, NULL);
+#endif
+#endif /* PY_VERSION_HEX < 0x03090000 */
+
 
 typedef struct _PyScannerObject {
     PyObject_HEAD
