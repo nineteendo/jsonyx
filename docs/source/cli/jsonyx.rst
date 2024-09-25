@@ -21,4 +21,4 @@ Options
 
 .. option:: -v, --version
 
-    Show the version number.
+    Show the version number and exit.

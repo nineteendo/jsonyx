@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON run_filter_query tests."""
-# TODO(Nice Zombies): add more tests
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -149,3 +148,10 @@ def test_invalid_query(
         run_filter_query([], query)
 
     check_syntax_err(exc_info, msg, colno, end_colno)
+
+    ("@[:]", "Filter is not allowed", 3, -1),
+    ("@ == @[:]", "Filter is not allowed", 8, -1),
+
+
+def test_slice() -> None:
+    """Test slice."""
