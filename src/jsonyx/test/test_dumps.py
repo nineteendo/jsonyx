@@ -54,22 +54,12 @@ def test_int(
     assert json.dumps(num_type(num), end="") == repr(num)
 
 
-def test_int_enum(json: ModuleType) -> None:
-    """Test int enum."""
-    assert json.dumps(_IntEnum.ZERO, end="") == "0"
-
-
 @pytest.mark.parametrize("num_type", [Decimal, float])
 def test_rational_number(
     json: ModuleType, num_type: type[Decimal | float],
 ) -> None:
     """Test rational number."""
     assert json.dumps(num_type("0.0"), end="") == "0.0"
-
-
-def test_float_enum(json: ModuleType) -> None:
-    """Test float enum."""
-    assert json.dumps(_FloatEnum.ZERO, end="") == "0.0"
 
 
 @pytest.mark.parametrize("num", ["NaN", "Infinity", "-Infinity"])
@@ -108,6 +98,15 @@ def test_signaling_nan(json: ModuleType) -> None:
     """Test signaling NaN."""
     with pytest.raises(ValueError, match="is not JSON serializable"):
         json.dumps(Decimal("sNaN"))
+
+
+@pytest.mark.parametrize(("obj", "expected"), [
+    (_IntEnum.ZERO, "0"),
+    (_FloatEnum.ZERO, "0.0"),
+])
+def test_enum(json: ModuleType, obj: float, expected: str) -> None:
+    """Test enum."""
+    assert json.dumps(obj, end="") == expected
 
 
 @pytest.mark.parametrize("obj", [

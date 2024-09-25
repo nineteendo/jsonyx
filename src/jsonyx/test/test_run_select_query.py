@@ -80,12 +80,18 @@ def test_invalid_property(key: str) -> None:
     check_syntax_err(exc_info, "Expecting property", 3)
 
 
-@pytest.mark.parametrize("query", ["$.a?", "$.a.b", "$.a[0]"])
+@pytest.mark.parametrize("query", [
+    # At the end
+    "$.a",
+
+    # In the middle
+    "$.a?", "$.a.b", "$.a[0]",
+])
 def test_list_property(query: str) -> None:
     """Test property on a list."""
     match: str = "List index must be int or slice, not"
     with pytest.raises(TypeError, match=match):
-        run_select_query(([[]], 0), query)
+        run_select_query(([[]], 0), query, allow_slice=True)
 
 
 @pytest.mark.parametrize("query", [
@@ -96,7 +102,7 @@ def test_list_property(query: str) -> None:
     "$.a.b", "$.a[0]",
 ])
 def test_list_property_mapping(query: str) -> None:
-    """Test property on a list."""
+    """Test property on a list with mapping."""
     with pytest.raises(TypeError, match="List index must be int, not"):
         run_select_query(([[]], 0), query, mapping=True)
 

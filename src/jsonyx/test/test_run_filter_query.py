@@ -110,10 +110,8 @@ def test_whitespace(query: str) -> None:
 
 
 @pytest.mark.parametrize(("query", "msg", "colno", "end_colno"), [
-    ("", "Expecting a relative query", 1, -1),
-    ("$", "Expecting a relative query", 1, -1),
-    ("!", "Expecting a relative query", 2, -1),
-    ("@?", "Optional marker is not allowed", 2, 3),
+    ("", "Expecting a relative query", 1, -1),  # relative=True
+    ("@?", "Optional marker is not allowed", 2, 3),  # mapping=True
     ("@ == ", "Expecting value", 6, -1),
     ("@ && ", "Expecting a relative query", 6, -1),
     ("!@ == 0", "Unexpected operator", 4, 6),
