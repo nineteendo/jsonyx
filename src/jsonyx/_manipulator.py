@@ -2,7 +2,6 @@
 """JSON manipulator."""
 # TODO(Nice Zombies): add error messages
 # TODO(Nice Zombies): raise JSONSyntaxError
-# TODO(Nice Zombies): remove value comparison
 # TODO(Nice Zombies): update schema ID
 from __future__ import annotations
 
@@ -260,32 +259,14 @@ class Manipulator:
                 if match := _match_whitespace(query, end):
                     end = match.end()
 
-                if query[end:end + 1] != "@":
-                    value, end = self._scan_query_value(query, end)
-                    nodes = [
-                        node
-                        for node, (filter_target, filter_key) in filtered_pairs
-                        if operator(
-                            filter_target[filter_key], value,  # type: ignore
-                        )
-                    ]
-                else:
-                    nodes = [node for node, _filter_node in filtered_pairs]
-                    filter2_nodes, end = self._run_select_query(
-                        nodes, query, end, mapping=True, relative=True,
+                value, end = self._scan_query_value(query, end)
+                nodes = [
+                    node
+                    for node, (filter_target, filter_key) in filtered_pairs
+                    if operator(
+                        filter_target[filter_key], value,  # type: ignore
                     )
-                    nodes = [
-                        node
-                        for (
-                            (node, (filter_target, filter_key)),
-                            (filter2_target, filter2_key),
-                        ) in zip(filtered_pairs, filter2_nodes, strict=True)
-                        if _has_key(filter2_target, filter2_key) and operator(
-                            filter_target[filter_key],  # type: ignore
-                            filter2_target[filter2_key],  # type: ignore
-                        )
-                    ]
-
+                ]
                 old_end = end
                 if match := _match_whitespace(query, end):
                     end = match.end()

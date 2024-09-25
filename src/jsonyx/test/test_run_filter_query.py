@@ -91,25 +91,6 @@ def test_operator_whitespace(query: str) -> None:
     assert not run_filter_query([], query)
 
 
-@pytest.mark.parametrize(("obj", "keep"), [
-    # Missing first key
-    ({"b": 0}, False),
-
-    # Missing second key
-    ({"a": 0}, False),
-
-    # Both keys present
-    ({"a": 0, "b": 1}, False),  # Different value
-    ({"a": 0, "b": 0}, True),  # Same value
-])
-def test_value_comparison(
-    obj: dict[Any, Any], keep: bool,  # noqa: FBT001
-) -> None:
-    """Test comparison of two values."""
-    expected: list[_Node] = [([obj], 0)] if keep else []
-    assert run_filter_query(([obj], 0), "@.a == @.b") == expected
-
-
 def test_and() -> None:
     """Test and."""
     query: str = "@ != 1 && @ != 2 && @ != 3"
@@ -134,10 +115,8 @@ def test_whitespace(query: str) -> None:
     ("!", "Expecting a relative query", 2, -1),
     ("@?", "Optional marker is not allowed", 2, 3),
     ("@ == ", "Expecting value", 6, -1),
-    ("@ == $", "Expecting value", 6, -1),
-    ("@ == @?", "Optional marker is not allowed", 7, 8),
     ("@ && ", "Expecting a relative query", 6, -1),
-    ("!@ == @", "Unexpected operator", 4, 6),
+    ("!@ == 0", "Unexpected operator", 4, 6),
     ("@ @ @", "Expecting end of file", 2, -1),
 ])
 def test_invalid_query(
@@ -150,8 +129,7 @@ def test_invalid_query(
     check_syntax_err(exc_info, msg, colno, end_colno)
 
 
-@pytest.mark.parametrize("query", ["@[:]", "@ == @[:]"])
-def test_slice(query: str) -> None:
+def test_slice() -> None:
     """Test slice."""
     with pytest.raises(TypeError, match="List index must be int"):
-        run_filter_query(([[]], 0), query)
+        run_filter_query(([[]], 0), "@[:]")
