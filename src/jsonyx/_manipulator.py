@@ -298,19 +298,22 @@ class Manipulator:
 
         end += 1
         while True:
+            key: _Key
             if query[end:end + 1] == "?":
                 if mapping:
                     msg = "Optional marker is not allowed"
                     raise _errmsg(msg, query, end, end + 1)
 
                 end += 1
+                for target, key in nodes:
+                    _check_query_key(target, key)
+
                 nodes = [
                     (target, key)
                     for (target, key) in nodes
                     if isinstance(key, slice) or _has_key(target, key)
                 ]
 
-            key: _Key
             if (terminator := query[end:end + 1]) == ".":
                 end += 1
                 if (

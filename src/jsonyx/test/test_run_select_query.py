@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON run_select_query tests."""
-# TODO(Nice Zombies): test type error optional marker
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -81,7 +80,7 @@ def test_invalid_property(key: str) -> None:
     check_syntax_err(exc_info, "Expecting property", 3)
 
 
-@pytest.mark.parametrize("query", ["$.a.b", "$.a[0]"])
+@pytest.mark.parametrize("query", ["$.a?", "$.a.b", "$.a[0]"])
 def test_list_property(query: str) -> None:
     """Test property on a list."""
     match: str = "List index must be int or slice, not"
@@ -180,7 +179,7 @@ def test_slice_not_allowed(query: str) -> None:
     "$[:]",
 
     # In the middle
-    "$[:].b", "$[:][0]",
+    "$[:]?", "$[:].b", "$[:][0]",
 ])
 def test_dict_slice(query: str) -> None:
     """Test slice on a dict."""
@@ -213,7 +212,7 @@ def test_too_big_idx(big_num: str) -> None:
     "$[0]",
 
     # In the middle
-    "$[0].b", "$[0][0]",
+    "$[0]?", "$[0].b", "$[0][0]",
 ])
 def test_dict_idx(query: str) -> None:
     """Test index on a dict."""
