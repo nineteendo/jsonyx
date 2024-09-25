@@ -10,6 +10,7 @@ __all__: list[str] = [
 ]
 
 import re
+import sys
 from codecs import (
     BOM_UTF8, BOM_UTF16_BE, BOM_UTF16_LE, BOM_UTF32_BE, BOM_UTF32_LE,
 )
@@ -196,9 +197,15 @@ class JSONSyntaxError(SyntaxError):
             doc.rfind("\n", 0, end), doc.rfind("\r", 0, end),
         )
         offset, text, end_offset = _get_err_context(doc, start, end)
-        super().__init__(
-            msg, (filename, lineno, offset, text, end_lineno, end_offset),
-        )
+        if sys.version_info >= (3, 10):
+            super().__init__(
+                msg, (filename, lineno, offset, text, end_lineno, end_offset),
+            )
+        else:
+            self.end_lineno: int = end_lineno
+            self.end_offset: int = end_offset
+            super().__init__(msg, (filename, lineno, offset, text))
+
         self.colno: int = colno
         self.end_colno: int = end_colno
 
