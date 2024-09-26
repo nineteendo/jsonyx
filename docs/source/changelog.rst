@@ -30,6 +30,7 @@ jsonyx 2.0.0 (unreleased)
   :func:`jsonyx.write`
 - Removed :mod:`!jsonyx.tool`
 - Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
+- Sped up decimal encoding
 
 jsonyx 1.2.1 (Aug 3, 2024)
 --------------------------

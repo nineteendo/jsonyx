@@ -1,7 +1,6 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON manipulator."""
 # TODO(Nice Zombies): add error messages
-# TODO(Nice Zombies): raise JSONSyntaxError
 # TODO(Nice Zombies): update schema ID
 from __future__ import annotations
 
