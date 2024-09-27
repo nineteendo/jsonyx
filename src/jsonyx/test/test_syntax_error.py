@@ -97,6 +97,8 @@ def test_start_and_end_position(
         #    ^^^^^^^^^^^^^^^              ^^^^^^^
 
         # Newline
+        (8, "current", 7, 7, 8, "current", 9),
+        #           ^                   ^
         (8, "current", 7, 8, 8, "current", 9),
         #           ^                   ^
         (8, "current\nnext", 7, 12, 8, "current", 9),
