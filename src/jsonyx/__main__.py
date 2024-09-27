@@ -232,7 +232,7 @@ def _run(args: _Namespace) -> None:
         stderr.write("".join(format_syntax_error(exc)))
         sys.exit(1)
     except (AssertionError, TypeError, ValueError) as exc:
-        stderr.write("".join(format_exception_only(exc)))
+        stderr.write("".join(format_exception_only(None, exc)))
         sys.exit(1)
 
     if args.output_filename and args.output_filename != "-":
