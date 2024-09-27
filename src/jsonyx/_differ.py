@@ -21,7 +21,7 @@ _escape: _SubFunc = re.compile(r"['~]", VERBOSE | MULTILINE | DOTALL).sub
 
 
 def _encode_query_key(key: str) -> str:
-    return f".{key}" if key.isidentifier() else f"['{_escape(r"~\1", key)}']"
+    return f".{key}" if key.isidentifier() else f"['{_escape(r'~\1', key)}']"
 
 
 def _eq(a: Any, b: Any) -> bool:
