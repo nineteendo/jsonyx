@@ -60,21 +60,17 @@ def _errmsg(msg: str, query: str, start: int, end: int = 0) -> JSONSyntaxError:
 def _check_query_key(
     target: _Target, key: _Key, *, allow_slice: bool = False,
 ) -> None:
-    if isinstance(target, dict) and not isinstance(key, str):
-        msg: str = f"Dict key must be str, not {type(key).__name__}"
-        raise TypeError(msg)
-
-    if isinstance(target, list):
-        if allow_slice:
-            if isinstance(key, str):
-                msg = (
-                    "List index must be int or slice, not "
-                    f"{type(key).__name__}"
-                )
-                raise TypeError(msg)
-        elif not isinstance(key, int):
-            msg = f"List index must be int, not {type(key).__name__}"
+    if isinstance(target, dict):
+        if not isinstance(key, str):
+            msg: str = f"Dict key must be str, not {type(key).__name__}"
             raise TypeError(msg)
+    elif allow_slice:
+        if isinstance(key, str):
+            msg = f"List index must be int or slice, not {type(key).__name__}"
+            raise TypeError(msg)
+    elif not isinstance(key, int):
+        msg = f"List index must be int, not {type(key).__name__}"
+        raise TypeError(msg)
 
 
 def _get_query_targets(node: _Node, *, mapping: bool = False) -> list[_Target]:
