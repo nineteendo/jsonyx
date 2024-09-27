@@ -30,7 +30,7 @@ if TYPE_CHECKING:
 
     _EncodeFunc = Callable[[_T], str]
     _StrPath = PathLike[str] | str
-    _SubFunc = Callable[[Callable[[Match[str]], str], str], str]
+    _SubFunc = Callable[[str | Callable[[Match[str]], str], str], str]
     _WriteFunc = Callable[[str], object]
 
 

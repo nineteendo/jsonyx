@@ -15,17 +15,13 @@ if TYPE_CHECKING:
     from collections.abc import Callable, KeysView
 
     _Operation = dict[str, Any]
-    _SubFunc = Callable[[Callable[[Match[str]], str], str], str]
+    _SubFunc = Callable[[str | Callable[[Match[str]], str], str], str]
 
 _escape: _SubFunc = re.compile(r"['~]", VERBOSE | MULTILINE | DOTALL).sub
 
 
-def _replace(match: Match[str]) -> str:
-    return "~" + match.group()
-
-
 def _encode_query_key(key: str) -> str:
-    return f".{key}" if key.isidentifier() else f"['{_escape(_replace, key)}']"
+    return f".{key}" if key.isidentifier() else f"['{_escape(r"~\1", key)}']"
 
 
 def _eq(a: Any, b: Any) -> bool:
