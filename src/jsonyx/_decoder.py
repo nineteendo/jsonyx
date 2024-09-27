@@ -71,9 +71,6 @@ def _get_err_context(doc: str, start: int, end: int) -> tuple[int, str, int]:
     line_start: int = max(
         doc.rfind("\n", 0, start), doc.rfind("\r", 0, start),
     ) + 1
-    if match := _match_whitespace(doc, line_start):
-        line_start = min(match.end(), start)
-
     if match := _match_line_end(doc, start):
         line_end: int = match.end()
     else:

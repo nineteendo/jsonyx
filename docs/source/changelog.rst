@@ -28,7 +28,6 @@ jsonyx 2.0.0 (unreleased)
 - Merged ``item_separator`` and ``key_separator`` as ``separators`` for
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
   :func:`jsonyx.write`
-- Removed leading whitespace from error messages
 - Removed :mod:`!jsonyx.tool`
 - Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
 - Sped up decimal encoding
