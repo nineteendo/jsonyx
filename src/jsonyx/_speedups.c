@@ -3,7 +3,6 @@
 // https://github.com/benfred/py-spy#can-py-spy-profile-native-extensions
 
 #include <Python.h>
-#include <structmember.h>
 #include <stdbool.h> // bool
 
 #define _Py_EnterRecursiveCall Py_EnterRecursiveCall
