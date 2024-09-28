@@ -661,9 +661,9 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
             if (PyUnicode_READ(kind, str, idx) == '"') {
                 key = scanstring_unicode(pyfilename, pystr, idx + 1, s->allow_surrogates, &next_idx);
             }
-            else if (!Py_UNICODE_ISALPHA(PyUnicode_READ(kind, str, idx))
-                     && PyUnicode_READ(kind, str, idx) != '_'
-                     && PyUnicode_READ(kind, str, idx) <= '\x7f')
+            else if (!Py_UNICODE_ISALPHA(PyUnicode_READ(kind, str, idx)) &&
+                     PyUnicode_READ(kind, str, idx) != '_' &&
+                     PyUnicode_READ(kind, str, idx) <= '\x7f')
             {
                 raise_errmsg("Expecting key", pyfilename, pystr, idx, 0);
                 goto bail;
@@ -1653,9 +1653,9 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
 
         for (Py_ssize_t  i = 0; i < PyList_GET_SIZE(values); i++) {
             PyObject *obj = PyList_GET_ITEM(values, i);
-            if (obj != Py_None && !PyUnicode_Check(obj) && !PyLong_Check(obj)
-                && !PyFloat_Check(obj)
-                && !PyObject_TypeCheck(obj, (PyTypeObject *)s->Decimal))
+            if (obj != Py_None && !PyUnicode_Check(obj) && !PyLong_Check(obj) &&
+                !PyFloat_Check(obj) &&
+                !PyObject_TypeCheck(obj, (PyTypeObject *)s->Decimal))
             {
                 indented = true;
                 break;
@@ -1794,9 +1794,9 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
         indented = false;
         for (i = 0; i < PySequence_Fast_GET_SIZE(s_fast); i++) {
             PyObject *obj = PySequence_Fast_GET_ITEM(s_fast, i);
-            if (obj != Py_None && !PyUnicode_Check(obj) && !PyLong_Check(obj)
-                && !PyFloat_Check(obj)
-                && !PyObject_TypeCheck(obj, (PyTypeObject *)s->Decimal))
+            if (obj != Py_None && !PyUnicode_Check(obj) && !PyLong_Check(obj) &&
+                !PyFloat_Check(obj) &&
+                !PyObject_TypeCheck(obj, (PyTypeObject *)s->Decimal))
             {
                 indented = true;
                 break;
