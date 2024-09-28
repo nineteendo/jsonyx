@@ -90,6 +90,7 @@ to :ref:`install <installation>` the project.
 .. toctree::
     :hidden:
 
+    Home <self>
     get-started
     how-to
     api/index
