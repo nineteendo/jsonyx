@@ -1,6 +1,7 @@
 /* JSON speedups */
 // TODO(Nice Zombies): speed up decoding
 // https://github.com/benfred/py-spy#can-py-spy-profile-native-extensions
+// https://github.com/P403n1x87/echion
 
 #include <Python.h>
 #include <stdbool.h> // bool
