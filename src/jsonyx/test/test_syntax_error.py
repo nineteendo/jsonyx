@@ -86,6 +86,26 @@ def test_start_and_end_position(
         (17, "previous\r\ncurrent", 10, 17, 1, "current", 8),
         #                 ^^^^^^^               ^^^^^^^
 
+        # Remove leading space
+        (8, " current", 0, 8, 1, " current", 9),
+        #    ^^^^^^^^             ^^^^^^^^
+        (8, "\tcurrent", 0, 8, 1, " current", 9),
+        #    ^^^^^^^^^             ^^^^^^^^
+        (8, " current", 1, 8, 1, "current", 8),
+        #     ^^^^^^^             ^^^^^^^
+        (8, "\tcurrent", 1, 8, 1, "current", 8),
+        #      ^^^^^^^             ^^^^^^^
+
+        # Remove trailing space
+        (8, "current ", 0, 8, 1, "current ", 9),
+        #    ^^^^^^^^             ^^^^^^^^
+        (8, "current\t", 0, 8, 1, "current ", 9),
+        #    ^^^^^^^^^             ^^^^^^^^
+        (8, "current ", 0, 7, 1, "current", 8),
+        #    ^^^^^^^              ^^^^^^^
+        (8, "current\t", 0, 7, 1, "current", 8),
+        #    ^^^^^^^               ^^^^^^^
+
         # No newline
         (9, "start-end", 0, 5, 1, "start-end", 6),
         #    ^^^^^                 ^^^^^
@@ -113,8 +133,8 @@ def test_start_and_end_position(
         #         ^                     ^
 
         # Expand tabs
-        (8, "\tcurrent", 1, 8, 2, " current", 9),
-        #      ^^^^^^^              ^^^^^^^
+        (9, "start\tend", 5, 6, 6, "start end", 7),
+        #         ^^                     ^
 
         # Truncate start
         (6, "start-middle-end", 13, 16, 4, "...end", 7),  # line_end

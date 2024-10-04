@@ -71,12 +71,19 @@ def _get_err_context(doc: str, start: int, end: int) -> tuple[int, str, int]:
     line_start: int = max(
         doc.rfind("\n", 0, start), doc.rfind("\r", 0, start),
     ) + 1
+    if match := _match_whitespace(doc, line_start):
+        line_start = min(match.end(), start)
+
     if match := _match_line_end(doc, start):
         line_end: int = match.end()
     else:
         line_end = start
 
-    if (end := min(line_end, end)) == start:
+    end = min(line_end, end)
+    if match := _match_whitespace(doc[::-1], len(doc) - line_end):
+        line_end = max(end, len(doc) - match.end())
+
+    if end == start:
         end += 1
 
     max_chars: int = get_terminal_size().columns - 4  # leading spaces
