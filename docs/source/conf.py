@@ -59,6 +59,7 @@ templates_path = ["_templates"]
 
 html_baseurl: str = "http://jsonyx.readthedocs.io/"
 html_context: dict[str, Any] = {
+    "breadcrumb_include_page": True,
     "conf_py_path": "/docs/source/",
     "display_github": True,
     "github_user": "nineteendo",
