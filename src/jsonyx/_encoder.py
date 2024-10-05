@@ -1,5 +1,6 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON encoder."""
+# TODO(Nice Zombies): add indent_depth=None
 from __future__ import annotations
 
 import sys
