@@ -29,6 +29,7 @@ class _Slicer:
 _slicer: _Slicer = _Slicer()
 
 
+# TODO(Nice Zombies): test with None
 @pytest.mark.parametrize(("node", "keep"), [
     # List
     (([], slice(0)), True),
