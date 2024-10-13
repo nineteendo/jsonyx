@@ -48,8 +48,9 @@ https://jsonyx.readthedocs.io
 
 ## Benchmark
 
-We recommend to use [`orjson`](https://pypi.org/project/orjson) or
-[`msgspec`](https://pypi.org/project/msgspec) for performance critical
+We recommend to use [`orjson`](https://pypi.org/project/orjson),
+[`msgspec`](https://pypi.org/project/msgspec) or
+[`pysimdjson`](https://pypi.org/project/pysimdjson) for performance critical
 applications:
 
 | encode                                      |  json | jsonyx | msgspec |  orjson | unit (μs) |

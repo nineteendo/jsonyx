@@ -51,7 +51,7 @@ performance and no dependencies.
 
 .. rubric:: Benchmark
 
-We recommend to use :pypi:`orjson`, :pypi:`pysimdjson` or :pypi:`msgspec` for
+We recommend to use :pypi:`orjson`, :pypi:`msgspec` or :pypi:`pysimdjson` for
 performance critical applications:
 
 =========================================== ===== ====== ======= ======== =========
