@@ -14,7 +14,6 @@ from typing import TYPE_CHECKING, Any
 
 import msgspec
 import orjson
-import rapidjson
 import simdjson
 from tabulate import tabulate  # type: ignore
 
@@ -81,8 +80,6 @@ _ENCODE_FUNCS: dict[str, _Func] = {
     "msgspec": msgspec.json.Encoder().encode,
     # pylint: disable-next=E1101
     "orjson": orjson.dumps,
-    # pylint: disable-next=I1101
-    "rapidjson": rapidjson.Encoder(),  # type: ignore
 }
 _DECODE_CASES: dict[str, Any] = {
     case: jsonyx.dumps(obj) for case, obj in _ENCODE_CASES.items()
@@ -93,8 +90,6 @@ _DECODE_FUNCS: dict[str, _Func] = {
     "msgspec": msgspec.json.Decoder().decode,
     # pylint: disable-next=E1101
     "orjson": orjson.loads,
-    # pylint: disable-next=I1101
-    "rapidjson": rapidjson.Decoder(),
     "simdjson": simdjson.Parser().parse,
 }
 

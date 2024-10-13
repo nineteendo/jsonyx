@@ -54,31 +54,31 @@ performance and no dependencies.
 We recommend to use :pypi:`orjson`, :pypi:`pysimdjson` or :pypi:`msgspec` for
 performance critical applications:
 
-=========================================== ===== ====== ======= ======== ========= =========
-encode                                       json jsonyx msgspec   orjson rapidjson unit (μs)
-=========================================== ===== ====== ======= ======== ========= =========
-List of 256 booleans                         4.60   3.92    1.08     1.00      3.29      1.95
-List of 256 ASCII strings                   11.57  12.67    1.52     1.00      9.23      4.27
-List of 256 floats                          22.02  23.15    1.41     1.00     22.76      9.14
-List of 256 dicts with 1 int                10.33  11.31    1.52     1.00      6.36      8.85
-Medium complex object                        9.68  10.13    1.22     1.00      6.71     15.26
-List of 256 strings                         21.84  11.63    2.12     1.00     30.21     14.97
-Complex object                               7.49   5.32    1.00 inf [1]_      6.71    207.61
-Dict with 256 lists of 256 dicts with 1 int  8.40   9.14    1.20     1.00      5.04   2743.09
-=========================================== ===== ====== ======= ======== ========= =========
+=========================================== ===== ====== ======= ======== =========
+encode                                       json jsonyx msgspec   orjson unit (μs)
+=========================================== ===== ====== ======= ======== =========
+List of 256 booleans                         4.60   3.92    1.08     1.00      1.95
+List of 256 ASCII strings                   11.57  12.67    1.52     1.00      4.27
+List of 256 floats                          22.02  23.15    1.41     1.00      9.14
+List of 256 dicts with 1 int                10.33  11.31    1.52     1.00      8.85
+Medium complex object                        9.68  10.13    1.22     1.00     15.26
+List of 256 strings                         21.84  11.63    2.12     1.00     14.97
+Complex object                               7.49   5.32    1.00 inf [1]_    207.61
+Dict with 256 lists of 256 dicts with 1 int  8.40   9.14    1.20     1.00   2743.09
+=========================================== ===== ====== ======= ======== =========
 
-=========================================== ===== ====== ======= ====== ========= ======== =========
-decode                                       json jsonyx msgspec orjson rapidjson simdjson unit (μs)
-=========================================== ===== ====== ======= ====== ========= ======== =========
-List of 256 booleans                         4.63   7.15    2.88   1.49      3.36     1.00      1.44
-List of 256 ASCII strings                    6.51   7.98    4.32   3.81      6.12     1.00      3.37
-List of 256 floats                          10.81  11.92    2.28   1.57      9.39     1.00      6.20
-List of 256 dicts with 1 int                12.04  14.29    6.73   4.98     11.07     1.00      6.31
-Medium complex object                       11.84  15.33    5.02   4.00     10.61     1.00      8.25
-List of 256 strings                          4.68   3.22    8.06   6.49      9.21     1.00     20.25
-Complex object                               9.12   8.55    8.99   8.16     10.25     1.00    132.89
-Dict with 256 lists of 256 dicts with 1 int 17.42  19.91   11.83  11.09     15.17     1.00   1752.60
-=========================================== ===== ====== ======= ====== ========= ======== =========
+=========================================== ===== ====== ======= ====== ======== =========
+decode                                       json jsonyx msgspec orjson simdjson unit (μs)
+=========================================== ===== ====== ======= ====== ======== =========
+List of 256 booleans                         4.63   7.15    2.88   1.49     1.00      1.44
+List of 256 ASCII strings                    6.51   7.98    4.32   3.81     1.00      3.37
+List of 256 floats                          10.81  11.92    2.28   1.57     1.00      6.20
+List of 256 dicts with 1 int                12.04  14.29    6.73   4.98     1.00      6.31
+Medium complex object                       11.84  15.33    5.02   4.00     1.00      8.25
+List of 256 strings                          4.68   3.22    8.06   6.49     1.00     20.25
+Complex object                               9.12   8.55    8.99   8.16     1.00    132.89
+Dict with 256 lists of 256 dicts with 1 int 17.42  19.91   11.83  11.09     1.00   1752.60
+=========================================== ===== ====== ======= ====== ======== =========
 
 Check out the :doc:`get-started` section for further information, including how
 to :ref:`install <installation>` the project.

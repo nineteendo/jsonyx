@@ -1,5 +1,4 @@
 msgspec==0.18.6
 orjson==3.10.7
 pysimdjson==6.0.2
-python-rapidjson==1.20
 tabulate==0.9.0
