@@ -55,7 +55,7 @@ We recommend to use :pypi:`orjson`, :pypi:`msgspec` or :pypi:`pysimdjson` for
 performance critical applications:
 
 =========================================== ===== ====== ======= ======== =========
-encode                                       json jsonyx msgspec   orjson unit (μs)
+encode                                       json jsonyx msgspec   orjson unit (μs)
 =========================================== ===== ====== ======= ======== =========
 List of 256 booleans                         4.60   3.92    1.08     1.00      1.95
 List of 256 ASCII strings                   11.57  12.67    1.52     1.00      4.27
@@ -68,7 +68,7 @@ Dict with 256 lists of 256 dicts with 1 int  8.40   9.14    1.20     1.00   2743
 =========================================== ===== ====== ======= ======== =========
 
 =========================================== ===== ====== ======= ====== ======== =========
-decode                                       json jsonyx msgspec orjson simdjson unit (μs)
+decode                                       json jsonyx msgspec orjson simdjson unit (μs)
 =========================================== ===== ====== ======= ====== ======== =========
 List of 256 booleans                         4.63   7.15    2.88   1.49     1.00      1.44
 List of 256 ASCII strings                    6.51   7.98    4.32   3.81     1.00      3.37
