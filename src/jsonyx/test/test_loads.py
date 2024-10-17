@@ -245,13 +245,7 @@ def test_surrogate_escape(json: ModuleType, s: str, expected: str) -> None:
     ('"\\\r', "Expecting escaped character", 3, -1),
     ('"\\\r\n', "Expecting escaped character", 3, -1),
     (r'"\a"', "Invalid backslash escape", 2, 4),
-    (r'"\u"', "Expecting 4 hex digits", 4, 5),
-    (r'"\u0xff"', "Expecting 4 hex digits", 4, 8),  # Reject prefix
-    (r'"\u????"', "Expecting 4 hex digits", 4, 8),
     (r'"\ud800"', "Surrogates are not allowed", 2, 8),
-    (r'"\ud800\u"', "Expecting 4 hex digits", 10, 11),
-    (r'"\ud800\u0xff"', "Expecting 4 hex digits", 10, 14),  # Reject prefix
-    (r'"\ud800\u????"', "Expecting 4 hex digits", 10, 14),
     (r'"\ud800\u0024"', "Surrogates are not allowed", 2, 8),
     (r'"\udf48"', "Surrogates are not allowed", 2, 8),
 ])
@@ -264,6 +258,33 @@ def test_invalid_string(
 
     check_syntax_err(exc_info, msg, colno, end_colno)
 
+@pytest.mark.parametrize(("s", "colno", "end_colno"), [
+    # Single
+    (r'"\u"', 4, 5),
+    (r'"\u0xff"', 4, 8),  # Hex prefix
+    (r'"\u 000"', 4, 8),  # Surrounded by whitespace
+    (r'"\u-000"', 4, 8),  # Negative number
+    (r'"\u+000"', 4, 8),  # Positive number
+    (r'"\u0_00"', 4, 8),  # Underscore between digits
+    (r'"\u????"', 4, 8),
+
+    # After high surrogate
+    (r'"\ud800\u"', 10, 11),
+    (r'"\ud800\u0xff"', 10, 14),  # Hex prefix
+    (r'"\ud800\u 000"', 10, 14),  # Surrounded by whitespace
+    (r'"\ud800\u-000"', 10, 14),  # Negative number
+    (r'"\ud800\u+000"', 10, 14),  # Positive number
+    (r'"\ud800\u0_00"', 10, 14),  # Underscore between digits
+    (r'"\ud800\u????"', 10, 14),
+])
+def test_invalid_unicode_escape(
+    json: ModuleType, s: str, colno: int, end_colno: int
+) -> None:
+    """Test invalid unicode escape."""
+    with pytest.raises(json.JSONSyntaxError) as exc_info:
+        json.loads(s)
+
+    check_syntax_err(exc_info, "Expecting 4 hex digits", colno, end_colno)
 
 @pytest.mark.parametrize(("s", "expected"), [
     # Empty array

@@ -23,6 +23,7 @@ jsonyx 2.0.0 (unreleased)
 - Changed error for big integers to :exc:`jsonyx.JSONSyntaxError`
 - Fixed line comment detection
 - Fixed typo in error message
+- Fixed unicode escape detection
 - Improved documentation
 - Made :class:`tuple` JSON serializable
 - Merged ``item_separator`` and ``key_separator`` as ``separators`` for

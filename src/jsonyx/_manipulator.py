@@ -303,7 +303,6 @@ class Manipulator:
                 for target, key in nodes:
                     _check_query_key(target, key, allow_slice=True)
 
-                # TODO(Nice Zombies): exclude None
                 nodes = [
                     (target, key)
                     for (target, key) in nodes

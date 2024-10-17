@@ -53,6 +53,7 @@ _UNESCAPE: dict[str, str] = {
 }
 
 _match_chunk: _MatchFunc = re.compile(r'[^"\\\x00-\x1f]+', _FLAGS).match
+_match_hex: _MatchFunc = re.compile(r'[0-9A-Fa-f]+$', _FLAGS).match
 _match_line_end: _MatchFunc = re.compile(r"[^\n\r]+", _FLAGS).match
 _match_number: _MatchFunc = re.compile(
     r"""
@@ -116,7 +117,7 @@ def _get_err_context(doc: str, start: int, end: int) -> tuple[int, str, int]:
 
 def _unescape_unicode(filename: str, s: str, end: int) -> int:
     esc: str = s[end:end + 4]
-    if len(esc) == 4 and esc[1] not in "xX":
+    if len(esc) == 4 and _match_hex(esc):
         try:
             return int(esc, 16)
         except ValueError:
