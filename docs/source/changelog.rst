@@ -29,7 +29,7 @@ jsonyx 2.0.0 (unreleased)
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
   :func:`jsonyx.write`
 - Reject invalid unicode escapes
-- Rejected non-ascii numbers conforming to the json specification
+- Rejected non-ascii numbers conforming to the JSON specification
 - Removed leading and trailing whitespace from error messages
 - Removed :mod:`!jsonyx.tool`
 - Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
