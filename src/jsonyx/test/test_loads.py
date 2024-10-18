@@ -176,6 +176,15 @@ def test_too_big_number(json: ModuleType, s: str) -> None:
     check_syntax_err(exc_info, "Number is too big", 1, len(s) + 1)
 
 
+@pytest.mark.parametrize("s", ["1\uff10", "0.1\uff10", "0e1\uff10"])
+def test_invalid_number(json: ModuleType, s: str) -> None:
+    """Test invalid number."""
+    with pytest.raises(json.JSONSyntaxError) as exc_info:
+        json.loads(s)
+
+    check_syntax_err(exc_info, "Expecting end of file", len(s))
+
+
 @pytest.mark.parametrize(("s", "expected"), [
     # Empty string
     ("", ""),
@@ -262,6 +271,7 @@ def test_invalid_string(
     # Single
     (r'"\u"', 4, 5),
     (r'"\u0xff"', 4, 8),  # Hex prefix
+    (rf'"\u{"\uff10" * 4}"', 4, 8), # Unicode digits
     (r'"\u 000"', 4, 8),  # Surrounded by whitespace
     (r'"\u-000"', 4, 8),  # Negative number
     (r'"\u+000"', 4, 8),  # Positive number
@@ -271,6 +281,7 @@ def test_invalid_string(
     # After high surrogate
     (r'"\ud800\u"', 10, 11),
     (r'"\ud800\u0xff"', 10, 14),  # Hex prefix
+    (rf'"\ud800\u{"\uff10" * 4}"', 10, 14), # Unicode digits
     (r'"\ud800\u 000"', 10, 14),  # Surrounded by whitespace
     (r'"\ud800\u-000"', 10, 14),  # Negative number
     (r'"\ud800\u+000"', 10, 14),  # Positive number

@@ -145,6 +145,24 @@ def test_slice(query: str, expected: slice) -> None:
     assert run_select_query(node, query, allow_slice=True) == [([], expected)]
 
 
+@pytest.mark.parametrize(("query", "colno"), [
+    # Slice
+    ("$[1\uff10:]", 4),
+    ("$[:1\uff10]", 5),
+
+    # Extended slice
+    ("$[1\uff10::]", 4),
+    ("$[:1\uff10:]", 5),
+    ("$[::1\uff10]", 6)
+])
+def test_invalid_slice(query: str, colno: int) -> None:
+    """Test slice."""
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        run_select_query([], query)
+
+    check_syntax_err(exc_info, "Expecting a closing bracket", colno)
+
+
 @pytest.mark.parametrize(("query", "msg", "colno"), [
     # Start
     ("$[{big_num}:]", "Start is too big", 3),
@@ -203,6 +221,14 @@ def test_dict_slice(query: str) -> None:
 def test_idx(num: str) -> None:
     """Test index."""
     assert run_select_query(([[]], 0), f"$[{num}]") == [([], int(num))]
+
+
+def test_invalid_idx() -> None:
+    """Test invalid idx."""
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        run_select_query(([[]], 0), "$[1\uff10]")
+
+    check_syntax_err(exc_info, "Expecting a closing bracket", 4)
 
 
 def test_too_big_idx(big_num: str) -> None:

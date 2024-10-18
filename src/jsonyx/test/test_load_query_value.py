@@ -131,6 +131,15 @@ def test_too_big_number(s: str) -> None:
     check_syntax_err(exc_info, "Number is too big", 1, len(s) + 1)
 
 
+@pytest.mark.parametrize("s", ["1\uff10", "0.1\uff10", "0e1\uff10"])
+def test_invalid_number(s: str) -> None:
+    """Test invalid number."""
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        load_query_value(s)
+
+    check_syntax_err(exc_info, "Expecting end of file", len(s))
+
+
 @pytest.mark.parametrize(("s", "expected"), [
     # Empty string
     ("", ""),

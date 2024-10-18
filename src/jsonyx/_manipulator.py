@@ -30,20 +30,20 @@ if TYPE_CHECKING:
 
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
-_match_idx: _MatchFunc = re.compile(r"-?0|-?[1-9]\d*", _FLAGS).match
+_match_idx: _MatchFunc = re.compile(r"-?0|-?[1-9][0-9]*", _FLAGS).match
 _match_number: _MatchFunc = re.compile(
     r"""
-    (-?0|-?[1-9]\d*) # integer
-    (\.\d+)?         # [frac]
-    ([eE][-+]?\d+)?  # [exp]
+    (-?0|-?[1-9][0-9]*) # integer
+    (\.[0-9]+)?         # [frac]
+    ([eE][-+]?[0-9]+)?  # [exp]
     """, _FLAGS,
 ).match
 _match_slice: _MatchFunc = re.compile(
     r"""
-    (-?0|-?[1-9]\d*)?       # [start]
-    :                       # ":"
-    (-?0|-?[1-9]\d*)?       # [stop]
-    (?::(-?0|-?[1-9]\d*)?)? # [":" [step]]
+    (-?0|-?[1-9][0-9]*)?       # [start]
+    :                          # ":"
+    (-?0|-?[1-9][0-9]*)?       # [stop]
+    (?::(-?0|-?[1-9][0-9]*)?)? # [":" [step]]
     """, _FLAGS,
 ).match
 _match_str_chunk: _MatchFunc = re.compile(r"[^'~]*", _FLAGS).match

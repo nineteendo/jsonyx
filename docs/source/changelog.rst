@@ -22,6 +22,7 @@ jsonyx 2.0.0 (unreleased)
 - Added :func:`jsonyx.Manipulator`
 - Changed error for big integers to :exc:`jsonyx.JSONSyntaxError`
 - Fixed line comment detection
+- Fixed number detection
 - Fixed typo in error message
 - Fixed unicode escape detection
 - Improved documentation

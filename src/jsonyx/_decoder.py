@@ -57,9 +57,9 @@ _match_hex_digits: _MatchFunc = re.compile(r'[0-9A-Fa-f]{4}', _FLAGS).match
 _match_line_end: _MatchFunc = re.compile(r"[^\n\r]+", _FLAGS).match
 _match_number: _MatchFunc = re.compile(
     r"""
-    (-?0|-?[1-9]\d*) # integer
-    (\.\d+)?         # [frac]
-    ([eE][-+]?\d+)?  # [exp]
+    (-?0|-?[1-9][0-9]*) # integer
+    (\.[0-9]+)?         # [frac]
+    ([eE][-+]?[0-9]+)?  # [exp]
     """, _FLAGS,
 ).match
 _match_unquoted_key: _MatchFunc = re.compile(
