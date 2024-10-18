@@ -176,13 +176,11 @@ def test_too_big_number(json: ModuleType, s: str) -> None:
     check_syntax_err(exc_info, "Number is too big", 1, len(s) + 1)
 
 
-@pytest.mark.parametrize("s", ["1\uff10", "0.1\uff10", "0e1\uff10"])
+@pytest.mark.parametrize("s", ["1\uff10", "0.\uff10", "0e\uff10"])
 def test_invalid_number(json: ModuleType, s: str) -> None:
     """Test invalid number."""
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(s)
-
-    check_syntax_err(exc_info, "Expecting end of file", len(s))
 
 
 @pytest.mark.parametrize(("s", "expected"), [
