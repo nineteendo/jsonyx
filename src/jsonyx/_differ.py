@@ -6,7 +6,6 @@ __all__: list[str] = ["make_patch"]
 
 import re
 from decimal import Decimal
-from itertools import starmap
 from math import isnan
 from re import DOTALL, MULTILINE, VERBOSE, Match
 from typing import TYPE_CHECKING, Any

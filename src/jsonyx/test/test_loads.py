@@ -265,11 +265,12 @@ def test_invalid_string(
 
     check_syntax_err(exc_info, msg, colno, end_colno)
 
+
 @pytest.mark.parametrize(("s", "colno", "end_colno"), [
     # Single
     (r'"\u"', 4, 5),
     (r'"\u0xff"', 4, 8),  # Hex prefix
-    (r'"\u{0}"'.format("\uff10" * 4), 4, 8), # Unicode digits
+    (r'"\u{0}"'.format("\uff10" * 4), 4, 8),  # Unicode digits
     (r'"\u 000"', 4, 8),  # Surrounded by whitespace
     (r'"\u-000"', 4, 8),  # Negative number
     (r'"\u+000"', 4, 8),  # Positive number
@@ -279,7 +280,7 @@ def test_invalid_string(
     # After high surrogate
     (r'"\ud800\u"', 10, 11),
     (r'"\ud800\u0xff"', 10, 14),  # Hex prefix
-    (r'"\ud800\u{0}"'.format("\uff10" * 4), 10, 14), # Unicode digits
+    (r'"\ud800\u{0}"'.format("\uff10" * 4), 10, 14),  # Unicode digits
     (r'"\ud800\u 000"', 10, 14),  # Surrounded by whitespace
     (r'"\ud800\u-000"', 10, 14),  # Negative number
     (r'"\ud800\u+000"', 10, 14),  # Positive number
@@ -287,13 +288,14 @@ def test_invalid_string(
     (r'"\ud800\u????"', 10, 14),
 ])
 def test_invalid_unicode_escape(
-    json: ModuleType, s: str, colno: int, end_colno: int
+    json: ModuleType, s: str, colno: int, end_colno: int,
 ) -> None:
     """Test invalid unicode escape."""
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(s)
 
     check_syntax_err(exc_info, "Expecting 4 hex digits", colno, end_colno)
+
 
 @pytest.mark.parametrize(("s", "expected"), [
     # Empty array

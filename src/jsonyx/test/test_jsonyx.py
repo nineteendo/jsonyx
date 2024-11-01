@@ -26,6 +26,7 @@ def test_duplicate_key(json: ModuleType) -> None:
     key: object = json.DuplicateKey("")
     assert isinstance(key, str)
     assert not str(key)
+    assert key != ""  # noqa: PLC1901
     assert hash(key) == id(key)
 
 

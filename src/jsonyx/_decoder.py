@@ -53,7 +53,7 @@ _UNESCAPE: dict[str, str] = {
 }
 
 _match_chunk: _MatchFunc = re.compile(r'[^"\\\x00-\x1f]+', _FLAGS).match
-_match_hex_digits: _MatchFunc = re.compile(r'[0-9A-Fa-f]{4}', _FLAGS).match
+_match_hex_digits: _MatchFunc = re.compile(r"[0-9A-Fa-f]{4}", _FLAGS).match
 _match_line_end: _MatchFunc = re.compile(r"[^\n\r]+", _FLAGS).match
 _match_number: _MatchFunc = re.compile(
     r"""
@@ -131,6 +131,7 @@ try:
         from _jsonyx import DuplicateKey
 except ImportError:
     class DuplicateKey(str):
+        # TODO(Nice Zombies): implement __eq__
         """A key that can appear multiple times in a dictionary.
 
         >>> import jsonyx as json
