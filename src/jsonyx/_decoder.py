@@ -131,7 +131,6 @@ try:
         from _jsonyx import DuplicateKey
 except ImportError:
     class DuplicateKey(str):
-        # TODO(Nice Zombies): implement __eq__
         """A key that can appear multiple times in a dictionary.
 
         >>> import jsonyx as json
@@ -145,11 +144,12 @@ except ImportError:
             dictionary with duplicate keys.
         """
 
+        __hash__ = object.__hash__
+        __ne__ = object.__ne__
         __slots__: tuple[()] = ()
 
-        def __hash__(self) -> int:
-            """Return hash."""
-            return id(self)
+        def __eq__(self, value: object) -> bool:
+            return self is value
 
     DuplicateKey.__module__ = "jsonyx"
 

@@ -48,8 +48,17 @@ typedef struct _PyEncoderObject {
     int trailing_comma;
 } PyEncoderObject;
 
-static Py_hash_t duplicatekey_hash(PyUnicodeObject *self) {
-    return (Py_hash_t)self;
+PyObject *
+PyDuplicateKey_RichCompare(PyObject *left, PyObject *right, int op)
+{
+    switch (op) {
+        case Py_EQ:
+            return PyBool_FromLong(left == right);
+        case Py_NE:
+            return PyBool_FromLong(left != right);
+        default:
+            return PyUnicode_RichCompare(left, right, op);
+    }
 }
 
 static PyTypeObject PyDuplicateKeyType = {
@@ -68,7 +77,8 @@ static PyTypeObject PyDuplicateKeyType = {
         ".. seealso:: :data:`jsonyx.allow.DUPLICATE_KEYS` for loading a dictionary with\n"
         "    duplicate keys.\n"
     ),
-    .tp_hash = (hashfunc)duplicatekey_hash,
+    .tp_hash = PyObject_GenericHash,
+    .tp_richcompare = PyDuplicateKey_RichCompare
 };
 
 /* Forward decls */
