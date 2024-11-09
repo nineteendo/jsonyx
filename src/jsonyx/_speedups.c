@@ -77,7 +77,7 @@ static PyTypeObject PyDuplicateKeyType = {
         ".. seealso:: :data:`jsonyx.allow.DUPLICATE_KEYS` for loading a dictionary with\n"
         "    duplicate keys.\n"
     ),
-    .tp_hash = PyObject_GenericHash,
+    .tp_hash = _Py_HashPointer,
     .tp_richcompare = PyDuplicateKey_RichCompare
 };
 
