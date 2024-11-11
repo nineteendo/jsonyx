@@ -31,8 +31,8 @@ jsonyx 2.0.0 (unreleased)
 - Rejected invalid unicode escapes
 - Rejected non-ascii numbers conforming to the JSON specification
 - Removed leading and trailing whitespace from error messages
-- Removed :data:`jsonyx.allow.DUPLICATE_KEYS`
-- Removed :data:`jsonyx.DuplicateKey`
+- Removed :data:`!jsonyx.allow.DUPLICATE_KEYS`
+- Removed :data:`!jsonyx.DuplicateKey`
 - Removed :mod:`!jsonyx.tool`
 - Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
 - Sped up decimal encoding
