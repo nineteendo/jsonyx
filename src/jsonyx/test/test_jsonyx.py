@@ -21,16 +21,6 @@ if TYPE_CHECKING:
     from types import ModuleType
 
 
-def test_duplicate_key(json: ModuleType) -> None:
-    """Test DuplicateKey."""
-    key: object = json.DuplicateKey("")
-    assert isinstance(key, str)
-    assert not str(key)
-    assert key != ""  # noqa: PLC1901
-    assert not key == ""  # noqa: SIM201, PLC1901
-    assert hash(key) == object.__hash__(key)  # noqa: PLC2801
-
-
 @pytest.mark.parametrize(("s", "encoding"), [
     # JSON must start with ASCII character (not NULL)
     # Strings can't contain control characters (including NULL)

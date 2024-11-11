@@ -5,7 +5,6 @@ from __future__ import annotations
 
 __all__: list[str] = [
     "Decoder",
-    "DuplicateKey",
     "Encoder",
     "JSONSyntaxError",
     "Manipulator",
@@ -27,9 +26,7 @@ __version__: str = "2.0.0"
 
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
-from jsonyx._decoder import (
-    Decoder, DuplicateKey, JSONSyntaxError, detect_encoding,
-)
+from jsonyx._decoder import Decoder, JSONSyntaxError, detect_encoding
 from jsonyx._differ import make_patch
 from jsonyx._encoder import Encoder
 from jsonyx._manipulator import Manipulator

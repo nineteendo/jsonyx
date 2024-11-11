@@ -22,16 +22,17 @@ jsonyx 2.0.0 (unreleased)
 - Added :func:`jsonyx.Manipulator`
 - Changed error for big integers to :exc:`jsonyx.JSONSyntaxError`
 - Fixed line comment detection
-- Fixed equality of :class:`jsonyx.DuplicateKey`
 - Fixed typo in error message
 - Improved documentation
 - Made :class:`tuple` JSON serializable
 - Merged ``item_separator`` and ``key_separator`` as ``separators`` for
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
   :func:`jsonyx.write`
-- Reject invalid unicode escapes
+- Rejected invalid unicode escapes
 - Rejected non-ascii numbers conforming to the JSON specification
 - Removed leading and trailing whitespace from error messages
+- Removed :data:`jsonyx.allow.DUPLICATE_KEYS`
+- Removed :data:`jsonyx.DuplicateKey`
 - Removed :mod:`!jsonyx.tool`
 - Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
 - Sped up decimal encoding

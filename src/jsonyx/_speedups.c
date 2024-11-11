@@ -20,7 +20,6 @@ typedef struct _PyScannerObject {
     PyObject_HEAD
     PyObject *Decimal;
     int allow_comments;
-    int allow_duplicate_keys;
     int allow_missing_commas;
     int allow_nan_and_infinity;
     int allow_surrogates;
@@ -47,39 +46,6 @@ typedef struct _PyEncoderObject {
     int sort_keys;
     int trailing_comma;
 } PyEncoderObject;
-
-PyObject *
-PyDuplicateKey_RichCompare(PyObject *left, PyObject *right, int op)
-{
-    switch (op) {
-        case Py_EQ:
-            return PyBool_FromLong(left == right);
-        case Py_NE:
-            return PyBool_FromLong(left != right);
-        default:
-            return PyUnicode_RichCompare(left, right, op);
-    }
-}
-
-static PyTypeObject PyDuplicateKeyType = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "jsonyx.DuplicateKey",
-    .tp_doc = PyDoc_STR(
-        "A key that can appear multiple times in a dictionary.\n"
-        "\n"
-        ">>> import jsonyx as json\n"
-        ">>> {json.DuplicateKey('key'): 'value 1', json.DuplicateKey('key'): 'value 2'}\n"
-        "{'key': 'value 1', 'key': 'value 2'}\n"
-        "\n"
-        ".. tip:: To retrieve the value of a duplicate key, you can\n"
-        "    :ref:`use a multi dict <use_multidict>`.\n"
-        "\n"
-        ".. seealso:: :data:`jsonyx.allow.DUPLICATE_KEYS` for loading a dictionary with\n"
-        "    duplicate keys.\n"
-    ),
-    .tp_hash = (hashfunc)_Py_HashPointer,
-    .tp_richcompare = PyDuplicateKey_RichCompare
-};
 
 /* Forward decls */
 
@@ -699,24 +665,10 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
             }
             if (key == NULL)
                 goto bail;
-            int contains = PyDict_Contains(rval, key);
-            if (contains == -1)
-                goto bail;
-
-            if (contains == 0) {
-                new_key = PyDict_SetDefault(memo, key, key);
-                // This returns a borrowed reference, while new_key
-                // is a strong reference in the case of PyObject_CallOneArg
-                Py_INCREF(new_key);
-            }
-            else if (!s->allow_duplicate_keys) {
-                raise_errmsg("Duplicate keys are not allowed", pyfilename, pystr, idx, next_idx);
-                goto bail;
-            }
-            else {
-                new_key = PyObject_CallOneArg((PyObject *)&PyDuplicateKeyType, key);
-            }
-
+            new_key = PyDict_SetDefault(memo, key, key);
+            // This returns a borrowed reference, while new_key
+            // is a strong reference in the case of PyObject_CallOneArg
+            Py_INCREF(new_key);
             if (new_key == NULL)
                 goto bail;
 
@@ -1218,20 +1170,20 @@ scanner_call(PyScannerObject *self, PyObject *args, PyObject *kwds)
 static PyObject *
 scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    static char *kwlist[] = {"allow_comments", "allow_duplicate_keys",
-                             "allow_missing_commas", "allow_nan_and_infinity",
-                             "allow_surrogates", "allow_trailing_comma",
-                             "allow_unquoted_keys", "use_decimal", NULL};
+    static char *kwlist[] = {"allow_comments", "allow_missing_commas",
+                             "allow_nan_and_infinity", "allow_surrogates",
+                             "allow_trailing_comma", "allow_unquoted_keys",
+                             "use_decimal", NULL};
 
     PyScannerObject *s;
-    int allow_comments, allow_duplicate_keys, allow_missing_commas;
-    int allow_nan_and_infinity, allow_surrogates, allow_trailing_comma;
-    int allow_unquoted_keys, use_decimal;
+    int allow_comments, allow_missing_commas, allow_nan_and_infinity;
+    int allow_surrogates, allow_trailing_comma, allow_unquoted_keys;
+    int use_decimal;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "pppppppp:make_scanner", kwlist,
-        &allow_comments, &allow_duplicate_keys, &allow_missing_commas,
-        &allow_nan_and_infinity, &allow_surrogates, &allow_trailing_comma,
-        &allow_unquoted_keys, &use_decimal))
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "ppppppp:make_scanner", kwlist,
+        &allow_comments, &allow_missing_commas, &allow_nan_and_infinity,
+        &allow_surrogates, &allow_trailing_comma, &allow_unquoted_keys,
+        &use_decimal))
         return NULL;
 
     s = (PyScannerObject *)type->tp_alloc(type, 0);
@@ -1249,7 +1201,6 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
         goto bail;
     }
     s->allow_comments = allow_comments;
-    s->allow_duplicate_keys = allow_duplicate_keys;
     s->allow_missing_commas = allow_missing_commas;
     s->allow_nan_and_infinity = allow_nan_and_infinity;
     s->allow_surrogates = allow_surrogates;
@@ -1948,16 +1899,6 @@ _json_exec(PyObject *module)
     rc = PyModule_AddObject(module, "make_encoder", PyEncoderType);
     if (rc < 0) {
         Py_XDECREF(PyEncoderType);
-        return -1;
-    }
-
-    PyDuplicateKeyType.tp_base = &PyUnicode_Type;
-    if (PyType_Ready(&PyDuplicateKeyType) < 0) {
-        return -1;
-    }
-    rc = PyModule_AddObject(module, "DuplicateKey", (PyObject *) &PyDuplicateKeyType);
-    if (rc < 0) {
-        Py_DECREF(&PyDuplicateKeyType);
         return -1;
     }
 

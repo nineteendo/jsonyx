@@ -4,7 +4,6 @@ from __future__ import annotations
 
 __all__: list[str] = [
     "COMMENTS",
-    "DUPLICATE_KEYS",
     "EVERYTHING",
     "MISSING_COMMAS",
     "NAN_AND_INFINITY",
@@ -43,38 +42,6 @@ COMMENTS: frozenset[str] = frozenset({"comments"})
     >>> decoder = json.Decoder(allow=jsonyx.allow.COMMENTS)
     >>> decoder.loads("0 /* Block */ // and line comment")
     0
-"""
-
-DUPLICATE_KEYS: frozenset[str] = frozenset({"duplicate_keys"})
-"""Allow duplicate keys in objects.
-
-.. tab:: without classes
-
-    .. only:: latex
-
-        .. rubric:: without classes
-
-    >>> import jsonyx as json
-    >>> import jsonyx.allow
-    >>> json.loads(
-    ...     '{"key": "value 1", "key": "value 2"}', allow=jsonyx.allow.DUPLICATE_KEYS
-    ... )
-    {'key': 'value 1', 'key': 'value 2'}
-
-.. tab:: with classes
-
-    .. only:: latex
-
-        .. rubric:: with classes
-
-    >>> import jsonyx as json
-    >>> import jsonyx.allow
-    >>>
-    >>> decoder = json.Decoder(allow=jsonyx.allow.DUPLICATE_KEYS)
-    >>> decoder.loads('{"key": "value 1", "key": "value 2"}')
-    {'key': 'value 1', 'key': 'value 2'}
-
-See :class:`jsonyx.DuplicateKey` for more information.
 """
 
 MISSING_COMMAS: frozenset[str] = frozenset({"missing_commas"})
@@ -239,13 +206,14 @@ UNQUOTED_KEYS: frozenset[str] = frozenset({"unquoted_keys"})
 """
 
 EVERYTHING: frozenset[str] = (
-    COMMENTS | DUPLICATE_KEYS | MISSING_COMMAS | NAN_AND_INFINITY | SURROGATES
-    | TRAILING_COMMA | UNQUOTED_KEYS
+    COMMENTS | MISSING_COMMAS | NAN_AND_INFINITY | SURROGATES | TRAILING_COMMA
+    | UNQUOTED_KEYS
 )
 """Allow all JSON deviations provided by :mod:`jsonyx`.
 
-.. versionchanged:: 2.0 Included :data:`jsonyx.allow.UNQUOTED_KEYS`.
+.. versionchanged:: 2.0 Excluded :data:`!jsonyx.allow.DUPLICATE_KEYS`.
+    Included :data:`jsonyx.allow.UNQUOTED_KEYS`.
 
-This is equivalent to ``COMMENTS | DUPLICATE_KEYS | MISSING_COMMAS |
-NAN_AND_INFINITY | SURROGATES | TRAILING_COMMA | UNQUOTED_KEYS``.
+This is equivalent to ``COMMENTS | MISSING_COMMAS | NAN_AND_INFINITY
+| SURROGATES | TRAILING_COMMA | UNQUOTED_KEYS``.
 """

@@ -2,12 +2,7 @@
 """JSON decoder."""
 from __future__ import annotations
 
-__all__: list[str] = [
-    "Decoder",
-    "DuplicateKey",
-    "JSONSyntaxError",
-    "detect_encoding",
-]
+__all__: list[str] = ["Decoder", "JSONSyntaxError", "detect_encoding"]
 
 import re
 import sys
@@ -124,34 +119,6 @@ def _unescape_unicode(filename: str, s: str, end: int) -> int:
 
     msg: str = "Expecting 4 hex digits"
     raise _errmsg(msg, filename, s, end, -4)
-
-
-try:
-    if not TYPE_CHECKING:
-        from _jsonyx import DuplicateKey
-except ImportError:
-    class DuplicateKey(str):
-        """A key that can appear multiple times in a dictionary.
-
-        >>> import jsonyx as json
-        >>> {json.DuplicateKey('key'): 'value 1', json.DuplicateKey('key'): 'value 2'}
-        {'key': 'value 1', 'key': 'value 2'}
-
-        .. tip:: To retrieve the value of a duplicate key, you can
-            :ref:`use a multi dict <use_multidict>`.
-
-        .. seealso:: :data:`jsonyx.allow.DUPLICATE_KEYS` for loading a
-            dictionary with duplicate keys.
-        """
-
-        __hash__ = object.__hash__
-        __ne__ = object.__ne__
-        __slots__: tuple[()] = ()
-
-        def __eq__(self, value: object) -> bool:
-            return self is value
-
-    DuplicateKey.__module__ = "jsonyx"
 
 
 class JSONSyntaxError(SyntaxError):
@@ -293,7 +260,6 @@ try:
 except ImportError:
     def make_scanner(
         allow_comments: bool,  # noqa: FBT001
-        allow_duplicate_keys: bool,  # noqa: FBT001
         allow_missing_commas: bool,  # noqa: FBT001
         allow_nan_and_infinity: bool,  # noqa: FBT001
         allow_surrogates: bool,  # noqa: FBT001
@@ -443,15 +409,8 @@ except ImportError:
                     msg = "Expecting key"
                     raise _errmsg(msg, filename, s, end)
 
-                if key not in result:
-                    # Reduce memory consumption
-                    key = memoize(key, key)
-                elif not allow_duplicate_keys:
-                    msg = "Duplicate keys are not allowed"
-                    raise _errmsg(msg, filename, s, key_idx, end)
-                else:
-                    key = DuplicateKey(key)
-
+                # Reduce memory consumption
+                key = memoize(key, key)
                 colon_idx: int = end
                 end = skip_comments(filename, s, end)
                 if s[end:end + 1] != ":":
@@ -650,10 +609,9 @@ class Decoder:
         allow_surrogates: bool = "surrogates" in allow
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
         self._scanner: _Scanner = make_scanner(
-            "comments" in allow, "duplicate_keys" in allow,
-            "missing_commas" in allow, "nan_and_infinity" in allow,
-            allow_surrogates, "trailing_comma" in allow,
-            "unquoted_keys" in allow, use_decimal,
+            "comments" in allow, "missing_commas" in allow,
+            "nan_and_infinity" in allow, allow_surrogates,
+            "trailing_comma" in allow, "unquoted_keys" in allow, use_decimal,
         )
 
     def read(self, filename: _StrPath) -> Any:

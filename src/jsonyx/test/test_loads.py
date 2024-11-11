@@ -11,8 +11,8 @@ from typing import TYPE_CHECKING
 import pytest
 
 from jsonyx.allow import (
-    COMMENTS, DUPLICATE_KEYS, MISSING_COMMAS, NAN_AND_INFINITY, SURROGATES,
-    TRAILING_COMMA, UNQUOTED_KEYS,
+    COMMENTS, MISSING_COMMAS, NAN_AND_INFINITY, SURROGATES, TRAILING_COMMA,
+    UNQUOTED_KEYS,
 )
 from jsonyx.test import check_syntax_err
 
@@ -389,6 +389,9 @@ def test_invalid_array(
 
     # Multiple values
     ('{"a": 1, "b": 2, "c": 3}', {"a": 1, "b": 2, "c": 3}),
+
+    # Duplicate keys
+    ('{"a": 1, "a": 2, "a": 3}', {"a": 3}),
 ])
 def test_object(json: ModuleType, s: str, expected: dict[str, object]) -> None:
     """Test JSON object."""
@@ -503,7 +506,6 @@ def test_invalid_unquoted_key(json: ModuleType, key: str) -> None:
 
 @pytest.mark.parametrize(("s", "msg", "colno", "end_colno"), [
     ("{", "Unterminated object", 1, 2),
-    ('{"": 1, "": 2, "": 3}', "Duplicate keys are not allowed", 9, 11),
     ('{""}', "Expecting colon", 4, -1),
     ('{"": 0', "Unterminated object", 1, 7),
     ('{"a": 1"b": 2"c": 3}', "Expecting comma", 8, -1),
@@ -519,14 +521,6 @@ def test_invalid_object(
         json.loads(s)
 
     check_syntax_err(exc_info, msg, colno, end_colno)
-
-
-def test_duplicate_key(json: ModuleType) -> None:
-    """Test duplicate key."""
-    s: str = '{"": 1, "": 2, "": 3}'
-    dct: dict[str, int] = json.loads(s, allow=DUPLICATE_KEYS)
-    assert all(not key for key in dct)
-    assert list(dct.values()) == [1, 2, 3]
 
 
 def test_reuse_keys(json: ModuleType) -> None:
