@@ -1247,6 +1247,8 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->allow_trailing_comma = allow_trailing_comma;
     s->allow_unquoted_keys = allow_unquoted_keys;
     s->use_decimal = use_decimal;
+    Py_INCREF(s->mapping_type);
+    Py_INCREF(s->seq_type);
     return (PyObject *)s;
 
 bail:
