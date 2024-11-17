@@ -259,6 +259,8 @@ try:
         from _jsonyx import make_scanner
 except ImportError:
     def make_scanner(
+        mapping_type: type,
+        seq_type: type,
         allow_comments: bool,  # noqa: FBT001
         allow_missing_commas: bool,  # noqa: FBT001
         allow_nan_and_infinity: bool,  # noqa: FBT001
@@ -377,9 +379,7 @@ except ImportError:
 
                 append_chunk(char)
 
-        def scan_object(
-            filename: str, s: str, end: int,
-        ) -> tuple[dict[str, Any], int]:
+        def scan_object(filename: str, s: str, end: int) -> tuple[Any, int]:
             obj_idx: int = end - 1
             end = skip_comments(filename, s, end)
             try:
@@ -389,9 +389,10 @@ except ImportError:
                 raise _errmsg(msg, filename, s, obj_idx, end) from None
 
             if nextchar == "}":
-                return {}, end + 1
+                return mapping_type([]), end + 1
 
-            result: dict[str, Any] = {}
+            pairs: list[tuple[str, Any]] = []
+            append_pair: Callable[[tuple[str, Any]], None] = pairs.append
             while True:
                 key_idx: int = end
                 if (nextchar := s[end:end + 1]) == '"':
@@ -418,7 +419,8 @@ except ImportError:
                     raise _errmsg(msg, filename, s, colon_idx)
 
                 end = skip_comments(filename, s, end + 1)
-                result[key], end = scan_value(filename, s, end)
+                value, end = scan_value(filename, s, end)
+                append_pair((key, value))
                 comma_idx: int = end
                 end = skip_comments(filename, s, end)
                 try:
@@ -431,7 +433,7 @@ except ImportError:
                     comma_idx = end
                     end = skip_comments(filename, s, end + 1)
                 elif nextchar == "}":
-                    return result, end + 1
+                    return mapping_type(pairs), end + 1
                 elif end == comma_idx:
                     msg = "Expecting comma"
                     raise _errmsg(msg, filename, s, comma_idx)
@@ -452,11 +454,9 @@ except ImportError:
                             msg, filename, s, comma_idx, comma_idx + 1,
                         )
 
-                    return result, end + 1
+                    return mapping_type(pairs), end + 1
 
-        def scan_array(
-            filename: str, s: str, end: int,
-        ) -> tuple[list[Any], int]:
+        def scan_array(filename: str, s: str, end: int) -> tuple[Any, int]:
             arr_idx: int = end - 1
             end = skip_comments(filename, s, end)
             try:
@@ -466,7 +466,7 @@ except ImportError:
                 raise _errmsg(msg, filename, s, arr_idx, end) from None
 
             if nextchar == "]":
-                return [], end + 1
+                return seq_type([]), end + 1
 
             values: list[Any] = []
             append_value: Callable[[Any], None] = values.append
@@ -485,7 +485,7 @@ except ImportError:
                     comma_idx = end
                     end = skip_comments(filename, s, end + 1)
                 elif nextchar == "]":
-                    return values, end + 1
+                    return seq_type(values), end + 1
                 elif end == comma_idx:
                     msg = "Expecting comma"
                     raise _errmsg(msg, filename, s, comma_idx)
@@ -506,7 +506,7 @@ except ImportError:
                             msg, filename, s, comma_idx, comma_idx + 1,
                         )
 
-                    return values, end + 1
+                    return seq_type(values), end + 1
 
         def scan_value(filename: str, s: str, idx: int) -> tuple[Any, int]:
             try:
@@ -598,20 +598,30 @@ except ImportError:
 class Decoder:
     """A configurable JSON decoder.
 
+    .. versionchanged:: 2.0 Added ``mapping_type`` and ``seq_type``.
+
     :param allow: the allowed JSON deviations
+    :param mapping_type: the mapping type
+    :param seq_type: the sequence type
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     """
 
     def __init__(
-        self, *, allow: Container[str] = NOTHING, use_decimal: bool = False,
+        self,
+        *,
+        allow: Container[str] = NOTHING,
+        mapping_type: type = dict,
+        seq_type: type = list,
+        use_decimal: bool = False,
     ) -> None:
         """Create a new JSON decoder."""
         allow_surrogates: bool = "surrogates" in allow
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
         self._scanner: _Scanner = make_scanner(
-            "comments" in allow, "missing_commas" in allow,
-            "nan_and_infinity" in allow, allow_surrogates,
-            "trailing_comma" in allow, "unquoted_keys" in allow, use_decimal,
+            mapping_type, seq_type, "comments" in allow,
+            "missing_commas" in allow, "nan_and_infinity" in allow,
+            allow_surrogates, "trailing_comma" in allow,
+            "unquoted_keys" in allow, use_decimal,
         )
 
     def read(self, filename: _StrPath) -> Any:

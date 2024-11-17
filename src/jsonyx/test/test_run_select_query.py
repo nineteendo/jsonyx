@@ -154,7 +154,7 @@ def test_slice(query: str, expected: slice) -> None:
 ])
 def test_invalid_slice(query: str) -> None:
     """Test slice."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
+    with pytest.raises(JSONSyntaxError):
         run_select_query([], query)
 
 
@@ -220,7 +220,7 @@ def test_idx(num: str) -> None:
 
 def test_invalid_idx() -> None:
     """Test invalid idx."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
+    with pytest.raises(JSONSyntaxError):
         run_select_query(([[]], 0), "$[1\uff10]")
 
 

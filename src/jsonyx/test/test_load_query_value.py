@@ -134,7 +134,7 @@ def test_too_big_number(s: str) -> None:
 @pytest.mark.parametrize("s", ["1\uff10", "0.\uff10", "0e\uff10"])
 def test_invalid_number(s: str) -> None:
     """Test invalid number."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
+    with pytest.raises(JSONSyntaxError):
         load_query_value(s)
 
 

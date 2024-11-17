@@ -58,6 +58,7 @@ def get_json(request: pytest.FixtureRequest) -> ModuleType:
     json: ModuleType | None
     if (json := request.param) is None:
         pytest.xfail("module unavailable")
+        # pylint: disable-next=W0101
         pytest.fail("module unavailable")
 
     return json  # type: ignore[no-any-return]

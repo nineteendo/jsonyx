@@ -336,7 +336,7 @@ class Encoder:
             item_separator = ""
 
         if indent is not None and isinstance(indent, int):
-            indent = " " * indent
+            indent *= " "
 
         self._encoder: _EncodeFunc[object] = make_encoder(
             indent, mapping_types, seq_types, end, item_separator,

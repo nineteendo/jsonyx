@@ -19,6 +19,8 @@
 typedef struct _PyScannerObject {
     PyObject_HEAD
     PyObject *Decimal;
+    PyObject *mapping_type;
+    PyObject *seq_type;
     int allow_comments;
     int allow_missing_commas;
     int allow_nan_and_infinity;
@@ -582,12 +584,16 @@ static int
 scanner_traverse(PyScannerObject *self, visitproc visit, void *arg)
 {
     Py_VISIT(Py_TYPE(self));
+    Py_VISIT(self->mapping_type);
+    Py_VISIT(self->seq_type);
     return 0;
 }
 
 static int
 scanner_clear(PyScannerObject *self)
 {
+    Py_CLEAR(self->mapping_type);
+    Py_CLEAR(self->seq_type);
     return 0;
 }
 
@@ -607,6 +613,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
     PyObject *val = NULL;
     PyObject *rval = NULL;
     PyObject *key = NULL;
+    int use_pairs = s->mapping_type != (PyObject *)&PyDict_Type;
     Py_ssize_t next_idx;
     Py_ssize_t obj_idx = idx - 1;
     Py_ssize_t colon_idx;
@@ -615,7 +622,10 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
     str = PyUnicode_DATA(pystr);
     kind = PyUnicode_KIND(pystr);
     end_idx = PyUnicode_GET_LENGTH(pystr) - 1;
-    rval = PyDict_New();
+    if (use_pairs)
+        rval = PyList_New(0);
+    else
+        rval = PyDict_New();
     if (rval == NULL)
         return NULL;
 
@@ -693,10 +703,24 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
             if (val == NULL)
                 goto bail;
 
-            if (PyDict_SetItem(rval, key, val) < 0)
-                goto bail;
-            Py_CLEAR(key);
-            Py_CLEAR(val);
+            if (use_pairs) {
+                PyObject *item = PyTuple_Pack(2, key, val);
+                if (item == NULL)
+                    goto bail;
+                Py_CLEAR(key);
+                Py_CLEAR(val);
+                if (PyList_Append(rval, item) == -1) {
+                    Py_DECREF(item);
+                    goto bail;
+                }
+                Py_DECREF(item);
+            }
+            else {
+                if (PyDict_SetItem(rval, key, val) < 0)
+                    goto bail;
+                Py_CLEAR(key);
+                Py_CLEAR(val);
+            }
             comma_idx = idx = next_idx;
 
             /* skip comments before } or , */
@@ -744,6 +768,13 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
     assert(idx <= end_idx && PyUnicode_READ(kind, str, idx) == '}');
 #endif
     *next_idx_ptr = idx + 1;
+
+    if (use_pairs) {
+        val = PyObject_CallOneArg(s->mapping_type, rval);
+        Py_DECREF(rval);
+        return val;
+    }
+
     return rval;
 bail:
     Py_XDECREF(key);
@@ -847,6 +878,11 @@ _parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, P
     assert(idx <= end_idx && PyUnicode_READ(kind, str, idx) == ']');
 #endif
     *next_idx_ptr = idx + 1;
+    if (s->seq_type != (PyObject *)&PyList_Type) {
+        val = PyObject_CallOneArg(s->seq_type, rval);
+        Py_DECREF(rval);
+        return val;
+    }
     return rval;
 bail:
     Py_XDECREF(val);
@@ -1170,17 +1206,19 @@ scanner_call(PyScannerObject *self, PyObject *args, PyObject *kwds)
 static PyObject *
 scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    static char *kwlist[] = {"allow_comments", "allow_missing_commas",
-                             "allow_nan_and_infinity", "allow_surrogates",
-                             "allow_trailing_comma", "allow_unquoted_keys",
-                             "use_decimal", NULL};
+    static char *kwlist[] = {"mapping_type", "seq_type", "allow_comments",
+                             "allow_missing_commas", "allow_nan_and_infinity",
+                             "allow_surrogates", "allow_trailing_comma",
+                             "allow_unquoted_keys", "use_decimal", NULL};
 
     PyScannerObject *s;
+    PyObject *mapping_type, *seq_type;
     int allow_comments, allow_missing_commas, allow_nan_and_infinity;
     int allow_surrogates, allow_trailing_comma, allow_unquoted_keys;
     int use_decimal;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "ppppppp:make_scanner", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOppppppp:make_scanner", kwlist,
+        &mapping_type, &seq_type,
         &allow_comments, &allow_missing_commas, &allow_nan_and_infinity,
         &allow_surrogates, &allow_trailing_comma, &allow_unquoted_keys,
         &use_decimal))
@@ -1200,6 +1238,8 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     if (s->Decimal == NULL) {
         goto bail;
     }
+    s->mapping_type = mapping_type;
+    s->seq_type = seq_type;
     s->allow_comments = allow_comments;
     s->allow_missing_commas = allow_missing_commas;
     s->allow_nan_and_infinity = allow_nan_and_infinity;

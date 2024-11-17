@@ -1,5 +1,7 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON loads tests."""
+# TODO(Nice Zombies): test mapping_type
+# TODO(Nice Zombies): test seq_type
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -179,7 +181,7 @@ def test_too_big_number(json: ModuleType, s: str) -> None:
 @pytest.mark.parametrize("s", ["1\uff10", "0.\uff10", "0e\uff10"])
 def test_invalid_number(json: ModuleType, s: str) -> None:
     """Test invalid number."""
-    with pytest.raises(json.JSONSyntaxError) as exc_info:
+    with pytest.raises(json.JSONSyntaxError):
         json.loads(s)
 
 
@@ -270,7 +272,8 @@ def test_invalid_string(
     # Single
     (r'"\u"', 4, 5),
     (r'"\u0xff"', 4, 8),  # Hex prefix
-    (r'"\u{0}"'.format("\uff10" * 4), 4, 8),  # Unicode digits
+    # pylint: disable-next=C0209
+    (r'"\u{}"'.format("\uff10" * 4), 4, 8),  # Unicode digits
     (r'"\u 000"', 4, 8),  # Surrounded by whitespace
     (r'"\u-000"', 4, 8),  # Negative number
     (r'"\u+000"', 4, 8),  # Positive number
@@ -280,7 +283,8 @@ def test_invalid_string(
     # After high surrogate
     (r'"\ud800\u"', 10, 11),
     (r'"\ud800\u0xff"', 10, 14),  # Hex prefix
-    (r'"\ud800\u{0}"'.format("\uff10" * 4), 10, 14),  # Unicode digits
+    # pylint: disable-next=C0209
+    (r'"\ud800\u{}"'.format("\uff10" * 4), 10, 14),  # Unicode digits
     (r'"\ud800\u 000"', 10, 14),  # Surrounded by whitespace
     (r'"\ud800\u-000"', 10, 14),  # Negative number
     (r'"\ud800\u+000"', 10, 14),  # Positive number
