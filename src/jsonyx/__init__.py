@@ -1,5 +1,7 @@
 # Copyright (C) 2024 Nice Zombies
 """Customizable JSON library for Python."""
+# TODO(Nice Zombies): add mapping_type
+# TODO(Nice Zombies): add seq_type
 # TODO(Nice Zombies): update badge branch
 from __future__ import annotations
 

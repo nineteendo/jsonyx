@@ -36,6 +36,7 @@ jsonyx 2.0.0 (unreleased)
 - Removed :mod:`!jsonyx.tool`
 - Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
 - Sped up decimal encoding
+- Use cache for indentations in the JSON encoder
 
 jsonyx 1.2.1 (Aug 3, 2024)
 --------------------------
