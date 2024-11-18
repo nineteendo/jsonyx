@@ -1,7 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON loads tests."""
-# TODO(Nice Zombies): test mapping_type
-# TODO(Nice Zombies): test seq_type
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -311,9 +309,12 @@ def test_invalid_unicode_escape(
     # Multiple values
     ("[1, 2, 3]", [1, 2, 3]),
 ])
-def test_array(json: ModuleType, s: str, expected: list[object]) -> None:
+@pytest.mark.parametrize("seq_type", [list, tuple])
+def test_array(
+    json: ModuleType, s: str, expected: list[object], seq_type: type,
+) -> None:
     """Test JSON array."""
-    assert json.loads(s) == expected
+    assert json.loads(s, seq_type=seq_type) == seq_type(expected)
 
 
 @pytest.mark.parametrize(("s", "expected"), [
@@ -386,20 +387,24 @@ def test_invalid_array(
 
 @pytest.mark.parametrize(("s", "expected"), [
     # Empty object
-    ("{}", {}),
+    ("{}", []),
 
     # One value
-    ('{"": 0}', {"": 0}),
+    ('{"": 0}', [("", 0)]),
 
     # Multiple values
-    ('{"a": 1, "b": 2, "c": 3}', {"a": 1, "b": 2, "c": 3}),
+    ('{"a": 1, "b": 2, "c": 3}', [("a", 1), ("b", 2), ("c", 3)]),
 
     # Duplicate keys
-    ('{"a": 1, "a": 2, "a": 3}', {"a": 3}),
+    ('{"a": 1, "a": 2, "a": 3}', [("a", 1), ("a", 2), ("a", 3)]),
 ])
-def test_object(json: ModuleType, s: str, expected: dict[str, object]) -> None:
+@pytest.mark.parametrize("mapping_type", [dict, list])
+def test_object(
+    json: ModuleType, s: str, expected: list[tuple[str, object]],
+    mapping_type: type,
+) -> None:
     """Test JSON object."""
-    assert json.loads(s) == expected
+    assert json.loads(s, mapping_type=mapping_type) == mapping_type(expected)
 
 
 @pytest.mark.parametrize(("s", "expected"), [

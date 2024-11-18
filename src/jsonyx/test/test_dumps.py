@@ -259,10 +259,10 @@ def test_seq_types(json: ModuleType, obj: Sequence[object]) -> None:
     # Multiple values
     ({"a": 1, "b": 2, "c": 3}, '{"a": 1, "b": 2, "c": 3}'),
 ])
-def test_mapping(
+def test_dict(
     json: ModuleType, obj: dict[str, object], expected: str,
 ) -> None:
-    """Test mapping."""
+    """Test dict."""
     assert json.dumps(obj, end="") == expected
 
 
