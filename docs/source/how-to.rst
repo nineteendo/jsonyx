@@ -106,6 +106,8 @@ Specializing JSON object decoding
     >>> from_json(decoder.loads('{"__complex__": true, "real": 1.0, "imag": 2.0}'))
     (1+2j)
 
+.. note:: ``mapping_type`` is not intended for this purpose.
+
 Disabling the integer string conversion length limit
 ----------------------------------------------------
 
