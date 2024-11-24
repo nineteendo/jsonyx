@@ -226,6 +226,7 @@ def write(
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
+    indent_depth: int | None = None,
     indent_leaves: bool = False,
     mapping_types: type | tuple[type, ...] = (),
     quoted_keys: bool = True,
@@ -238,8 +239,8 @@ def write(
 
     .. versionchanged:: 2.0
 
-        - Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types``
-          and ``quoted_keys``.
+        - Added ``commas``, ``indent_depth``, ``indent_leaves``,
+          ``mapping_types``, ``seq_types`` and ``quoted_keys``.
         - Made :class:`tuple` JSON serializable.
         - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
@@ -250,6 +251,7 @@ def write(
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
     :param indent: the number of spaces or string to indent with
+    :param indent_depth: the depth up to which to indent
     :param indent_leaves: indent leaf objects and arrays
     :param mapping_types: an additional mapping type or tuple of additional
                           mapping types
@@ -286,6 +288,7 @@ def write(
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
+        indent_depth=indent_depth,
         indent_leaves=indent_leaves,
         mapping_types=mapping_types,
         quoted_keys=quoted_keys,
@@ -305,6 +308,7 @@ def dump(
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
+    indent_depth: int | None = None,
     indent_leaves: bool = False,
     mapping_types: type | tuple[type, ...] = (),
     quoted_keys: bool = True,
@@ -317,8 +321,8 @@ def dump(
 
     .. versionchanged:: 2.0
 
-        - Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types``
-          and ``quoted_keys``.
+        - Added ``commas``, ``indent_depth``, ``indent_leaves``,
+          ``mapping_types``, ``seq_types`` and ``quoted_keys``.
         - Made :class:`tuple` JSON serializable.
         - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
@@ -329,6 +333,7 @@ def dump(
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
     :param indent: the number of spaces or string to indent with
+    :param indent_depth: the depth up to which to indent
     :param indent_leaves: indent leaf objects and arrays
     :param mapping_types: an additional mapping type or tuple of additional
                           mapping types
@@ -364,6 +369,7 @@ def dump(
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
+        indent_depth=indent_depth,
         indent_leaves=indent_leaves,
         mapping_types=mapping_types,
         quoted_keys=quoted_keys,
@@ -382,6 +388,7 @@ def dumps(
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
+    indent_depth: int | None = None,
     indent_leaves: bool = False,
     mapping_types: type | tuple[type, ...] = (),
     quoted_keys: bool = True,
@@ -394,8 +401,8 @@ def dumps(
 
     .. versionchanged:: 2.0
 
-        - Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types``
-          and ``quoted_keys``.
+        - Added ``commas``, ``indent_depth``, ``indent_leaves``,
+          ``mapping_types``, ``seq_types`` and ``quoted_keys``.
         - Made :class:`tuple` JSON serializable.
         - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
@@ -405,6 +412,7 @@ def dumps(
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
     :param indent: the number of spaces or string to indent with
+    :param indent_depth: the depth up to which to indent
     :param indent_leaves: indent leaf objects and arrays
     :param mapping_types: an additional mapping type or tuple of additional
                           mapping types
@@ -436,6 +444,7 @@ def dumps(
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
+        indent_depth=indent_depth,
         indent_leaves=indent_leaves,
         mapping_types=mapping_types,
         quoted_keys=quoted_keys,

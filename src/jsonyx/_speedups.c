@@ -40,6 +40,7 @@ typedef struct _PyEncoderObject {
     PyObject *item_separator;
     PyObject *long_item_separator;
     PyObject *key_separator;
+    Py_ssize_t indent_depth;
     int allow_nan_and_infinity;
     int allow_surrogates;
     int ensure_ascii;
@@ -1281,20 +1282,22 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     static char *kwlist[] = {"indent", "mapping_types", "seq_types", "end",
                              "item_separator", "long_item_separator",
-                             "key_separator", "allow_nan_and_infinity",
-                             "allow_surrogates", "ensure_ascii",
-                             "indent_leaves", "quoted_keys", "sort_keys",
-                             "trailing_comma", NULL};
+                             "key_separator", "indent_depth",
+                             "allow_nan_and_infinity", "allow_surrogates",
+                             "ensure_ascii", "indent_leaves", "quoted_keys",
+                             "sort_keys", "trailing_comma", NULL};
 
     PyEncoderObject *s;
     PyObject *indent, *mapping_types, *seq_types;
     PyObject *end, *item_separator, *long_item_separator, *key_separator;
+    Py_ssize_t indent_depth;
     int allow_nan_and_infinity, allow_surrogates, ensure_ascii, indent_leaves;
     int quoted_keys, sort_keys, trailing_comma;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOUUUUppppppp:make_encoder", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOUUUUnppppppp:make_encoder", kwlist,
         &indent, &mapping_types, &seq_types,
         &end, &item_separator, &long_item_separator, &key_separator,
+        &indent_depth,
         &allow_nan_and_infinity, &allow_surrogates, &ensure_ascii,
         &indent_leaves, &quoted_keys, &sort_keys, &trailing_comma))
         return NULL;
@@ -1319,6 +1322,7 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->item_separator = item_separator;
     s->long_item_separator = long_item_separator;
     s->key_separator = key_separator;
+    s->indent_depth = indent_depth;
     s->allow_nan_and_infinity = allow_nan_and_infinity;
     s->allow_surrogates = allow_surrogates;
     s->ensure_ascii = ensure_ascii;
@@ -1722,7 +1726,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
         goto bail;
 
     int indented;
-    if (s->indent == Py_None) {
+    if (s->indent == Py_None || indent_level >= s->indent_depth) {
         indented = false;
     }
     else if (s->indent_leaves) {
@@ -1859,7 +1863,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
         goto bail;
 
     int indented;
-    if (s->indent == Py_None) {
+    if (s->indent == Py_None || indent_level >= s->indent_depth) {
         indented = false;
     }
     else if (s->indent_leaves) {

@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON encoder."""
-# TODO(Nice Zombies): add indent_depth=None
 from __future__ import annotations
 
 import sys
@@ -62,6 +61,7 @@ except ImportError:
         item_separator: str,
         long_item_separator: str,
         key_separator: str,
+        indent_depth: int,
         allow_nan_and_infinity: bool,  # noqa: FBT001
         allow_surrogates: bool,  # noqa: FBT001
         ensure_ascii: bool,  # noqa: FBT001
@@ -135,7 +135,7 @@ except ImportError:
             return str(decimal)
 
         def write_sequence(
-            seq: Any, write: _WriteFunc, old_indent: str,
+            seq: Any, write: _WriteFunc, indent_level: int, old_indent: str,
         ) -> None:
             if not seq:
                 write("[]")
@@ -148,14 +148,16 @@ except ImportError:
             markers[markerid] = seq
             write("[")
             current_indent: str = old_indent
-            if indent is None or (not indent_leaves and all(
-                value is None or isinstance(value, (Decimal, float, int, str))
-                for value in seq
-            )):
+            if indent is None or indent_level >= indent_depth or (
+                not indent_leaves and all(value is None or isinstance(
+                    value, (Decimal, float, int, str),
+                ) for value in seq)
+            ):
                 indented: bool = False
                 current_item_separator: str = long_item_separator
             else:
                 indented = True
+                indent_level += 1
                 current_indent += indent
                 current_item_separator = item_separator + current_indent
                 write(current_indent)
@@ -167,7 +169,7 @@ except ImportError:
                 else:
                     write(current_item_separator)
 
-                write_value(value, write, current_indent)
+                write_value(value, write, indent_level, current_indent)
 
             del markers[markerid]
             if indented:
@@ -179,7 +181,10 @@ except ImportError:
             write("]")
 
         def write_mapping(
-            mapping: Any, write: _WriteFunc, old_indent: str,
+            mapping: Any,
+            write: _WriteFunc,
+            indent_level: int,
+            old_indent: str,
         ) -> None:
             if not mapping:
                 write("{}")
@@ -192,14 +197,16 @@ except ImportError:
             markers[markerid] = mapping
             write("{")
             current_indent: str = old_indent
-            if indent is None or (not indent_leaves and all(
-                value is None or isinstance(value, (Decimal, float, int, str))
-                for value in mapping.values()
-            )):
+            if indent is None or indent_level >= indent_depth or (
+                not indent_leaves and all(value is None or isinstance(
+                    value, (Decimal, float, int, str),
+                ) for value in mapping.values())
+            ):
                 indented: bool = False
                 current_item_separator: str = long_item_separator
             else:
                 indented = True
+                indent_level += 1
                 current_indent += indent
                 current_item_separator = item_separator + current_indent
                 write(current_indent)
@@ -224,7 +231,7 @@ except ImportError:
                     write(encode_string(key))
 
                 write(key_separator)
-                write_value(value, write, current_indent)
+                write_value(value, write, indent_level, current_indent)
 
             del markers[markerid]
             if indented:
@@ -236,7 +243,10 @@ except ImportError:
             write("}")
 
         def write_value(
-            obj: object, write: _WriteFunc, current_indent: str,
+            obj: object,
+            write: _WriteFunc,
+            indent_level: int,
+            current_indent: str,
         ) -> None:
             if isinstance(obj, str):
                 write(encode_string(obj))
@@ -252,9 +262,9 @@ except ImportError:
             elif isinstance(obj, float):
                 write(floatstr(obj))
             elif isinstance(obj, (list, tuple, seq_types)):
-                write_sequence(obj, write, current_indent)
+                write_sequence(obj, write, indent_level, current_indent)
             elif isinstance(obj, (dict, mapping_types)):
-                write_mapping(obj, write, current_indent)
+                write_mapping(obj, write, indent_level, current_indent)
             elif isinstance(obj, Decimal):
                 write(decimalstr(obj))
             else:
@@ -268,7 +278,7 @@ except ImportError:
             io: StringIO = StringIO()
             write: _WriteFunc = io.write
             try:
-                write_value(obj, write, "\n")
+                write_value(obj, write, 0, "\n")
             except (ValueError, TypeError) as exc:
                 raise exc.with_traceback(None) from None
             finally:
@@ -285,8 +295,8 @@ class Encoder:
 
     .. versionchanged:: 2.0
 
-        - Added ``commas``, ``indent_leaves``, ``mapping_types``, ``seq_types``
-          and ``quoted_keys``.
+        - Added ``commas``, ``indent_depth``, ``indent_leaves``,
+          ``mapping_types``, ``seq_types`` and ``quoted_keys``.
         - Made :class:`tuple` JSON serializable.
         - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
@@ -295,6 +305,7 @@ class Encoder:
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
     :param indent: the number of spaces or string to indent with
+    :param indent_depth: the depth up to which to indent
     :param indent_leaves: indent leaf objects and arrays
     :param mapping_types: an additional mapping type or tuple of additional
                           mapping types
@@ -319,6 +330,7 @@ class Encoder:
         end: str = "\n",
         ensure_ascii: bool = False,
         indent: int | str | None = None,
+        indent_depth: int | None = None,
         indent_leaves: bool = False,
         mapping_types: type | tuple[type, ...] = (),
         quoted_keys: bool = True,
@@ -338,11 +350,14 @@ class Encoder:
         if indent is not None and isinstance(indent, int):
             indent *= " "
 
+        if indent_depth is None:
+            indent_depth = sys.maxsize
+
         self._encoder: _EncodeFunc[object] = make_encoder(
             indent, mapping_types, seq_types, end, item_separator,
-            long_item_separator, key_separator, "nan_and_infinity" in allow,
-            allow_surrogates, ensure_ascii, indent_leaves, quoted_keys,
-            sort_keys, commas and trailing_comma,
+            long_item_separator, key_separator, indent_depth,
+            "nan_and_infinity" in allow, allow_surrogates, ensure_ascii,
+            indent_leaves, quoted_keys, sort_keys, commas and trailing_comma,
         )
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 

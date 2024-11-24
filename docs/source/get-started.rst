@@ -129,7 +129,7 @@ Compact encoding
 Pretty printing
 ^^^^^^^^^^^^^^^
 
-.. versionchanged:: 2.0 Added ``indent_leaves``.
+.. versionchanged:: 2.0 Added ``indent_depth`` and ``indent_leaves``.
 
 >>> import jsonyx as json
 >>> json.dump({"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}, indent=4)
@@ -139,8 +139,8 @@ Pretty printing
 }
 
 .. tip:: Use ``ensure_ascii=True`` to escape non-ASCII characters,
-    ``indent_leaves=True`` to indent everything and ``sort_keys=True`` to sort
-    the keys of objects.
+    ``indent_depth=1`` to indent up to level 1, ``indent_leaves=True`` to
+    indent everything and ``sort_keys=True`` to sort the keys of objects.
 
 .. seealso:: The built-in :mod:`pprint` module for pretty-printing arbitrary
     Python data structures.
