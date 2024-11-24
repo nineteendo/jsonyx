@@ -152,7 +152,7 @@ class Manipulator:
 
     .. versionadded:: 2.0
 
-    :param allow: the allowed JSON deviations
+    :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     """
 

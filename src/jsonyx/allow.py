@@ -86,7 +86,7 @@ EVERYTHING: frozenset[str] = (
     COMMENTS | MISSING_COMMAS | NAN_AND_INFINITY | SURROGATES | TRAILING_COMMA
     | UNQUOTED_KEYS
 )
-"""Allow all JSON deviations provided by :mod:`jsonyx`.
+"""Allow all JSON deviations.
 
 .. versionchanged:: 2.0 Excluded :data:`!jsonyx.allow.DUPLICATE_KEYS`.
     Included :data:`jsonyx.allow.UNQUOTED_KEYS`.

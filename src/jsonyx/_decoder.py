@@ -600,7 +600,7 @@ class Decoder:
 
     .. versionchanged:: 2.0 Added ``mapping_type`` and ``seq_type``.
 
-    :param allow: the allowed JSON deviations
+    :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param mapping_type: the mapping type
     :param seq_type: the sequence type
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`

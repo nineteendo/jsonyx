@@ -290,7 +290,7 @@ class Encoder:
         - Made :class:`tuple` JSON serializable.
         - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
-    :param allow: the allowed JSON deviations
+    :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters

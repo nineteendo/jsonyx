@@ -109,7 +109,7 @@ def read(
     .. versionchanged:: 2.0 Added ``mapping_type`` and ``seq_type``.
 
     :param filename: the path to the JSON file
-    :param allow: the allowed JSON deviations
+    :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param mapping_type: the mapping type
     :param seq_type: the sequence type
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
@@ -149,7 +149,7 @@ def load(
     .. versionchanged:: 2.0 Added ``mapping_type`` and ``seq_type``.
 
     :param fp: an open JSON file
-    :param allow: the allowed JSON deviations
+    :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param mapping_type: the mapping type
     :param seq_type: the sequence type
     :param root: the path to the archive containing this JSON file
@@ -186,7 +186,7 @@ def loads(
     .. versionchanged:: 2.0 Added ``mapping_type`` and ``seq_type``.
 
     :param s: a JSON string
-    :param allow: the allowed JSON deviations
+    :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param filename: the path to the JSON file
     :param mapping_type: the mapping type
     :param seq_type: the sequence type
@@ -237,7 +237,7 @@ def write(
 
     :param obj: a Python object
     :param filename: the path to the JSON file
-    :param allow: the allowed JSON deviations
+    :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
@@ -314,7 +314,7 @@ def dump(
 
     :param obj: a Python object
     :param fp: an open JSON file
-    :param allow: the allowed JSON deviations
+    :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
@@ -388,7 +388,7 @@ def dumps(
         - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
     :param obj: a Python object
-    :param allow: the allowed JSON deviations
+    :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
@@ -445,7 +445,7 @@ def apply_patch(
 
     :param obj: a Python object
     :param patch: a JSON patch
-    :param allow: the allowed JSON deviations
+    :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises AssertionError: if an assertion fails
     :raises JSONSyntaxError: if a query is invalid
@@ -480,7 +480,7 @@ def run_select_query(
 
     :param nodes: a node or a list of nodes
     :param query: a JSON select query
-    :param allow: the allowed JSON deviations
+    :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param allow_slice: allow slice
     :param mapping: map every input node to a single output node
     :param relative: query must start with ``"@"`` instead of ``"$"``
@@ -522,7 +522,7 @@ def run_filter_query(
 
     :param nodes: a node or a list of nodes
     :param query: a JSON filter query
-    :param allow: the allowed JSON deviations
+    :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the filter query is invalid
     :return: the filtered list of nodes
@@ -547,7 +547,7 @@ def load_query_value(
     .. versionadded:: 2.0
 
     :param s: a JSON query value
-    :param allow: the allowed JSON deviations
+    :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the query value is invalid
     :return: a Python object
