@@ -60,21 +60,23 @@ def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
     :param exc: a JSON syntax error
     :return: a list of strings, each ending in a newline
 
-    >>> import jsonyx as json
-    >>> try:
-    ...     json.loads("[,]")
-    ... except json.JSONSyntaxError as exc:
-    ...     print("Traceback (most recent call last):")
-    ...     print(end="".join(json.format_syntax_error(exc)))
-    ...
-    Traceback (most recent call last):
-        File "<string>", line 1, column 2
-        [,]
-         ^
-    jsonyx.JSONSyntaxError: Expecting value
+    Example:
+        >>> import jsonyx as json
+        >>> try:
+        ...     json.loads("[,]")
+        ... except json.JSONSyntaxError as exc:
+        ...     print("Traceback (most recent call last):")
+        ...     print(end="".join(json.format_syntax_error(exc)))
+        ...
+        Traceback (most recent call last):
+            File "<string>", line 1, column 2
+            [,]
+            ^
+        jsonyx.JSONSyntaxError: Expecting value
 
     .. note:: Don't use :func:`traceback.format_exception_only`, it displays
         less information.
+
     """
     if exc.end_lineno == exc.lineno:
         line_range: str = f"{exc.lineno:d}"
@@ -117,15 +119,17 @@ def read(
     :raises RecursionError: if the JSON file is too deeply nested
     :return: a Python object.
 
-    >>> import jsonyx as json
-    >>> from pathlib import Path
-    >>> from tempfile import TemporaryDirectory
-    >>> with TemporaryDirectory() as tmpdir:
-    ...     filename = Path(tmpdir) / "file.json"
-    ...     _ = filename.write_text('["filesystem API"]', "utf_8")
-    ...     json.Decoder().read(filename)
-    ...
-    ['filesystem API']
+    Example:
+        >>> import jsonyx as json
+        >>> from pathlib import Path
+        >>> from tempfile import TemporaryDirectory
+        >>> with TemporaryDirectory() as tmpdir:
+        ...     filename = Path(tmpdir) / "file.json"
+        ...     _ = filename.write_text('["filesystem API"]', "utf_8")
+        ...     json.Decoder().read(filename)
+        ...
+        ['filesystem API']
+
     """
     return Decoder(
         allow=allow,
@@ -158,11 +162,13 @@ def load(
     :raises RecursionError: if the JSON file is too deeply nested
     :return: a Python object
 
-    >>> import jsonyx as json
-    >>> from io import StringIO
-    >>> io = StringIO('["streaming API"]')
-    >>> json.load(io)
-    ['streaming API']
+    Example:
+        >>> import jsonyx as json
+        >>> from io import StringIO
+        >>> io = StringIO('["streaming API"]')
+        >>> json.load(io)
+        ['streaming API']
+
     """
     return Decoder(
         allow=allow,
@@ -195,11 +201,13 @@ def loads(
     :raises RecursionError: if the JSON string is too deeply nested
     :return: a Python object
 
-    >>> import jsonyx as json
-    >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
-    {'foo': ['bar', None, 1.0, 2]}
+    Example:
+        >>> import jsonyx as json
+        >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
+        {'foo': ['bar', None, 1.0, 2]}
 
     .. tip:: Specify ``filename`` to display the filename in error messages.
+
     """
     return Decoder(
         allow=allow,
@@ -255,20 +263,22 @@ def write(
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
 
-    >>> import jsonyx as json
-    >>> from pathlib import Path
-    >>> from tempfile import TemporaryDirectory
-    >>> with TemporaryDirectory() as tmpdir:
-    ...     filename = Path(tmpdir) / "file.json"
-    ...     json.write(["filesystem API"], filename)
-    ...     filename.read_text("utf_8")
-    ...
-    '["filesystem API"]\n'
+    Example:
+        >>> import jsonyx as json
+        >>> from pathlib import Path
+        >>> from tempfile import TemporaryDirectory
+        >>> with TemporaryDirectory() as tmpdir:
+        ...     filename = Path(tmpdir) / "file.json"
+        ...     json.write(["filesystem API"], filename)
+        ...     filename.read_text("utf_8")
+        ...
+        '["filesystem API"]\n'
 
     .. note:: The item separator is automatically stripped when indented.
 
     .. warning:: Avoid specifying ABCs for ``mapping_types`` or ``seq_types``,
         that is very slow.
+
     """
     return Encoder(
         allow=allow,
@@ -332,19 +342,21 @@ def dump(
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
 
-    >>> import jsonyx as json
-    >>> json.dump(["foo", {"bar": ("baz", None, 1.0, 2)}])
-    ["foo", {"bar": ["baz", null, 1.0, 2]}]
-    >>> from io import StringIO
-    >>> io = StringIO()
-    >>> json.dump(["streaming API"], io)
-    >>> io.getvalue()
-    '["streaming API"]\n'
+    Example:
+        >>> import jsonyx as json
+        >>> json.dump(["foo", {"bar": ("baz", None, 1.0, 2)}])
+        ["foo", {"bar": ["baz", null, 1.0, 2]}]
+        >>> from io import StringIO
+        >>> io = StringIO()
+        >>> json.dump(["streaming API"], io)
+        >>> io.getvalue()
+        '["streaming API"]\n'
 
     .. note:: The item separator is automatically stripped when indented.
 
     .. warning:: Avoid specifying ABCs for ``mapping_types`` or ``seq_types``,
         that is very slow.
+
     """
     Encoder(
         allow=allow,
@@ -407,14 +419,16 @@ def dumps(
     :raises ValueError: for invalid values
     :return: a JSON string
 
-    >>> import jsonyx as json
-    >>> json.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
-    '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
+    Example:
+        >>> import jsonyx as json
+        >>> json.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
+        '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
 
     .. note:: The item separator is automatically stripped when indented.
 
     .. warning:: Avoid specifying ABCs for ``mapping_types`` or ``seq_types``,
         that is very slow.
+
     """
     return Encoder(
         allow=allow,
@@ -455,11 +469,13 @@ def apply_patch(
     :raises ValueError: if a value is invalid
     :return: the patched Python object
 
-    >>> import jsonyx as json
-    >>> json.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
-    [1, 3]
+    Example:
+        >>> import jsonyx as json
+        >>> json.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
+        [1, 3]
 
     .. tip:: Using queries instead of indices is more robust.
+
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).apply_patch(
         obj, patch,
@@ -493,16 +509,18 @@ def run_select_query(
     :raises ValueError: if a value is invalid
     :return: the selected list of nodes
 
-    >>> import jsonyx as json
-    >>> root = [[1, 2, 3, 4, 5, 6]]
-    >>> node = root, 0
-    >>> for target, key in json.run_select_query(node, "$[@ > 3]"):
-    ...     target[key] = None
-    ...
-    >>> root[0]
-    [1, 2, 3, None, None, None]
+    Example:
+        >>> import jsonyx as json
+        >>> root = [[1, 2, 3, 4, 5, 6]]
+        >>> node = root, 0
+        >>> for target, key in json.run_select_query(node, "$[@ > 3]"):
+        ...     target[key] = None
+        ...
+        >>> root[0]
+        [1, 2, 3, None, None, None]
 
     .. tip:: Using queries instead of indices is more robust.
+
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).run_select_query(
         nodes,
@@ -533,9 +551,11 @@ def run_filter_query(
     :raises KeyError: if a key is not found
     :return: the filtered list of nodes
 
-    >>> import jsonyx as json
-    >>> node = [None], 0
-    >>> assert json.run_filter_query(node, "@ == null")
+    Example:
+        >>> import jsonyx as json
+        >>> node = [None], 0
+        >>> assert json.run_filter_query(node, "@ == null")
+
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).run_filter_query(
         nodes, query,
@@ -558,9 +578,11 @@ def load_query_value(
     :raises JSONSyntaxError: if the query value is invalid
     :return: a Python object
 
-    >>> import jsonyx as json
-    >>> json.load_query_value("'~'foo'")
-    "'foo"
+    Example:
+        >>> import jsonyx as json
+        >>> json.load_query_value("'~'foo'")
+        "'foo"
+
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).load_query_value(
         s,

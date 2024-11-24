@@ -130,9 +130,11 @@ def make_patch(old: Any, new: Any) -> list[_Operation]:
     :param new: the new Python object
     :return: the JSON patch
 
-    >>> import jsonyx as json
-    >>> json.make_patch([1, 2, 3], [1, 3])
-    [{'op': 'del', 'path': '$[1]'}]
+    Example:
+        >>> import jsonyx as json
+        >>> json.make_patch([1, 2, 3], [1, 3])
+        [{'op': 'del', 'path': '$[1]'}]
+
     """
     patch: list[_Operation] = []
     _make_patch(old, new, patch)

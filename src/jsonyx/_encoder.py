@@ -355,16 +355,18 @@ class Encoder:
         :raises TypeError: for unserializable values
         :raises ValueError: for invalid values
 
-        >>> import jsonyx as json
-        >>> from pathlib import Path
-        >>> from tempfile import TemporaryDirectory
-        >>> encoder = json.Encoder()
-        >>> with TemporaryDirectory() as tmpdir:
-        ...     filename = Path(tmpdir) / "file.json"
-        ...     encoder.write(["filesystem API"], filename)
-        ...     filename.read_text("utf_8")
-        ...
-        '["filesystem API"]\n'
+        Example:
+            >>> import jsonyx as json
+            >>> from pathlib import Path
+            >>> from tempfile import TemporaryDirectory
+            >>> encoder = json.Encoder()
+            >>> with TemporaryDirectory() as tmpdir:
+            ...     filename = Path(tmpdir) / "file.json"
+            ...     encoder.write(["filesystem API"], filename)
+            ...     filename.read_text("utf_8")
+            ...
+            '["filesystem API"]\n'
+
         """
         Path(filename).write_text(self._encoder(obj), "utf_8", self._errors)
 
@@ -377,15 +379,17 @@ class Encoder:
         :raises TypeError: for unserializable values
         :raises ValueError: for invalid values
 
-        >>> import jsonyx as json
-        >>> encoder = json.Encoder()
-        >>> encoder.dump(["foo", {"bar": ("baz", None, 1.0, 2)}])
-        ["foo", {"bar": ["baz", null, 1.0, 2]}]
-        >>> from io import StringIO
-        >>> io = StringIO()
-        >>> encoder.dump(["streaming API"], io)
-        >>> io.getvalue()
-        '["streaming API"]\n'
+        Example:
+            >>> import jsonyx as json
+            >>> encoder = json.Encoder()
+            >>> encoder.dump(["foo", {"bar": ("baz", None, 1.0, 2)}])
+            ["foo", {"bar": ["baz", null, 1.0, 2]}]
+            >>> from io import StringIO
+            >>> io = StringIO()
+            >>> encoder.dump(["streaming API"], io)
+            >>> io.getvalue()
+            '["streaming API"]\n'
+
         """
         s: str = self._encoder(obj)
         if fp is None:
@@ -402,10 +406,12 @@ class Encoder:
         :raises ValueError: for invalid values
         :return: a JSON string
 
-        >>> import jsonyx as json
-        >>> encoder = json.Encoder()
-        >>> encoder.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
-        '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
+        Example:
+            >>> import jsonyx as json
+            >>> encoder = json.Encoder()
+            >>> encoder.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
+            '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
+
         """
         return self._encoder(obj)
 

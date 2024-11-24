@@ -586,12 +586,14 @@ class Manipulator:
         :raises ValueError: if a value is invalid
         :return: the patched Python object
 
-        >>> import jsonyx as json
-        >>> manipulator = json.Manipulator()
-        >>> manipulator.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
-        [1, 3]
+        Example:
+            >>> import jsonyx as json
+            >>> manipulator = json.Manipulator()
+            >>> manipulator.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
+            [1, 3]
 
         .. tip:: Using queries instead of indices is more robust.
+
         """
         root: list[Any] = [obj]
         if isinstance(patch, dict):
@@ -622,17 +624,19 @@ class Manipulator:
         :raises ValueError: if a value is invalid
         :return: the selected list of nodes
 
-        >>> import jsonyx as json
-        >>> manipulator = json.Manipulator()
-        >>> root = [[1, 2, 3, 4, 5, 6]]
-        >>> node = root, 0
-        >>> for target, key in manipulator.run_select_query(node, "$[@ > 3]"):
-        ...     target[key] = None
-        ...
-        >>> root[0]
-        [1, 2, 3, None, None, None]
+        Example:
+            >>> import jsonyx as json
+            >>> manipulator = json.Manipulator()
+            >>> root = [[1, 2, 3, 4, 5, 6]]
+            >>> node = root, 0
+            >>> for target, key in manipulator.run_select_query(node, "$[@ > 3]"):
+            ...     target[key] = None
+            ...
+            >>> root[0]
+            [1, 2, 3, None, None, None]
 
         .. tip:: Using queries instead of indices is more robust.
+
         """
         if isinstance(nodes, tuple):
             nodes = [nodes]
@@ -663,10 +667,12 @@ class Manipulator:
         :raises KeyError: if a key is not found
         :return: the filtered list of nodes
 
-        >>> import jsonyx as json
-        >>> manipulator = json.Manipulator()
-        >>> node = [None], 0
-        >>> assert manipulator.run_filter_query(node, "@ == null")
+        Example:
+            >>> import jsonyx as json
+            >>> manipulator = json.Manipulator()
+            >>> node = [None], 0
+            >>> assert manipulator.run_filter_query(node, "@ == null")
+
         """
         if isinstance(nodes, tuple):
             nodes = [nodes]
@@ -685,10 +691,12 @@ class Manipulator:
         :raises JSONSyntaxError: if the query value is invalid
         :return: a Python object
 
-        >>> import jsonyx as json
-        >>> manipulator = json.Manipulator()
-        >>> manipulator.load_query_value("'~'foo'")
-        "'foo"
+        Example:
+            >>> import jsonyx as json
+            >>> manipulator = json.Manipulator()
+            >>> manipulator.load_query_value("'~'foo'")
+            "'foo"
+
         """
         obj, end = self._scan_query_value(s)
         if end < len(s):

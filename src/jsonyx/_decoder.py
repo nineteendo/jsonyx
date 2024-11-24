@@ -130,17 +130,19 @@ class JSONSyntaxError(SyntaxError):
     :param start: the start position
     :param end: the end position or negative offset
 
-    >>> import jsonyx as json
-    >>> raise json.JSONSyntaxError("Expecting value", "<string>", "[,]", 1)
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-      File "<string>", line 1
-        [,]
-         ^
-    jsonyx.JSONSyntaxError: Expecting value
+    Example:
+        >>> import jsonyx as json
+        >>> raise json.JSONSyntaxError("Expecting value", "<string>", "[,]", 1)
+        Traceback (most recent call last):
+          File "<stdin>", line 1, in <module>
+          File "<string>", line 1
+            [,]
+             ^
+        jsonyx.JSONSyntaxError: Expecting value
 
     .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the
         exception.
+
     """
 
     def __init__(
@@ -212,14 +214,16 @@ def detect_encoding(b: bytearray | bytes) -> str:
     :param b: a JSON string
     :return: the detected encoding
 
-    >>> import jsonyx as json
-    >>> b = b'\x00"\x00f\x00o\x00o\x00"'
-    >>> b.decode(json.detect_encoding(b))
-    '"foo"'
+    Example:
+        >>> import jsonyx as json
+        >>> b = b'\x00"\x00f\x00o\x00o\x00"'
+        >>> b.decode(json.detect_encoding(b))
+        '"foo"'
 
     .. note:: Supports only ``"utf_8"``, ``"utf_8-sig"``, ``"utf_16"``,
         ``"utf_16_be"``, ``"utf_16_le"``, ``"utf_32"``, ``"utf_32_be"`` and
         ``"utf_32_le"``.
+
     """
     # JSON must start with ASCII character (not NULL)
     # Strings can't contain control characters (including NULL)
@@ -632,15 +636,17 @@ class Decoder:
         :raises RecursionError: if the JSON file is too deeply nested
         :return: a Python object
 
-        >>> import jsonyx as json
-        >>> from pathlib import Path
-        >>> from tempfile import TemporaryDirectory
-        >>> with TemporaryDirectory() as tmpdir:
-        ...     filename = Path(tmpdir) / "file.json"
-        ...     _ = filename.write_text('["filesystem API"]', "utf_8")
-        ...     json.Decoder().read(filename)
-        ...
-        ['filesystem API']
+        Example:
+            >>> import jsonyx as json
+            >>> from pathlib import Path
+            >>> from tempfile import TemporaryDirectory
+            >>> with TemporaryDirectory() as tmpdir:
+            ...     filename = Path(tmpdir) / "file.json"
+            ...     _ = filename.write_text('["filesystem API"]', "utf_8")
+            ...     json.Decoder().read(filename)
+            ...
+            ['filesystem API']
+
         """
         return self.loads(Path(filename).read_bytes(), filename=filename)
 
@@ -655,12 +661,14 @@ class Decoder:
         :raises RecursionError: if the JSON file is too deeply nested
         :return: a Python object
 
-        >>> import jsonyx as json
-        >>> from io import StringIO
-        >>> decoder = json.Decoder()
-        >>> io = StringIO('["streaming API"]')
-        >>> decoder.load(io)
-        ['streaming API']
+        Example:
+            >>> import jsonyx as json
+            >>> from io import StringIO
+            >>> decoder = json.Decoder()
+            >>> io = StringIO('["streaming API"]')
+            >>> decoder.load(io)
+            ['streaming API']
+
         """
         name: str | None
         if name := getattr(fp, "name", None):
@@ -679,13 +687,15 @@ class Decoder:
         :raises RecursionError: if the JSON string is too deeply nested
         :return: a Python object
 
-        >>> import jsonyx as json
-        >>> decoder = json.Decoder()
-        >>> decoder.loads('{"foo": ["bar", null, 1.0, 2]}')
-        {'foo': ['bar', None, 1.0, 2]}
+        Example:
+            >>> import jsonyx as json
+            >>> decoder = json.Decoder()
+            >>> decoder.loads('{"foo": ["bar", null, 1.0, 2]}')
+            {'foo': ['bar', None, 1.0, 2]}
 
         .. tip:: Specify ``filename`` to display the filename in error
             messages.
+
         """
         filename = fspath(filename)
         if not filename.startswith("<") and not filename.endswith(">"):
