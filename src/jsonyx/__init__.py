@@ -448,7 +448,9 @@ def apply_patch(
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises AssertionError: if an assertion fails
+    :raises IndexError: if an index is out of range
     :raises JSONSyntaxError: if a query is invalid
+    :raises KeyError: if a key is not found
     :raises TypeError: if a value has the wrong type
     :raises ValueError: if a value is invalid
     :return: the patched Python object
@@ -485,7 +487,9 @@ def run_select_query(
     :param mapping: map every input node to a single output node
     :param relative: query must start with ``"@"`` instead of ``"$"``
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
+    :raises IndexError: if an index is out of range
     :raises JSONSyntaxError: if the select query is invalid
+    :raises KeyError: if a key is not found
     :raises ValueError: if a value is invalid
     :return: the selected list of nodes
 
@@ -524,7 +528,9 @@ def run_filter_query(
     :param query: a JSON filter query
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
+    :raises IndexError: if an index is out of range
     :raises JSONSyntaxError: if the filter query is invalid
+    :raises KeyError: if a key is not found
     :return: the filtered list of nodes
 
     >>> import jsonyx as json
