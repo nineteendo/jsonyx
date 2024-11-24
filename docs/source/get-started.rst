@@ -70,28 +70,10 @@ Check if the correct version is installed
 
 .. versionadded:: 2.0
 
-.. tab:: long options
+.. code-block:: console
 
-
-    .. only:: latex
-
-        .. rubric:: long options
-
-    .. code-block:: console
-
-        $ jsonyx --version
-        jsonyx 2.0.0 (C extension)
-
-.. tab:: short options
-
-    .. only:: latex
-
-        .. rubric:: short options
-
-    .. code-block:: console
-
-        $ jsonyx -v
-        jsonyx 2.0.0 (C extension)
+    $ jsonyx --version
+    jsonyx 2.0.0 (C extension)
 
 .. note:: If the version number is followed by ``(Python)``, the C extension is
     not installed.
@@ -217,42 +199,17 @@ Using the ``jsonyx`` application
 
 .. versionadded:: 2.0
 
-.. tab:: long options
+.. code-block:: shell-session
 
-    .. only:: latex
-
-        .. rubric:: long options
-
-    .. code-block:: shell-session
-
-        $ echo '{"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}' | jsonyx format --indent 4
-        {
-            "foo": [1, 2, 3],
-            "bar": {"a": 1, "b": 2, "c": 3}
-        }
-        $ echo '{1.2: 3.4}' | jsonyx format
-          File "<stdin>", line 1, column 2
-            {1.2: 3.4}
-             ^
-        jsonyx.JSONSyntaxError: Expecting string
-
-.. tab:: short options
-
-    .. only:: latex
-
-        .. rubric:: short options
-
-    .. code-block:: shell-session
-
-        $ echo '{"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}' | jsonyx format -i4
-        {
-            "foo": [1, 2, 3],
-            "bar": {"a": 1, "b": 2, "c": 3}
-        }
-        $ echo '{1.2: 3.4}' | jsonyx format
-          File "<stdin>", line 1, column 2
-            {1.2: 3.4}
-             ^
-        jsonyx.JSONSyntaxError: Expecting string
+    $ echo '{"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}' | jsonyx format --indent 4
+    {
+        "foo": [1, 2, 3],
+        "bar": {"a": 1, "b": 2, "c": 3}
+    }
+    $ echo '{1.2: 3.4}' | jsonyx format
+        File "<stdin>", line 1, column 2
+        {1.2: 3.4}
+         ^
+    jsonyx.JSONSyntaxError: Expecting string
 
 See :doc:`api/index` and :doc:`cli/index` for more details.

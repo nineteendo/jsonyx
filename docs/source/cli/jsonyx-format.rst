@@ -80,40 +80,15 @@ Options
 Example
 -------
 
-.. tab:: long options
+.. code-block:: shell-session
 
-    .. only:: latex
-
-        .. rubric:: long options
-
-    .. code-block:: shell-session
-
-        $ echo '{"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}' | jsonyx format --indent 4
-        {
-            "foo": [1, 2, 3],
-            "bar": {"a": 1, "b": 2, "c": 3}
-        }
-        $ echo '{1.2: 3.4}' | jsonyx format
-          File "<stdin>", line 1, column 2
-            {1.2: 3.4}
-             ^
-        jsonyx.JSONSyntaxError: Expecting string
-
-.. tab:: short options
-
-    .. only:: latex
-
-        .. rubric:: short options
-
-    .. code-block:: shell-session
-
-        $ echo '{"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}' | jsonyx format -i4
-        {
-            "foo": [1, 2, 3],
-            "bar": {"a": 1, "b": 2, "c": 3}
-        }
-        $ echo '{1.2: 3.4}' | jsonyx format
-          File "<stdin>", line 1, column 2
-            {1.2: 3.4}
-             ^
-        jsonyx.JSONSyntaxError: Expecting string
+    $ echo '{"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}' | jsonyx format --indent 4
+    {
+        "foo": [1, 2, 3],
+        "bar": {"a": 1, "b": 2, "c": 3}
+    }
+    $ echo '{1.2: 3.4}' | jsonyx format
+        File "<stdin>", line 1, column 2
+        {1.2: 3.4}
+         ^
+    jsonyx.JSONSyntaxError: Expecting string
