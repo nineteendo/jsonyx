@@ -59,7 +59,6 @@ ignore = [
     "PLR0917", # too-many-positional-arguments
     "PLR1702", # too-many-nested-blocks
     "PLR2004", # magic-value-comparison
-    "PYI051", # redundant-literal-union
     "SIM108", # if-else-block-instead-of-if-exp
     "T201", # print
     "TD003", # missing-todo-link

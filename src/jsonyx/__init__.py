@@ -71,7 +71,7 @@ def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
         Traceback (most recent call last):
             File "<string>", line 1, column 2
             [,]
-            ^
+             ^
         jsonyx.JSONSyntaxError: Expecting value
 
     .. note:: Don't use :func:`traceback.format_exception_only`, it displays
