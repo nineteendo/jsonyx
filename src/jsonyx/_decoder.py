@@ -629,6 +629,7 @@ class Decoder:
 
         :param filename: the path to the JSON file
         :raises JSONSyntaxError: if the JSON file is invalid
+        :raises RecursionError: if the JSON file is too deeply nested
         :return: a Python object
 
         >>> import jsonyx as json
@@ -651,6 +652,7 @@ class Decoder:
         :param fp: an open JSON file
         :param root: the path to the archive containing this JSON file
         :raises JSONSyntaxError: if the JSON file is invalid
+        :raises RecursionError: if the JSON file is too deeply nested
         :return: a Python object
 
         >>> import jsonyx as json
@@ -674,6 +676,7 @@ class Decoder:
         :param s: a JSON string
         :param filename: the path to the JSON file
         :raises JSONSyntaxError: if the JSON string is invalid
+        :raises RecursionError: if the JSON string is too deeply nested
         :return: a Python object
 
         >>> import jsonyx as json

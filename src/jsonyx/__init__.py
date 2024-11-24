@@ -114,6 +114,7 @@ def read(
     :param seq_type: the sequence type
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON file is invalid
+    :raises RecursionError: if the JSON file is too deeply nested
     :return: a Python object.
 
     >>> import jsonyx as json
@@ -154,6 +155,7 @@ def load(
     :param root: the path to the archive containing this JSON file
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON file is invalid
+    :raises RecursionError: if the JSON file is too deeply nested
     :return: a Python object
 
     >>> import jsonyx as json
@@ -190,6 +192,7 @@ def loads(
     :param seq_type: the sequence type
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON string is invalid
+    :raises RecursionError: if the JSON string is too deeply nested
     :return: a Python object
 
     >>> import jsonyx as json
@@ -248,6 +251,7 @@ def write(
                       sequence types
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
+    :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
 
@@ -324,6 +328,7 @@ def dump(
                       sequence types
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
+    :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
 
@@ -397,6 +402,7 @@ def dumps(
                       sequence types
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
+    :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
     :return: a JSON string

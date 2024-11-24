@@ -351,6 +351,7 @@ class Encoder:
 
         :param obj: a Python object
         :param filename: the path to the JSON file
+        :raises RecursionError: if the object is too deeply nested
         :raises TypeError: for unserializable values
         :raises ValueError: for invalid values
 
@@ -372,6 +373,7 @@ class Encoder:
 
         :param obj: a Python object
         :param fp: an open JSON file
+        :raises RecursionError: if the object is too deeply nested
         :raises TypeError: for unserializable values
         :raises ValueError: for invalid values
 
@@ -395,6 +397,7 @@ class Encoder:
         r"""Serialize a Python object to a JSON string.
 
         :param obj: a Python object
+        :raises RecursionError: if the object is too deeply nested
         :raises TypeError: for unserializable values
         :raises ValueError: for invalid values
         :return: a JSON string
