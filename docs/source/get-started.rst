@@ -104,65 +104,28 @@ Encoding basic Python object hierarchies
 
 .. versionchanged:: 2.0 Made :class:`tuple` JSON serializable.
 
-.. tab:: without classes
-
-    .. only:: latex
-
-        .. rubric:: without classes
-
-    >>> import jsonyx as json
-    >>>
-    >>> json.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
-    '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
-    >>> json.dump('"foo\bar')
-    "\"foo\bar"
-    >>> json.dump("\\")
-    "\\"
-    >>> json.dump("\u20AC")
-    "€"
-    >>> from io import StringIO
-    >>> io = StringIO()
-    >>> json.dump(["streaming API"], io)
-    >>> io.getvalue()
-    '["streaming API"]\n'
-    >>> from pathlib import Path
-    >>> from tempfile import TemporaryDirectory
-    >>> with TemporaryDirectory() as tmpdir:
-    ...     filename = Path(tmpdir) / "file.json"
-    ...     json.write(["filesystem API"], filename)
-    ...     filename.read_text("utf_8")
-    ...
-    '["filesystem API"]\n'
-
-.. tab:: with classes
-
-    .. only:: latex
-
-        .. rubric:: with classes
-
-    >>> import jsonyx as json
-    >>> encoder = json.Encoder()
-    >>> encoder.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
-    '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
-    >>> encoder.dump('"foo\bar')
-    "\"foo\bar"
-    >>> encoder.dump("\\")
-    "\\"
-    >>> encoder.dump("\u20AC")
-    "€"
-    >>> from io import StringIO
-    >>> io = StringIO()
-    >>> encoder.dump(["streaming API"], io)
-    >>> io.getvalue()
-    '["streaming API"]\n'
-    >>> from pathlib import Path
-    >>> from tempfile import TemporaryDirectory
-    >>> with TemporaryDirectory() as tmpdir:
-    ...     filename = Path(tmpdir) / "file.json"
-    ...     encoder.write(["filesystem API"], filename)
-    ...     filename.read_text("utf_8")
-    ...
-    '["filesystem API"]\n'
+>>> import jsonyx as json
+>>> json.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
+'["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
+>>> json.dump('"foo\bar')
+"\"foo\bar"
+>>> json.dump("\\")
+"\\"
+>>> json.dump("\u20AC")
+"€"
+>>> from io import StringIO
+>>> io = StringIO()
+>>> json.dump(["streaming API"], io)
+>>> io.getvalue()
+'["streaming API"]\n'
+>>> from pathlib import Path
+>>> from tempfile import TemporaryDirectory
+>>> with TemporaryDirectory() as tmpdir:
+...     filename = Path(tmpdir) / "file.json"
+...     json.write(["filesystem API"], filename)
+...     filename.read_text("utf_8")
+...
+'["filesystem API"]\n'
 
 Compact encoding
 ^^^^^^^^^^^^^^^^
@@ -172,27 +135,9 @@ Compact encoding
     - Added ``quoted_keys``.
     - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
-.. tab:: without classes
-
-    .. only:: latex
-
-        .. rubric:: without classes
-
-    >>> import jsonyx as json
-    >>>
-    >>> json.dumps({"a": 1, "b": 2, "c": 3}, end="", separators=(",", ":"))
-    '{"a":1,"b":2,"c":3}'
-
-.. tab:: with classes
-
-    .. only:: latex
-
-        .. rubric:: with classes
-
-    >>> import jsonyx as json
-    >>> encoder = json.Encoder(end="", separators=(",", ":"))
-    >>> encoder.dumps({"a": 1, "b": 2, "c": 3})
-    '{"a":1,"b":2,"c":3}'
+>>> import jsonyx as json
+>>> json.dumps({"a": 1, "b": 2, "c": 3}, end="", separators=(",", ":"))
+'{"a":1,"b":2,"c":3}'
 
 .. tip:: Use ``quoted_keys=False`` for even more compact encoding, but this
     isn't widely supported.
@@ -202,33 +147,12 @@ Pretty printing
 
 .. versionchanged:: 2.0 Added ``indent_leaves``.
 
-.. tab:: without classes
-
-    .. only:: latex
-
-        .. rubric:: without classes
-
-    >>> import jsonyx as json
-    >>>
-    >>> json.dump({"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}, indent=4)
-    {
-        "foo": [1, 2, 3],
-        "bar": {"a": 1, "b": 2, "c": 3}
-    }
-
-.. tab:: with classes
-
-    .. only:: latex
-
-        .. rubric:: with classes
-
-    >>> import jsonyx as json
-    >>> encoder = json.Encoder(indent=4)
-    >>> encoder.dump({"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}})
-    {
-        "foo": [1, 2, 3],
-        "bar": {"a": 1, "b": 2, "c": 3}
-    }
+>>> import jsonyx as json
+>>> json.dump({"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}, indent=4)
+{
+    "foo": [1, 2, 3],
+    "bar": {"a": 1, "b": 2, "c": 3}
+}
 
 .. tip:: Use ``ensure_ascii=True`` to escape non-ASCII characters,
     ``indent_leaves=True`` to indent everything and ``sort_keys=True`` to sort
@@ -240,80 +164,30 @@ Pretty printing
 Decoding JSON
 ^^^^^^^^^^^^^
 
-.. tab:: without classes
-
-    .. only:: latex
-
-        .. rubric:: without classes
-
-    >>> import jsonyx as json
-    >>>
-    >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
-    {'foo': ['bar', None, 1.0, 2]}
-    >>> json.loads(r'"\"foo\bar"')
-    '"foo\x08ar'
-    >>> from io import StringIO
-    >>> io = StringIO('["streaming API"]')
-    >>> json.load(io)
-    ['streaming API']
-    >>> from pathlib import Path
-    >>> from tempfile import TemporaryDirectory
-    >>> with TemporaryDirectory() as tmpdir:
-    ...     filename = Path(tmpdir) / "file.json"
-    ...     _ = filename.write_text('["filesystem API"]', "utf_8")
-    ...     json.read(filename)
-    ...
-    ['filesystem API']
-
-.. tab:: with classes
-
-    .. only:: latex
-
-        .. rubric:: with classes
-
-    >>> import jsonyx as json
-    >>> decoder = json.Decoder()
-    >>> decoder.loads('{"foo": ["bar", null, 1.0, 2]}')
-    {'foo': ['bar', None, 1.0, 2]}
-    >>> decoder.loads(r'"\"foo\bar"')
-    '"foo\x08ar'
-    >>> from io import StringIO
-    >>> io = StringIO('["streaming API"]')
-    >>> decoder.load(io)
-    ['streaming API']
-    >>> from pathlib import Path
-    >>> from tempfile import TemporaryDirectory
-    >>> with TemporaryDirectory() as tmpdir:
-    ...     filename = Path(tmpdir) / "file.json"
-    ...     _ = filename.write_text('["filesystem API"]', "utf_8")
-    ...     decoder.read(filename)
-    ...
-    ['filesystem API']
+>>> import jsonyx as json
+>>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
+{'foo': ['bar', None, 1.0, 2]}
+>>> json.loads(r'"\"foo\bar"')
+'"foo\x08ar'
+>>> from io import StringIO
+>>> io = StringIO('["streaming API"]')
+>>> json.load(io)
+['streaming API']
+>>> from pathlib import Path
+>>> from tempfile import TemporaryDirectory
+>>> with TemporaryDirectory() as tmpdir:
+...     filename = Path(tmpdir) / "file.json"
+...     _ = filename.write_text('["filesystem API"]', "utf_8")
+...     json.read(filename)
+...
+['filesystem API']
 
 Using :class:`decimal.Decimal` instead of :class:`float`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. tab:: without classes
-
-    .. only:: latex
-
-        .. rubric:: without classes
-
-    >>> import jsonyx as json
-    >>>
-    >>> json.loads("[1.0000000000000001, 1e400]", use_decimal=True)
-    [Decimal('1.0000000000000001'), Decimal('1E+400')]
-
-.. tab:: with classes
-
-    .. only:: latex
-
-        .. rubric:: with classes
-
-    >>> import jsonyx as json
-    >>> decoder = json.Decoder(use_decimal=True)
-    >>> decoder.loads("[1.0000000000000001, 1e400]")
-    [Decimal('1.0000000000000001'), Decimal('1E+400')]
+>>> import jsonyx as json
+>>> json.loads("[1.0000000000000001, 1e400]", use_decimal=True)
+[Decimal('1.0000000000000001'), Decimal('1E+400')]
 
 .. note:: :class:`decimal.Decimal` can be natively serialized, but not as fast
     as :class:`float`.
@@ -332,27 +206,9 @@ Applying a patch
 
 .. versionadded:: 2.0
 
-.. tab:: without classes
-
-    .. only:: latex
-
-        .. rubric:: without classes
-
-    >>> import jsonyx as json
-    >>>
-    >>> json.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
-    [1, 3]
-
-.. tab:: with classes
-
-    .. only:: latex
-
-        .. rubric:: with classes
-
-    >>> import jsonyx as json
-    >>> manipulator = json.Manipulator()
-    >>> manipulator.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
-    [1, 3]
+>>> import jsonyx as json
+>>> json.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
+[1, 3]
 
 .. tip:: Using queries instead of indices is more robust.
 

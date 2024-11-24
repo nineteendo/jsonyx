@@ -60,45 +60,18 @@ def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
     :param exc: a JSON syntax error
     :return: a list of strings, each ending in a newline
 
-    .. tab:: without classes
-
-        .. only:: latex
-
-            .. rubric:: without classes
-
-        >>> import jsonyx as json
-        >>>
-        >>> try:
-        ...     json.loads("[,]")
-        ... except json.JSONSyntaxError as exc:
-        ...     print("Traceback (most recent call last):")
-        ...     print(end="".join(json.format_syntax_error(exc)))
-        ...
-        Traceback (most recent call last):
-          File "<string>", line 1, column 2
-            [,]
-             ^
-        jsonyx.JSONSyntaxError: Expecting value
-
-    .. tab:: with classes
-
-        .. only:: latex
-
-            .. rubric:: with classes
-
-        >>> import jsonyx as json
-        >>> decoder = json.Decoder()
-        >>> try:
-        ...     decoder.loads("[,]")
-        ... except json.JSONSyntaxError as exc:
-        ...     print("Traceback (most recent call last):")
-        ...     print(end="".join(json.format_syntax_error(exc)))
-        ...
-        Traceback (most recent call last):
-          File "<string>", line 1, column 2
-            [,]
-             ^
-        jsonyx.JSONSyntaxError: Expecting value
+    >>> import jsonyx as json
+    >>> try:
+    ...     json.loads("[,]")
+    ... except json.JSONSyntaxError as exc:
+    ...     print("Traceback (most recent call last):")
+    ...     print(end="".join(json.format_syntax_error(exc)))
+    ...
+    Traceback (most recent call last):
+        File "<string>", line 1, column 2
+        [,]
+         ^
+    jsonyx.JSONSyntaxError: Expecting value
 
     .. note:: Don't use :func:`traceback.format_exception_only`, it displays
         less information.
