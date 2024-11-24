@@ -109,6 +109,8 @@ Encoding basic Python object hierarchies
 ...
 '["filesystem API"]\n'
 
+.. tip:: Using :class:`jsonyx.Encoder` is faster.
+
 Compact encoding
 ^^^^^^^^^^^^^^^^
 
@@ -163,6 +165,8 @@ Decoding JSON
 ...     json.read(filename)
 ...
 ['filesystem API']
+
+.. tip:: Using :class:`jsonyx.Decoder` is faster.
 
 Using :class:`decimal.Decimal` instead of :class:`float`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
