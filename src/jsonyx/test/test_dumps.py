@@ -1,6 +1,5 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON dumps tests."""
-# TODO(Nice Zombies): test indent_depth
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -234,6 +233,13 @@ def test_list_indent_leaves(
     assert s == f"[\n{expected}1,\n{expected}2,\n{expected}3\n]"
 
 
+def test_list_indent_depth(json: ModuleType) -> None:
+    """Test list indent with indent_depth and indent_leaves."""
+    assert json.dumps(
+        [[1, 2, 3]], end="", indent=1, indent_depth=1, indent_leaves=True,
+    ) == "[\n [1, 2, 3]\n]"
+
+
 def test_list_recursion(json: ModuleType) -> None:
     """Test list recursion."""
     obj: list[object] = []
@@ -410,6 +416,14 @@ def test_dict_indent_leaves(
     assert s == (
         f'{{\n{expected}"a": 1,\n{expected}"b": 2,\n{expected}"c": 3\n}}'
     )
+
+
+def test_dict_indent_depth(json: ModuleType) -> None:
+    """Test dict indent with indent_depth and indent_leaves."""
+    obj: dict[str, object] = {"": {"a": 1, "b": 2, "c": 3}}
+    assert json.dumps(
+        obj, end="", indent=1, indent_depth=1, indent_leaves=True,
+    ) == '{\n "": {"a": 1, "b": 2, "c": 3}\n}'
 
 
 def test_dict_recursion(json: ModuleType) -> None:
