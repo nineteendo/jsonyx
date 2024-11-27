@@ -10,8 +10,9 @@ Usage
 
 .. code-block:: none
 
-    jsonyx patch [-h] [-a] [-c] [-C] [-d] [-i SPACES] [-l] [-s] [-S] [-t] [-T]
-                 [-q] patch_filename [input_filename] [output_filename]
+    jsonyx patch [-h] [-a] [-c] [-C] [-d] [-i SPACES] [-l] [-L LEVEL] [-s]
+                 [-S] [-t] [-T] [-q] patch_filename [input_filename]
+                 [output_filename]
 
 Positional arguments
 --------------------

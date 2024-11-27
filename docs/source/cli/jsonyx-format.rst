@@ -10,8 +10,8 @@ Usage
 
 .. code-block:: none
 
-    jsonyx format [-h] [-a] [-c] [-C] [-d] [-i SPACES] [-l] [-s] [-S] [-t] [-T]
-                  [-q] [input_filename] [output_filename]
+    jsonyx format [-h] [-a] [-c] [-C] [-d] [-i SPACES] [-l] [-L LEVEL] [-s]
+                  [-S] [-t] [-T] [-q] [input_filename] [output_filename]
 
 Positional arguments
 --------------------

@@ -83,8 +83,8 @@ def _configure(parser: ArgumentParser) -> None:
         "-i",
         "--indent",
         type=int,
-        metavar="SPACES",
         help="indent using the specified number of spaces",
+        metavar="SPACES",
     )
     parent_parser.add_argument(
         "-l",
@@ -98,6 +98,7 @@ def _configure(parser: ArgumentParser) -> None:
         "--max-indent-level",
         type=int,
         help="the level up to which to indent",
+        metavar="LEVEL",
     )
     parent_parser.add_argument(
         "-s",
