@@ -108,6 +108,7 @@ typehints_use_rtype: bool = False
 # -- Options for sphinx_copybutton
 
 copybutton_exclude: str = ".linenos, .gp, .go"
+copybutton_line_continuation_character: str = "\\"
 
 # -- Options for sphinx_issues
 

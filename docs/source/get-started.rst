@@ -206,8 +206,8 @@ Using the ``jsonyx`` application
 
 .. code-block:: shell-session
 
-    $ echo '{"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}' |
-    > jsonyx format --indent 4 --indent-leaves
+    $ echo '{"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}' \
+    | jsonyx format --indent 4 --indent-leaves
     {
         "foo": [1, 2, 3],
         "bar": {"a": 1, "b": 2, "c": 3}
