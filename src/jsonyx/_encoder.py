@@ -61,7 +61,7 @@ except ImportError:
         item_separator: str,
         long_item_separator: str,
         key_separator: str,
-        indent_depth: int,
+        max_indent_level: int,
         allow_nan_and_infinity: bool,  # noqa: FBT001
         allow_surrogates: bool,  # noqa: FBT001
         ensure_ascii: bool,  # noqa: FBT001
@@ -148,7 +148,7 @@ except ImportError:
             markers[markerid] = seq
             write("[")
             current_indent: str = old_indent
-            if indent is None or indent_level >= indent_depth or (
+            if indent is None or indent_level >= max_indent_level or (
                 not indent_leaves and all(value is None or isinstance(
                     value, (Decimal, float, int, str),
                 ) for value in seq)
@@ -197,7 +197,7 @@ except ImportError:
             markers[markerid] = mapping
             write("{")
             current_indent: str = old_indent
-            if indent is None or indent_level >= indent_depth or (
+            if indent is None or indent_level >= max_indent_level or (
                 not indent_leaves and all(value is None or isinstance(
                     value, (Decimal, float, int, str),
                 ) for value in mapping.values())
@@ -295,8 +295,8 @@ class Encoder:
 
     .. versionchanged:: 2.0
 
-        - Added ``commas``, ``indent_depth``, ``indent_leaves``,
-          ``mapping_types``, ``seq_types`` and ``quoted_keys``.
+        - Added ``commas``, ``indent_leaves``, ``mapping_types``,
+          ``max_indent_level``, ``seq_types`` and ``quoted_keys``.
         - Made :class:`tuple` JSON serializable.
         - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
@@ -305,10 +305,10 @@ class Encoder:
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
     :param indent: the number of spaces or string to indent with
-    :param indent_depth: the depth up to which to indent
     :param indent_leaves: indent leaf objects and arrays
     :param mapping_types: an additional mapping type or tuple of additional
                           mapping types
+    :param max_indent_level: the level up to which to indent
     :param quoted_keys: quote keys which are identifiers
     :param separators: the item and key separator
     :param seq_types: an additional sequence type or tuple of additional
@@ -330,9 +330,9 @@ class Encoder:
         end: str = "\n",
         ensure_ascii: bool = False,
         indent: int | str | None = None,
-        indent_depth: int | None = None,
         indent_leaves: bool = False,
         mapping_types: type | tuple[type, ...] = (),
+        max_indent_level: int | None = None,
         quoted_keys: bool = True,
         separators: tuple[str, str] = (", ", ": "),
         seq_types: type | tuple[type, ...] = (),
@@ -350,12 +350,12 @@ class Encoder:
         if indent is not None and isinstance(indent, int):
             indent *= " "
 
-        if indent_depth is None:
-            indent_depth = sys.maxsize
+        if max_indent_level is None:
+            max_indent_level = sys.maxsize
 
         self._encoder: _EncodeFunc[object] = make_encoder(
             indent, mapping_types, seq_types, end, item_separator,
-            long_item_separator, key_separator, indent_depth,
+            long_item_separator, key_separator, max_indent_level,
             "nan_and_infinity" in allow, allow_surrogates, ensure_ascii,
             indent_leaves, quoted_keys, sort_keys, commas and trailing_comma,
         )

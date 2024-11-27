@@ -233,10 +233,10 @@ def test_list_indent_leaves(
     assert s == f"[\n{expected}1,\n{expected}2,\n{expected}3\n]"
 
 
-def test_list_indent_depth(json: ModuleType) -> None:
-    """Test list indent with indent_depth and indent_leaves."""
+def test_list_max_indent_level(json: ModuleType) -> None:
+    """Test list indent with max_indent_level and indent_leaves."""
     assert json.dumps(
-        [[1, 2, 3]], end="", indent=1, indent_depth=1, indent_leaves=True,
+        [[1, 2, 3]], end="", indent=1, indent_leaves=True, max_indent_level=1,
     ) == "[\n [1, 2, 3]\n]"
 
 
@@ -418,11 +418,11 @@ def test_dict_indent_leaves(
     )
 
 
-def test_dict_indent_depth(json: ModuleType) -> None:
-    """Test dict indent with indent_depth and indent_leaves."""
+def test_dict_max_indent_level(json: ModuleType) -> None:
+    """Test dict indent with max_indent_level and indent_leaves."""
     obj: dict[str, object] = {"": {"a": 1, "b": 2, "c": 3}}
     assert json.dumps(
-        obj, end="", indent=1, indent_depth=1, indent_leaves=True,
+        obj, end="", indent=1, indent_leaves=True, max_indent_level=1,
     ) == '{\n "": {"a": 1, "b": 2, "c": 3}\n}'
 
 

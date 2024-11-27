@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Copyright (C) 2024 Nice Zombies
 """A command line utility to manipulate JSON files."""
-# TODO(Nice Zombies): add --indent-depth
+# TODO(Nice Zombies): add --max-indent-level
 from __future__ import annotations
 
 __all__: list[str] = ["main"]
