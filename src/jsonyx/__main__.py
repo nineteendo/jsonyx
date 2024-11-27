@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # Copyright (C) 2024 Nice Zombies
 """A command line utility to manipulate JSON files."""
-# TODO(Nice Zombies): add --max-indent-level
 from __future__ import annotations
 
 __all__: list[str] = ["main"]
@@ -28,6 +27,7 @@ class _Namespace:
     indent: int | str | None
     indent_leaves: bool
     input_filename: str | None
+    max_indent_level: int | None
     quoted_keys: bool
     nonstrict: bool
     output_filename: str | None
@@ -91,6 +91,12 @@ def _configure(parser: ArgumentParser) -> None:
         "--indent-leaves",
         action="store_true",
         help="indent leaf objects and arrays",
+    )
+    parent_parser.add_argument(
+        "-L",
+        "--max-indent-level",
+        type=int,
+        help="the level up to which to indent",
     )
     parent_parser.add_argument(
         "-s",
@@ -198,6 +204,7 @@ def _run(args: _Namespace) -> None:
         ensure_ascii=args.ensure_ascii,
         indent=args.indent,
         indent_leaves=args.indent_leaves,
+        max_indent_level=args.max_indent_level,
         quoted_keys=args.quoted_keys,
         separators=(",", ":") if args.compact else (", ", ": "),
         sort_keys=args.sort_keys,

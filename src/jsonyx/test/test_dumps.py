@@ -206,17 +206,6 @@ def test_list(json: ModuleType, obj: list[object], expected: str) -> None:
     assert json.dumps(obj, end="") == expected
 
 
-@pytest.mark.parametrize(("obj", "expected"), [
-    ([1, 2, 3], "[1, 2, 3]"),
-    ([[1, 2, 3]], "[\n [1, 2, 3]\n]"),
-])
-def test_list_indent(
-    json: ModuleType, obj: list[object], expected: str,
-) -> None:
-    """Test list indent."""
-    assert json.dumps(obj, end="", indent=1) == expected
-
-
 @pytest.mark.parametrize(("indent", "expected"), [
     # Integer
     (0, ""),
@@ -225,19 +214,29 @@ def test_list_indent(
     # String
     ("\t", "\t"),
 ])
-def test_list_indent_leaves(
+def test_list_indent(
     json: ModuleType, indent: int | str, expected: str,
 ) -> None:
-    """Test list indent with indent_leaves."""
-    s: str = json.dumps([1, 2, 3], end="", indent=indent, indent_leaves=True)
+    """Test list indent."""
+    s: str = json.dumps([1, 2, 3], end="", indent=indent)
     assert s == f"[\n{expected}1,\n{expected}2,\n{expected}3\n]"
 
 
+@pytest.mark.parametrize(("obj", "expected"), [
+    ([1, 2, 3], "[1, 2, 3]"),
+    ([[1, 2, 3]], "[\n [1, 2, 3]\n]"),
+])
+def test_list_indent_leaves(
+    json: ModuleType, obj: list[object], expected: str,
+) -> None:
+    """Test list indent without indent_leaves."""
+    assert json.dumps(obj, end="", indent=1, indent_leaves=False) == expected
+
+
 def test_list_max_indent_level(json: ModuleType) -> None:
-    """Test list indent with max_indent_level and indent_leaves."""
-    assert json.dumps(
-        [[1, 2, 3]], end="", indent=1, indent_leaves=True, max_indent_level=1,
-    ) == "[\n [1, 2, 3]\n]"
+    """Test list indent with max_indent_level."""
+    s: str = json.dumps([[1, 2, 3]], end="", indent=1, max_indent_level=1)
+    assert s == "[\n [1, 2, 3]\n]"
 
 
 def test_list_recursion(json: ModuleType) -> None:
@@ -388,17 +387,6 @@ def test_sort_keys(json: ModuleType) -> None:
     assert s == '{"a": 1, "b": 2, "c": 3}'
 
 
-@pytest.mark.parametrize(("obj", "expected"), [
-    ({"a": 1, "b": 2, "c": 3}, '{"a": 1, "b": 2, "c": 3}'),
-    ({"": {"a": 1, "b": 2, "c": 3}}, '{\n "": {"a": 1, "b": 2, "c": 3}\n}'),
-])
-def test_dict_indent(
-    json: ModuleType, obj: dict[str, object], expected: str,
-) -> None:
-    """Test dict indent."""
-    assert json.dumps(obj, end="", indent=1) == expected
-
-
 @pytest.mark.parametrize(("indent", "expected"), [
     # Integer
     (0, ""),
@@ -407,23 +395,33 @@ def test_dict_indent(
     # String
     ("\t", "\t"),
 ])
-def test_dict_indent_leaves(
+def test_dict_indent(
     json: ModuleType, indent: int | str, expected: str,
 ) -> None:
-    """Test dict indent with indent_leaves."""
+    """Test dict indent."""
     obj: dict[str, object] = {"a": 1, "b": 2, "c": 3}
-    s: str = json.dumps(obj, end="", indent=indent, indent_leaves=True)
+    s: str = json.dumps(obj, end="", indent=indent)
     assert s == (
         f'{{\n{expected}"a": 1,\n{expected}"b": 2,\n{expected}"c": 3\n}}'
     )
 
 
+@pytest.mark.parametrize(("obj", "expected"), [
+    ({"a": 1, "b": 2, "c": 3}, '{"a": 1, "b": 2, "c": 3}'),
+    ({"": {"a": 1, "b": 2, "c": 3}}, '{\n "": {"a": 1, "b": 2, "c": 3}\n}'),
+])
+def test_dict_indent_leaves(
+    json: ModuleType, obj: dict[str, object], expected: str,
+) -> None:
+    """Test dict indent without indent_leaves."""
+    assert json.dumps(obj, end="", indent=1, indent_leaves=False) == expected
+
+
 def test_dict_max_indent_level(json: ModuleType) -> None:
-    """Test dict indent with max_indent_level and indent_leaves."""
+    """Test dict indent with max_indent_level."""
     obj: dict[str, object] = {"": {"a": 1, "b": 2, "c": 3}}
-    assert json.dumps(
-        obj, end="", indent=1, indent_leaves=True, max_indent_level=1,
-    ) == '{\n "": {"a": 1, "b": 2, "c": 3}\n}'
+    s: str = json.dumps(obj, end="", indent=1, max_indent_level=1)
+    assert s == '{\n "": {"a": 1, "b": 2, "c": 3}\n}'
 
 
 def test_dict_recursion(json: ModuleType) -> None:
@@ -478,20 +476,15 @@ def test_no_commas(
     ({"a": 1, "b": 2, "c": 3}, '{\n "a": 1\n "b": 2\n "c": 3\n}'),
 ])
 @pytest.mark.parametrize("trailing_comma", [True, False])
-def test_no_commas_indent_leaves(
+def test_no_commas_indent(
     json: ModuleType,
     obj: dict[str, object] | list[object],
     expected: str,
     trailing_comma: bool,  # noqa: FBT001
 ) -> None:
-    """Test no commas with indent and indent_leaves."""
+    """Test no commas with indent."""
     assert json.dumps(
-        obj,
-        commas=False,
-        end="",
-        indent=1,
-        indent_leaves=True,
-        trailing_comma=trailing_comma,
+        obj, commas=False, end="", indent=1, trailing_comma=trailing_comma,
     ) == expected
 
 
@@ -531,10 +524,8 @@ def test_trailing_comma(
     ([1, 2, 3], "[\n 1,\n 2,\n 3,\n]"),
     ({"a": 1, "b": 2, "c": 3}, '{\n "a": 1,\n "b": 2,\n "c": 3,\n}'),
 ])
-def test_trailing_comma_indent_leaves(
+def test_trailing_comma_indent(
     json: ModuleType, obj: dict[str, object] | list[object], expected: str,
 ) -> None:
-    """Test trailing_comma with indent and indent_leaves."""
-    assert json.dumps(
-        obj, end="", indent=1, indent_leaves=True, trailing_comma=True,
-    ) == expected
+    """Test trailing_comma with indent."""
+    assert json.dumps(obj, end="", indent=1, trailing_comma=True) == expected

@@ -132,15 +132,16 @@ Pretty printing
 .. versionchanged:: 2.0 Added ``indent_leaves`` and ``max_indent_level``.
 
 >>> import jsonyx as json
->>> json.dump({"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}, indent=4)
+>>> obj = {"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}
+>>> json.dump(obj, indent=4, indent_leaves=False)
 {
     "foo": [1, 2, 3],
     "bar": {"a": 1, "b": 2, "c": 3}
 }
 
 .. tip:: Use ``ensure_ascii=True`` to escape non-ASCII characters,
-    ``indent_leaves=True`` to indent everything, ``max_indent_level=1`` to
-    indent up to level 1, and ``sort_keys=True`` to sort the keys of objects.
+    ``max_indent_level=1`` to indent up to level 1, and ``sort_keys=True``
+    to sort the keys of objects.
 
 .. seealso:: The built-in :mod:`pprint` module for pretty-printing arbitrary
     Python data structures.

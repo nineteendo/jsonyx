@@ -61,6 +61,10 @@ Options
 
     Indent leaf objects and arrays.
 
+.. option:: -L, --max-indent-level
+
+    The level up to which to indent.
+
 .. option:: -q, --unquoted-keys
 
     Don't quote keys which are identifiers.

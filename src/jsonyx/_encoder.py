@@ -330,7 +330,7 @@ class Encoder:
         end: str = "\n",
         ensure_ascii: bool = False,
         indent: int | str | None = None,
-        indent_leaves: bool = False,
+        indent_leaves: bool = True,
         mapping_types: type | tuple[type, ...] = (),
         max_indent_level: int | None = None,
         quoted_keys: bool = True,
