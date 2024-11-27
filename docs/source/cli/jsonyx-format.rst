@@ -86,13 +86,14 @@ Example
 
 .. code-block:: shell-session
 
-    $ echo '{"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}' | jsonyx format --indent 4
+    $ echo '{"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}' |
+    > jsonyx format --indent 4 --indent-leaves
     {
         "foo": [1, 2, 3],
         "bar": {"a": 1, "b": 2, "c": 3}
     }
     $ echo '{1.2: 3.4}' | jsonyx format
-        File "<stdin>", line 1, column 2
+      File "<stdin>", line 1, column 2
         {1.2: 3.4}
          ^
     jsonyx.JSONSyntaxError: Expecting string
