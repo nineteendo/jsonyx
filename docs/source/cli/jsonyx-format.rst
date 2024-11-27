@@ -53,9 +53,9 @@ Options
 
     Indent using the specified number of spaces.
 
-.. option:: -l, --indent-leaves
+.. option:: -l, --no-indent-leaves
 
-    Indent leaf objects and arrays.
+    Don't indent leaf objects and arrays.
 
 .. option:: -L, --max-indent-level
 

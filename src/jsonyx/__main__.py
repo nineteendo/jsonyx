@@ -88,9 +88,10 @@ def _configure(parser: ArgumentParser) -> None:
     )
     parent_parser.add_argument(
         "-l",
-        "--indent-leaves",
-        action="store_true",
-        help="indent leaf objects and arrays",
+        "--no-indent-leaves",
+        action="store_false",
+        dest="indent_leaves",
+        help="don't indent leaf objects and arrays",
     )
     parent_parser.add_argument(
         "-L",

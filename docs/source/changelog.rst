@@ -15,7 +15,7 @@ jsonyx 2.0.0 (unreleased)
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
   :func:`jsonyx.write`
 - Added ``python -m jsonyx diff`` and ``python -m jsonyx patch``
-- Added ``--indent-leaves`` and its alias ``-l`` to ``python -m jsonyx format``
+- Added ``--no-indent-leaves`` and its alias ``-l`` to ``python -m jsonyx format``
 - Added ``--max-indent-level`` and its alias ``-L`` to ``python -m jsonyx format``
 - Added ``--unquoted-keys`` and its alias ``-q`` to ``python -m jsonyx format``
 - Added ``--version`` and its alias ``-v`` to ``python -m jsonyx``
