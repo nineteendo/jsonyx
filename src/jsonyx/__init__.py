@@ -519,7 +519,6 @@ def run_select_query(
     :raises IndexError: if an index is out of range
     :raises JSONSyntaxError: if the select query is invalid
     :raises KeyError: if a key is not found
-    :raises ValueError: if a value is invalid
     :return: the selected list of nodes
 
     Example:
