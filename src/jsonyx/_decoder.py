@@ -634,6 +634,7 @@ class Decoder:
         :param filename: the path to the JSON file
         :raises JSONSyntaxError: if the JSON file is invalid
         :raises RecursionError: if the JSON file is too deeply nested
+        :raises UnicodeDecodeError: when failing to decode the file
         :return: a Python object
 
         Example:
@@ -659,6 +660,7 @@ class Decoder:
         :param root: the path to the archive containing this JSON file
         :raises JSONSyntaxError: if the JSON file is invalid
         :raises RecursionError: if the JSON file is too deeply nested
+        :raises UnicodeDecodeError: when failing to decode the file
         :return: a Python object
 
         Example:
@@ -685,6 +687,7 @@ class Decoder:
         :param filename: the path to the JSON file
         :raises JSONSyntaxError: if the JSON string is invalid
         :raises RecursionError: if the JSON string is too deeply nested
+        :raises UnicodeDecodeError: when failing to decode the string
         :return: a Python object
 
         Example:
