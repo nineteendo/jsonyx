@@ -368,6 +368,7 @@ class Encoder:
         :param filename: the path to the JSON file
         :raises RecursionError: if the object is too deeply nested
         :raises TypeError: for unserializable values
+        :raises UnicodeEncodeError: when failing to encode the file
         :raises ValueError: for invalid values
 
         Example:

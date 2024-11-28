@@ -266,6 +266,7 @@ def write(
     :param trailing_comma: add a trailing comma when indented
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
+    :raises UnicodeEncodeError: when failing to encode the file
     :raises ValueError: for invalid values
 
     Example:
