@@ -69,7 +69,7 @@ def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
         ...     print(end="".join(json.format_syntax_error(exc)))
         ...
         Traceback (most recent call last):
-            File "<string>", line 1, column 2
+          File "<string>", line 1, column 2
             [,]
              ^
         jsonyx.JSONSyntaxError: Expecting value
