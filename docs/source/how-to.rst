@@ -36,6 +36,8 @@ Specializing JSON object encoding
 >>> json.dump(to_json(1 + 2j))
 {"__complex__": true, "real": 1.0, "imag": 2.0}
 
+.. tip:: You can use :func:`functools.singledispatch` to make this extensible.
+
 Specializing JSON object decoding
 ---------------------------------
 
