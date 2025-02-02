@@ -20,6 +20,26 @@ jsonyx.JSONSyntaxError: Expecting value
 
 .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the exception.
 
+Encoding :mod:`numpy` objects
+-----------------------------
+
+>>> import jsonyx as json
+>>> import numpy as np
+>>> 
+>>> obj = np.array([
+...     np.bool(), np.int8(), np.uint8(), np.int16(), np.uint16(), np.int32(),
+...     np.uint32(), np.intp(), np.uintp(), np.int64(), np.uint64(), np.float16(),
+...     np.float32(), np.float64(), np.float128()
+... ], dtype="O")
+>>> types = {
+...     "bool": np.bool,
+...     "float": np.floating,
+...     "int": np.integer,
+...     "sequence": np.ndarray
+... }
+>>> json.dump(obj, types=types)
+[false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0]
+
 Specializing JSON object encoding
 ---------------------------------
 

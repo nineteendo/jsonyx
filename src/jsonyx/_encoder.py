@@ -54,9 +54,13 @@ try:
         from _jsonyx import make_encoder
 except ImportError:
     def make_encoder(
+        bool_types: type | tuple[type, ...],
+        float_types: type | tuple[type, ...],
         indent: str | None,
+        int_types: type | tuple[type, ...],
         mapping_types: type | tuple[type, ...],
-        seq_types: type | tuple[type, ...],
+        sequence_types: type | tuple[type, ...],
+        str_types: type | tuple[type, ...],
         end: str,
         item_separator: str,
         long_item_separator: str,
@@ -71,8 +75,6 @@ except ImportError:
         trailing_comma: bool,  # noqa: FBT001
     ) -> _EncodeFunc[object]:
         """Make JSON encoder."""
-        float_repr: _EncodeFunc[float] = float.__repr__
-        int_repr: _EncodeFunc[int] = int.__repr__
         markers: dict[int, object] = {}
 
         if not ensure_ascii:
@@ -105,7 +107,7 @@ except ImportError:
 
         def floatstr(num: float) -> str:
             if isfinite(num):
-                return float_repr(num)
+                return repr(num)
 
             if not allow_nan_and_infinity:
                 msg: str = f"{num!r} is not allowed"
@@ -149,8 +151,8 @@ except ImportError:
             write("[")
             current_indent: str = old_indent
             if indent is None or indent_level >= max_indent_level or (
-                not indent_leaves and all(value is None or isinstance(
-                    value, (Decimal, float, int, str),
+                not indent_leaves and not any(isinstance(
+                    value, (list, tuple, dict, sequence_types, mapping_types),
                 ) for value in seq)
             ):
                 indented: bool = False
@@ -198,8 +200,8 @@ except ImportError:
             write("{")
             current_indent: str = old_indent
             if indent is None or indent_level >= max_indent_level or (
-                not indent_leaves and all(value is None or isinstance(
-                    value, (Decimal, float, int, str),
+                not indent_leaves and not any(isinstance(
+                    value, (list, tuple, dict, sequence_types, mapping_types),
                 ) for value in mapping.values())
             ):
                 indented: bool = False
@@ -248,20 +250,17 @@ except ImportError:
             indent_level: int,
             current_indent: str,
         ) -> None:
-            if isinstance(obj, str):
-                write(encode_string(obj))
-            elif obj is None:
+            if obj is None:
                 write("null")
-            elif isinstance(obj, int):
-                if obj is True:
-                    write("true")
-                elif obj is False:
-                    write("false")
-                else:
-                    write(int_repr(obj))
-            elif isinstance(obj, float):
-                write(floatstr(obj))
-            elif isinstance(obj, (list, tuple, seq_types)):
+            elif isinstance(obj, (bool, bool_types)):
+                write("true" if obj else "false")
+            elif isinstance(obj, (str, str_types)):
+                write(encode_string(str(obj)))
+            elif isinstance(obj, (int, int_types)):
+                write(repr(int(obj)))  # type: ignore
+            elif isinstance(obj, (float, float_types)):
+                write(floatstr(float(obj)))  # type: ignore
+            elif isinstance(obj, (list, tuple, sequence_types)):
                 write_sequence(obj, write, indent_level, current_indent)
             elif isinstance(obj, (dict, mapping_types)):
                 write_mapping(obj, write, indent_level, current_indent)
@@ -295,8 +294,8 @@ class Encoder:
 
     .. versionchanged:: 2.0
 
-        - Added ``commas``, ``indent_leaves``, ``mapping_types``,
-          ``max_indent_level``, ``seq_types`` and ``quoted_keys``.
+        - Added ``commas``, ``indent_leaves``, ``max_indent_level``,
+          ``quoted_keys`` and ``types``.
         - Made :class:`tuple` JSON serializable.
         - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
@@ -306,20 +305,16 @@ class Encoder:
     :param ensure_ascii: escape non-ASCII characters
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
-    :param mapping_types: an additional mapping type or tuple of additional
-                          mapping types
     :param max_indent_level: the level up to which to indent
     :param quoted_keys: quote keys which are identifiers
     :param separators: the item and key separator
-    :param seq_types: an additional sequence type or tuple of additional
-                      sequence types
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
+    :param types: a dictionary of additional types
 
     .. note:: The item separator is automatically stripped when indented.
 
-    .. warning:: Avoid specifying ABCs for ``mapping_types`` or ``seq_types``,
-        that is very slow.
+    .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
     """
 
     def __init__(
@@ -331,13 +326,12 @@ class Encoder:
         ensure_ascii: bool = False,
         indent: int | str | None = None,
         indent_leaves: bool = True,
-        mapping_types: type | tuple[type, ...] = (),
         max_indent_level: int | None = None,
         quoted_keys: bool = True,
         separators: tuple[str, str] = (", ", ": "),
-        seq_types: type | tuple[type, ...] = (),
         sort_keys: bool = False,
         trailing_comma: bool = False,
+        types: dict[str, type | tuple[type, ...]] | None = None,
     ) -> None:
         """Create a new JSON encoder."""
         allow_surrogates: bool = "surrogates" in allow
@@ -353,11 +347,17 @@ class Encoder:
         if max_indent_level is None:
             max_indent_level = sys.maxsize
 
+        if types is None:
+            types = {}
+
         self._encoder: _EncodeFunc[object] = make_encoder(
-            indent, mapping_types, seq_types, end, item_separator,
-            long_item_separator, key_separator, max_indent_level,
-            "nan_and_infinity" in allow, allow_surrogates, ensure_ascii,
-            indent_leaves, quoted_keys, sort_keys, commas and trailing_comma,
+            types.get("bool", ()), types.get("float", ()), indent,
+            types.get("int", ()), types.get("mapping", ()),
+            types.get("sequence", ()), types.get("str", ()), end,
+            item_separator, long_item_separator, key_separator,
+            max_indent_level, "nan_and_infinity" in allow, allow_surrogates,
+            ensure_ascii, indent_leaves, quoted_keys, sort_keys,
+            commas and trailing_comma,
         )
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 

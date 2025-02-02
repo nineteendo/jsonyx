@@ -230,20 +230,19 @@ def write(
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     indent_leaves: bool = True,
-    mapping_types: type | tuple[type, ...] = (),
     max_indent_level: int | None = None,
     quoted_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
-    seq_types: type | tuple[type, ...] = (),
     sort_keys: bool = False,
     trailing_comma: bool = False,
+    types: dict[str, type | tuple[type, ...]] | None = None,
 ) -> None:
     r"""Serialize a Python object to a JSON file.
 
     .. versionchanged:: 2.0
 
-        - Added ``commas``, ``indent_leaves``, ``mapping_types``,
-          ``max_indent_level``, ``seq_types`` and ``quoted_keys``.
+        - Added ``commas``, ``indent_leaves``, ``max_indent_level``,
+          ``quoted_keys`` and ``types``.
         - Made :class:`tuple` JSON serializable.
         - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
@@ -255,15 +254,12 @@ def write(
     :param ensure_ascii: escape non-ASCII characters
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
-    :param mapping_types: an additional mapping type or tuple of additional
-                          mapping types
     :param max_indent_level: the level up to which to indent
     :param quoted_keys: quote keys which are identifiers
     :param separators: the item and key separator
-    :param seq_types: an additional sequence type or tuple of additional
-                      sequence types
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
+    :param types: a dictionary of additional types
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
     :raises UnicodeEncodeError: when failing to encode the file
@@ -282,8 +278,7 @@ def write(
 
     .. note:: The item separator is automatically stripped when indented.
 
-    .. warning:: Avoid specifying ABCs for ``mapping_types`` or ``seq_types``,
-        that is very slow.
+    .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
 
     """
     return Encoder(
@@ -293,13 +288,12 @@ def write(
         ensure_ascii=ensure_ascii,
         indent=indent,
         indent_leaves=indent_leaves,
-        mapping_types=mapping_types,
         max_indent_level=max_indent_level,
         quoted_keys=quoted_keys,
         separators=separators,
-        seq_types=seq_types,
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
+        types=types,
     ).write(obj, filename)
 
 
@@ -313,20 +307,19 @@ def dump(
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     indent_leaves: bool = True,
-    mapping_types: type | tuple[type, ...] = (),
     max_indent_level: int | None = None,
     quoted_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
-    seq_types: type | tuple[type, ...] = (),
     sort_keys: bool = False,
     trailing_comma: bool = False,
+    types: dict[str, type | tuple[type, ...]] | None = None,
 ) -> None:
     r"""Serialize a Python object to an open JSON file.
 
     .. versionchanged:: 2.0
 
-        - Added ``commas``, ``indent_leaves``, ``mapping_types``,
-          ``max_indent_level``, ``seq_types`` and ``quoted_keys``.
+        - Added ``commas``, ``indent_leaves``, ``max_indent_level``,
+          ``quoted_keys`` and ``types``.
         - Made :class:`tuple` JSON serializable.
         - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
@@ -338,15 +331,12 @@ def dump(
     :param ensure_ascii: escape non-ASCII characters
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
-    :param mapping_types: an additional mapping type or tuple of additional
-                          mapping types
     :param max_indent_level: the level up to which to indent
     :param quoted_keys: quote keys which are identifiers
     :param separators: the item and key separator
-    :param seq_types: an additional sequence type or tuple of additional
-                      sequence types
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
+    :param types: a dictionary of additional types
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
@@ -363,8 +353,7 @@ def dump(
 
     .. note:: The item separator is automatically stripped when indented.
 
-    .. warning:: Avoid specifying ABCs for ``mapping_types`` or ``seq_types``,
-        that is very slow.
+    .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
 
     """
     Encoder(
@@ -374,13 +363,12 @@ def dump(
         ensure_ascii=ensure_ascii,
         indent=indent,
         indent_leaves=indent_leaves,
-        mapping_types=mapping_types,
         max_indent_level=max_indent_level,
         quoted_keys=quoted_keys,
         separators=separators,
-        seq_types=seq_types,
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
+        types=types,
     ).dump(obj, fp)
 
 
@@ -393,20 +381,19 @@ def dumps(
     ensure_ascii: bool = False,
     indent: int | str | None = None,
     indent_leaves: bool = True,
-    mapping_types: type | tuple[type, ...] = (),
     max_indent_level: int | None = None,
     quoted_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
-    seq_types: type | tuple[type, ...] = (),
     sort_keys: bool = False,
     trailing_comma: bool = False,
+    types: dict[str, type | tuple[type, ...]] | None = None,
 ) -> str:
     r"""Serialize a Python object to a JSON string.
 
     .. versionchanged:: 2.0
 
-        - Added ``commas``, ``indent_leaves``, ``mapping_types``,
-          ``max_indent_level``, ``seq_types`` and ``quoted_keys``.
+        - Added ``commas``, ``indent_leaves``, ``max_indent_level``,
+          ``quoted_keys`` and ``types``.
         - Made :class:`tuple` JSON serializable.
         - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
@@ -417,15 +404,12 @@ def dumps(
     :param ensure_ascii: escape non-ASCII characters
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
-    :param mapping_types: an additional mapping type or tuple of additional
-                          mapping types
     :param max_indent_level: the level up to which to indent
     :param quoted_keys: quote keys which are identifiers
     :param separators: the item and key separator
-    :param seq_types: an additional sequence type or tuple of additional
-                      sequence types
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
+    :param types: a dictionary of additional types
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
@@ -438,8 +422,7 @@ def dumps(
 
     .. note:: The item separator is automatically stripped when indented.
 
-    .. warning:: Avoid specifying ABCs for ``mapping_types`` or ``seq_types``,
-        that is very slow.
+    .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
 
     """
     return Encoder(
@@ -449,13 +432,12 @@ def dumps(
         ensure_ascii=ensure_ascii,
         indent=indent,
         indent_leaves=indent_leaves,
-        mapping_types=mapping_types,
         max_indent_level=max_indent_level,
         quoted_keys=quoted_keys,
         separators=separators,
-        seq_types=seq_types,
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
+        types=types,
     ).dumps(obj)
 
 

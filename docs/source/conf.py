@@ -37,6 +37,7 @@ extensions: list[str] = [
 ]
 
 intersphinx_mapping: dict[str, tuple[str, None]] = {
+    "numpy": ("https://numpy.org/doc/stable", None),
     "python": ("https://docs.python.org/3", None),
     "sphinx": ("https://www.sphinx-doc.org/en/master", None),
 }

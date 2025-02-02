@@ -10,10 +10,9 @@ jsonyx 2.0.0 (unreleased)
 - Added the ``jsonyx`` application
 - Added ``mapping_type`` and ``seq_type`` to :class:`jsonyx.Decoder`,
   :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`jsonyx.read`
-- Added ``commas``, ``indent_leaves``, ``mapping_types``,
-  ``max_indent_level``, ``seq_types`` and ``quoted_keys`` to
-  :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
-  :func:`jsonyx.write`
+- Added ``commas``, ``indent_leaves``, ``max_indent_level`` and ``quoted_keys``
+  and ``types`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
+  :func:`jsonyx.dumps` and :func:`jsonyx.write`
 - Added ``python -m jsonyx diff`` and ``python -m jsonyx patch``
 - Added ``--no-indent-leaves`` and its alias ``-l`` to ``python -m jsonyx format``
 - Added ``--max-indent-level`` and its alias ``-L`` to ``python -m jsonyx format``

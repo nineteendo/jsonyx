@@ -1,6 +1,10 @@
 # MISC
 .DS_Store
 
+# Generated files
+docs/source/api/
+!docs/source/api/index.rst
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

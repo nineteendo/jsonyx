@@ -33,9 +33,13 @@ typedef struct _PyScannerObject {
 typedef struct _PyEncoderObject {
     PyObject_HEAD
     PyObject *Decimal;
+    PyObject *bool_types;
+    PyObject *float_types;
     PyObject *indent;
+    PyObject *int_types;
     PyObject *mapping_types;
-    PyObject *seq_types;
+    PyObject *sequence_types;
+    PyObject *str_types;
     PyObject *end;
     PyObject *item_separator;
     PyObject *long_item_separator;
@@ -1280,23 +1284,27 @@ static PyType_Spec PyScannerType_spec = {
 static PyObject *
 encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    static char *kwlist[] = {"indent", "mapping_types", "seq_types", "end",
-                             "item_separator", "long_item_separator",
-                             "key_separator", "max_indent_level",
-                             "allow_nan_and_infinity", "allow_surrogates",
-                             "ensure_ascii", "indent_leaves", "quoted_keys",
-                             "sort_keys", "trailing_comma", NULL};
+    static char *kwlist[] = {"bool_types", "float_types", "indent",
+                             "int_types", "mapping_types", "sequence_types",
+                             "str_types", "end", "item_separator",
+                             "long_item_separator", "key_separator",
+                             "max_indent_level", "allow_nan_and_infinity",
+                             "allow_surrogates", "ensure_ascii",
+                             "indent_leaves", "quoted_keys", "sort_keys",
+                             "trailing_comma", NULL};
 
     PyEncoderObject *s;
-    PyObject *indent, *mapping_types, *seq_types;
+    PyObject *bool_types, *float_types, *indent, *int_types, *mapping_types;
+    PyObject *sequence_types, *str_types;
     PyObject *end, *item_separator, *long_item_separator, *key_separator;
     Py_ssize_t max_indent_level;
     int allow_nan_and_infinity, allow_surrogates, ensure_ascii, indent_leaves;
     int quoted_keys, sort_keys, trailing_comma;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOUUUUnppppppp:make_encoder", kwlist,
-        &indent, &mapping_types, &seq_types,
-        &end, &item_separator, &long_item_separator, &key_separator,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOUUUUnppppppp:make_encoder", kwlist,
+        &bool_types, &float_types, &indent, &int_types, &mapping_types,
+        &sequence_types, &str_types, &end, &item_separator,
+        &long_item_separator, &key_separator,
         &max_indent_level,
         &allow_nan_and_infinity, &allow_surrogates, &ensure_ascii,
         &indent_leaves, &quoted_keys, &sort_keys, &trailing_comma))
@@ -1315,9 +1323,13 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     if (s->Decimal == NULL) {
         goto bail;
     }
+    s->bool_types = bool_types;
+    s->float_types = float_types;
     s->indent = indent;
+    s->int_types = int_types;
     s->mapping_types = mapping_types;
-    s->seq_types = seq_types;
+    s->sequence_types = sequence_types;
+    s->str_types = str_types;
     s->end = end;
     s->item_separator = item_separator;
     s->long_item_separator = long_item_separator;
@@ -1332,7 +1344,7 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->trailing_comma = trailing_comma;
     Py_INCREF(s->indent);
     Py_INCREF(s->mapping_types);
-    Py_INCREF(s->seq_types);
+    Py_INCREF(s->sequence_types);
     Py_INCREF(s->end);
     Py_INCREF(s->item_separator);
     Py_INCREF(s->long_item_separator);
@@ -1567,37 +1579,64 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
                        Py_ssize_t indent_level, PyObject *indent_cache)
 {
     /* Encode Python object obj to a JSON term */
+    PyObject *new_obj;
     int rv;
 
     if (obj == Py_None) {
       return _PyUnicodeWriter_WriteASCIIString(writer, "null", 4);
     }
-    else if (obj == Py_True) {
-      return _PyUnicodeWriter_WriteASCIIString(writer, "true", 4);
+    else if (obj == Py_True || obj == Py_False || PyObject_IsInstance(obj, s->bool_types)) {
+        if (PyErr_Occurred())
+            return -1;
+        rv = PyObject_IsTrue(obj);
+        if (rv == -1) {
+            return -1;
+        }
+        else if (rv) {
+            return _PyUnicodeWriter_WriteASCIIString(writer, "true", 4);
+        }
+        else {
+            return _PyUnicodeWriter_WriteASCIIString(writer, "false", 5);
+        }
     }
-    else if (obj == Py_False) {
-      return _PyUnicodeWriter_WriteASCIIString(writer, "false", 5);
-    }
-    else if (PyUnicode_Check(obj)) {
-        PyObject *encoded = encoder_encode_string(s, obj);
+    else if (PyUnicode_Check(obj) || PyObject_IsInstance(obj, s->str_types)) {
+        if (PyErr_Occurred())
+            return -1;
+        new_obj = PyObject_Str(obj);
+        if (new_obj == NULL)
+            return -1;
+        PyObject *encoded = encoder_encode_string(s, new_obj);
+        Py_DECREF(new_obj);
         if (encoded == NULL)
             return -1;
         return _steal_accumulate(writer, encoded);
     }
-    else if (PyLong_Check(obj)) {
-        PyObject *encoded = PyLong_Type.tp_repr(obj);
+    else if (PyLong_Check(obj) || PyObject_IsInstance(obj, s->int_types)) {
+        if (PyErr_Occurred())
+            return -1;
+        new_obj = Py_TYPE(obj)->tp_as_number->nb_int(obj);
+        if (new_obj == NULL)
+            return -1;
+        PyObject *encoded = PyLong_Type.tp_repr(new_obj);
+        Py_DECREF(new_obj);
         if (encoded == NULL)
             return -1;
         return _steal_accumulate(writer, encoded);
     }
-    else if (PyFloat_Check(obj)) {
-        PyObject *encoded = encoder_encode_float(s, obj);
+    else if (PyFloat_Check(obj) || PyObject_IsInstance(obj, s->float_types)) {
+        if (PyErr_Occurred())
+            return -1;
+        new_obj = Py_TYPE(obj)->tp_as_number->nb_float(obj);
+        if (new_obj == NULL)
+            return -1;
+        PyObject *encoded = encoder_encode_float(s, new_obj);
+        Py_DECREF(new_obj);
         if (encoded == NULL)
             return -1;
         return _steal_accumulate(writer, encoded);
     }
     else if (PyList_Check(obj) || PyTuple_Check(obj) ||
-             PyObject_IsInstance(obj, s->seq_types))
+             PyObject_IsInstance(obj, s->sequence_types))
     {
         // See https://github.com/python/cpython/issues/123593 
         if (PyErr_Occurred())
@@ -1740,10 +1779,13 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
 
         for (Py_ssize_t  i = 0; i < PyList_GET_SIZE(values); i++) {
             PyObject *obj = PyList_GET_ITEM(values, i);
-            if (obj != Py_None && !PyUnicode_Check(obj) && !PyLong_Check(obj) &&
-                !PyFloat_Check(obj) &&
-                !PyObject_TypeCheck(obj, (PyTypeObject *)s->Decimal))
+            if (PyList_Check(obj) || PyTuple_Check(obj) || PyDict_Check(obj) ||
+                PyObject_IsInstance(obj, s->sequence_types) ||
+                PyObject_IsInstance(obj, s->mapping_types))
             {
+                if (PyErr_Occurred()) {
+                    goto bail;
+                }
                 indented = true;
                 break;
             }
@@ -1873,10 +1915,13 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
         indented = false;
         for (i = 0; i < PySequence_Fast_GET_SIZE(s_fast); i++) {
             PyObject *obj = PySequence_Fast_GET_ITEM(s_fast, i);
-            if (obj != Py_None && !PyUnicode_Check(obj) && !PyLong_Check(obj) &&
-                !PyFloat_Check(obj) &&
-                !PyObject_TypeCheck(obj, (PyTypeObject *)s->Decimal))
+            if (PyList_Check(obj) || PyTuple_Check(obj) || PyDict_Check(obj) ||
+                PyObject_IsInstance(obj, s->sequence_types) ||
+                PyObject_IsInstance(obj, s->mapping_types))
             {
+                if (PyErr_Occurred()) {
+                    goto bail;
+                }
                 indented = true;
                 break;
             }
@@ -1947,9 +1992,13 @@ static int
 encoder_traverse(PyEncoderObject *self, visitproc visit, void *arg)
 {
     Py_VISIT(Py_TYPE(self));
+    Py_VISIT(self->bool_types);
+    Py_VISIT(self->float_types);
     Py_VISIT(self->indent);
+    Py_VISIT(self->int_types);
     Py_VISIT(self->mapping_types);
-    Py_VISIT(self->seq_types);
+    Py_VISIT(self->sequence_types);
+    Py_VISIT(self->str_types);
     Py_VISIT(self->end);
     Py_VISIT(self->key_separator);
     Py_VISIT(self->item_separator);
@@ -1961,9 +2010,13 @@ static int
 encoder_clear(PyEncoderObject *self)
 {
     /* Deallocate Encoder */
+    Py_CLEAR(self->bool_types);
+    Py_CLEAR(self->float_types);
     Py_CLEAR(self->indent);
+    Py_CLEAR(self->int_types);
     Py_CLEAR(self->mapping_types);
-    Py_CLEAR(self->seq_types);
+    Py_CLEAR(self->sequence_types);
+    Py_CLEAR(self->str_types);
     Py_CLEAR(self->end);
     Py_CLEAR(self->key_separator);
     Py_CLEAR(self->item_separator);
