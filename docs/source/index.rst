@@ -49,7 +49,7 @@ performance and no dependencies.
 
 - Dedicated functions for reading and writing files and pretty printing
 
-.. rubric:: Benchmark
+.. rubric:: Benchmark (Oct 13, 2024)
 
 We recommend to use :pypi:`orjson`, :pypi:`msgspec` or :pypi:`pysimdjson` for
 performance critical applications:

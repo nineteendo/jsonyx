@@ -40,6 +40,8 @@ Encoding :mod:`numpy` objects
 >>> json.dump(obj, types=types)
 [false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0]
 
+.. note:: If needed, you can also specify ``"mapping"`` or ``"str"``.
+
 Specializing JSON object encoding
 ---------------------------------
 

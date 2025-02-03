@@ -46,7 +46,7 @@ https://jsonyx.readthedocs.io
     ```
 - Dedicated functions for reading and writing files and pretty printing
 
-## Benchmark
+## Benchmark (Oct 13, 2024)
 
 We recommend to use [`orjson`](https://pypi.org/project/orjson),
 [`msgspec`](https://pypi.org/project/msgspec) or

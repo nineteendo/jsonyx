@@ -1,11 +1,10 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON dumps tests."""
-# TODO(Nice Zombies): test types
 from __future__ import annotations
 
 __all__: list[str] = []
 
-from collections import UserDict, UserList
+from collections import UserDict, UserList, UserString
 from decimal import Decimal
 from enum import Enum
 from typing import TYPE_CHECKING
@@ -23,6 +22,24 @@ _CIRCULAR_DICT: dict[str, object] = {}
 _CIRCULAR_DICT[""] = _CIRCULAR_DICT
 _CIRCULAR_LIST: list[object] = []
 _CIRCULAR_LIST.append(_CIRCULAR_LIST)
+
+
+# pylint: disable-next=R0903
+class _MyBool:
+    def __bool__(self) -> bool:
+        return False
+
+
+# pylint: disable-next=R0903
+class _MyInt:
+    def __int__(self) -> int:
+        return 0
+
+
+# pylint: disable-next=R0903
+class _MyFloat:
+    def __float__(self) -> float:
+        return 0.0
 
 
 class _FloatEnum(float, Enum):
@@ -45,6 +62,11 @@ def test_singletons(
     assert json.dumps(obj, end="") == expected
 
 
+def test_bool_types(json: ModuleType) -> None:
+    """Test bool_types."""
+    assert json.dumps(_MyBool(), end="", types={"bool": _MyBool}) == "false"
+
+
 @pytest.mark.parametrize("num", [0, 1])
 @pytest.mark.parametrize("num_type", [Decimal, int])
 def test_int(
@@ -52,6 +74,11 @@ def test_int(
 ) -> None:
     """Test integer."""
     assert json.dumps(num_type(num), end="") == repr(num)
+
+
+def test_int_types(json: ModuleType) -> None:
+    """Test int_types."""
+    assert json.dumps(_MyInt(), end="", types={"int": _MyInt}) == "0"
 
 
 @pytest.mark.parametrize("num_type", [Decimal, float])
@@ -98,6 +125,11 @@ def test_signaling_nan(json: ModuleType) -> None:
     """Test signaling NaN."""
     with pytest.raises(ValueError, match="is not JSON serializable"):
         json.dumps(Decimal("sNaN"))
+
+
+def test_float_types(json: ModuleType) -> None:
+    """Test float_types."""
+    assert json.dumps(_MyFloat(), end="", types={"float": _MyFloat}) == "0.0"
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
@@ -185,6 +217,12 @@ def test_surrogate_escapes_not_allowed(json: ModuleType, obj: str) -> None:
     """Test surrogate escapes when not allowed."""
     with pytest.raises(ValueError, match="Surrogates are not allowed"):
         json.dumps(obj, ensure_ascii=True)
+
+
+def test_str_types(json: ModuleType) -> None:
+    """Test str_types."""
+    obj: UserString = UserString("")
+    assert json.dumps(obj, end="", types={"str": UserString}) == '""'
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
