@@ -1,5 +1,6 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON loads tests."""
+# TODO(Nice Zombies): test types
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -309,12 +310,13 @@ def test_invalid_unicode_escape(
     # Multiple values
     ("[1, 2, 3]", [1, 2, 3]),
 ])
-@pytest.mark.parametrize("seq_type", [list, tuple])
+@pytest.mark.parametrize("sequence_type", [list, tuple])
 def test_array(
-    json: ModuleType, s: str, expected: list[object], seq_type: type,
+    json: ModuleType, s: str, expected: list[object], sequence_type: type,
 ) -> None:
     """Test JSON array."""
-    assert json.loads(s, seq_type=seq_type) == seq_type(expected)
+    types: dict[str, type] = {"sequence": sequence_type}
+    assert json.loads(s, types=types) == sequence_type(expected)
 
 
 @pytest.mark.parametrize(("s", "expected"), [
@@ -404,7 +406,8 @@ def test_object(
     mapping_type: type,
 ) -> None:
     """Test JSON object."""
-    assert json.loads(s, mapping_type=mapping_type) == mapping_type(expected)
+    types: dict[str, type] = {"mapping": mapping_type}
+    assert json.loads(s, types=types) == mapping_type(expected)
 
 
 @pytest.mark.parametrize(("s", "expected"), [

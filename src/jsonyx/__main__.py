@@ -229,11 +229,11 @@ def _run(args: _Namespace) -> None:
         if args.command == "format":
             output_obj: Any = input_obj
         elif args.command == "patch":
-            args = cast(_PatchNameSpace, args)
+            args = cast("_PatchNameSpace", args)
             patch: Any = decoder.read(args.patch_filename)
             output_obj = manipulator.apply_patch(input_obj, patch)
         else:
-            args = cast(_DiffNameSpace, args)
+            args = cast("_DiffNameSpace", args)
             old_input_obj: object = decoder.read(args.old_input_filename)
             output_obj = make_patch(old_input_obj, input_obj)
             if len(output_obj) == 1:

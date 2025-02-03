@@ -33,7 +33,7 @@ from jsonyx._manipulator import Manipulator
 from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
-    from collections.abc import Container
+    from collections.abc import Callable, Container
     from os import PathLike
 
     _T_co = TypeVar("_T_co", covariant=True)
@@ -52,6 +52,7 @@ if TYPE_CHECKING:
     _Node = tuple[dict[Any, Any] | list[Any], int | slice | str]
     _Operation = dict[str, Any]
     _StrPath = PathLike[str] | str
+    _Type = Callable[[Any], Any]
 
 
 def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
@@ -102,18 +103,16 @@ def read(
     filename: _StrPath,
     *,
     allow: Container[str] = NOTHING,
-    mapping_type: type = dict,
-    seq_type: type = list,
+    types: dict[str, _Type] | None = None,
     use_decimal: bool = False,
 ) -> Any:
     """Deserialize a JSON file to a Python object.
 
-    .. versionchanged:: 2.0 Added ``mapping_type`` and ``seq_type``.
+    .. versionchanged:: 2.0 Added ``types``.
 
     :param filename: the path to the JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param mapping_type: the mapping type
-    :param seq_type: the sequence type
+    :param types: the types
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON file is invalid
     :raises RecursionError: if the JSON file is too deeply nested
@@ -132,31 +131,26 @@ def read(
         ['filesystem API']
 
     """
-    return Decoder(
-        allow=allow,
-        mapping_type=mapping_type,
-        seq_type=seq_type,
-        use_decimal=use_decimal,
-    ).read(filename)
+    return Decoder(allow=allow, types=types, use_decimal=use_decimal).read(
+        filename,
+    )
 
 
 def load(
     fp: _SupportsRead[bytes | str],
     *,
     allow: Container[str] = NOTHING,
-    mapping_type: type = dict,
-    seq_type: type = list,
+    types: dict[str, _Type] | None = None,
     root: _StrPath = ".",
     use_decimal: bool = False,
 ) -> Any:
     """Deserialize an open JSON file to a Python object.
 
-    .. versionchanged:: 2.0 Added ``mapping_type`` and ``seq_type``.
+    .. versionchanged:: 2.0 Added ``types``.
 
     :param fp: an open JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param mapping_type: the mapping type
-    :param seq_type: the sequence type
+    :param types: the types
     :param root: the path to the archive containing this JSON file
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON file is invalid
@@ -172,12 +166,9 @@ def load(
         ['streaming API']
 
     """
-    return Decoder(
-        allow=allow,
-        mapping_type=mapping_type,
-        seq_type=seq_type,
-        use_decimal=use_decimal,
-    ).load(fp, root=root)
+    return Decoder(allow=allow, types=types, use_decimal=use_decimal).load(
+        fp, root=root,
+    )
 
 
 def loads(
@@ -185,19 +176,17 @@ def loads(
     *,
     allow: Container[str] = NOTHING,
     filename: _StrPath = "<string>",
-    mapping_type: type = dict,
-    seq_type: type = list,
+    types: dict[str, _Type] | None = None,
     use_decimal: bool = False,
 ) -> Any:
     """Deserialize a JSON string to a Python object.
 
-    .. versionchanged:: 2.0 Added ``mapping_type`` and ``seq_type``.
+    .. versionchanged:: 2.0 Added ``types``.
 
     :param s: a JSON string
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param filename: the path to the JSON file
-    :param mapping_type: the mapping type
-    :param seq_type: the sequence type
+    :param types: the types
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON string is invalid
     :raises RecursionError: if the JSON string is too deeply nested
@@ -212,12 +201,9 @@ def loads(
     .. tip:: Specify ``filename`` to display the filename in error messages.
 
     """
-    return Decoder(
-        allow=allow,
-        mapping_type=mapping_type,
-        seq_type=seq_type,
-        use_decimal=use_decimal,
-    ).loads(s, filename=filename)
+    return Decoder(allow=allow, types=types, use_decimal=use_decimal).loads(
+        s, filename=filename,
+    )
 
 
 def write(

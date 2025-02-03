@@ -8,8 +8,8 @@ jsonyx 2.0.0 (unreleased)
 
 - Added support for Python 3.8 and Python 3.9
 - Added the ``jsonyx`` application
-- Added ``mapping_type`` and ``seq_type`` to :class:`jsonyx.Decoder`,
-  :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`jsonyx.read`
+- Added ``types`` to :class:`jsonyx.Decoder`, :func:`jsonyx.load`,
+  :func:`jsonyx.loads` and :func:`jsonyx.read`
 - Added ``commas``, ``indent_leaves``, ``max_indent_level`` and ``quoted_keys``
   and ``types`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
   :func:`jsonyx.dumps` and :func:`jsonyx.write`

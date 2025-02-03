@@ -19,8 +19,12 @@
 typedef struct _PyScannerObject {
     PyObject_HEAD
     PyObject *Decimal;
+    PyObject *bool_type;
+    PyObject *float_type;
+    PyObject *int_type;
     PyObject *mapping_type;
-    PyObject *seq_type;
+    PyObject *sequence_type;
+    PyObject *str_type;
     int allow_comments;
     int allow_missing_commas;
     int allow_nan_and_infinity;
@@ -375,7 +379,7 @@ raise_errmsg(const char *msg, PyObject *filename, PyObject *s, Py_ssize_t start,
 }
 
 static PyObject *
-scanstring_unicode(PyObject *pyfilename, PyObject *pystr, Py_ssize_t end, int allow_surrogates, Py_ssize_t *next_end_ptr)
+scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py_ssize_t end, Py_ssize_t *next_end_ptr)
 {
     /* Read the JSON string from PyUnicode pystr.
     end is the index of the first character after the quote.
@@ -384,6 +388,7 @@ scanstring_unicode(PyObject *pyfilename, PyObject *pystr, Py_ssize_t end, int al
 
     Return value is a new PyUnicode
     */
+    PyObject *old_rval = NULL;
     PyObject *rval = NULL;
     Py_ssize_t len;
     Py_ssize_t begin = end - 1;
@@ -541,17 +546,17 @@ scanstring_unicode(PyObject *pyfilename, PyObject *pystr, Py_ssize_t end, int al
                         end += 6;
                         c = Py_UNICODE_JOIN_SURROGATES(c, c2);
                     }
-                    else if (!allow_surrogates) {
+                    else if (!s->allow_surrogates) {
                         raise_errmsg("Surrogates are not allowed", pyfilename, pystr, end - 6, end);
                         goto bail;
                     }
                 }
-                else if (!allow_surrogates) {
+                else if (!s->allow_surrogates) {
                     raise_errmsg("Surrogates are not allowed", pyfilename, pystr, end - 6, end);
                     goto bail;
                 }
             }
-            else if (Py_UNICODE_IS_LOW_SURROGATE(c) && !allow_surrogates) {
+            else if (Py_UNICODE_IS_LOW_SURROGATE(c) && !s->allow_surrogates) {
                 raise_errmsg("Surrogates are not allowed", pyfilename, pystr, end - 6, end);
                 goto bail;
             }
@@ -564,7 +569,14 @@ scanstring_unicode(PyObject *pyfilename, PyObject *pystr, Py_ssize_t end, int al
 #ifdef Py_DEBUG
     assert(end < len && PyUnicode_READ(kind, str, end) == '"');
 #endif
-    rval = _PyUnicodeWriter_Finish(&writer);
+    old_rval = _PyUnicodeWriter_Finish(&writer);
+    if (s->str_type != (PyObject *)&PyUnicode_Type) {
+        rval = PyObject_CallOneArg(s->str_type, old_rval);
+        Py_DECREF(old_rval);
+    }
+    else {
+        rval = old_rval;
+    }
     *next_end_ptr = end + 1;
     return rval;
 
@@ -589,16 +601,24 @@ static int
 scanner_traverse(PyScannerObject *self, visitproc visit, void *arg)
 {
     Py_VISIT(Py_TYPE(self));
+    Py_VISIT(self->bool_type);
+    Py_VISIT(self->float_type);
+    Py_VISIT(self->int_type);
     Py_VISIT(self->mapping_type);
-    Py_VISIT(self->seq_type);
+    Py_VISIT(self->sequence_type);
+    Py_VISIT(self->str_type);
     return 0;
 }
 
 static int
 scanner_clear(PyScannerObject *self)
 {
+    Py_CLEAR(self->bool_type);
+    Py_CLEAR(self->float_type);
+    Py_CLEAR(self->int_type);
     Py_CLEAR(self->mapping_type);
-    Py_CLEAR(self->seq_type);
+    Py_CLEAR(self->sequence_type);
+    Py_CLEAR(self->str_type);
     return 0;
 }
 
@@ -650,7 +670,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
 
             /* read key */
             if (PyUnicode_READ(kind, str, idx) == '"') {
-                key = scanstring_unicode(pyfilename, pystr, idx + 1, s->allow_surrogates, &next_idx);
+                key = scanstring_unicode(s, pyfilename, pystr, idx + 1, &next_idx);
             }
             else if (!Py_UNICODE_ISALPHA(PyUnicode_READ(kind, str, idx)) &&
                      PyUnicode_READ(kind, str, idx) != '_' &&
@@ -883,8 +903,8 @@ _parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, P
     assert(idx <= end_idx && PyUnicode_READ(kind, str, idx) == ']');
 #endif
     *next_idx_ptr = idx + 1;
-    if (s->seq_type != (PyObject *)&PyList_Type) {
-        val = PyObject_CallOneArg(s->seq_type, rval);
+    if (s->sequence_type != (PyObject *)&PyList_Type) {
+        val = PyObject_CallOneArg(s->sequence_type, rval);
         Py_DECREF(rval);
         return val;
     }
@@ -909,6 +929,7 @@ _match_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr,
     Py_ssize_t end_idx;
     Py_ssize_t idx = start;
     int is_float = 0;
+    PyObject *old_rval;
     PyObject *rval;
     PyObject *numstr = NULL;
 
@@ -995,19 +1016,33 @@ _match_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr,
             buf[i] = (char) PyUnicode_READ(kind, str, i + start);
         }
         if (is_float) {
-            rval = PyFloat_FromString(numstr);
-            if (!isfinite(PyFloat_AS_DOUBLE(rval))) {
-                Py_DECREF(rval);
+            old_rval = PyFloat_FromString(numstr);
+            if (!isfinite(PyFloat_AS_DOUBLE(old_rval))) {
+                Py_DECREF(old_rval);
                 raise_errmsg("Big numbers require decimal", pyfilename, pystr, start, idx);
                 goto bail;
             }
+            if (s->float_type != (PyObject *)&PyFloat_Type) {
+                rval = PyObject_CallOneArg(s->float_type, old_rval);
+                Py_DECREF(old_rval);
+            }
+            else {
+                rval = old_rval;
+            }
         }
         else {
-            rval = PyLong_FromString(buf, NULL, 10);
+            old_rval = PyLong_FromString(buf, NULL, 10);
             if (PyErr_ExceptionMatches(PyExc_ValueError)) {
                 PyErr_Clear();
                 raise_errmsg("Number is too big", pyfilename, pystr, start, idx);
                 goto bail;
+            }
+            if (s->int_type != (PyObject *)&PyLong_Type) {
+                rval = PyObject_CallOneArg(s->int_type, old_rval);
+                Py_DECREF(old_rval);
+            }
+            else {
+                rval = old_rval;
             }
         }
     }
@@ -1029,7 +1064,7 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
 
     Returns a new PyObject representation of the term.
     */
-    PyObject *numstr;
+    PyObject *old_res;
     PyObject *res;
     const void *str;
     int kind;
@@ -1051,7 +1086,7 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
     switch (PyUnicode_READ(kind, str, idx)) {
         case '"':
             /* string */
-            return scanstring_unicode(pyfilename, pystr, idx + 1, s->allow_surrogates, next_idx_ptr);
+            return scanstring_unicode(s, pyfilename, pystr, idx + 1, next_idx_ptr);
         case '{':
             /* object */
             if (_Py_EnterRecursiveCall(" while decoding a JSON object "
@@ -1079,6 +1114,9 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
             /* true */
             if ((idx + 3 < length) && PyUnicode_READ(kind, str, idx + 1) == 'r' && PyUnicode_READ(kind, str, idx + 2) == 'u' && PyUnicode_READ(kind, str, idx + 3) == 'e') {
                 *next_idx_ptr = idx + 4;
+                if (s->bool_type != (PyObject *)&PyBool_Type) {
+                    return PyObject_CallOneArg(s->bool_type, Py_True);
+                }
                 Py_RETURN_TRUE;
             }
             break;
@@ -1089,6 +1127,9 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
                 PyUnicode_READ(kind, str, idx + 3) == 's' &&
                 PyUnicode_READ(kind, str, idx + 4) == 'e') {
                 *next_idx_ptr = idx + 5;
+                if (s->bool_type != (PyObject *)&PyBool_Type) {
+                    return PyObject_CallOneArg(s->bool_type, Py_False);
+                }
                 Py_RETURN_FALSE;
             }
             break;
@@ -1102,11 +1143,22 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
                 }
                 *next_idx_ptr = idx + 3;
                 if (s->use_decimal) {
-                    numstr = PyUnicode_FromString("NaN");
-                    if (numstr == NULL) {
+                    old_res = PyUnicode_FromString("NaN");
+                    if (old_res == NULL) {
                         return NULL;
                     }
-                    return PyObject_CallOneArg(s->Decimal, numstr);
+                    res = PyObject_CallOneArg(s->Decimal, old_res);
+                    Py_DECREF(old_res);
+                    return res;
+                }
+                if (s->float_type != (PyObject *)&PyFloat_Type) {
+                    old_res = PyFloat_FromDouble(Py_NAN);
+                    if (old_res == NULL) {
+                        return NULL;
+                    }
+                    res = PyObject_CallOneArg(s->float_type, old_res);
+                    Py_DECREF(old_res);
+                    return res;
                 }
                 Py_RETURN_NAN;
             }
@@ -1126,11 +1178,22 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
                 }
                 *next_idx_ptr = idx + 8;
                 if (s->use_decimal) {
-                    numstr = PyUnicode_FromString("Infinity");
-                    if (numstr == NULL) {
+                    old_res = PyUnicode_FromString("Infinity");
+                    if (old_res == NULL) {
                         return NULL;
                     }
-                    return PyObject_CallOneArg(s->Decimal, numstr);
+                    res = PyObject_CallOneArg(s->Decimal, old_res);
+                    Py_DECREF(old_res);
+                    return res;
+                }
+                if (s->float_type != (PyObject *)&PyFloat_Type) {
+                    old_res = PyFloat_FromDouble(+Py_INFINITY);
+                    if (old_res == NULL) {
+                        return NULL;
+                    }
+                    res = PyObject_CallOneArg(s->float_type, old_res);
+                    Py_DECREF(old_res);
+                    return res;
                 }
                 Py_RETURN_INF(+1);
             }
@@ -1151,11 +1214,22 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
                     return NULL;
                 }
                 if (s->use_decimal) {
-                    numstr = PyUnicode_FromString("-Infinity");
-                    if (numstr == NULL) {
+                    old_res = PyUnicode_FromString("-Infinity");
+                    if (old_res == NULL) {
                         return NULL;
                     }
-                    return PyObject_CallOneArg(s->Decimal, numstr);
+                    res = PyObject_CallOneArg(s->Decimal, old_res);
+                    Py_DECREF(old_res);
+                    return res;
+                }
+                if (s->float_type != (PyObject *)&PyFloat_Type) {
+                    old_res = PyFloat_FromDouble(-Py_INFINITY);
+                    if (old_res == NULL) {
+                        return NULL;
+                    }
+                    res = PyObject_CallOneArg(s->float_type, old_res);
+                    Py_DECREF(old_res);
+                    return res;
                 }
                 Py_RETURN_INF(-1);
             }
@@ -1211,19 +1285,23 @@ scanner_call(PyScannerObject *self, PyObject *args, PyObject *kwds)
 static PyObject *
 scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    static char *kwlist[] = {"mapping_type", "seq_type", "allow_comments",
-                             "allow_missing_commas", "allow_nan_and_infinity",
-                             "allow_surrogates", "allow_trailing_comma",
-                             "allow_unquoted_keys", "use_decimal", NULL};
+    static char *kwlist[] = {"bool_type", "float_type", "int_type",
+                             "mapping_type", "sequence_type", "str_type",
+                             "allow_comments", "allow_missing_commas",
+                             "allow_nan_and_infinity", "allow_surrogates",
+                             "allow_trailing_comma", "allow_unquoted_keys",
+                             "use_decimal", NULL};
 
     PyScannerObject *s;
-    PyObject *mapping_type, *seq_type;
+    PyObject *bool_type, *float_type, *int_type, *mapping_type, *sequence_type;
+    PyObject *str_type;
     int allow_comments, allow_missing_commas, allow_nan_and_infinity;
     int allow_surrogates, allow_trailing_comma, allow_unquoted_keys;
     int use_decimal;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOppppppp:make_scanner", kwlist,
-        &mapping_type, &seq_type,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOppppppp:make_scanner", kwlist,
+        &bool_type, &float_type, &int_type, &mapping_type, &sequence_type,
+        &str_type,
         &allow_comments, &allow_missing_commas, &allow_nan_and_infinity,
         &allow_surrogates, &allow_trailing_comma, &allow_unquoted_keys,
         &use_decimal))
@@ -1243,8 +1321,12 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     if (s->Decimal == NULL) {
         goto bail;
     }
+    s->bool_type = bool_type;
+    s->float_type = float_type;
+    s->int_type = int_type;
     s->mapping_type = mapping_type;
-    s->seq_type = seq_type;
+    s->sequence_type = sequence_type;
+    s->str_type = str_type;
     s->allow_comments = allow_comments;
     s->allow_missing_commas = allow_missing_commas;
     s->allow_nan_and_infinity = allow_nan_and_infinity;
@@ -1252,8 +1334,12 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->allow_trailing_comma = allow_trailing_comma;
     s->allow_unquoted_keys = allow_unquoted_keys;
     s->use_decimal = use_decimal;
+    Py_INCREF(s->bool_type);
+    Py_INCREF(s->float_type);
+    Py_INCREF(s->int_type);
     Py_INCREF(s->mapping_type);
-    Py_INCREF(s->seq_type);
+    Py_INCREF(s->sequence_type);
+    Py_INCREF(s->str_type);
     return (PyObject *)s;
 
 bail:
@@ -1342,9 +1428,13 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->quoted_keys = quoted_keys;
     s->sort_keys = sort_keys;
     s->trailing_comma = trailing_comma;
+    Py_INCREF(s->bool_types);
+    Py_INCREF(s->float_types);
     Py_INCREF(s->indent);
+    Py_INCREF(s->int_types);
     Py_INCREF(s->mapping_types);
     Py_INCREF(s->sequence_types);
+    Py_INCREF(s->str_types);
     Py_INCREF(s->end);
     Py_INCREF(s->item_separator);
     Py_INCREF(s->long_item_separator);

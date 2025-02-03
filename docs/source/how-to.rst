@@ -25,14 +25,13 @@ Encoding :mod:`numpy` objects
 
 >>> import jsonyx as json
 >>> import numpy as np
->>> 
 >>> obj = np.array([
-...     np.bool(), np.int8(), np.uint8(), np.int16(), np.uint16(), np.int32(),
+...     np.bool_(), np.int8(), np.uint8(), np.int16(), np.uint16(), np.int32(),
 ...     np.uint32(), np.intp(), np.uintp(), np.int64(), np.uint64(), np.float16(),
 ...     np.float32(), np.float64(), np.float128()
 ... ], dtype="O")
 >>> types = {
-...     "bool": np.bool,
+...     "bool": np.bool_,
 ...     "float": np.floating,
 ...     "int": np.integer,
 ...     "sequence": np.ndarray
@@ -40,7 +39,24 @@ Encoding :mod:`numpy` objects
 >>> json.dump(obj, types=types)
 [false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0]
 
-.. note:: If needed, you can also specify ``"mapping"`` or ``"str"``.
+.. tip:: If needed, you can also specify ``"mapping"`` or ``"str"``.
+
+Decoding :mod:`numpy` objects
+-----------------------------
+
+>>> import jsonyx as json
+>>> from functools import partial
+>>> import numpy as np
+>>> types = {
+...     "bool": np.bool_,
+...     "float": np.float64,
+...     "int": np.int64,
+...     "sequence": partial(np.array, dtype="O")
+... }
+>>> json.loads("[false, 0.0, 0]", types=types)
+array([np.False_, np.float64(0.0), np.int64(0)], dtype=object)
+
+.. tip:: If needed, you can also specify ``"mapping"`` or ``"str"``.
 
 Specializing JSON object encoding
 ---------------------------------
