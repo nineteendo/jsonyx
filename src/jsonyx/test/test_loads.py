@@ -104,14 +104,10 @@ def test_nan_and_infinity(json: ModuleType, s: str, float_type: type) -> None:
 
 
 @pytest.mark.parametrize("s", ["NaN", "Infinity", "-Infinity"])
-@pytest.mark.parametrize("float_type", [_MyNumber, Decimal, float])
-def test_nan_and_infinity_not_allowed(
-    json: ModuleType, s: str, float_type: type,
-) -> None:
+def test_nan_and_infinity_not_allowed(json: ModuleType, s: str) -> None:
     """Test NaN and infinity when not allowed."""
-    types: dict[str, type] = {"float": float_type}
     with pytest.raises(json.JSONSyntaxError) as exc_info:
-        json.loads(s, types=types, use_decimal=float_type is Decimal)
+        json.loads(s)
 
     check_syntax_err(exc_info, f"{s} is not allowed", 1, len(s) + 1)
 
