@@ -1,13 +1,14 @@
 # Copyright (C) 2024 Nice Zombies
 """JSON loads tests."""
-# TODO(Nice Zombies): test types
 from __future__ import annotations
 
 __all__: list[str] = []
 
+from collections import UserString
+from dataclasses import dataclass
 from decimal import Decimal
 from math import isnan
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
@@ -22,6 +23,21 @@ from jsonyx.test import get_big_num, get_json  # type: ignore # noqa: F401
 
 if TYPE_CHECKING:
     from types import ModuleType
+
+
+# pylint: disable-next=R0903
+@dataclass
+class _MyNumber:
+    value: Any
+
+    def __bool__(self) -> bool:
+        return bool(self.value)
+
+    def __float__(self) -> float:
+        return float(self.value)
+
+    def __int__(self) -> int:
+        return int(self.value)
 
 
 @pytest.mark.parametrize(
@@ -51,30 +67,36 @@ def test_utf8_bom(json: ModuleType) -> None:
     check_syntax_err(exc_info, "Unexpected UTF-8 BOM", 1, 2)
 
 
+def test_null(json: ModuleType) -> None:
+    """Test null."""
+    assert json.loads("null") is None
+
+
 @pytest.mark.parametrize(("s", "expected"), [
     ("true", True),
     ("false", False),
-    ("null", None),
 ])
-def test_literal_names(
-    json: ModuleType, s: str, expected: bool | None,  # noqa: FBT001
+@pytest.mark.parametrize("bool_type", [_MyNumber, bool])
+def test_bool(
+    json: ModuleType, s: str, expected: bool, bool_type: type,  # noqa: FBT001
 ) -> None:
-    """Test literal names."""
-    assert json.loads(s) is expected
+    """Test bool."""
+    obj: object = json.loads(s, types={"bool": bool_type})
+    assert isinstance(obj, bool_type)
+    assert obj == bool_type(expected)
 
 
 @pytest.mark.parametrize("s", ["NaN", "Infinity", "-Infinity"])
-@pytest.mark.parametrize("use_decimal", [True, False])
-def test_nan_and_infinity(
-    json: ModuleType, s: str, use_decimal: bool,  # noqa: FBT001
-) -> None:
+@pytest.mark.parametrize("float_type", [_MyNumber, Decimal, float])
+def test_nan_and_infinity(json: ModuleType, s: str, float_type: type) -> None:
     """Test NaN and infinity."""
     obj: object = json.loads(
-        s, allow=NAN_AND_INFINITY, use_decimal=use_decimal,
+        s, allow=NAN_AND_INFINITY, types={"float": float_type},
+        use_decimal=float_type is Decimal,
     )
-    expected_type: type[Decimal | float] = Decimal if use_decimal else float
-    expected: Decimal | float = expected_type(s)
-    assert isinstance(obj, expected_type)
+    expected: Any = Decimal(s) if float_type is Decimal else float(s)
+    expected = float_type(expected)
+    assert isinstance(obj, float_type)
     if isnan(expected):
         assert isnan(obj)  # type: ignore[arg-type]
     else:
@@ -82,13 +104,14 @@ def test_nan_and_infinity(
 
 
 @pytest.mark.parametrize("s", ["NaN", "Infinity", "-Infinity"])
-@pytest.mark.parametrize("use_decimal", [True, False])
+@pytest.mark.parametrize("float_type", [_MyNumber, Decimal, float])
 def test_nan_and_infinity_not_allowed(
-    json: ModuleType, s: str, use_decimal: bool,  # noqa: FBT001
+    json: ModuleType, s: str, float_type: type,
 ) -> None:
     """Test NaN and infinity when not allowed."""
+    types: dict[str, type] = {"float": float_type}
     with pytest.raises(json.JSONSyntaxError) as exc_info:
-        json.loads(s, use_decimal=use_decimal)
+        json.loads(s, types=types, use_decimal=float_type is Decimal)
 
     check_syntax_err(exc_info, f"{s} is not allowed", 1, len(s) + 1)
 
@@ -113,6 +136,13 @@ def test_too_big_int(json: ModuleType, big_num: str) -> None:
         json.loads(big_num)
 
     check_syntax_err(exc_info, "Number is too big", 1, len(big_num) + 1)
+
+
+def test_int_type(json: ModuleType) -> None:
+    """Test int_type."""
+    obj: object = json.loads("0", types={"int": _MyNumber})
+    assert isinstance(obj, _MyNumber)
+    assert obj == _MyNumber(0)
 
 
 @pytest.mark.parametrize("s", [
@@ -182,6 +212,13 @@ def test_invalid_number(json: ModuleType, s: str) -> None:
     """Test invalid number."""
     with pytest.raises(json.JSONSyntaxError):
         json.loads(s)
+
+
+def test_float_type(json: ModuleType) -> None:
+    """Test int_type."""
+    obj: object = json.loads("0.0", types={"float": _MyNumber})
+    assert isinstance(obj, _MyNumber)
+    assert obj == _MyNumber(0.0)
 
 
 @pytest.mark.parametrize(("s", "expected"), [
@@ -298,6 +335,13 @@ def test_invalid_unicode_escape(
         json.loads(s)
 
     check_syntax_err(exc_info, "Expecting 4 hex digits", colno, end_colno)
+
+
+def test_str_type(json: ModuleType) -> None:
+    """Test str_type."""
+    obj: object = json.loads('""', types={"str": UserString})
+    assert isinstance(obj, UserString)
+    assert not obj
 
 
 @pytest.mark.parametrize(("s", "expected"), [

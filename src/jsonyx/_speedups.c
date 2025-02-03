@@ -437,18 +437,7 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py
             c = d;
         }
 
-        if (c == '"') {
-            // Fast path for simple case.
-            if (writer.buffer == NULL) {
-                PyObject *ret = PyUnicode_Substring(pystr, end, next);
-                if (ret == NULL) {
-                    goto bail;
-                }
-                *next_end_ptr = next + 1;;
-                return ret;
-            }
-        }
-        else if (c != '\\') {
+        if (c != '"' && c != '\\') {
             raise_errmsg("Unterminated string", pyfilename, pystr, begin, next);
             goto bail;
         }
