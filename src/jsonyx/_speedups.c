@@ -17,7 +17,7 @@
 
 #if PY_VERSION_HEX < 0x03120000
 #if !defined(Py_INFINITY)
-#define Py_INFINITY PY_HUGE_VALUE;
+#define Py_INFINITY Py_HUGE_VAL;
 #endif
 #endif /* PY_VERSION_HEX < 0x03120000 */
 
