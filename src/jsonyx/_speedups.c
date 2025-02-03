@@ -15,6 +15,11 @@
 #endif
 #endif /* PY_VERSION_HEX < 0x03090000 */
 
+#if PY_VERSION_HEX < 0x03120000
+#if !defined(Py_INFINITY)
+#define Py_INFINITY PY_HUGE_VALUE;
+#endif
+#endif /* PY_VERSION_HEX < 0x03120000 */
 
 typedef struct _PyScannerObject {
     PyObject_HEAD
