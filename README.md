@@ -53,7 +53,7 @@ We recommend to use [`orjson`](https://pypi.org/project/orjson),
 [`pysimdjson`](https://pypi.org/project/pysimdjson) for performance critical
 applications:
 
-| encode                                      |   json | jsonyx | msgspec |  orjson | fastest time |
+| encode                                      |   json | jsonyx | msgspec |  orjson | fastest time |
 |:--------------------------------------------|-------:|-------:|--------:|--------:|-------------:|
 | List of 256 booleans                        |  4.49x |  4.47x |   1.00x |   1.07x |      1.95 μs |
 | List of 256 ASCII strings                   | 12.41x | 14.20x |   1.55x |   1.00x |      3.76 μs |
@@ -64,7 +64,7 @@ applications:
 | Complex object                              |  7.11x |  5.47x |   1.00x | DNF[^1] |    212.52 μs |
 | Dict with 256 lists of 256 dicts with 1 int |  9.32x | 11.44x |   1.31x |   1.00x |   2359.82 μs |
 
-| decode                                      |   json | jsonyx | msgspec | orjson | simdjson | fastest time |
+| decode                                      |   json | jsonyx | msgspec | orjson | simdjson | fastest time |
 |:--------------------------------------------|-------:|-------:|--------:|-------:|---------:|-------------:|
 | List of 256 booleans                        |  4.64x |  7.19x |   2.99x |  1.40x |    1.00x |      1.42 μs |
 | List of 256 ASCII strings                   |  7.61x | 12.30x |   5.04x |  4.66x |    1.00x |      2.87 μs |
