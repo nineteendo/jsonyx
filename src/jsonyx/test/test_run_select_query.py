@@ -1,4 +1,3 @@
-# Copyright (C) 2024 Nice Zombies
 """JSON run_select_query tests."""
 from __future__ import annotations
 

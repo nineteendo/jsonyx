@@ -1,4 +1,3 @@
-# Copyright (C) 2024 Nice Zombies
 """JSON make_patch tests."""
 from __future__ import annotations
 

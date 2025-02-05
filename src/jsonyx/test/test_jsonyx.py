@@ -1,4 +1,3 @@
-# Copyright (C) 2024 Nice Zombies
 # TODO(Nice Zombies): test apply_patch
 # TODO(Nice Zombies): test schema
 """JSON tests."""

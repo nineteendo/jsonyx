@@ -1,4 +1,3 @@
-# Copyright (C) 2024 Nice Zombies
 """JSON manipulator."""
 # TODO(Nice Zombies): add error messages
 # TODO(Nice Zombies): update schema ID

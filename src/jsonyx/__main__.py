@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# Copyright (C) 2024 Nice Zombies
 """A command line utility to manipulate JSON files."""
 from __future__ import annotations
 

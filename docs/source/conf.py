@@ -1,7 +1,7 @@
-# Copyright (C) 2024 Nice Zombies
 """Configuration file for the Sphinx documentation builder."""
 from __future__ import annotations
 
+from datetime import UTC, datetime
 from os import environ, getenv
 from typing import Any
 
@@ -10,7 +10,7 @@ from typing import Any
 branch: str = getenv("READTHEDOCS_GIT_IDENTIFIER", "main")
 project: str = "jsonyx"
 # pylint: disable-next=W0622
-copyright: str = "2024, Nice Zombies"  # noqa: A001
+copyright: str = f"{datetime.now(tz=UTC).year}, Nice Zombies"  # noqa: A001
 author: str = "Nice Zombies"
 
 release: str = "2.0"

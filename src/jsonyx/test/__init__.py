@@ -1,4 +1,3 @@
-# Copyright (C) 2024 Nice Zombies
 """JSON test utils."""
 from __future__ import annotations
 

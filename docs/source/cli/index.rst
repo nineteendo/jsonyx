@@ -2,7 +2,7 @@ Command Line Interface
 ======================
 
 .. meta::
-   :canonical: .
+    :canonical: .
 
 .. versionadded:: 2.0
 

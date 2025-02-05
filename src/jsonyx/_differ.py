@@ -1,4 +1,3 @@
-# Copyright (C) 2024 Nice Zombies
 """JSON differ."""
 from __future__ import annotations
 

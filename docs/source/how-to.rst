@@ -54,7 +54,7 @@ Example with :mod:`numpy`:
 [false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0]
 
 .. note:: Custom types must be registered manually, :mod:`jsonyx` does not
-  infer serializability based on method presence.
+    infer serializability based on method presence.
 .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
 
 .. _using_hooks:

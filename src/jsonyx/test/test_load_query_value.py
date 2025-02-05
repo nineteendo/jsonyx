@@ -1,4 +1,3 @@
-# Copyright (C) 2024 Nice Zombies
 """JSON load_query_value tests."""
 from __future__ import annotations
 

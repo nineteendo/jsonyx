@@ -48,9 +48,11 @@ line-length = 79
 ignore = [
     "ANN401", # any-type
     "C901", # complex-structure
+    "CPY001", # missing-copyright-notice
     "DOC201", # docstring-missing-returns
     "DOC501", # docstring-missing-exception
     "I001", # unsorted-imports
+    "INP001", # implicit-namespace-package
     "PGH003", # blanket-type-ignore
     "PLR0912", # too-many-branches
     "PLR0913", # too-many-arguments

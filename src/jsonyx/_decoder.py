@@ -1,4 +1,3 @@
-# Copyright (C) 2024 Nice Zombies
 """JSON decoder."""
 # TODO(Nice Zombies): Fix end_offset in JSONSyntaxError
 from __future__ import annotations

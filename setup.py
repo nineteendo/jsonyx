@@ -1,4 +1,3 @@
-# Copyright (C) 2024 Nice Zombies
 """jsonyx extension modules."""
 from __future__ import annotations
 

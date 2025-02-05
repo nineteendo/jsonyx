@@ -1,4 +1,3 @@
-# Copyright (C) 2024 Nice Zombies
 """Allow JSON deviations not requiring human intervention."""
 from __future__ import annotations
 
