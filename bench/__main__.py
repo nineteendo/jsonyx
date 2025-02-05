@@ -118,7 +118,7 @@ def _run_benchmark(
         row.append(1_000_000 * unit)
         results.append(row)
 
-    headers: list[str] = [name, *funcs.keys(), "unit\xa0(\u03bcs)"]
+    headers: list[str] = [name, *funcs.keys(), "fastest time"]
     print()
     print(tabulate(results, headers, tablefmt="pipe", floatfmt=".02f"))
     print(tabulate(results, headers, tablefmt="rst", floatfmt=".02f"))
