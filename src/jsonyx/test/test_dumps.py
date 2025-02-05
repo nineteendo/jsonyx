@@ -219,12 +219,6 @@ def test_surrogate_escapes_not_allowed(json: ModuleType, obj: str) -> None:
         json.dumps(obj, ensure_ascii=True)
 
 
-def test_str_types(json: ModuleType) -> None:
-    """Test str_types."""
-    obj: UserString = UserString("")
-    assert json.dumps(obj, end="", types={"str": UserString}) == '""'
-
-
 @pytest.mark.parametrize(("obj", "expected"), [
     # Empty list
     ([], "[]"),
@@ -487,6 +481,17 @@ def test_unserializable_value(json: ModuleType, obj: object) -> None:
     """Test unserializable value."""
     with pytest.raises(TypeError, match="is not JSON serializable"):
         json.dumps(obj)
+
+
+@pytest.mark.parametrize(("obj", "expected"), [
+    (UserString(""), '""'),
+    ({UserString(""): 0}, '{"": 0}'),
+])
+def test_str_types(
+    json: ModuleType, obj: UserString | dict[object, object], expected: str,
+) -> None:
+    """Test str_types."""
+    assert json.dumps(obj, end="", types={"str": UserString}) == expected
 
 
 @pytest.mark.parametrize("obj", [_CIRCULAR_DICT, _CIRCULAR_LIST])

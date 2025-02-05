@@ -81,7 +81,7 @@ def test_bool(
     json: ModuleType, s: str, expected: bool, bool_type: type,  # noqa: FBT001
 ) -> None:
     """Test bool."""
-    obj: object = json.loads(s, types={"bool": bool_type})
+    obj: object = json.loads(s, hooks={"bool": bool_type})
     assert isinstance(obj, bool_type)
     assert obj == bool_type(expected)
 
@@ -91,7 +91,7 @@ def test_bool(
 def test_nan_and_infinity(json: ModuleType, s: str, float_type: type) -> None:
     """Test NaN and infinity."""
     obj: object = json.loads(
-        s, allow=NAN_AND_INFINITY, types={"float": float_type},
+        s, allow=NAN_AND_INFINITY, hooks={"float": float_type},
         use_decimal=float_type is Decimal,
     )
     expected: Any = Decimal(s) if float_type is Decimal else float(s)
@@ -136,7 +136,7 @@ def test_too_big_int(json: ModuleType, big_num: str) -> None:
 
 def test_int_type(json: ModuleType) -> None:
     """Test int_type."""
-    obj: object = json.loads("0", types={"int": _MyNumber})
+    obj: object = json.loads("0", hooks={"int": _MyNumber})
     assert isinstance(obj, _MyNumber)
     assert obj == _MyNumber(0)
 
@@ -212,7 +212,7 @@ def test_invalid_number(json: ModuleType, s: str) -> None:
 
 def test_float_type(json: ModuleType) -> None:
     """Test int_type."""
-    obj: object = json.loads("0.0", types={"float": _MyNumber})
+    obj: object = json.loads("0.0", hooks={"float": _MyNumber})
     assert isinstance(obj, _MyNumber)
     assert obj == _MyNumber(0.0)
 
@@ -335,7 +335,7 @@ def test_invalid_unicode_escape(
 
 def test_str_type(json: ModuleType) -> None:
     """Test str_type."""
-    obj: object = json.loads('""', types={"str": UserString})
+    obj: object = json.loads('""', hooks={"str": UserString})
     assert isinstance(obj, UserString)
     assert not obj
 
@@ -356,7 +356,7 @@ def test_array(
 ) -> None:
     """Test JSON array."""
     types: dict[str, type] = {"sequence": sequence_type}
-    assert json.loads(s, types=types) == sequence_type(expected)
+    assert json.loads(s, hooks=types) == sequence_type(expected)
 
 
 @pytest.mark.parametrize(("s", "expected"), [
@@ -447,7 +447,7 @@ def test_object(
 ) -> None:
     """Test JSON object."""
     types: dict[str, type] = {"mapping": mapping_type}
-    assert json.loads(s, types=types) == mapping_type(expected)
+    assert json.loads(s, hooks=types) == mapping_type(expected)
 
 
 @pytest.mark.parametrize(("s", "expected"), [

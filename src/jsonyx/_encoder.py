@@ -216,10 +216,11 @@ except ImportError:
             first: bool = True
             items: ItemsView[object, object] = mapping.items()
             for key, value in sorted(items) if sort_keys else items:
-                if not isinstance(key, str):
+                if not isinstance(key, (str, str_types)):
                     msg = f"Keys must be str, not {type(key).__name__}"
                     raise TypeError(msg)
 
+                key = str(key)  # noqa: PLW2901
                 if first:
                     first = False
                 else:
@@ -310,7 +311,7 @@ class Encoder:
     :param separators: the item and key separator
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
-    :param types: a dictionary of additional types
+    :param types: a dictionary of additional :ref:`types <protocol_types>`
 
     .. note:: The item separator is automatically stripped when indented.
 

@@ -34,7 +34,7 @@ if TYPE_CHECKING:
     _MatchFunc = Callable[[str, int], Match[str] | None]
     _Scanner = Callable[[str, str], Any]
     _StrPath = PathLike[str] | str
-    _Type = Callable[[Any], Any]
+    _Hook = Callable[[Any], Any]
 
 
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
@@ -265,12 +265,12 @@ try:
         from _jsonyx import make_scanner
 except ImportError:
     def make_scanner(
-        bool_type: _Type,
-        float_type: _Type,
-        int_type: _Type,
-        mapping_type: _Type,
-        sequence_type: _Type,
-        str_type: _Type,
+        bool_hook: _Hook,
+        float_hook: _Hook,
+        int_hook: _Hook,
+        mapping_hook: _Hook,
+        sequence_hook: _Hook,
+        str_hook: _Hook,
         allow_comments: bool,  # noqa: FBT001
         allow_missing_commas: bool,  # noqa: FBT001
         allow_nan_and_infinity: bool,  # noqa: FBT001
@@ -286,7 +286,7 @@ except ImportError:
             [str], Decimal | float,
         ] = Decimal if use_decimal else float
         if use_decimal:
-            float_type = Decimal
+            float_hook = Decimal
 
         def skip_comments(filename: str, s: str, end: int) -> int:
             find: Callable[[str, int], int] = s.find
@@ -335,7 +335,7 @@ except ImportError:
                     raise _errmsg(msg, filename, s, str_idx, end) from None
 
                 if terminator == '"':
-                    return str_type("".join(chunks)), end + 1
+                    return str_hook("".join(chunks)), end + 1
 
                 if terminator != "\\":
                     if terminator in {"\n", "\r"}:
@@ -401,7 +401,7 @@ except ImportError:
                 raise _errmsg(msg, filename, s, obj_idx, end) from None
 
             if nextchar == "}":
-                return mapping_type([]), end + 1
+                return mapping_hook([]), end + 1
 
             pairs: list[tuple[Any, Any]] = []
             append_pair: Callable[[tuple[Any, Any]], None] = pairs.append
@@ -445,7 +445,7 @@ except ImportError:
                     comma_idx = end
                     end = skip_comments(filename, s, end + 1)
                 elif nextchar == "}":
-                    return mapping_type(pairs), end + 1
+                    return mapping_hook(pairs), end + 1
                 elif end == comma_idx:
                     msg = "Expecting comma"
                     raise _errmsg(msg, filename, s, comma_idx)
@@ -466,7 +466,7 @@ except ImportError:
                             msg, filename, s, comma_idx, comma_idx + 1,
                         )
 
-                    return mapping_type(pairs), end + 1
+                    return mapping_hook(pairs), end + 1
 
         def scan_array(filename: str, s: str, end: int) -> tuple[Any, int]:
             arr_idx: int = end - 1
@@ -478,7 +478,7 @@ except ImportError:
                 raise _errmsg(msg, filename, s, arr_idx, end) from None
 
             if nextchar == "]":
-                return sequence_type([]), end + 1
+                return sequence_hook([]), end + 1
 
             values: list[Any] = []
             append_value: Callable[[Any], None] = values.append
@@ -497,7 +497,7 @@ except ImportError:
                     comma_idx = end
                     end = skip_comments(filename, s, end + 1)
                 elif nextchar == "]":
-                    return sequence_type(values), end + 1
+                    return sequence_hook(values), end + 1
                 elif end == comma_idx:
                     msg = "Expecting comma"
                     raise _errmsg(msg, filename, s, comma_idx)
@@ -518,7 +518,7 @@ except ImportError:
                             msg, filename, s, comma_idx, comma_idx + 1,
                         )
 
-                    return sequence_type(values), end + 1
+                    return sequence_hook(values), end + 1
 
         def scan_value(filename: str, s: str, idx: int) -> tuple[Any, int]:
             try:
@@ -537,9 +537,9 @@ except ImportError:
             elif nextchar == "n" and s[idx:idx + 4] == "null":
                 value, end = None, idx + 4
             elif nextchar == "t" and s[idx:idx + 4] == "true":
-                value, end = bool_type(True), idx + 4  # noqa: FBT003
+                value, end = bool_hook(True), idx + 4  # noqa: FBT003
             elif nextchar == "f" and s[idx:idx + 5] == "false":
-                value, end = bool_type(False), idx + 5  # noqa: FBT003
+                value, end = bool_hook(False), idx + 5  # noqa: FBT003
             elif number := _match_number(s, idx):
                 integer, frac, exp = number.groups()
                 end = number.end()
@@ -550,7 +550,7 @@ except ImportError:
                         msg = "Number is too big"
                         raise _errmsg(msg, filename, s, idx, end) from None
 
-                    value = int_type(value)
+                    value = int_hook(value)
                 else:
                     try:
                         value = parse_float(
@@ -564,25 +564,25 @@ except ImportError:
                         msg = "Big numbers require decimal"
                         raise _errmsg(msg, filename, s, idx, end)
 
-                    value = float_type(value)
+                    value = float_hook(value)
             elif nextchar == "N" and s[idx:idx + 3] == "NaN":
                 if not allow_nan_and_infinity:
                     msg = "NaN is not allowed"
                     raise _errmsg(msg, filename, s, idx, idx + 3)
 
-                value, end = float_type(parse_float("NaN")), idx + 3
+                value, end = float_hook(parse_float("NaN")), idx + 3
             elif nextchar == "I" and s[idx:idx + 8] == "Infinity":
                 if not allow_nan_and_infinity:
                     msg = "Infinity is not allowed"
                     raise _errmsg(msg, filename, s, idx, idx + 8)
 
-                value, end = float_type(parse_float("Infinity")), idx + 8
+                value, end = float_hook(parse_float("Infinity")), idx + 8
             elif nextchar == "-" and s[idx:idx + 9] == "-Infinity":
                 if not allow_nan_and_infinity:
                     msg = "-Infinity is not allowed"
                     raise _errmsg(msg, filename, s, idx, idx + 9)
 
-                value, end = float_type(parse_float("-Infinity")), idx + 9
+                value, end = float_hook(parse_float("-Infinity")), idx + 9
             else:
                 msg = "Expecting value"
                 raise _errmsg(msg, filename, s, idx)
@@ -617,7 +617,7 @@ class Decoder:
     .. versionchanged:: 2.0 Added ``types``.
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param types: the types
+    :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     """
 
@@ -625,20 +625,20 @@ class Decoder:
         self,
         *,
         allow: Container[str] = NOTHING,
-        types: dict[str, _Type] | None = None,
+        hooks: dict[str, _Hook] | None = None,
         use_decimal: bool = False,
     ) -> None:
         """Create a new JSON decoder."""
         allow_surrogates: bool = "surrogates" in allow
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 
-        if types is None:
-            types = {}
+        if hooks is None:
+            hooks = {}
 
         self._scanner: _Scanner = make_scanner(
-            types.get("bool", bool), types.get("float", float),
-            types.get("int", int), types.get("mapping", dict),
-            types.get("sequence", list), types.get("str", str),
+            hooks.get("bool", bool), hooks.get("float", float),
+            hooks.get("int", int), hooks.get("mapping", dict),
+            hooks.get("sequence", list), hooks.get("str", str),
             "comments" in allow, "missing_commas" in allow,
             "nan_and_infinity" in allow, allow_surrogates,
             "trailing_comma" in allow, "unquoted_keys" in allow, use_decimal,

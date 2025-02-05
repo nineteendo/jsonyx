@@ -52,7 +52,7 @@ if TYPE_CHECKING:
     _Node = tuple[dict[Any, Any] | list[Any], int | slice | str]
     _Operation = dict[str, Any]
     _StrPath = PathLike[str] | str
-    _Type = Callable[[Any], Any]
+    _Hook = Callable[[Any], Any]
 
 
 def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
@@ -103,16 +103,16 @@ def read(
     filename: _StrPath,
     *,
     allow: Container[str] = NOTHING,
-    types: dict[str, _Type] | None = None,
+    hooks: dict[str, _Hook] | None = None,
     use_decimal: bool = False,
 ) -> Any:
     """Deserialize a JSON file to a Python object.
 
-    .. versionchanged:: 2.0 Added ``types``.
+    .. versionchanged:: 2.0 Added ``hooks``.
 
     :param filename: the path to the JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param types: the types
+    :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON file is invalid
     :raises RecursionError: if the JSON file is too deeply nested
@@ -131,7 +131,7 @@ def read(
         ['filesystem API']
 
     """
-    return Decoder(allow=allow, types=types, use_decimal=use_decimal).read(
+    return Decoder(allow=allow, hooks=hooks, use_decimal=use_decimal).read(
         filename,
     )
 
@@ -140,17 +140,17 @@ def load(
     fp: _SupportsRead[bytes | str],
     *,
     allow: Container[str] = NOTHING,
-    types: dict[str, _Type] | None = None,
+    hooks: dict[str, _Hook] | None = None,
     root: _StrPath = ".",
     use_decimal: bool = False,
 ) -> Any:
     """Deserialize an open JSON file to a Python object.
 
-    .. versionchanged:: 2.0 Added ``types``.
+    .. versionchanged:: 2.0 Added ``hooks``.
 
     :param fp: an open JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param types: the types
+    :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
     :param root: the path to the archive containing this JSON file
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON file is invalid
@@ -166,7 +166,7 @@ def load(
         ['streaming API']
 
     """
-    return Decoder(allow=allow, types=types, use_decimal=use_decimal).load(
+    return Decoder(allow=allow, hooks=hooks, use_decimal=use_decimal).load(
         fp, root=root,
     )
 
@@ -176,17 +176,17 @@ def loads(
     *,
     allow: Container[str] = NOTHING,
     filename: _StrPath = "<string>",
-    types: dict[str, _Type] | None = None,
+    hooks: dict[str, _Hook] | None = None,
     use_decimal: bool = False,
 ) -> Any:
     """Deserialize a JSON string to a Python object.
 
-    .. versionchanged:: 2.0 Added ``types``.
+    .. versionchanged:: 2.0 Added ``hooks``.
 
     :param s: a JSON string
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param filename: the path to the JSON file
-    :param types: the types
+    :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON string is invalid
     :raises RecursionError: if the JSON string is too deeply nested
@@ -201,7 +201,7 @@ def loads(
     .. tip:: Specify ``filename`` to display the filename in error messages.
 
     """
-    return Decoder(allow=allow, types=types, use_decimal=use_decimal).loads(
+    return Decoder(allow=allow, hooks=hooks, use_decimal=use_decimal).loads(
         s, filename=filename,
     )
 
@@ -245,7 +245,7 @@ def write(
     :param separators: the item and key separator
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
-    :param types: a dictionary of additional types
+    :param types: a dictionary of additional :ref:`types <protocol_types>`
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
     :raises UnicodeEncodeError: when failing to encode the file
@@ -322,7 +322,7 @@ def dump(
     :param separators: the item and key separator
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
-    :param types: a dictionary of additional types
+    :param types: a dictionary of additional :ref:`types <protocol_types>`
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
@@ -395,7 +395,7 @@ def dumps(
     :param separators: the item and key separator
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
-    :param types: a dictionary of additional types
+    :param types: a dictionary of additional :ref:`types <protocol_types>`
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values

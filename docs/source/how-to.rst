@@ -4,11 +4,10 @@ How-to Guide
 Better error messages for other JSON libraries
 ----------------------------------------------
 
->>> import jsonyx
->>> from json import JSONDecodeError, loads
+>>> import json, jsonyx
 >>> try:
-...     loads("[,]")
-... except JSONDecodeError as exc:
+...     json.loads("[,]")
+... except json.JSONDecodeError as exc:
 ...     raise jsonyx.JSONSyntaxError(exc.msg, "<string>", exc.doc, exc.pos) from None
 ...
 Traceback (most recent call last):
@@ -20,8 +19,23 @@ jsonyx.JSONSyntaxError: Expecting value
 
 .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the exception.
 
-Encoding :mod:`numpy` objects
------------------------------
+.. _protocol_types:
+
+Encoding protocol-based objects
+-------------------------------
+
+.. versionadded:: 2.0
+
+Required methods:
+
+- ``"bool"``: :meth:`~object.__bool__` or :meth:`~object.__len__`
+- ``"float"``: :meth:`~object.__float__`
+- ``"int"``: :meth:`~object.__int__`
+- ``"mapping"``: :meth:`~object.__len__`, :meth:`!keys`, :meth:`!values` and :meth:`!items`
+- ``"sequence"``: :meth:`~object.__len__`, and :meth:`~object.__iter__`
+- ``"str"``: :meth:`~object.__str__`
+
+Example with :mod:`numpy`:
 
 >>> import jsonyx as json
 >>> import numpy as np
@@ -39,27 +53,42 @@ Encoding :mod:`numpy` objects
 >>> json.dump(obj, types=types)
 [false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0]
 
-.. tip:: If needed, you can also specify ``"mapping"`` or ``"str"``.
+.. note:: Custom types must be registered manually, :mod:`jsonyx` does not
+  infer serializability based on method presence.
+.. warning:: Avoid specifying ABCs for ``types``, that is very slow.
 
-Decoding :mod:`numpy` objects
------------------------------
+.. _using_hooks:
+
+Decoding objects using hooks
+----------------------------
+
+.. versionadded:: 2.0
+
+Called with:
+
+- ``"bool"``: :class:`bool`
+- ``"float"``: :class:`float`
+- ``"int"``: :class:`int`
+- ``"mapping"``: ``list[tuple[Any, Any]]``
+- ``"sequence"``: :class:`list`
+- ``"str"``: :class:`str`
+
+Example with :mod:`numpy`:
 
 >>> import jsonyx as json
 >>> from functools import partial
 >>> import numpy as np
->>> types = {
+>>> hooks = {
 ...     "bool": np.bool_,
 ...     "float": np.float64,
 ...     "int": np.int64,
 ...     "sequence": partial(np.array, dtype="O")
 ... }
->>> json.loads("[false, 0.0, 0]", types=types)
+>>> json.loads("[false, 0.0, 0]", hooks=hooks)
 array([np.False_, np.float64(0.0), np.int64(0)], dtype=object)
 
-.. tip:: If needed, you can also specify ``"mapping"`` or ``"str"``.
-
-Specializing JSON object encoding
----------------------------------
+Encoding arbitrary objects
+--------------------------
 
 >>> import jsonyx as json
 >>> def to_json(obj):
@@ -74,10 +103,11 @@ Specializing JSON object encoding
 >>> json.dump(to_json(1 + 2j))
 {"__complex__": true, "real": 1.0, "imag": 2.0}
 
+.. todo:: Mention alternatives.
 .. tip:: You can use :func:`functools.singledispatch` to make this extensible.
 
-Specializing JSON object decoding
----------------------------------
+Decoding arbitrary objects
+--------------------------
 
 >>> import jsonyx as json
 >>> def from_json(obj):
@@ -92,7 +122,8 @@ Specializing JSON object decoding
 >>> from_json(json.loads('{"__complex__": true, "real": 1.0, "imag": 2.0}'))
 (1+2j)
 
-.. note:: ``mapping_type`` is not intended for this purpose.
+.. todo:: Mention alternatives.
+.. note:: The ``"mapping"`` hook is not intended for this purpose.
 
 Disabling the integer string conversion length limit
 ----------------------------------------------------

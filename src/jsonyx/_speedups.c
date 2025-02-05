@@ -24,12 +24,12 @@
 typedef struct _PyScannerObject {
     PyObject_HEAD
     PyObject *Decimal;
-    PyObject *bool_type;
-    PyObject *float_type;
-    PyObject *int_type;
-    PyObject *mapping_type;
-    PyObject *sequence_type;
-    PyObject *str_type;
+    PyObject *bool_hook;
+    PyObject *float_hook;
+    PyObject *int_hook;
+    PyObject *mapping_hook;
+    PyObject *sequence_hook;
+    PyObject *str_hook;
     int allow_comments;
     int allow_missing_commas;
     int allow_nan_and_infinity;
@@ -564,8 +564,8 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py
     assert(end < len && PyUnicode_READ(kind, str, end) == '"');
 #endif
     old_rval = _PyUnicodeWriter_Finish(&writer);
-    if (s->str_type != (PyObject *)&PyUnicode_Type) {
-        rval = PyObject_CallOneArg(s->str_type, old_rval);
+    if (s->str_hook != (PyObject *)&PyUnicode_Type) {
+        rval = PyObject_CallOneArg(s->str_hook, old_rval);
         Py_DECREF(old_rval);
     }
     else {
@@ -595,24 +595,24 @@ static int
 scanner_traverse(PyScannerObject *self, visitproc visit, void *arg)
 {
     Py_VISIT(Py_TYPE(self));
-    Py_VISIT(self->bool_type);
-    Py_VISIT(self->float_type);
-    Py_VISIT(self->int_type);
-    Py_VISIT(self->mapping_type);
-    Py_VISIT(self->sequence_type);
-    Py_VISIT(self->str_type);
+    Py_VISIT(self->bool_hook);
+    Py_VISIT(self->float_hook);
+    Py_VISIT(self->int_hook);
+    Py_VISIT(self->mapping_hook);
+    Py_VISIT(self->sequence_hook);
+    Py_VISIT(self->str_hook);
     return 0;
 }
 
 static int
 scanner_clear(PyScannerObject *self)
 {
-    Py_CLEAR(self->bool_type);
-    Py_CLEAR(self->float_type);
-    Py_CLEAR(self->int_type);
-    Py_CLEAR(self->mapping_type);
-    Py_CLEAR(self->sequence_type);
-    Py_CLEAR(self->str_type);
+    Py_CLEAR(self->bool_hook);
+    Py_CLEAR(self->float_hook);
+    Py_CLEAR(self->int_hook);
+    Py_CLEAR(self->mapping_hook);
+    Py_CLEAR(self->sequence_hook);
+    Py_CLEAR(self->str_hook);
     return 0;
 }
 
@@ -632,7 +632,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
     PyObject *val = NULL;
     PyObject *rval = NULL;
     PyObject *key = NULL;
-    int use_pairs = s->mapping_type != (PyObject *)&PyDict_Type;
+    int use_pairs = s->mapping_hook != (PyObject *)&PyDict_Type;
     Py_ssize_t next_idx;
     Py_ssize_t obj_idx = idx - 1;
     Py_ssize_t colon_idx;
@@ -789,7 +789,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
     *next_idx_ptr = idx + 1;
 
     if (use_pairs) {
-        val = PyObject_CallOneArg(s->mapping_type, rval);
+        val = PyObject_CallOneArg(s->mapping_hook, rval);
         Py_DECREF(rval);
         return val;
     }
@@ -897,8 +897,8 @@ _parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, P
     assert(idx <= end_idx && PyUnicode_READ(kind, str, idx) == ']');
 #endif
     *next_idx_ptr = idx + 1;
-    if (s->sequence_type != (PyObject *)&PyList_Type) {
-        val = PyObject_CallOneArg(s->sequence_type, rval);
+    if (s->sequence_hook != (PyObject *)&PyList_Type) {
+        val = PyObject_CallOneArg(s->sequence_hook, rval);
         Py_DECREF(rval);
         return val;
     }
@@ -1016,8 +1016,8 @@ _match_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr,
                 raise_errmsg("Big numbers require decimal", pyfilename, pystr, start, idx);
                 goto bail;
             }
-            if (s->float_type != (PyObject *)&PyFloat_Type) {
-                rval = PyObject_CallOneArg(s->float_type, old_rval);
+            if (s->float_hook != (PyObject *)&PyFloat_Type) {
+                rval = PyObject_CallOneArg(s->float_hook, old_rval);
                 Py_DECREF(old_rval);
             }
             else {
@@ -1031,8 +1031,8 @@ _match_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr,
                 raise_errmsg("Number is too big", pyfilename, pystr, start, idx);
                 goto bail;
             }
-            if (s->int_type != (PyObject *)&PyLong_Type) {
-                rval = PyObject_CallOneArg(s->int_type, old_rval);
+            if (s->int_hook != (PyObject *)&PyLong_Type) {
+                rval = PyObject_CallOneArg(s->int_hook, old_rval);
                 Py_DECREF(old_rval);
             }
             else {
@@ -1108,8 +1108,8 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
             /* true */
             if ((idx + 3 < length) && PyUnicode_READ(kind, str, idx + 1) == 'r' && PyUnicode_READ(kind, str, idx + 2) == 'u' && PyUnicode_READ(kind, str, idx + 3) == 'e') {
                 *next_idx_ptr = idx + 4;
-                if (s->bool_type != (PyObject *)&PyBool_Type) {
-                    return PyObject_CallOneArg(s->bool_type, Py_True);
+                if (s->bool_hook != (PyObject *)&PyBool_Type) {
+                    return PyObject_CallOneArg(s->bool_hook, Py_True);
                 }
                 Py_RETURN_TRUE;
             }
@@ -1121,8 +1121,8 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
                 PyUnicode_READ(kind, str, idx + 3) == 's' &&
                 PyUnicode_READ(kind, str, idx + 4) == 'e') {
                 *next_idx_ptr = idx + 5;
-                if (s->bool_type != (PyObject *)&PyBool_Type) {
-                    return PyObject_CallOneArg(s->bool_type, Py_False);
+                if (s->bool_hook != (PyObject *)&PyBool_Type) {
+                    return PyObject_CallOneArg(s->bool_hook, Py_False);
                 }
                 Py_RETURN_FALSE;
             }
@@ -1145,12 +1145,12 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
                     Py_DECREF(old_res);
                     return res;
                 }
-                if (s->float_type != (PyObject *)&PyFloat_Type) {
+                if (s->float_hook != (PyObject *)&PyFloat_Type) {
                     old_res = PyFloat_FromDouble(Py_NAN);
                     if (old_res == NULL) {
                         return NULL;
                     }
-                    res = PyObject_CallOneArg(s->float_type, old_res);
+                    res = PyObject_CallOneArg(s->float_hook, old_res);
                     Py_DECREF(old_res);
                     return res;
                 }
@@ -1180,12 +1180,12 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
                     Py_DECREF(old_res);
                     return res;
                 }
-                if (s->float_type != (PyObject *)&PyFloat_Type) {
+                if (s->float_hook != (PyObject *)&PyFloat_Type) {
                     old_res = PyFloat_FromDouble(+Py_INFINITY);
                     if (old_res == NULL) {
                         return NULL;
                     }
-                    res = PyObject_CallOneArg(s->float_type, old_res);
+                    res = PyObject_CallOneArg(s->float_hook, old_res);
                     Py_DECREF(old_res);
                     return res;
                 }
@@ -1216,12 +1216,12 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
                     Py_DECREF(old_res);
                     return res;
                 }
-                if (s->float_type != (PyObject *)&PyFloat_Type) {
+                if (s->float_hook != (PyObject *)&PyFloat_Type) {
                     old_res = PyFloat_FromDouble(-Py_INFINITY);
                     if (old_res == NULL) {
                         return NULL;
                     }
-                    res = PyObject_CallOneArg(s->float_type, old_res);
+                    res = PyObject_CallOneArg(s->float_hook, old_res);
                     Py_DECREF(old_res);
                     return res;
                 }
@@ -1279,23 +1279,23 @@ scanner_call(PyScannerObject *self, PyObject *args, PyObject *kwds)
 static PyObject *
 scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    static char *kwlist[] = {"bool_type", "float_type", "int_type",
-                             "mapping_type", "sequence_type", "str_type",
+    static char *kwlist[] = {"bool_hook", "float_hook", "int_hook",
+                             "mapping_hook", "sequence_hook", "str_hook",
                              "allow_comments", "allow_missing_commas",
                              "allow_nan_and_infinity", "allow_surrogates",
                              "allow_trailing_comma", "allow_unquoted_keys",
                              "use_decimal", NULL};
 
     PyScannerObject *s;
-    PyObject *bool_type, *float_type, *int_type, *mapping_type, *sequence_type;
-    PyObject *str_type;
+    PyObject *bool_hook, *float_hook, *int_hook, *mapping_hook, *sequence_hook;
+    PyObject *str_hook;
     int allow_comments, allow_missing_commas, allow_nan_and_infinity;
     int allow_surrogates, allow_trailing_comma, allow_unquoted_keys;
     int use_decimal;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOppppppp:make_scanner", kwlist,
-        &bool_type, &float_type, &int_type, &mapping_type, &sequence_type,
-        &str_type,
+        &bool_hook, &float_hook, &int_hook, &mapping_hook, &sequence_hook,
+        &str_hook,
         &allow_comments, &allow_missing_commas, &allow_nan_and_infinity,
         &allow_surrogates, &allow_trailing_comma, &allow_unquoted_keys,
         &use_decimal))
@@ -1315,12 +1315,12 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     if (s->Decimal == NULL) {
         goto bail;
     }
-    s->bool_type = bool_type;
-    s->float_type = float_type;
-    s->int_type = int_type;
-    s->mapping_type = mapping_type;
-    s->sequence_type = sequence_type;
-    s->str_type = str_type;
+    s->bool_hook = bool_hook;
+    s->float_hook = float_hook;
+    s->int_hook = int_hook;
+    s->mapping_hook = mapping_hook;
+    s->sequence_hook = sequence_hook;
+    s->str_hook = str_hook;
     s->allow_comments = allow_comments;
     s->allow_missing_commas = allow_missing_commas;
     s->allow_nan_and_infinity = allow_nan_and_infinity;
@@ -1328,12 +1328,12 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->allow_trailing_comma = allow_trailing_comma;
     s->allow_unquoted_keys = allow_unquoted_keys;
     s->use_decimal = use_decimal;
-    Py_INCREF(s->bool_type);
-    Py_INCREF(s->float_type);
-    Py_INCREF(s->int_type);
-    Py_INCREF(s->mapping_type);
-    Py_INCREF(s->sequence_type);
-    Py_INCREF(s->str_type);
+    Py_INCREF(s->bool_hook);
+    Py_INCREF(s->float_hook);
+    Py_INCREF(s->int_hook);
+    Py_INCREF(s->mapping_hook);
+    Py_INCREF(s->sequence_hook);
+    Py_INCREF(s->str_hook);
     return (PyObject *)s;
 
 bail:
@@ -1764,9 +1764,12 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
     PyObject *keystr = NULL;
     PyObject *encoded;
 
-    if (PyUnicode_Check(key)) {
-        keystr = key;
-        Py_INCREF(keystr);
+    if (PyUnicode_Check(key) || PyObject_IsInstance(key, s->str_types)) {
+        if (PyErr_Occurred())
+            return -1;
+        keystr = PyObject_Str(key);
+        if (keystr == NULL)
+            return -1;
     }
     else {
         PyErr_Format(PyExc_TypeError,
