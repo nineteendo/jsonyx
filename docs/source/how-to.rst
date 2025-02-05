@@ -103,8 +103,9 @@ Encoding arbitrary objects
 >>> json.dump(to_json(1 + 2j))
 {"__complex__": true, "real": 1.0, "imag": 2.0}
 
-.. todo:: Mention alternatives.
 .. tip:: You can use :func:`functools.singledispatch` to make this extensible.
+.. seelaso:: The :mod:`pickle` and :mod:`shelve` modules which are better
+    suited for this.
 
 Decoding arbitrary objects
 --------------------------
@@ -122,8 +123,9 @@ Decoding arbitrary objects
 >>> from_json(json.loads('{"__complex__": true, "real": 1.0, "imag": 2.0}'))
 (1+2j)
 
-.. todo:: Mention alternatives.
 .. note:: The ``"mapping"`` hook is not intended for this purpose.
+.. seelaso:: The :mod:`pickle` and :mod:`shelve` modules which are better
+    suited for this.
 
 Disabling the integer string conversion length limit
 ----------------------------------------------------
