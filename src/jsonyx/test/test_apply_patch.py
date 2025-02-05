@@ -1,21 +1,24 @@
 """JSON apply_patch tests."""
-# Test rest of operations
+# Test copy and move
 from __future__ import annotations
 
 __all__: list[str] = []
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
 from jsonyx import apply_patch
+
+if TYPE_CHECKING:
+    _Operation = dict[str, Any]
 
 
 @pytest.mark.parametrize(("obj", "kwargs", "expected"), [
     ([1, 2, 3], {}, [1, 2, 3, 4]),
     ([[1, 2, 3]], {"path": "$[0]"}, [[1, 2, 3, 4]]),
 ])
-def test_append(obj: Any, kwargs: dict[str, Any], expected: Any) -> None:
+def test_append(obj: Any, kwargs: _Operation, expected: Any) -> None:
     """Test append."""
     assert apply_patch(obj, {"op": "append", "value": 4, **kwargs}) == expected
 
@@ -23,7 +26,7 @@ def test_append(obj: Any, kwargs: dict[str, Any], expected: Any) -> None:
 def test_append_copy() -> None:
     """Test if append makes a copy."""
     value: list[Any] = [4]
-    patch: dict[str, Any] = {"op": "append", "value": value}
+    patch: _Operation = {"op": "append", "value": value}
     result: list[Any] = apply_patch([[1], [2], [3]], patch)[3]
     assert result == value  # sanity check
     assert result is not value
@@ -33,7 +36,7 @@ def test_append_copy() -> None:
     (0, {}),
     ([0], {"path": "$[0]"}),
 ])
-def test_assert(obj: Any, kwargs: dict[str, Any]) -> None:
+def test_assert(obj: Any, kwargs: _Operation) -> None:
     """Test assert."""
     apply_patch(obj, {"op": "assert", "expr": "@ == 0", **kwargs})
 
@@ -43,7 +46,7 @@ def test_assert(obj: Any, kwargs: dict[str, Any]) -> None:
     ([1], {"path": "$[0]"}, "@ == 0"),
     (1, {"msg": "msg"}, "msg"),
 ])
-def test_failed_assert(obj: Any, kwargs: dict[str, Any], match: str) -> None:
+def test_failed_assert(obj: Any, kwargs: _Operation, match: str) -> None:
     """Test failed assert."""
     with pytest.raises(AssertionError, match=match):
         apply_patch(obj, {"op": "assert", "expr": "@ == 0", **kwargs})
@@ -58,7 +61,7 @@ def test_failed_assert(obj: Any, kwargs: dict[str, Any], match: str) -> None:
     ([[1, 2, 3]], {"path": "$[0]"}, [[]]),
     ([{"a": 1, "b": 2, "c": 3}], {"path": "$[0]"}, [{}]),
 ])  # type: ignore
-def test_clear(obj: Any, kwargs: dict[str, Any], expected: Any) -> None:
+def test_clear(obj: Any, kwargs: _Operation, expected: Any) -> None:
     """Test clear."""
     assert apply_patch(obj, {"op": "clear", **kwargs}) == expected
 
@@ -95,16 +98,16 @@ def test_del_root() -> None:
     ([1, 2, 3], {}, [1, 2, 3, 4, 5, 6]),
     ([[1, 2, 3]], {"path": "$[0]"}, [[1, 2, 3, 4, 5, 6]]),
 ])
-def test_extend(obj: Any, kwargs: dict[str, Any], expected: Any) -> None:
+def test_extend(obj: Any, kwargs: _Operation, expected: Any) -> None:
     """Test extend."""
-    patch: dict[str, Any] = {"op": "extend", "value": [4, 5, 6], **kwargs}
+    patch: _Operation = {"op": "extend", "value": [4, 5, 6], **kwargs}
     assert apply_patch(obj, patch) == expected
 
 
 def test_extend_copy() -> None:
     """Test if extend makes a copy."""
     value: list[Any] = [4]
-    patch: dict[str, Any] = {"op": "extend", "value": [value]}
+    patch: _Operation = {"op": "extend", "value": [value]}
     result: list[Any] = apply_patch([[1], [2], [3]], patch)[3]
     assert result == value  # sanity check
     assert result is not value
@@ -119,14 +122,14 @@ def test_extend_copy() -> None:
 ])
 def test_insert(path: str, expected: Any) -> None:
     """Test insert."""
-    patch: dict[str, Any] = {"op": "insert", "path": path, "value": 0}
+    patch: _Operation = {"op": "insert", "path": path, "value": 0}
     assert apply_patch([1, 2, 3], patch) == expected
 
 
 def test_insert_copy() -> None:
     """Test if insert makes a copy."""
     value: list[Any] = [0]
-    patch: dict[str, Any] = {"op": "insert", "path": "$[0]", "value": value}
+    patch: _Operation = {"op": "insert", "path": "$[0]", "value": value}
     result: list[Any] = apply_patch([[1], [2], [3]], patch)[0]
     assert result == value  # sanity check
     assert result is not value
@@ -142,7 +145,7 @@ def test_insert_root() -> None:
     ([1, 2, 3], {}, [3, 2, 1]),
     ([[1, 2, 3]], {"path": "$[0]"}, [[3, 2, 1]]),
 ])
-def test_reverse(obj: Any, kwargs: dict[str, Any], expected: Any) -> None:
+def test_reverse(obj: Any, kwargs: _Operation, expected: Any) -> None:
     """Test reverse."""
     assert apply_patch(obj, {"op": "reverse", **kwargs}) == expected
 
@@ -156,18 +159,16 @@ def test_reverse(obj: Any, kwargs: dict[str, Any], expected: Any) -> None:
     # Allow slice
     ([1, 2, 3], {"path": "$[:]"}, [3, 4, 5], [3, 4, 5]),
 ])
-def test_set(
-    obj: Any, kwargs: dict[str, Any], value: Any, expected: Any,
-) -> None:
+def test_set(obj: Any, kwargs: _Operation, value: Any, expected: Any) -> None:
     """Test set."""
-    patch: dict[str, Any] = {"op": "set", "value": value, **kwargs}
+    patch: _Operation = {"op": "set", "value": value, **kwargs}
     assert apply_patch(obj, patch) == expected
 
 
 def test_set_copy() -> None:
     """Test if set makes a copy."""
     value: list[Any] = [1]
-    patch: dict[str, Any] = {"op": "set", "value": value}
+    patch: _Operation = {"op": "set", "value": value}
     result: list[Any] = apply_patch([0], patch)
     assert result == value  # sanity check
     assert result is not value
@@ -178,7 +179,7 @@ def test_set_copy() -> None:
     ([[3, 1, 2]], {"path": "$[0]"}, [[1, 2, 3]]),
     ([3, 1, 2], {"reverse": True}, [3, 2, 1]),
 ])
-def test_sort(obj: Any, kwargs: dict[str, Any], expected: Any) -> None:
+def test_sort(obj: Any, kwargs: _Operation, expected: Any) -> None:
     """Test sort."""
     assert apply_patch(obj, {"op": "sort", **kwargs}) == expected
 
@@ -187,17 +188,30 @@ def test_sort(obj: Any, kwargs: dict[str, Any], expected: Any) -> None:
     ({"a": 1, "b": 2, "c": 3}, {}, {"a": 4, "b": 5, "c": 6}),
     ([{"a": 1, "b": 2, "c": 3}], {"path": "$[0]"}, [{"a": 4, "b": 5, "c": 6}]),
 ])
-def test_update(obj: Any, kwargs: dict[str, Any], expected: Any) -> None:
+def test_update(obj: Any, kwargs: _Operation, expected: Any) -> None:
     """Test update."""
-    value: dict[str, Any] = {"a": 4, "b": 5, "c": 6}
-    patch: dict[str, Any] = {"op": "update", "value": value, **kwargs}
+    value: _Operation = {"a": 4, "b": 5, "c": 6}
+    patch: _Operation = {"op": "update", "value": value, **kwargs}
     assert apply_patch(obj, patch) == expected
 
 
 def test_update_copy() -> None:
     """Test if update makes a copy."""
     value: list[Any] = [4]
-    patch: dict[str, Any] = {"op": "update", "value": {"d": [4]}}
+    patch: _Operation = {"op": "update", "value": {"d": [4]}}
     result: list[Any] = apply_patch({"a": [1], "b": [2], "c": [3]}, patch)["d"]
     assert result == value  # sanity check
     assert result is not value
+
+
+@pytest.mark.parametrize(("paths", "expected"), [
+    # Empty list
+    ([], {"a": 1, "b": 2, "c": 3}),
+
+    # Multiple operations
+    (["$.a", "$.b", "$.c"], {}),
+])
+def test_operations(paths: list[str], expected: dict[str, Any]) -> None:
+    """Test operations."""
+    patch: list[_Operation] = [{"op": "del", "path": path} for path in paths]
+    assert apply_patch({"a": 1, "b": 2, "c": 3}, patch) == expected
