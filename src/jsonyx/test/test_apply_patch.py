@@ -14,7 +14,7 @@ from jsonyx import apply_patch
 @pytest.mark.parametrize(("obj", "kwargs", "expected"), [
     ([1, 2, 3], {}, [1, 2, 3, 4]),
     ([[1, 2, 3]], {"path": "$[0]"}, [[1, 2, 3, 4]]),
-])  # type: ignore
+])
 def test_append(obj: Any, kwargs: dict[str, Any], expected: Any) -> None:
     """Test append."""
     assert apply_patch(obj, {"op": "append", "value": 4, **kwargs}) == expected
@@ -70,14 +70,18 @@ def test_invalid_clear() -> None:
 
 
 @pytest.mark.parametrize(("obj", "path", "expected"), [
+    # List and dict
+    ([1, 2, 3, 4], "$[3]", [1, 2, 3]),
+    ({"a": 1, "b": 2, "c": 3, "d": 4}, "$.d", {"a": 1, "b": 2, "c": 3}),
+
     # Allow slice
     ([1, 2, 3], "$[:]", []),
 
     # Reverse indices for queries
     ([1, 0, 2, 0, 3], "$[@ == 0]", [1, 2, 3]),
-])  # type: ignore
+])
 def test_del(obj: Any, path: str, expected: Any) -> None:
-    """Test del."""
+    """Test delete."""
     assert apply_patch(obj, {"op": "del", "path": path}) == expected
 
 
@@ -90,7 +94,7 @@ def test_del_root() -> None:
 @pytest.mark.parametrize(("obj", "kwargs", "expected"), [
     ([1, 2, 3], {}, [1, 2, 3, 4, 5, 6]),
     ([[1, 2, 3]], {"path": "$[0]"}, [[1, 2, 3, 4, 5, 6]]),
-])  # type: ignore
+])
 def test_extend(obj: Any, kwargs: dict[str, Any], expected: Any) -> None:
     """Test extend."""
     patch: dict[str, Any] = {"op": "extend", "value": [4, 5, 6], **kwargs}
@@ -112,7 +116,7 @@ def test_extend_copy() -> None:
 
     # Reverse indices for queries
     ("$[@]", [0, 1, 0, 2, 0, 3]),
-])  # type: ignore
+])
 def test_insert(path: str, expected: Any) -> None:
     """Test insert."""
     patch: dict[str, Any] = {"op": "insert", "path": path, "value": 0}
@@ -132,3 +136,68 @@ def test_insert_root() -> None:
     """Test insert at the root."""
     with pytest.raises(ValueError, match="Can not insert at the root"):
         apply_patch(0, {"op": "insert", "path": "$", "value": 0})
+
+
+@pytest.mark.parametrize(("obj", "kwargs", "expected"), [
+    ([1, 2, 3], {}, [3, 2, 1]),
+    ([[1, 2, 3]], {"path": "$[0]"}, [[3, 2, 1]]),
+])
+def test_reverse(obj: Any, kwargs: dict[str, Any], expected: Any) -> None:
+    """Test reverse."""
+    assert apply_patch(obj, {"op": "reverse", **kwargs}) == expected
+
+
+@pytest.mark.parametrize(("obj", "kwargs", "value", "expected"), [
+    # Normal
+    (0, {}, 1, 1),
+    ([0], {"path": "$[0]"}, 1, [1]),
+    ({"a": 0}, {"path": "$.a"}, 1, {"a": 1}),
+
+    # Allow slice
+    ([1, 2, 3], {"path": "$[:]"}, [3, 4, 5], [3, 4, 5]),
+])
+def test_set(
+    obj: Any, kwargs: dict[str, Any], value: Any, expected: Any,
+) -> None:
+    """Test set."""
+    patch: dict[str, Any] = {"op": "set", "value": value, **kwargs}
+    assert apply_patch(obj, patch) == expected
+
+
+def test_set_copy() -> None:
+    """Test if set makes a copy."""
+    value: list[Any] = [1]
+    patch: dict[str, Any] = {"op": "set", "value": value}
+    result: list[Any] = apply_patch([0], patch)
+    assert result == value  # sanity check
+    assert result is not value
+
+
+@pytest.mark.parametrize(("obj", "kwargs", "expected"), [
+    ([3, 1, 2], {}, [1, 2, 3]),
+    ([[3, 1, 2]], {"path": "$[0]"}, [[1, 2, 3]]),
+    ([3, 1, 2], {"reverse": True}, [3, 2, 1]),
+])
+def test_sort(obj: Any, kwargs: dict[str, Any], expected: Any) -> None:
+    """Test sort."""
+    assert apply_patch(obj, {"op": "sort", **kwargs}) == expected
+
+
+@pytest.mark.parametrize(("obj", "kwargs", "expected"), [
+    ({"a": 1, "b": 2, "c": 3}, {}, {"a": 4, "b": 5, "c": 6}),
+    ([{"a": 1, "b": 2, "c": 3}], {"path": "$[0]"}, [{"a": 4, "b": 5, "c": 6}]),
+])
+def test_update(obj: Any, kwargs: dict[str, Any], expected: Any) -> None:
+    """Test update."""
+    value: dict[str, Any] = {"a": 4, "b": 5, "c": 6}
+    patch: dict[str, Any] = {"op": "update", "value": value, **kwargs}
+    assert apply_patch(obj, patch) == expected
+
+
+def test_update_copy() -> None:
+    """Test if update makes a copy."""
+    value: list[Any] = [4]
+    patch: dict[str, Any] = {"op": "update", "value": {"d": [4]}}
+    result: list[Any] = apply_patch({"a": [1], "b": [2], "c": [3]}, patch)["d"]
+    assert result == value  # sanity check
+    assert result is not value

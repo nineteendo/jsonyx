@@ -565,9 +565,7 @@ class Manipulator:
             elif op == "sort":
                 path = operation.get("path", "$")
                 reverse: bool = operation.get("reverse", False)
-                for target, key in self.run_select_query(
-                    node, path, allow_slice=True,
-                ):
+                for target, key in self.run_select_query(node, path):
                     list.sort(target[key], reverse=reverse)  # type: ignore
             elif op == "update":
                 path = operation.get("path", "$")
