@@ -463,7 +463,7 @@ class Manipulator:
                 path: str = operation.get("path", "$")
                 value: Any = operation["value"]
                 for target, key in self.run_select_query(node, path):
-                    list.append(target[key], value)  # type: ignore
+                    list.append(target[key], deepcopy(value))  # type: ignore
             elif op == "assert":
                 path = operation.get("path", "$")
                 expr: str = operation["expr"]
@@ -513,7 +513,7 @@ class Manipulator:
                 path = operation.get("path", "$")
                 value = operation["value"]
                 for target, key in self.run_select_query(node, path):
-                    list.extend(target[key], value)  # type: ignore
+                    list.extend(target[key], deepcopy(value))  # type: ignore
             elif op == "insert":
                 path = operation["path"]
                 value = operation["value"]
@@ -523,7 +523,7 @@ class Manipulator:
                     if target is root:
                         raise ValueError
 
-                    list.insert(target, key, value)  # type: ignore
+                    list.insert(target, key, deepcopy(value))  # type: ignore
             elif op == "move":
                 path = operation.get("path", "$")
                 src = operation["from"]
@@ -559,7 +559,7 @@ class Manipulator:
                 for target, key in self.run_select_query(
                     node, path, allow_slice=True,
                 ):
-                    target[key] = value  # type: ignore
+                    target[key] = deepcopy(value)  # type: ignore
             elif op == "sort":
                 path = operation.get("path", "$")
                 reverse: bool = operation.get("reverse", False)
@@ -571,7 +571,7 @@ class Manipulator:
                 path = operation.get("path", "$")
                 value = operation["value"]
                 for target, key in self.run_select_query(node, path):
-                    dict.update(target[key], value)  # type: ignore
+                    dict.update(target[key], deepcopy(value))  # type: ignore
             else:
                 raise ValueError
 
