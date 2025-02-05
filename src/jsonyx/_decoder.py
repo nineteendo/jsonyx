@@ -1,5 +1,4 @@
 """JSON decoder."""
-# TODO(Nice Zombies): Fix end_offset in JSONSyntaxError
 from __future__ import annotations
 
 __all__: list[str] = ["Decoder", "JSONSyntaxError", "detect_encoding"]
@@ -175,6 +174,9 @@ class JSONSyntaxError(SyntaxError):
             doc.rfind("\n", 0, end), doc.rfind("\r", 0, end),
         )
         offset, text, end_offset = _get_err_context(doc, start, end)
+        if end_lineno != lineno:
+            end_offset = end_colno
+
         if sys.version_info >= (3, 10):
             super().__init__(
                 msg, (filename, lineno, offset, text, end_lineno, end_offset),

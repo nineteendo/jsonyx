@@ -88,12 +88,16 @@ def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
     else:
         column_range = f"{exc.colno:d}-{exc.end_colno:d}"
 
-    caret_indent: str = " " * (exc.offset - 1)  # type: ignore
-    caret_selection: str = "^" * (exc.end_offset - exc.offset)  # type: ignore
+    indent: str = " " * (exc.offset - 1)  # type: ignore
+    if exc.end_lineno == exc.lineno:
+        selection: str = "^" * (exc.end_offset - exc.offset)  # type: ignore
+    else:
+        selection = "^" * (len(exc.text) - exc.offset + 1)  # type: ignore
+
     return [
         f'  File "{exc.filename}", line {line_range}, column {column_range}\n',
         f"    {exc.text}\n",
-        f"    {caret_indent}{caret_selection}\n",
+        f"    {indent}{selection}\n",
         f"{exc.__module__}.{type(exc).__qualname__}: {exc.msg}\n",
     ]
 
