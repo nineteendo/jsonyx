@@ -467,15 +467,20 @@ class Manipulator:
             elif op == "assert":
                 path = operation.get("path", "$")
                 expr: str = operation["expr"]
+                msg: str = operation.get("msg", expr)
                 current_nodes: list[_Node] = self.run_select_query(node, path)
                 if current_nodes != self.run_filter_query(current_nodes, expr):
-                    raise AssertionError
+                    raise AssertionError(msg)
             elif op == "clear":
                 path = operation.get("path", "$")
                 for target, key in self.run_select_query(node, path):
                     new_target: Any = target[key]  # type: ignore
                     if not isinstance(new_target, (dict, list)):
-                        raise TypeError
+                        msg = (
+                            "Target must be dict or list, not "
+                            f"{type(new_target).__name__}"
+                        )
+                        raise TypeError(msg)
 
                     new_target.clear()
             elif op == "copy":

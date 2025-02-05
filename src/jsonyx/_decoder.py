@@ -286,8 +286,6 @@ except ImportError:
         parse_float: Callable[
             [str], Decimal | float,
         ] = Decimal if use_decimal else float
-        if use_decimal:
-            float_hook = Decimal
 
         def skip_comments(filename: str, s: str, end: int) -> int:
             find: Callable[[str, int], int] = s.find
@@ -565,7 +563,8 @@ except ImportError:
                         msg = "Big numbers require decimal"
                         raise _errmsg(msg, filename, s, idx, end)
 
-                    value = float_hook(value)
+                    if not use_decimal:
+                        value = float_hook(value)
             elif nextchar == "N" and s[idx:idx + 3] == "NaN":
                 if not allow_nan_and_infinity:
                     msg = "NaN is not allowed"

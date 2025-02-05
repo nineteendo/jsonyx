@@ -40,7 +40,8 @@
                     },
                     "then": {
                         "properties": {
-                            "expr": {"description": "A JSON expression.", "type": "string", "default": "@"}
+                            "expr": {"description": "A JSON expression.", "type": "string", "default": "@"},
+                            "msg": {"description": "An error messafe.", "type": "string"}
                         },
                         "required": ["expr"]
                     }

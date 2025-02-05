@@ -1,6 +1,5 @@
-# TODO(Nice Zombies): test apply_patch
-# TODO(Nice Zombies): test schema
 """JSON tests."""
+# TODO(Nice Zombies): test schema
 from __future__ import annotations
 
 __all__: list[str] = []
