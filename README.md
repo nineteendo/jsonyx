@@ -76,7 +76,7 @@ applications:
 | Dict with 256 lists of 256 dicts with 1 int | 18.00 |  22.32 |   12.38 |  10.84 |     1.00 |   1622.21 |
 
 > [!WARNING]
-> The Python version of jsonyx is up to 36.25x slower, so double check that the
-> C version is installed.
+> The Python version of `jsonyx` is up to 36.25x slower, so double check that
+> the C version is installed.
 
 [^1]: failed due to recursion error

@@ -1,7 +1,7 @@
 """Configuration file for the Sphinx documentation builder."""
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from os import environ, getenv
 from typing import Any
 
@@ -9,8 +9,9 @@ from typing import Any
 
 branch: str = getenv("READTHEDOCS_GIT_IDENTIFIER", "main")
 project: str = "jsonyx"
+year: int = datetime.now(tz=timezone.utc).year
 # pylint: disable-next=W0622
-copyright: str = f"{datetime.now(tz=UTC).year}, Nice Zombies"  # noqa: A001
+copyright: str = f"{year}, Nice Zombies"  # noqa: A001
 author: str = "Nice Zombies"
 
 release: str = "2.0"

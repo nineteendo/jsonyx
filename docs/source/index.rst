@@ -80,8 +80,8 @@ Complex object                               9.21   8.66    8.91   7.95     1.00
 Dict with 256 lists of 256 dicts with 1 int 18.00  22.32   12.38  10.84     1.00   1622.21
 =========================================== ===== ====== ======= ====== ======== =========
 
-.. warning:: The Python version of jsonyx is up to 36.25x slower, so double
-    check that the C version is installed.
+.. warning:: The Python version of :mod:`jsonyx` is up to 36.25x slower, so
+    double check that the C version is installed.
 
 Check out the :doc:`get-started` section for further information, including how
 to :ref:`install <installation>` the project.
