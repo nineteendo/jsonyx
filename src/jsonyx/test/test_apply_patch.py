@@ -215,3 +215,9 @@ def test_operations(paths: list[str], expected: dict[str, Any]) -> None:
     """Test operations."""
     patch: list[_Operation] = [{"op": "del", "path": path} for path in paths]
     assert apply_patch({"a": 1, "b": 2, "c": 3}, patch) == expected
+
+
+def test_unknown_operation() -> None:
+    """Test unknown operation."""
+    with pytest.raises(ValueError, match="Unknown operation"):
+        apply_patch(0, {"op": "foo"})

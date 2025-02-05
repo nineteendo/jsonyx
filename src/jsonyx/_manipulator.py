@@ -573,7 +573,8 @@ class Manipulator:
                 for target, key in self.run_select_query(node, path):
                     dict.update(target[key], deepcopy(value))  # type: ignore
             else:
-                raise ValueError
+                msg = "Unknown operation"
+                raise ValueError(msg)
 
     def apply_patch(
         self, obj: Any, patch: _Operation | list[_Operation],
