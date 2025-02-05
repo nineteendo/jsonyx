@@ -506,7 +506,8 @@ class Manipulator:
                     node, path, allow_slice=True,
                 )[::-1]:
                     if target is root:
-                        raise ValueError
+                        msg = "Can not delete the root"
+                        raise ValueError(msg)
 
                     del target[key]  # type: ignore
             elif op == "extend":
@@ -521,7 +522,8 @@ class Manipulator:
                 # Reverse to preserve indices for queries
                 for target, key in self.run_select_query(node, path)[::-1]:
                     if target is root:
-                        raise ValueError
+                        msg = "Can not insert at the root"
+                        raise ValueError(msg)
 
                     list.insert(target, key, deepcopy(value))  # type: ignore
             elif op == "move":
