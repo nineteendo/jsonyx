@@ -104,7 +104,7 @@ Encoding arbitrary objects
 {"__complex__": true, "real": 1.0, "imag": 2.0}
 
 .. tip:: You can use :func:`functools.singledispatch` to make this extensible.
-.. seelaso:: The :mod:`pickle` and :mod:`shelve` modules which are better
+.. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
     suited for this.
 
 Decoding arbitrary objects
@@ -124,7 +124,7 @@ Decoding arbitrary objects
 (1+2j)
 
 .. note:: The ``"mapping"`` hook is not intended for this purpose.
-.. seelaso:: The :mod:`pickle` and :mod:`shelve` modules which are better
+.. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
     suited for this.
 
 Disabling the integer string conversion length limit
