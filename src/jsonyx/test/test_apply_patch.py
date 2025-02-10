@@ -1,5 +1,5 @@
 """JSON apply_patch tests."""
-# Test copy and move
+# TODO(Nice Zombies): Test copy and move
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -25,9 +25,9 @@ def test_append(obj: Any, kwargs: _Operation, expected: Any) -> None:
 
 def test_append_copy() -> None:
     """Test if append makes a copy."""
-    value: list[Any] = [4]
+    value: list[Any] = [0]
     patch: _Operation = {"op": "append", "value": value}
-    result: list[Any] = apply_patch([[1], [2], [3]], patch)[3]
+    result: list[Any] = apply_patch([], patch)[0]
     assert result == value  # sanity check
     assert result is not value
 
@@ -106,9 +106,8 @@ def test_extend(obj: Any, kwargs: _Operation, expected: Any) -> None:
 
 def test_extend_copy() -> None:
     """Test if extend makes a copy."""
-    value: list[Any] = [4]
-    patch: _Operation = {"op": "extend", "value": [value]}
-    result: list[Any] = apply_patch([[1], [2], [3]], patch)[3]
+    value: list[Any] = [0]
+    result: list[Any] = apply_patch([], {"op": "extend", "value": [value]})[0]
     assert result == value  # sanity check
     assert result is not value
 
@@ -130,7 +129,7 @@ def test_insert_copy() -> None:
     """Test if insert makes a copy."""
     value: list[Any] = [0]
     patch: _Operation = {"op": "insert", "path": "$[0]", "value": value}
-    result: list[Any] = apply_patch([[1], [2], [3]], patch)[0]
+    result: list[Any] = apply_patch([], patch)[0]
     assert result == value  # sanity check
     assert result is not value
 
@@ -197,9 +196,9 @@ def test_update(obj: Any, kwargs: _Operation, expected: Any) -> None:
 
 def test_update_copy() -> None:
     """Test if update makes a copy."""
-    value: list[Any] = [4]
-    patch: _Operation = {"op": "update", "value": {"d": [4]}}
-    result: list[Any] = apply_patch({"a": [1], "b": [2], "c": [3]}, patch)["d"]
+    value: list[Any] = [1]
+    patch: _Operation = {"op": "update", "value": {"a": [1]}}
+    result: list[Any] = apply_patch({}, patch)["a"]
     assert result == value  # sanity check
     assert result is not value
 
