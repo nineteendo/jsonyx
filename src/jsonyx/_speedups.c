@@ -1698,7 +1698,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
     else if (PyLong_Check(obj) || PyObject_IsInstance(obj, s->int_types)) {
         if (PyErr_Occurred())
             return -1;
-        new_obj = Py_TYPE(obj)->tp_as_number->nb_int(obj);
+        new_obj = PyNumber_Long(obj);
         if (new_obj == NULL)
             return -1;
         PyObject *encoded = PyLong_Type.tp_repr(new_obj);
@@ -1710,7 +1710,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
     else if (PyFloat_Check(obj) || PyObject_IsInstance(obj, s->float_types)) {
         if (PyErr_Occurred())
             return -1;
-        new_obj = Py_TYPE(obj)->tp_as_number->nb_float(obj);
+        new_obj = PyNumber_Float(obj);
         if (new_obj == NULL)
             return -1;
         PyObject *encoded = encoder_encode_float(s, new_obj);

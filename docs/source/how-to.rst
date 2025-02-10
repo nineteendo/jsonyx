@@ -28,12 +28,12 @@ Encoding protocol-based objects
 
 Required methods:
 
-- ``"bool"``: :meth:`~object.__bool__` or :meth:`~object.__len__`
-- ``"float"``: :meth:`~object.__float__`
-- ``"int"``: :meth:`~object.__int__`
+- ``"bool"``: :meth:`~object.__bool__`, :meth:`~object.__len__` or absent for ``true``
+- ``"float"``: :meth:`~object.__float__` or :meth:`~object.__index__`
+- ``"int"``: :meth:`~object.__int__` or :meth:`~object.__index__`
 - ``"mapping"``: :meth:`~object.__len__`, :meth:`!keys`, :meth:`!values` and :meth:`!items`
 - ``"sequence"``: :meth:`~object.__len__`, and :meth:`~object.__iter__`
-- ``"str"``: :meth:`~object.__str__`
+- ``"str"``: :meth:`~object.__str__` or :meth:`~object.__repr__`
 
 Example with :mod:`numpy`:
 
