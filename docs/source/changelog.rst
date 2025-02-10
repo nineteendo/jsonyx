@@ -22,6 +22,7 @@ jsonyx 2.0.0 (unreleased)
 - Added :func:`jsonyx.apply_patch` and :func:`jsonyx.make_patch`
 - Added :func:`jsonyx.load_query_value`
 - Added :func:`jsonyx.run_filter_query` and :func:`jsonyx.run_select_query`
+- Added :func:`jsonyx.paste_values`
 - Added :func:`jsonyx.Manipulator`
 - Changed error for big integers to :exc:`jsonyx.JSONSyntaxError`
 - Fixed line comment detection

@@ -466,6 +466,45 @@ def apply_patch(
     )
 
 
+def paste_values(
+    current_nodes: _Node | list[_Node],
+    values: list[Any] | Any,
+    operation: _Operation,
+    *,
+    allow: Container[str] = NOTHING,
+    use_decimal: bool = False,
+) -> None:
+    """Paste value to a node or values to a list of nodes.
+
+    .. versionadded:: 2.0
+
+    :param current_nodes: a node or a list of nodes
+    :param values: a value or a list of values
+    :param operation: a JSON paste operation
+    :param allow: the JSON deviations from :mod:`jsonyx.allow`
+    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
+    :raises IndexError: if an index is out of range
+    :raises JSONSyntaxError: if a query is invalid
+    :raises KeyError: if a key is not found
+    :raises TypeError: if a value has the wrong type
+    :raises ValueError: if a value is invalid
+
+    Example:
+        >>> import jsonyx as json
+        >>> root = [[1, 2, 3]]
+        >>> node = root, 0
+        >>> json.paste_values(node, 4, {'mode': 'append'})
+        >>> root[0]
+        [1, 2, 3, 4]
+
+    .. tip:: Using queries instead of indices is more robust.
+
+    """
+    return Manipulator(allow=allow, use_decimal=use_decimal).paste_values(
+        current_nodes, values, operation,
+    )
+
+
 def run_select_query(
     nodes: _Node | list[_Node],
     query: str,

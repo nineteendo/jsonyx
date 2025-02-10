@@ -402,8 +402,8 @@ class Manipulator:
     def _paste_values(
         self,
         current_nodes: list[_Node],
-        operation: _Operation,
         values: list[Any],
+        operation: _Operation,
     ) -> None:
         if (mode := operation["mode"]) == "append":
             dst: str = operation.get("to", "@")
@@ -497,7 +497,7 @@ class Manipulator:
                         relative=True,
                     )
                 ]
-                self._paste_values(current_nodes, operation, values)
+                self.paste_values(current_nodes, values, operation)
             elif op == "del":
                 path = operation["path"]
 
@@ -550,7 +550,7 @@ class Manipulator:
                     del target[key]  # type: ignore
 
                 # Undo reverse
-                self._paste_values(current_nodes, operation, values[::-1])
+                self.paste_values(current_nodes, values[::-1], operation)
             elif op == "reverse":
                 path = operation.get("path", "$")
                 for target, key in self.run_select_query(node, path):
@@ -606,6 +606,41 @@ class Manipulator:
 
         self._apply_patch(root, patch)
         return root[0]
+
+    def paste_values(
+        self,
+        current_nodes: _Node | list[_Node],
+        values: Any | list[Any],
+        operation: _Operation,
+    ) -> None:
+        """Paste value to a node or values to a list of nodes.
+
+        :param current_nodes: a node or a list of nodes
+        :param values: a value or a list of values
+        :param operation: a JSON paste operation
+        :raises IndexError: if an index is out of range
+        :raises JSONSyntaxError: if a query is invalid
+        :raises KeyError: if a key is not found
+        :raises TypeError: if a value has the wrong type
+        :raises ValueError: if a value is invalid
+
+        Example:
+            >>> import jsonyx as json
+            >>> manipulator = json.Manipulator()
+            >>> root = [[1, 2, 3]]
+            >>> node = root, 0
+            >>> manipulator.paste_values(node, 4, {'mode': 'append'})
+            >>> root[0]
+            [1, 2, 3, 4]
+
+        .. tip:: Using queries instead of indices is more robust.
+
+        """
+        if isinstance(current_nodes, tuple):
+            current_nodes = [current_nodes]
+            values = [values]
+
+        self._paste_values(current_nodes, values, operation)
 
     def run_select_query(
         self,
