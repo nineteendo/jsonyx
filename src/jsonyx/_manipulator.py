@@ -228,7 +228,7 @@ class Manipulator:
             if negate_filter:
                 end += 1
 
-            filter_nodes, end = self._run_select_query(
+            filter_nodes, end = self._select_nodes(
                 nodes, query, end, mapping=True, relative=True,
             )
             filtered_pairs: list[tuple[_Node, _Node]] = [
@@ -272,7 +272,7 @@ class Manipulator:
             if match := _match_whitespace(query, end):
                 end = match.end()
 
-    def _run_select_query(
+    def _select_nodes(
         self,
         nodes: list[_Node],
         query: str,
@@ -407,21 +407,21 @@ class Manipulator:
     ) -> None:
         if (mode := operation["mode"]) == "append":
             dst: str = operation.get("to", "@")
-            dst_nodes: list[_Node] = self.run_select_query(
+            dst_nodes: list[_Node] = self.select_nodes(
                 current_nodes, dst, mapping=True, relative=True,
             )
             for (target, key), value in zip(dst_nodes, values):
                 list.append(target[key], value)  # type: ignore
         elif mode == "extend":
             dst = operation.get("to", "@")
-            dst_nodes = self.run_select_query(
+            dst_nodes = self.select_nodes(
                 current_nodes, dst, mapping=True, relative=True,
             )
             for (target, key), value in zip(dst_nodes, values):
                 list.extend(target[key], value)  # type: ignore
         elif mode == "insert":
             dst = operation["to"]
-            dst_nodes = self.run_select_query(
+            dst_nodes = self.select_nodes(
                 current_nodes, dst, mapping=True, relative=True,
             )
 
@@ -435,7 +435,7 @@ class Manipulator:
                 list.insert(target, key, value)  # type: ignore
         elif mode == "set":
             dst = operation.get("to", "@")
-            dst_nodes = self.run_select_query(
+            dst_nodes = self.select_nodes(
                 current_nodes,
                 dst,
                 allow_slice=True,
@@ -446,7 +446,7 @@ class Manipulator:
                 target[key] = value  # type: ignore
         elif mode == "update":
             dst = operation.get("to", "@")
-            dst_nodes = self.run_select_query(
+            dst_nodes = self.select_nodes(
                 current_nodes, dst, mapping=True, relative=True,
             )
             for (target, key), value in zip(dst_nodes, values):
@@ -462,18 +462,18 @@ class Manipulator:
             if (op := operation["op"]) == "append":
                 path: str = operation.get("path", "$")
                 value: Any = operation["value"]
-                for target, key in self.run_select_query(node, path):
+                for target, key in self.select_nodes(node, path):
                     list.append(target[key], deepcopy(value))  # type: ignore
             elif op == "assert":
                 path = operation.get("path", "$")
                 expr: str = operation["expr"]
                 msg: str = operation.get("msg", expr)
-                current_nodes: list[_Node] = self.run_select_query(node, path)
+                current_nodes: list[_Node] = self.select_nodes(node, path)
                 if current_nodes != self.apply_filter(current_nodes, expr):
                     raise AssertionError(msg)
             elif op == "clear":
                 path = operation.get("path", "$")
-                for target, key in self.run_select_query(node, path):
+                for target, key in self.select_nodes(node, path):
                     new_target: Any = target[key]  # type: ignore
                     if not isinstance(new_target, (dict, list)):
                         msg = (
@@ -486,10 +486,10 @@ class Manipulator:
             elif op == "copy":
                 path = operation.get("path", "$")
                 src: str = operation["from"]
-                current_nodes = self.run_select_query(node, path)
+                current_nodes = self.select_nodes(node, path)
                 values: list[Any] = [
                     deepcopy(target[key])  # type: ignore
-                    for target, key in self.run_select_query(
+                    for target, key in self.select_nodes(
                         current_nodes,
                         src,
                         allow_slice=True,
@@ -502,7 +502,7 @@ class Manipulator:
                 path = operation["path"]
 
                 # Reverse to preserve indices for queries
-                for target, key in self.run_select_query(
+                for target, key in self.select_nodes(
                     node, path, allow_slice=True,
                 )[::-1]:
                     if target is root:
@@ -513,14 +513,14 @@ class Manipulator:
             elif op == "extend":
                 path = operation.get("path", "$")
                 value = operation["value"]
-                for target, key in self.run_select_query(node, path):
+                for target, key in self.select_nodes(node, path):
                     list.extend(target[key], deepcopy(value))  # type: ignore
             elif op == "insert":
                 path = operation["path"]
                 value = operation["value"]
 
                 # Reverse to preserve indices for queries
-                for target, key in self.run_select_query(node, path)[::-1]:
+                for target, key in self.select_nodes(node, path)[::-1]:
                     if target is root:
                         msg = "Can not insert at the root"
                         raise ValueError(msg)
@@ -529,8 +529,8 @@ class Manipulator:
             elif op == "move":
                 path = operation.get("path", "$")
                 src = operation["from"]
-                current_nodes = self.run_select_query(node, path)
-                src_nodes: list[_Node] = self.run_select_query(
+                current_nodes = self.select_nodes(node, path)
+                src_nodes: list[_Node] = self.select_nodes(
                     current_nodes,
                     src,
                     allow_slice=True,
@@ -553,24 +553,24 @@ class Manipulator:
                 self.paste_values(current_nodes, values[::-1], operation)
             elif op == "reverse":
                 path = operation.get("path", "$")
-                for target, key in self.run_select_query(node, path):
+                for target, key in self.select_nodes(node, path):
                     list.reverse(target[key])  # type: ignore
             elif op == "set":
                 path = operation.get("path", "$")
                 value = operation["value"]
-                for target, key in self.run_select_query(
+                for target, key in self.select_nodes(
                     node, path, allow_slice=True,
                 ):
                     target[key] = deepcopy(value)  # type: ignore
             elif op == "sort":
                 path = operation.get("path", "$")
                 reverse: bool = operation.get("reverse", False)
-                for target, key in self.run_select_query(node, path):
+                for target, key in self.select_nodes(node, path):
                     list.sort(target[key], reverse=reverse)  # type: ignore
             elif op == "update":
                 path = operation.get("path", "$")
                 value = operation["value"]
-                for target, key in self.run_select_query(node, path):
+                for target, key in self.select_nodes(node, path):
                     dict.update(target[key], deepcopy(value))  # type: ignore
             else:
                 msg = "Unknown operation"
@@ -642,7 +642,7 @@ class Manipulator:
 
         self._paste_values(current_nodes, values, operation)
 
-    def run_select_query(
+    def select_nodes(
         self,
         nodes: _Node | list[_Node],
         query: str,
@@ -651,7 +651,7 @@ class Manipulator:
         mapping: bool = False,
         relative: bool = False,
     ) -> list[_Node]:
-        """Run a JSON select query on a node or a list of nodes.
+        """Select nodes from a node or a list of nodes.
 
         :param nodes: a node or a list of nodes
         :param query: a JSON select query
@@ -668,7 +668,7 @@ class Manipulator:
             >>> manipulator = json.Manipulator()
             >>> root = [[1, 2, 3, 4, 5, 6]]
             >>> node = root, 0
-            >>> for target, key in manipulator.run_select_query(node, "$[@ > 3]"):
+            >>> for target, key in manipulator.select_nodes(node, "$[@ > 3]"):
             ...     target[key] = None
             ...
             >>> root[0]
@@ -680,7 +680,7 @@ class Manipulator:
         if isinstance(nodes, tuple):
             nodes = [nodes]
 
-        nodes, end = self._run_select_query(
+        nodes, end = self._select_nodes(
             nodes,
             query,
             allow_slice=allow_slice,

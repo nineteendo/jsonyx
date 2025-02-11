@@ -1,4 +1,4 @@
-"""JSON run_select_query tests."""
+"""JSON select_nodes tests."""
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-from jsonyx import JSONSyntaxError, run_select_query
+from jsonyx import JSONSyntaxError, select_nodes
 # pylint: disable-next=W0611
 from jsonyx.test import get_big_num  # type: ignore # noqa: F401
 from jsonyx.test import check_syntax_err
@@ -41,13 +41,13 @@ _slicer: _Slicer = _Slicer()
 def test_optional_marker(node: _Node, keep: bool) -> None:  # noqa: FBT001
     """Test optional marker."""
     expected: list[_Node] = [node] if keep else []
-    assert run_select_query(node, "$?", allow_slice=True) == expected
+    assert select_nodes(node, "$?", allow_slice=True) == expected
 
 
 def test_optional_marker_not_allowed() -> None:
     """Test optional marker when not allowed."""
     with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query([], "$?", mapping=True)
+        select_nodes([], "$?", mapping=True)
 
     check_syntax_err(exc_info, "Optional marker is not allowed", 2, 3)
 
@@ -61,7 +61,7 @@ def test_optional_marker_not_allowed() -> None:
 ])
 def test_property(key: str) -> None:
     """Test property."""
-    assert run_select_query(([{}], 0), f"$.{key}") == [({}, key)]
+    assert select_nodes(([{}], 0), f"$.{key}") == [({}, key)]
 
 
 @pytest.mark.parametrize("key", [
@@ -74,7 +74,7 @@ def test_property(key: str) -> None:
 def test_invalid_property(key: str) -> None:
     """Test invalid property."""
     with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query([], f"$.{key}")
+        select_nodes([], f"$.{key}")
 
     check_syntax_err(exc_info, "Expecting property", 3)
 
@@ -90,7 +90,7 @@ def test_list_property(query: str) -> None:
     """Test property on a list."""
     match: str = "List index must be int or slice, not"
     with pytest.raises(TypeError, match=match):
-        run_select_query(([[]], 0), query, allow_slice=True)
+        select_nodes(([[]], 0), query, allow_slice=True)
 
 
 @pytest.mark.parametrize("query", [
@@ -103,7 +103,7 @@ def test_list_property(query: str) -> None:
 def test_list_property_mapping(query: str) -> None:
     """Test property on a list with mapping."""
     with pytest.raises(TypeError, match="List index must be int, not"):
-        run_select_query(([[]], 0), query, mapping=True)
+        select_nodes(([[]], 0), query, mapping=True)
 
 
 @pytest.mark.parametrize(("query", "expected"), [
@@ -141,7 +141,7 @@ def test_list_property_mapping(query: str) -> None:
 def test_slice(query: str, expected: slice) -> None:
     """Test slice."""
     node: _Node = [[]], 0
-    assert run_select_query(node, query, allow_slice=True) == [([], expected)]
+    assert select_nodes(node, query, allow_slice=True) == [([], expected)]
 
 
 @pytest.mark.parametrize("query", [
@@ -154,7 +154,7 @@ def test_slice(query: str, expected: slice) -> None:
 def test_invalid_slice(query: str) -> None:
     """Test slice."""
     with pytest.raises(JSONSyntaxError):
-        run_select_query([], query)
+        select_nodes([], query)
 
 
 @pytest.mark.parametrize(("query", "msg", "colno"), [
@@ -174,7 +174,7 @@ def test_too_big_slice_idx(
 ) -> None:
     """Test too big slice index."""
     with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query([], query.format(big_num=big_num))
+        select_nodes([], query.format(big_num=big_num))
 
     check_syntax_err(exc_info, msg, colno, colno + len(big_num))
 
@@ -189,7 +189,7 @@ def test_too_big_slice_idx(
 def test_slice_not_allowed(query: str) -> None:
     """Test slice when not allowed."""
     with pytest.raises(TypeError, match="List index must be int, not"):
-        run_select_query(([[]], 0), query, mapping=True)
+        select_nodes(([[]], 0), query, mapping=True)
 
 
 @pytest.mark.parametrize("query", [
@@ -202,7 +202,7 @@ def test_slice_not_allowed(query: str) -> None:
 def test_dict_slice(query: str) -> None:
     """Test slice on a dict."""
     with pytest.raises(TypeError, match="Dict key must be str, not"):
-        run_select_query(([{}], 0), query)
+        select_nodes(([{}], 0), query)
 
 
 @pytest.mark.parametrize("num", [
@@ -214,19 +214,19 @@ def test_dict_slice(query: str) -> None:
 ])
 def test_idx(num: str) -> None:
     """Test index."""
-    assert run_select_query(([[]], 0), f"$[{num}]") == [([], int(num))]
+    assert select_nodes(([[]], 0), f"$[{num}]") == [([], int(num))]
 
 
 def test_invalid_idx() -> None:
     """Test invalid idx."""
     with pytest.raises(JSONSyntaxError):
-        run_select_query(([[]], 0), "$[1\uff10]")
+        select_nodes(([[]], 0), "$[1\uff10]")
 
 
 def test_too_big_idx(big_num: str) -> None:
     """Test too big index."""
     with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query([], f"$[{big_num}]")
+        select_nodes([], f"$[{big_num}]")
 
     check_syntax_err(exc_info, "Index is too big", 3, 3 + len(big_num))
 
@@ -241,7 +241,7 @@ def test_too_big_idx(big_num: str) -> None:
 def test_dict_idx(query: str) -> None:
     """Test index on a dict."""
     with pytest.raises(TypeError, match="Dict key must be str, not"):
-        run_select_query(([{}], 0), query)
+        select_nodes(([{}], 0), query)
 
 
 @pytest.mark.parametrize(("obj", "query", "keys"), [
@@ -250,13 +250,13 @@ def test_dict_idx(query: str) -> None:
 ])
 def test_filter(obj: _Target, query: str, keys: list[_Key]) -> None:
     """Test filter."""
-    assert run_select_query(([obj], 0), query) == [(obj, key) for key in keys]
+    assert select_nodes(([obj], 0), query) == [(obj, key) for key in keys]
 
 
 def test_filter_not_allowed() -> None:
     """Test filter when not allowed."""
     with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query([], "$[@]", mapping=True)
+        select_nodes([], "$[@]", mapping=True)
 
     check_syntax_err(exc_info, "Filter is not allowed", 3)
 
@@ -273,7 +273,7 @@ def test_filter_not_allowed() -> None:
 ])  # type: ignore
 def test_query(obj: _Target, query: str, expected: _Node) -> None:
     """Test root."""
-    assert run_select_query(([obj], 0), query) == [expected]
+    assert select_nodes(([obj], 0), query) == [expected]
 
 
 @pytest.mark.parametrize(("query", "msg", "colno"), [
@@ -285,7 +285,7 @@ def test_query(obj: _Target, query: str, expected: _Node) -> None:
 def test_invalid_query(query: str, msg: str, colno: int) -> None:
     """Test invalid query."""
     with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query([], query)
+        select_nodes([], query)
 
     check_syntax_err(exc_info, msg, colno)
 
@@ -294,7 +294,7 @@ def test_invalid_query(query: str, msg: str, colno: int) -> None:
 def test_invalid_relative_query(query: str) -> None:
     """Test invalid relative query."""
     with pytest.raises(JSONSyntaxError) as exc_info:
-        run_select_query([], query, relative=True)
+        select_nodes([], query, relative=True)
 
     check_syntax_err(exc_info, "Expecting a relative query")
 
@@ -309,4 +309,4 @@ def test_invalid_relative_query(query: str) -> None:
 def test_invalid_target(query: str) -> None:
     """Test invalid target."""
     with pytest.raises(TypeError, match="Target must be dict or list, not"):
-        run_select_query(([0], 0), query)
+        select_nodes(([0], 0), query)

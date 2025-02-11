@@ -18,7 +18,7 @@ __all__: list[str] = [
     "loads",
     "make_patch",
     "read",
-    "run_select_query",
+    "select_nodes",
     "write",
 ]
 __version__: str = "2.0.0"
@@ -505,7 +505,7 @@ def paste_values(
     )
 
 
-def run_select_query(
+def select_nodes(
     nodes: _Node | list[_Node],
     query: str,
     *,
@@ -515,7 +515,7 @@ def run_select_query(
     relative: bool = False,
     use_decimal: bool = False,
 ) -> list[_Node]:
-    """Run a JSON select query on a node or a list of nodes.
+    """Select nodes from a node or a list of nodes.
 
     .. versionadded:: 2.0
 
@@ -535,7 +535,7 @@ def run_select_query(
         >>> import jsonyx as json
         >>> root = [[1, 2, 3, 4, 5, 6]]
         >>> node = root, 0
-        >>> for target, key in json.run_select_query(node, "$[@ > 3]"):
+        >>> for target, key in json.select_nodes(node, "$[@ > 3]"):
         ...     target[key] = None
         ...
         >>> root[0]
@@ -544,7 +544,7 @@ def run_select_query(
     .. tip:: Using queries instead of indices is more robust.
 
     """
-    return Manipulator(allow=allow, use_decimal=use_decimal).run_select_query(
+    return Manipulator(allow=allow, use_decimal=use_decimal).select_nodes(
         nodes,
         query,
         allow_slice=allow_slice,
