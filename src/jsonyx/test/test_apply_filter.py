@@ -1,4 +1,4 @@
-"""JSON run_filter_query tests."""
+"""JSON apply_filter tests."""
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-from jsonyx import JSONSyntaxError, run_filter_query
+from jsonyx import JSONSyntaxError, apply_filter
 from jsonyx.test import check_syntax_err
 
 if TYPE_CHECKING:
@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 def test_has_key(obj: list[Any], keep: bool) -> None:  # noqa: FBT001
     """Test has key."""
     expected: list[_Node] = [(obj, 0)] if keep else []
-    assert run_filter_query((obj, 0), "@") == expected
+    assert apply_filter((obj, 0), "@") == expected
 
 
 @pytest.mark.parametrize(("obj", "keep"), [
@@ -37,7 +37,7 @@ def test_has_key(obj: list[Any], keep: bool) -> None:  # noqa: FBT001
 def test_has_not_key(obj: list[Any], keep: bool) -> None:  # noqa: FBT001
     """Test has not key."""
     expected: list[_Node] = [(obj, 0)] if keep else []
-    assert run_filter_query((obj, 0), "!@") == expected
+    assert apply_filter((obj, 0), "!@") == expected
 
 
 @pytest.mark.parametrize(("query", "keep"), [
@@ -72,7 +72,7 @@ def test_has_not_key(obj: list[Any], keep: bool) -> None:  # noqa: FBT001
 def test_operator(query: str, keep: bool) -> None:  # noqa: FBT001
     """Test operator."""
     expected: list[_Node] = [([0], 0)] if keep else []
-    assert run_filter_query(([0], 0), query) == expected
+    assert apply_filter(([0], 0), query) == expected
 
 
 @pytest.mark.parametrize("query", [
@@ -87,13 +87,13 @@ def test_operator(query: str, keep: bool) -> None:  # noqa: FBT001
 ])
 def test_operator_whitespace(query: str) -> None:
     """Test whitespace around operator."""
-    assert not run_filter_query([], query)
+    assert not apply_filter([], query)
 
 
 def test_and() -> None:
     """Test and."""
     query: str = "@ != 1 && @ != 2 && @ != 3"
-    assert run_filter_query(([0], 0), query) == [([0], 0)]
+    assert apply_filter(([0], 0), query) == [([0], 0)]
 
 
 @pytest.mark.parametrize("query", [
@@ -105,7 +105,7 @@ def test_and() -> None:
 ])
 def test_whitespace(query: str) -> None:
     """Test whitespace around and."""
-    assert run_filter_query(([0], 0), query) == [([0], 0)]
+    assert apply_filter(([0], 0), query) == [([0], 0)]
 
 
 @pytest.mark.parametrize(("query", "msg", "colno", "end_colno"), [
@@ -121,7 +121,7 @@ def test_invalid_query(
 ) -> None:
     """Test invalid query."""
     with pytest.raises(JSONSyntaxError) as exc_info:
-        run_filter_query([], query)
+        apply_filter([], query)
 
     check_syntax_err(exc_info, msg, colno, end_colno)
 
@@ -129,4 +129,4 @@ def test_invalid_query(
 def test_slice() -> None:
     """Test slice."""
     with pytest.raises(TypeError, match="List index must be int"):
-        run_filter_query(([[]], 0), "@[:]")
+        apply_filter(([[]], 0), "@[:]")

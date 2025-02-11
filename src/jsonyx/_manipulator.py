@@ -220,7 +220,7 @@ class Manipulator:
 
         return value, end
 
-    def _run_filter_query(
+    def _apply_filter(
         self, nodes: list[_Node], query: str, end: int,
     ) -> tuple[list[_Node], int]:
         while True:
@@ -386,7 +386,7 @@ class Manipulator:
                             range(len(target))
                         )
                     ]
-                    nodes, end = self._run_filter_query(nodes, query, end)
+                    nodes, end = self._apply_filter(nodes, query, end)
 
                 if query[end:end + 1] != "]":
                     msg = "Expecting a closing bracket"
@@ -469,7 +469,7 @@ class Manipulator:
                 expr: str = operation["expr"]
                 msg: str = operation.get("msg", expr)
                 current_nodes: list[_Node] = self.run_select_query(node, path)
-                if current_nodes != self.run_filter_query(current_nodes, expr):
+                if current_nodes != self.apply_filter(current_nodes, expr):
                     raise AssertionError(msg)
             elif op == "clear":
                 path = operation.get("path", "$")
@@ -694,10 +694,10 @@ class Manipulator:
 
         return nodes
 
-    def run_filter_query(
+    def apply_filter(
         self, nodes: _Node | list[_Node], query: str,
     ) -> list[_Node]:
-        """Run a JSON filter query on a node or a list of nodes.
+        """Apply a JSON filter query to a node or a list of nodes.
 
         :param nodes: a node or a list of nodes
         :param query: a JSON filter query
@@ -710,13 +710,13 @@ class Manipulator:
             >>> import jsonyx as json
             >>> manipulator = json.Manipulator()
             >>> node = [None], 0
-            >>> assert manipulator.run_filter_query(node, "@ == null")
+            >>> assert manipulator.apply_filter(node, "@ == null")
 
         """
         if isinstance(nodes, tuple):
             nodes = [nodes]
 
-        nodes, end = self._run_filter_query(nodes, query, 0)
+        nodes, end = self._apply_filter(nodes, query, 0)
         if end < len(query):
             msg: str = "Expecting end of file"
             raise _errmsg(msg, query, end)

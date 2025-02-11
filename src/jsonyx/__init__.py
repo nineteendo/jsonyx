@@ -7,6 +7,7 @@ __all__: list[str] = [
     "Encoder",
     "JSONSyntaxError",
     "Manipulator",
+    "apply_filter",
     "apply_patch",
     "detect_encoding",
     "dump",
@@ -17,7 +18,6 @@ __all__: list[str] = [
     "loads",
     "make_patch",
     "read",
-    "run_filter_query",
     "run_select_query",
     "write",
 ]
@@ -553,14 +553,14 @@ def run_select_query(
     )
 
 
-def run_filter_query(
+def apply_filter(
     nodes: _Node | list[_Node],
     query: str,
     *,
     allow: Container[str] = NOTHING,
     use_decimal: bool = False,
 ) -> list[_Node]:
-    """Run a JSON filter query on a node or a list of nodes.
+    """Apply a JSON filter query to a node or a list of nodes.
 
     .. versionadded:: 2.0
 
@@ -576,10 +576,10 @@ def run_filter_query(
     Example:
         >>> import jsonyx as json
         >>> node = [None], 0
-        >>> assert json.run_filter_query(node, "@ == null")
+        >>> assert json.apply_filter(node, "@ == null")
 
     """
-    return Manipulator(allow=allow, use_decimal=use_decimal).run_filter_query(
+    return Manipulator(allow=allow, use_decimal=use_decimal).apply_filter(
         nodes, query,
     )
 
