@@ -248,7 +248,7 @@ def write(
     :param separators: the item and key separator
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
-    :param types: a dictionary of additional :ref:`types <protocol_types>`
+    :param types: a dictionary of :ref:`additional types <protocol_types>`
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
     :raises UnicodeEncodeError: when failing to encode the file
@@ -325,7 +325,7 @@ def dump(
     :param separators: the item and key separator
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
-    :param types: a dictionary of additional :ref:`types <protocol_types>`
+    :param types: a dictionary of :ref:`additional types <protocol_types>`
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
@@ -398,7 +398,7 @@ def dumps(
     :param separators: the item and key separator
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
-    :param types: a dictionary of additional :ref:`types <protocol_types>`
+    :param types: a dictionary of :ref:`additional types <protocol_types>`
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values

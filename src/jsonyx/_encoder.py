@@ -310,7 +310,7 @@ class Encoder:
     :param separators: the item and key separator
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
-    :param types: a dictionary of additional :ref:`types <protocol_types>`
+    :param types: a dictionary of :ref:`additional types <protocol_types>`
 
     .. note:: The item separator is automatically stripped when indented.
 
