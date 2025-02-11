@@ -81,7 +81,9 @@ Dict with 256 lists of 256 dicts with 1 int 18.00x 22.32x  12.38x 10.84x    1.00
 =========================================== ====== ====== ======= ====== ======== ============
 
 .. warning:: The Python version of :mod:`jsonyx` is up to 36.25x slower, so
-    double check that the C version is installed.
+    make sure you have a
+    `C compiler <https://wiki.python.org/moin/WindowsCompilers>` installed on
+    Windows.
 
 Check out the :doc:`get-started` section for further information, including how
 to :ref:`install <installation>` the project.
