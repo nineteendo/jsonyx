@@ -68,7 +68,7 @@ Options
 
 .. option:: -q, --unquoted-keys
 
-    Don't quote keys which are :ref:`identifiers <identifiers>`..
+    Don't quote keys which are :ref:`identifiers <identifiers>`.
 
 .. option:: -s, --sort-keys
 
