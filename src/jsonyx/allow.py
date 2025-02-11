@@ -71,7 +71,7 @@ TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
 """
 
 UNQUOTED_KEYS: frozenset[str] = frozenset({"unquoted_keys"})
-"""Allow unquoted keys in objects which are identifiers.
+"""Allow unquoted keys in objects which are :ref:`identifiers <identifiers>`.
 
 .. versionadded:: 2.0
 

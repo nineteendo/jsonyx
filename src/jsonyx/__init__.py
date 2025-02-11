@@ -244,7 +244,7 @@ def write(
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
     :param max_indent_level: the level up to which to indent
-    :param quoted_keys: quote keys which are identifiers
+    :param quoted_keys: quote keys which are :ref:`identifiers <identifiers>`
     :param separators: the item and key separator
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
@@ -321,7 +321,7 @@ def dump(
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
     :param max_indent_level: the level up to which to indent
-    :param quoted_keys: quote keys which are identifiers
+    :param quoted_keys: quote keys which are :ref:`identifiers <identifiers>`
     :param separators: the item and key separator
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
@@ -394,7 +394,7 @@ def dumps(
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
     :param max_indent_level: the level up to which to indent
-    :param quoted_keys: quote keys which are identifiers
+    :param quoted_keys: quote keys which are :ref:`identifiers <identifiers>`
     :param separators: the item and key separator
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
