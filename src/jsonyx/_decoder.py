@@ -188,6 +188,7 @@ class JSONSyntaxError(SyntaxError):
 
         self.colno: int = colno
         self.end_colno: int = end_colno
+        self.args = (msg, filename, doc, start, end)
 
     def __str__(self) -> str:
         """Convert to string."""

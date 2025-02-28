@@ -26,6 +26,7 @@ jsonyx 2.0.0 (unreleased)
 - Added :func:`jsonyx.Manipulator`
 - Changed error for big integers to :exc:`jsonyx.JSONSyntaxError`
 - Changed error for deep nesting to :exc:`jsonyx.JSONSyntaxError`
+- Fixed canonical string representation of :exc:`jsonyx.JSONSyntaxError`
 - Fixed line comment detection
 - Fixed spelling of "commas" in error messages
 - Fixed ``end_offset`` of :exc:`jsonyx.JSONSyntaxError`
