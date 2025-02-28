@@ -530,9 +530,17 @@ except ImportError:
             if nextchar == '"':
                 value, end = scan_string(filename, s, idx + 1)
             elif nextchar == "{":
-                value, end = scan_object(filename, s, idx + 1)
+                try:
+                    value, end = scan_object(filename, s, idx + 1)
+                except RecursionError:
+                    msg = "Object is too deeply nested"
+                    raise _errmsg(msg, filename, s, idx) from None
             elif nextchar == "[":
-                value, end = scan_array(filename, s, idx + 1)
+                try:
+                    value, end = scan_array(filename, s, idx + 1)
+                except RecursionError:
+                    msg = "Array is too deeply nested"
+                    raise _errmsg(msg, filename, s, idx) from None
             elif nextchar == "n" and s[idx:idx + 4] == "null":
                 value, end = None, idx + 4
             elif nextchar == "t" and s[idx:idx + 4] == "true":
@@ -649,7 +657,6 @@ class Decoder:
 
         :param filename: the path to the JSON file
         :raises JSONSyntaxError: if the JSON file is invalid
-        :raises RecursionError: if the JSON file is too deeply nested
         :raises UnicodeDecodeError: when failing to decode the file
         :return: a Python object
 
@@ -675,7 +682,6 @@ class Decoder:
         :param fp: an open JSON file
         :param root: the path to the archive containing this JSON file
         :raises JSONSyntaxError: if the JSON file is invalid
-        :raises RecursionError: if the JSON file is too deeply nested
         :raises UnicodeDecodeError: when failing to decode the file
         :return: a Python object
 
@@ -702,7 +708,6 @@ class Decoder:
         :param s: a JSON string
         :param filename: the path to the JSON file
         :raises JSONSyntaxError: if the JSON string is invalid
-        :raises RecursionError: if the JSON string is too deeply nested
         :raises UnicodeDecodeError: when failing to decode the string
         :return: a Python object
 

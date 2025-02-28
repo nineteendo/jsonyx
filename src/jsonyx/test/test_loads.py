@@ -611,11 +611,17 @@ def test_trailing_comma(
     assert json.loads(s, allow=TRAILING_COMMA) == expected
 
 
-@pytest.mark.parametrize("start", ["[", '{"":'])
-def test_recursion(json: ModuleType, start: str) -> None:
+@pytest.mark.parametrize(("start", "msg"), [
+    ("[", "Array is too deeply nested"),
+    ('{"":', "Object is too deeply nested"),
+])
+def test_recursion(json: ModuleType, start: str, msg: str) -> None:
     """Test recursion."""
-    with pytest.raises(RecursionError):
+    with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(start * 100_000)
+
+    exc: Any = exc_info.value
+    assert exc.msg == msg
 
 
 @pytest.mark.parametrize("s", [

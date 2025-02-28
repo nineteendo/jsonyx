@@ -118,7 +118,6 @@ def read(
     :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON file is invalid
-    :raises RecursionError: if the JSON file is too deeply nested
     :raises UnicodeDecodeError: when failing to decode the file
     :return: a Python object.
 
@@ -157,7 +156,6 @@ def load(
     :param root: the path to the archive containing this JSON file
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON file is invalid
-    :raises RecursionError: if the JSON file is too deeply nested
     :raises UnicodeDecodeError: when failing to decode the file
     :return: a Python object
 
@@ -192,7 +190,6 @@ def loads(
     :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON string is invalid
-    :raises RecursionError: if the JSON string is too deeply nested
     :raises UnicodeDecodeError: when failing to decode the string
     :return: a Python object
 
