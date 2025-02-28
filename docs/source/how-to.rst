@@ -127,8 +127,8 @@ Decoding arbitrary objects
 .. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
     suited for this.
 
-Disabling the integer string conversion length limit
-----------------------------------------------------
+Encoding and decoding big integers
+----------------------------------
 
 >>> import jsonyx as json
 >>> from sys import set_int_max_str_digits
