@@ -75,8 +75,10 @@ Check if the correct version is installed
     $ jsonyx --version
     jsonyx 2.0.0 (C extension)
 
-.. note:: If the version number is followed by ``(Python)``, the C extension is
-    not installed.
+.. warning:: If the version number is followed by ``(Python)``, the performance
+    will be up to 36.25x slower, so make sure you have a
+    `C compiler <https://wiki.python.org/moin/WindowsCompilers>`_ installed on
+    Windows.
 
 Quick start
 -----------
