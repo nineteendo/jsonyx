@@ -124,7 +124,7 @@ def _unescape_unicode(filename: str, s: str, end: int) -> int:
 
 
 class UnicodeFileDecodeError(UnicodeDecodeError):
-    """Unicode decoding error in a file.
+    r"""Unicode decoding error in a file.
 
     :param reason: an error message
     :param filename: the path to the file
@@ -135,10 +135,10 @@ class UnicodeFileDecodeError(UnicodeDecodeError):
 
     Example:
         >>> import jsonyx as json
-        >>> raise json.UnicodeFileDecodeError("invalid start byte", "<string>", "utf_8", b'\x80', 0, 1)
+        >>> raise json.UnicodeFileDecodeError("invalid start byte", "<string>", "utf-8", b'\x80', 0, 1)
         Traceback (most recent call last):
           File "<stdin>", line 1, in <module>
-        jsonyx.UnicodeFileDecodeError: 'utf_8' codec can't decode byte 0x80 in file <string>, position 0: invalid start byte
+        jsonyx.UnicodeFileDecodeError: 'utf-8' codec can't decode byte 0x80 in file <string>, position 0: invalid start byte
     """
 
     def __init__(
