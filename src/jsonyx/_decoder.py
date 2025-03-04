@@ -1,7 +1,9 @@
 """JSON decoder."""
 from __future__ import annotations
 
-__all__: list[str] = ["Decoder", "JSONSyntaxError", "detect_encoding"]
+__all__: list[str] = [
+    "Decoder", "JSONSyntaxError", "detect_encoding", "UnicodeFileDecodeError",
+]
 
 import re
 import sys
@@ -119,6 +121,55 @@ def _unescape_unicode(filename: str, s: str, end: int) -> int:
 
     msg: str = "Expecting 4 hex digits"
     raise _errmsg(msg, filename, s, end, -4)
+
+
+class UnicodeFileDecodeError(UnicodeDecodeError):
+    """Unicode decoding error in a file.
+
+    :param reason: an error message
+    :param filename: the path to the file
+    :param encoding: the encoding
+    :param object: the byte string
+    :param start: the start position
+    :param end: the end position
+
+    Example:
+        >>> import jsonyx as json
+        >>> raise json.UnicodeFileDecodeError("invalid start byte", "<string>", "utf_8", b'\x80', 0, 1)
+        Traceback (most recent call last):
+          File "<stdin>", line 1, in <module>
+        jsonyx.UnicodeFileDecodeError: 'utf_8' codec can't decode byte 0x80 in file <string>, position 0: invalid start byte
+    """
+
+    def __init__(
+        self,
+        reason: str,
+        filename: str,
+        encoding: str,
+        object: bytes,
+        start: int,
+        end: int,
+    ) -> None:
+        super().__init__(encoding, object, start, end, reason)
+        self.filename: str = filename
+        self.args = (reason, filename, encoding, object, start, end)
+
+    def __str__(self) -> str:
+        if self.end == self.start + 1:
+            byte_info: str = f"byte {self.object[self.start]:#04x}"
+            position_range: str = f"{self.start}"
+        else:
+            byte_info = "bytes"
+            position_range = f"{self.start}-{self.end - 1}"
+
+        return (
+            f"{self.encoding!r} codec can't decode {byte_info} in file "
+            f"{self.filename}, position {position_range}: "
+            f"{self.reason}"
+        )
+
+
+UnicodeFileDecodeError.__module__ = "jsonyx"
 
 
 class JSONSyntaxError(SyntaxError):
@@ -658,7 +709,7 @@ class Decoder:
 
         :param filename: the path to the JSON file
         :raises JSONSyntaxError: if the JSON file is invalid
-        :raises UnicodeDecodeError: when failing to decode the file
+        :raises UnicodeFileDecodeError: when failing to decode the file
         :return: a Python object
 
         Example:
@@ -683,7 +734,7 @@ class Decoder:
         :param fp: an open JSON file
         :param root: the path to the archive containing this JSON file
         :raises JSONSyntaxError: if the JSON file is invalid
-        :raises UnicodeDecodeError: when failing to decode the file
+        :raises UnicodeFileDecodeError: when failing to decode the file
         :return: a Python object
 
         Example:
@@ -709,7 +760,7 @@ class Decoder:
         :param s: a JSON string
         :param filename: the path to the JSON file
         :raises JSONSyntaxError: if the JSON string is invalid
-        :raises UnicodeDecodeError: when failing to decode the string
+        :raises UnicodeFileDecodeError: when failing to decode the string
         :return: a Python object
 
         Example:
@@ -727,7 +778,13 @@ class Decoder:
             filename = realpath(filename)
 
         if not isinstance(s, str):
-            s = s.decode(detect_encoding(s), self._errors)  # type: ignore
+            try:
+                s = s.decode(detect_encoding(s), self._errors)  # type: ignore
+            except UnicodeDecodeError as exc:
+                raise UnicodeFileDecodeError(
+                    exc.reason, filename, exc.encoding, exc.object, exc.start,
+                    exc.end,
+                ) from None
 
         return self._scanner(filename, s)  # type: ignore
 

@@ -54,7 +54,7 @@ def test_surrogate(json: ModuleType, string: str) -> None:
 def test_surrogate_not_allowed(json: ModuleType, string: str) -> None:
     """Test surrogate when not allowed."""
     b: bytes = f'"{string}"'.encode(errors="surrogatepass")
-    with pytest.raises(UnicodeDecodeError):
+    with pytest.raises(json.UnicodeFileDecodeError):
         json.loads(b)
 
 

@@ -24,6 +24,7 @@ jsonyx 2.0.0 (unreleased)
 - Added :func:`jsonyx.apply_filter` and :func:`jsonyx.select_nodes`
 - Added :func:`jsonyx.paste_values`
 - Added :func:`jsonyx.Manipulator`
+- Added :func:`jsonyx.UnicodeFileDecodeError`
 - Changed error for big integers to :exc:`jsonyx.JSONSyntaxError`
 - Changed error for deep nesting to :exc:`jsonyx.JSONSyntaxError`
 - Fixed canonical string representation of :exc:`jsonyx.JSONSyntaxError`
@@ -31,6 +32,7 @@ jsonyx 2.0.0 (unreleased)
 - Fixed spelling of "commas" in error messages
 - Fixed ``end_offset`` of :exc:`jsonyx.JSONSyntaxError`
 - Improved documentation
+- Included filename when failing to decode a file
 - Made :class:`tuple` JSON serializable
 - Merged ``item_separator`` and ``key_separator`` as ``separators`` for
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and

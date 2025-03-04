@@ -6,6 +6,7 @@ __all__: list[str] = [
     "Decoder",
     "Encoder",
     "JSONSyntaxError",
+    "UnicodeFileDecodeError",
     "Manipulator",
     "apply_filter",
     "apply_patch",
@@ -25,7 +26,9 @@ __version__: str = "2.0.0"
 
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
-from jsonyx._decoder import Decoder, JSONSyntaxError, detect_encoding
+from jsonyx._decoder import (
+    Decoder, JSONSyntaxError, UnicodeFileDecodeError, detect_encoding,
+)
 from jsonyx._differ import make_patch
 from jsonyx._encoder import Encoder
 from jsonyx._manipulator import Manipulator
@@ -118,7 +121,7 @@ def read(
     :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON file is invalid
-    :raises UnicodeDecodeError: when failing to decode the file
+    :raises UnicodeFileDecodeError: when failing to decode the file
     :return: a Python object.
 
     Example:
@@ -156,7 +159,7 @@ def load(
     :param root: the path to the archive containing this JSON file
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON file is invalid
-    :raises UnicodeDecodeError: when failing to decode the file
+    :raises UnicodeFileDecodeError: when failing to decode the file
     :return: a Python object
 
     Example:
@@ -190,7 +193,7 @@ def loads(
     :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the JSON string is invalid
-    :raises UnicodeDecodeError: when failing to decode the string
+    :raises UnicodeFileDecodeError: when failing to decode the string
     :return: a Python object
 
     Example:
