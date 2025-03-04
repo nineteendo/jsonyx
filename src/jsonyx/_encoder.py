@@ -393,6 +393,7 @@ class Encoder:
         :param fp: an open JSON file
         :raises RecursionError: if the object is too deeply nested
         :raises TypeError: for unserializable values
+        :raises UnicodeEncodeError: when failing to write to the file
         :raises ValueError: for invalid values
 
         Example:

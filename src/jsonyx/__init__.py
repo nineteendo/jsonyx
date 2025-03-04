@@ -57,7 +57,7 @@ if TYPE_CHECKING:
     _Hook = Callable[[Any], Any]
 
 
-def format_syntax_error(exc: JSONSyntaxError) -> list[str]:
+def format_syntax_error(exc: TruncatedSyntaxError) -> list[str]:
     """Format a JSON syntax error.
 
     :param exc: a JSON syntax error
@@ -325,6 +325,7 @@ def dump(
     :param types: a dictionary of :ref:`additional types <protocol_types>`
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
+    :raises UnicodeEncodeError: when failing to write to the file
     :raises ValueError: for invalid values
 
     Example:
