@@ -58,9 +58,9 @@ if TYPE_CHECKING:
 
 
 def format_syntax_error(exc: TruncatedSyntaxError) -> list[str]:
-    """Format a JSON syntax error.
+    """Format a truncated syntax error.
 
-    :param exc: a JSON syntax error
+    :param exc: a truncated syntax error
     :return: a list of strings, each ending in a newline
 
     Example:

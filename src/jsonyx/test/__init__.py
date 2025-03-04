@@ -30,7 +30,7 @@ def check_syntax_err(
     colno: int = 1,
     end_colno: int = -1,
 ) -> None:
-    """Check JSON syntax error."""
+    """Check truncated syntax error."""
     exc: Any = exc_info.value
     if end_colno < 0:
         end_colno = colno
