@@ -214,7 +214,10 @@ TruncatedSyntaxError.__module__ = "jsonyx"
 
 
 class JSONSyntaxError(TruncatedSyntaxError):
-    pass
+    """Invalid JSON (query) syntax.
+
+    See :exc:`jsonyx.TruncatedSyntaxError` for more information.
+    """
 
 
 JSONSyntaxError.__module__ = "jsonyx"
@@ -737,12 +740,12 @@ class Decoder:
             try:
                 s = s.decode(encoding, self._errors)  # type: ignore
             except UnicodeDecodeError as exc:
-                # TODO(Nice Zombies): combine 'surrogatepass' with 'replace'
-                doc = exc.object.decode(encoding, 'replace')
-                start = len(exc.object[:exc.start].decode(encoding, 'replace'))
-                end = len(exc.object[:exc.end].decode(encoding, 'replace'))
+                doc: str = exc.object.decode(encoding, 'replace')
+                start: str = exc.object[:exc.start].decode(encoding, 'replace')
+                end: str = exc.object[:exc.end].decode(encoding, 'replace')
                 raise TruncatedSyntaxError(
-                    f"(unicode error) {exc}", filename, doc, start, end
+                    f"(unicode error) {exc}", filename, doc, len(start),
+                    len(end),
                 ) from None
 
         return self._scanner(filename, s)  # type: ignore
