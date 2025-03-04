@@ -11,7 +11,7 @@ from traceback import format_exception_only
 from typing import Any, Literal, cast
 
 from jsonyx import (
-    Decoder, Encoder, JSONSyntaxError, Manipulator, __version__,
+    Decoder, Encoder, Manipulator, TruncatedSyntaxError, __version__,
     format_syntax_error, make_patch,
 )
 from jsonyx.allow import EVERYTHING, NOTHING
@@ -237,7 +237,7 @@ def _run(args: _Namespace) -> None:
             output_obj = make_patch(old_input_obj, input_obj)
             if len(output_obj) == 1:
                 output_obj = output_obj[0]
-    except JSONSyntaxError as exc:
+    except TruncatedSyntaxError as exc:
         stderr.write("".join(format_syntax_error(exc)))
         sys.exit(1)
     except (AssertionError, TypeError, ValueError) as exc:

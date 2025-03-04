@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 __all__: list[str] = [
-    "Decoder", "JSONSyntaxError", "detect_encoding", "UnicodeFileDecodeError",
+    "Decoder", "JSONSyntaxError", "TruncatedSyntaxError", "detect_encoding",
 ]
 
 import re
@@ -123,73 +123,24 @@ def _unescape_unicode(filename: str, s: str, end: int) -> int:
     raise _errmsg(msg, filename, s, end, -4)
 
 
-class UnicodeFileDecodeError(UnicodeDecodeError):
-    r"""Unicode decoding error in a file.
-
-    :param reason: an error message
-    :param filename: the path to the file
-    :param encoding: the encoding
-    :param object: the byte string
-    :param start: the start position
-    :param end: the end position
-
-    Example:
-        >>> import jsonyx as json
-        >>> raise json.UnicodeFileDecodeError("invalid start byte", "<string>", "utf-8", b'\x80', 0, 1)
-        Traceback (most recent call last):
-          File "<stdin>", line 1, in <module>
-        jsonyx.UnicodeFileDecodeError: 'utf-8' codec can't decode byte 0x80 in file <string>, position 0: invalid start byte
-    """
-
-    def __init__(
-        self,
-        reason: str,
-        filename: str,
-        encoding: str,
-        object: bytes,
-        start: int,
-        end: int,
-    ) -> None:
-        super().__init__(encoding, object, start, end, reason)
-        self.filename: str = filename
-        self.args = (reason, filename, encoding, object, start, end)
-
-    def __str__(self) -> str:
-        if self.end == self.start + 1:
-            byte_info: str = f"byte {self.object[self.start]:#04x}"
-            position_range: str = f"{self.start}"
-        else:
-            byte_info = "bytes"
-            position_range = f"{self.start}-{self.end - 1}"
-
-        return (
-            f"{self.encoding!r} codec can't decode {byte_info} in file "
-            f"{self.filename}, position {position_range}: "
-            f"{self.reason}"
-        )
-
-
-UnicodeFileDecodeError.__module__ = "jsonyx"
-
-
-class JSONSyntaxError(SyntaxError):
-    """Invalid JSON (query) syntax.
+class TruncatedSyntaxError(SyntaxError):
+    """Truncated syntax error.
 
     :param msg: an error message
-    :param filename: the path to the JSON file
-    :param doc: a JSON string
+    :param filename: the path to the file
+    :param doc: a string
     :param start: the start position
     :param end: the end position or negative offset
 
     Example:
         >>> import jsonyx as json
-        >>> raise json.JSONSyntaxError("Expecting value", "<string>", "[,]", 1)
+        >>> raise json.TruncatedSyntaxError("Expecting value", "<string>", "[,]", 1)
         Traceback (most recent call last):
           File "<stdin>", line 1, in <module>
           File "<string>", line 1
             [,]
              ^
-        jsonyx.JSONSyntaxError: Expecting value
+        jsonyx.TruncatedSyntaxError: Expecting value
 
     .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the
         exception.
@@ -199,7 +150,7 @@ class JSONSyntaxError(SyntaxError):
     def __init__(
         self, msg: str, filename: str, doc: str, start: int = 0, end: int = 0,
     ) -> None:
-        """Create a new JSON syntax error."""
+        """Create a new truncated syntax error."""
         lineno: int = (
             doc.count("\n", 0, start)
             + doc.count("\r", 0, start)
@@ -257,6 +208,13 @@ class JSONSyntaxError(SyntaxError):
             f"{self.msg} ({self.filename}, line {line_range}, column "
             f"{column_range})"
         )
+
+
+TruncatedSyntaxError.__module__ = "jsonyx"
+
+
+class JSONSyntaxError(TruncatedSyntaxError):
+    pass
 
 
 JSONSyntaxError.__module__ = "jsonyx"
@@ -708,8 +666,7 @@ class Decoder:
         """Deserialize a JSON file to a Python object.
 
         :param filename: the path to the JSON file
-        :raises JSONSyntaxError: if the JSON file is invalid
-        :raises UnicodeFileDecodeError: when failing to decode the file
+        :raises TruncatedSyntaxError: when failing to decode the file
         :return: a Python object
 
         Example:
@@ -733,8 +690,7 @@ class Decoder:
 
         :param fp: an open JSON file
         :param root: the path to the archive containing this JSON file
-        :raises JSONSyntaxError: if the JSON file is invalid
-        :raises UnicodeFileDecodeError: when failing to decode the file
+        :raises TruncatedSyntaxError: when failing to decode the file
         :return: a Python object
 
         Example:
@@ -759,8 +715,7 @@ class Decoder:
 
         :param s: a JSON string
         :param filename: the path to the JSON file
-        :raises JSONSyntaxError: if the JSON string is invalid
-        :raises UnicodeFileDecodeError: when failing to decode the string
+        :raises TruncatedSyntaxError: when failing to decode the string
         :return: a Python object
 
         Example:
@@ -778,12 +733,16 @@ class Decoder:
             filename = realpath(filename)
 
         if not isinstance(s, str):
+            encoding = detect_encoding(s)
             try:
-                s = s.decode(detect_encoding(s), self._errors)  # type: ignore
+                s = s.decode(encoding, self._errors)  # type: ignore
             except UnicodeDecodeError as exc:
-                raise UnicodeFileDecodeError(
-                    exc.reason, filename, exc.encoding, exc.object, exc.start,
-                    exc.end,
+                # TODO(Nice Zombies): combine 'surrogatepass' with 'replace'
+                doc = exc.object.decode(encoding, 'replace')
+                start = len(exc.object[:exc.start].decode(encoding, 'replace'))
+                end = len(exc.object[:exc.end].decode(encoding, 'replace'))
+                raise TruncatedSyntaxError(
+                    f"(unicode error) {exc}", filename, doc, start, end
                 ) from None
 
         return self._scanner(filename, s)  # type: ignore

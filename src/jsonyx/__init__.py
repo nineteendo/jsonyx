@@ -6,7 +6,7 @@ __all__: list[str] = [
     "Decoder",
     "Encoder",
     "JSONSyntaxError",
-    "UnicodeFileDecodeError",
+    "TruncatedSyntaxError",
     "Manipulator",
     "apply_filter",
     "apply_patch",
@@ -27,7 +27,7 @@ __version__: str = "2.0.0"
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
 from jsonyx._decoder import (
-    Decoder, JSONSyntaxError, UnicodeFileDecodeError, detect_encoding,
+    Decoder, JSONSyntaxError, TruncatedSyntaxError, detect_encoding,
 )
 from jsonyx._differ import make_patch
 from jsonyx._encoder import Encoder
@@ -120,8 +120,7 @@ def read(
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
-    :raises JSONSyntaxError: if the JSON file is invalid
-    :raises UnicodeFileDecodeError: when failing to decode the file
+    :raises TruncatedSyntaxError: when failing to decode the file
     :return: a Python object.
 
     Example:
@@ -158,8 +157,7 @@ def load(
     :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
     :param root: the path to the archive containing this JSON file
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
-    :raises JSONSyntaxError: if the JSON file is invalid
-    :raises UnicodeFileDecodeError: when failing to decode the file
+    :raises TruncatedSyntaxError: when failing to decode the file
     :return: a Python object
 
     Example:
@@ -192,8 +190,7 @@ def loads(
     :param filename: the path to the JSON file
     :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
-    :raises JSONSyntaxError: if the JSON string is invalid
-    :raises UnicodeFileDecodeError: when failing to decode the string
+    :raises TruncatedSyntaxError: when failing to decode the string
     :return: a Python object
 
     Example:

@@ -1,11 +1,11 @@
-"""JSONSyntaxError tests."""
+"""TruncatedSyntaxError tests."""
 from __future__ import annotations
 
 __all__: list[str] = []
 
 import pytest
 
-from jsonyx import JSONSyntaxError
+from jsonyx import TruncatedSyntaxError
 
 
 @pytest.mark.parametrize(
@@ -60,7 +60,7 @@ def test_start_and_end_position(
     end_colno: int,
 ) -> None:
     """Test start and end position."""
-    exc: JSONSyntaxError = JSONSyntaxError("", "", doc, start, end)
+    exc: TruncatedSyntaxError = TruncatedSyntaxError("", "", doc, start, end)
     assert exc.lineno == lineno
     assert exc.end_lineno == end_lineno
     assert exc.colno == 6
@@ -176,7 +176,7 @@ def test_err_context(
 ) -> None:
     """Test error context."""
     monkeypatch.setenv("COLUMNS", str(4 + columns))  # leading spaces
-    exc: JSONSyntaxError = JSONSyntaxError("", "", doc, start, end)
+    exc: TruncatedSyntaxError = TruncatedSyntaxError("", "", doc, start, end)
     assert exc.offset == offset
     assert exc.text == text
     assert exc.end_offset == end_offset
@@ -196,6 +196,8 @@ def test_string(
     doc: str, end: int, line_range: str, column_range: str,
 ) -> None:
     """Test string representation."""
-    exc: JSONSyntaxError = JSONSyntaxError("msg", "<string>", doc, 5, end)
+    exc: TruncatedSyntaxError = TruncatedSyntaxError(
+        "msg", "<string>", doc, 5, end,
+    )
     expected: str = f"msg (<string>, line {line_range}, column {column_range})"
     assert str(exc) == expected

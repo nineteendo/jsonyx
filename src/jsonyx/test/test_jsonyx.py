@@ -1,6 +1,7 @@
 """JSON tests."""
 # TODO(Nice Zombies): test schema
 # TODO(Nice Zombies): test paste_values
+# TODO(Nice Zombies): test unicode error
 from __future__ import annotations
 
 __all__: list[str] = []
