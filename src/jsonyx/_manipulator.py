@@ -594,7 +594,7 @@ class Manipulator:
         Example:
             >>> import jsonyx as json
             >>> manipulator = json.Manipulator()
-            >>> manipulator.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
+            >>> manipulator.apply_patch([1, 2, 3], {"op": "del", "path": "$[1]"})
             [1, 3]
 
         .. tip:: Using queries instead of indices is more robust.
@@ -629,7 +629,7 @@ class Manipulator:
             >>> manipulator = json.Manipulator()
             >>> root = [[1, 2, 3]]
             >>> node = root, 0
-            >>> manipulator.paste_values(node, 4, {'mode': 'append'})
+            >>> manipulator.paste_values(node, 4, {"mode": "append"})
             >>> root[0]
             [1, 2, 3, 4]
 

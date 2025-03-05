@@ -196,7 +196,7 @@ Applying a patch
 .. versionadded:: 2.0
 
 >>> import jsonyx as json
->>> json.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
+>>> json.apply_patch([1, 2, 3], {"op": "del", "path": "$[1]"})
 [1, 3]
 
 .. tip:: Using queries instead of indices is more robust.
@@ -215,7 +215,7 @@ Using the ``jsonyx`` application
         "foo": [1, 2, 3],
         "bar": {"a": 1, "b": 2, "c": 3}
     }
-    $ echo '{1.2: 3.4}' | jsonyx format
+    $ echo "{1.2: 3.4}" | jsonyx format
       File "<stdin>", line 1, column 2
         {1.2: 3.4}
          ^

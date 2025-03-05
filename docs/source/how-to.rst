@@ -17,6 +17,45 @@ Traceback (most recent call last):
      ^
 jsonyx.JSONSyntaxError: Expecting value
 
+Better error messages for encoding strings
+------------------------------------------
+
+>>> import jsonyx as json
+>>> try:
+...     "café".encode("ascii")
+... except UnicodeEncodeError as exc:
+...     raise json.TruncatedSyntaxError(
+...         f"(unicode error) {exc}", "<string>", exc.object, exc.start, exc.end,
+...     ) from None
+...
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+  File "<string>", line 1
+    café
+       ^
+jsonyx.TruncatedSyntaxError: (unicode error) 'ascii' codec can't encode character '\xe9' in position 3: ordinal not in range(128)
+
+Better error messages for decoding bytes
+----------------------------------------
+
+>>> import jsonyx as json
+>>> try:
+...     b"caf\xe9".decode("ascii")
+... except UnicodeDecodeError as exc:
+...     doc = exc.object.decode("ascii", "replace")
+...     start = exc.object[:exc.start].decode("ascii", "replace")
+...     end = exc.object[:exc.end].decode("ascii", "replace")
+...     raise json.TruncatedSyntaxError(
+...         f"(unicode error) {exc}", "<string>", doc, len(start), len(end),
+...     ) from None
+...
+Traceback (most recent call last):
+  File "<stdin>", line 7, in <module>
+  File "<string>", line 1
+    caf�
+       ^
+jsonyx.TruncatedSyntaxError: (unicode error) 'ascii' codec can't decode byte 0xe9 in position 3: ordinal not in range(128)
+
 .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the exception.
 
 .. _protocol_types:

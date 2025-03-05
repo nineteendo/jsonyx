@@ -453,7 +453,7 @@ def apply_patch(
 
     Example:
         >>> import jsonyx as json
-        >>> json.apply_patch([1, 2, 3], {'op': 'del', 'path': '$[1]'})
+        >>> json.apply_patch([1, 2, 3], {"op": "del", "path": "$[1]"})
         [1, 3]
 
     .. tip:: Using queries instead of indices is more robust.
@@ -491,7 +491,7 @@ def paste_values(
         >>> import jsonyx as json
         >>> root = [[1, 2, 3]]
         >>> node = root, 0
-        >>> json.paste_values(node, 4, {'mode': 'append'})
+        >>> json.paste_values(node, 4, {"mode": "append"})
         >>> root[0]
         [1, 2, 3, 4]
 

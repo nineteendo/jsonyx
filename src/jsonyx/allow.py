@@ -66,7 +66,7 @@ TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
 
 >>> import jsonyx as json
 >>> import jsonyx.allow
->>> json.loads('[0,]', allow=jsonyx.allow.TRAILING_COMMA)
+>>> json.loads("[0,]", allow=jsonyx.allow.TRAILING_COMMA)
 [0]
 """
 
