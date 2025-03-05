@@ -238,7 +238,7 @@ def detect_encoding(b: bytearray | bytes) -> str:
         >>> b.decode(json.detect_encoding(b))
         '"foo"'
 
-    .. note:: Supports only ``"utf_8"``, ``"utf_8-sig"``, ``"utf_16"``,
+    .. note:: Supports only ``"utf_8"``, ``"utf_8_sig"``, ``"utf_16"``,
         ``"utf_16_be"``, ``"utf_16_le"``, ``"utf_32"``, ``"utf_32_be"`` and
         ``"utf_32_le"``.
 
