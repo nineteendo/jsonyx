@@ -50,7 +50,7 @@ _UNESCAPE: dict[str, str] = {
     "t": "\t",
 }
 
-_replace_unprintable: _SubFunc = re.compile(r'[\x00-\x1f\x7f]', _FLAGS).sub
+_replace_unprintable: _SubFunc = re.compile(r"[\x00-\x1f\x7f]", _FLAGS).sub
 _match_chunk: _MatchFunc = re.compile(r'[^"\\\x00-\x1f]+', _FLAGS).match
 _match_hex_digits: _MatchFunc = re.compile(r"[0-9A-Fa-f]{4}", _FLAGS).match
 _match_line_end: _MatchFunc = re.compile(r"[^\n\r]+", _FLAGS).match
@@ -99,7 +99,7 @@ def _get_err_context(doc: str, start: int, end: int) -> tuple[int, str, int]:
         end + max_chars // 3,
     ), line_end)
     text: str = doc[text_start:text_end].expandtabs(1)
-    text = _replace_unprintable('\ufffd', text)
+    text = _replace_unprintable("\ufffd", text)
     if text_start > line_start:
         text = "..." + text[3:]
 
@@ -742,12 +742,14 @@ class Decoder:
             try:
                 s = s.decode(encoding, self._errors)  # type: ignore
             except UnicodeDecodeError as exc:
-                doc: str = exc.object.decode(encoding, 'replace')
-                start: str = exc.object[:exc.start].decode(encoding, 'replace')
-                end: str = exc.object[:exc.end].decode(encoding, 'replace')
+                msg: str = f"(unicode error) {exc}"
+                doc: str = exc.object.decode(encoding, "replace")
+                # pylint: disable-next=E1127
+                start: str = exc.object[:exc.start].decode(encoding, "replace")
+                # pylint: disable-next=E1127
+                end: str = exc.object[:exc.end].decode(encoding, "replace")
                 raise TruncatedSyntaxError(
-                    f"(unicode error) {exc}", filename, doc, len(start),
-                    len(end),
+                    msg, filename, doc, len(start), len(end),
                 ) from None
 
         return self._scanner(filename, s)  # type: ignore
