@@ -11,7 +11,6 @@ Better error messages for other JSON libraries
 ...     raise jsonyx.JSONSyntaxError(exc.msg, "<string>", exc.doc, exc.pos) from None
 ...
 Traceback (most recent call last):
-  File "<stdin>", line 4, in <module>
   File "<string>", line 1
     [,]
      ^
@@ -29,7 +28,6 @@ Better error messages for encoding strings
 ...     ) from None
 ...
 Traceback (most recent call last):
-  File "<stdin>", line 4, in <module>
   File "<string>", line 1
     café
        ^
@@ -50,9 +48,8 @@ Better error messages for decoding bytes
 ...     ) from None
 ...
 Traceback (most recent call last):
-  File "<stdin>", line 7, in <module>
   File "<string>", line 1
-    caf�
+    caf?
        ^
 jsonyx.TruncatedSyntaxError: (unicode error) 'ascii' codec can't decode byte 0xe9 in position 3: ordinal not in range(128)
 
