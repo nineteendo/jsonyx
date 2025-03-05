@@ -135,7 +135,13 @@ def test_start_and_end_position(
         (9, "start\tend", 5, 6, 6, "start end", 7),
         #         ^^                     ^
 
-        # TODO(Nice Zombies): Test escaping of unprintable characters
+        # Replace unprintable characters
+        (9, "start\x00end", 5, 6, 6, "start\ufffdend", 7),
+        #         ^^^^                     ^^^^^^
+        (9, "start\x1fend", 5, 6, 6, "start\ufffdend", 7),
+        #         ^^^^                     ^^^^^^
+        (9, "start\x7fend", 5, 6, 6, "start\ufffdend", 7),
+        #         ^^^^                     ^^^^^^
 
         # Truncate start
         (6, "start-middle-end", 13, 16, 4, "...end", 7),  # line_end

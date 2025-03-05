@@ -50,7 +50,7 @@ _UNESCAPE: dict[str, str] = {
     "t": "\t",
 }
 
-_escape_unprintable: _SubFunc = re.compile(r'[\x00-\x1f]', _FLAGS).sub
+_replace_unprintable: _SubFunc = re.compile(r'[\x00-\x1f\x7f]', _FLAGS).sub
 _match_chunk: _MatchFunc = re.compile(r'[^"\\\x00-\x1f]+', _FLAGS).match
 _match_hex_digits: _MatchFunc = re.compile(r"[0-9A-Fa-f]{4}", _FLAGS).match
 _match_line_end: _MatchFunc = re.compile(r"[^\n\r]+", _FLAGS).match
@@ -99,7 +99,7 @@ def _get_err_context(doc: str, start: int, end: int) -> tuple[int, str, int]:
         end + max_chars // 3,
     ), line_end)
     text: str = doc[text_start:text_end].expandtabs(1)
-    text = _escape_unprintable('\ufffd', text)
+    text = _replace_unprintable('\ufffd', text)
     if text_start > line_start:
         text = "..." + text[3:]
 
