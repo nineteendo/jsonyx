@@ -23,8 +23,8 @@ jsonyx 2.0.0 (unreleased)
 - Added :func:`jsonyx.load_query_value`
 - Added :func:`jsonyx.apply_filter` and :func:`jsonyx.select_nodes`
 - Added :func:`jsonyx.paste_values`
-- Added :func:`jsonyx.Manipulator`
-- Added :func:`jsonyx.TruncatedSyntaxError`
+- Added :class:`jsonyx.Manipulator`
+- Added :exc:`jsonyx.TruncatedSyntaxError`
 - Changed error for big integers to :exc:`jsonyx.JSONSyntaxError`
 - Changed error for deep nesting to :exc:`jsonyx.JSONSyntaxError`
 - Changed unicode decode error to :exc:`jsonyx.TruncatedSyntaxError`
@@ -44,6 +44,7 @@ jsonyx 2.0.0 (unreleased)
 - Removed :data:`!jsonyx.DuplicateKey`
 - Removed :mod:`!jsonyx.tool`
 - Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
+- Replaced unprintable characters in error messages
 - Sped up decimal encoding
 - Use cache for indentations in the JSON encoder
 
