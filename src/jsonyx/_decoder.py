@@ -139,7 +139,7 @@ class TruncatedSyntaxError(SyntaxError):
         >>> import jsonyx as json
         >>> raise json.TruncatedSyntaxError("Expecting value", "<string>", "[,]", 1)
         Traceback (most recent call last):
-          File "<string>", line 1
+          File "<string>", line 1, column 2
             [,]
              ^
         jsonyx.TruncatedSyntaxError: Expecting value
