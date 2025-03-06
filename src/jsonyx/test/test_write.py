@@ -37,6 +37,8 @@ def test_surrogates(json: ModuleType, s: str) -> None:
 @pytest.mark.parametrize("s", ["\ud800", "\ud800$", "\udf48"])  # noqa: PT014
 def test_surrogates_if_not_allowed(json: ModuleType, s: str) -> None:
     """Test surrogates."""
-    with TemporaryDirectory() as tmpdir:
-        with pytest.raises(json.TruncatedSyntaxError):
-            json.write(s, Path(tmpdir) / "file.json")
+    with (
+        TemporaryDirectory() as tmpdir,
+        pytest.raises(json.TruncatedSyntaxError),
+    ):
+        json.write(s, Path(tmpdir) / "file.json")

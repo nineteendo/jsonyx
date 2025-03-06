@@ -1,13 +1,10 @@
 """JSON encoder."""
 from __future__ import annotations
 
-import sys
-
-from jsonyx import TruncatedSyntaxError
-
 __all__: list[str] = ["Encoder"]
 
 import re
+import sys
 from decimal import Decimal
 from io import StringIO
 from math import inf, isfinite
@@ -15,6 +12,7 @@ from pathlib import Path
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
+from jsonyx import TruncatedSyntaxError
 from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
@@ -418,9 +416,9 @@ class Encoder:
             else:
                 fp.write(s)
         except UnicodeEncodeError as exc:
+            msg: str = f"(unicode error) {exc}"
             raise TruncatedSyntaxError(
-                f"(unicode error) {exc}", "<string>", exc.object, exc.start,
-                exc.end,
+                msg, "<string>", exc.object, exc.start, exc.end,
             ) from None
 
     def dumps(self, obj: object) -> str:
