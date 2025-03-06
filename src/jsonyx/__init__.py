@@ -248,7 +248,7 @@ def write(
     :param types: a dictionary of :ref:`additional types <protocol_types>`
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
-    :raises UnicodeEncodeError: when failing to encode the file
+    :raises TruncatedSyntaxError: when failing to encode the file
     :raises ValueError: for invalid values
 
     Example:
@@ -325,7 +325,7 @@ def dump(
     :param types: a dictionary of :ref:`additional types <protocol_types>`
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
-    :raises UnicodeEncodeError: when failing to write to the file
+    :raises TruncatedSyntaxError: when failing to write to the file
     :raises ValueError: for invalid values
 
     Example:

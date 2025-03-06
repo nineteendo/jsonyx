@@ -50,7 +50,9 @@ _UNESCAPE: dict[str, str] = {
     "t": "\t",
 }
 
-_replace_unprintable: _SubFunc = re.compile(r"[\x00-\x1f\x7f]", _FLAGS).sub
+_replace_unprintable: _SubFunc = re.compile(
+    r"[\x00-\x1f\x7f\ud800-\udfff]", _FLAGS,
+).sub
 _match_chunk: _MatchFunc = re.compile(r'[^"\\\x00-\x1f]+', _FLAGS).match
 _match_hex_digits: _MatchFunc = re.compile(r"[0-9A-Fa-f]{4}", _FLAGS).match
 _match_line_end: _MatchFunc = re.compile(r"[^\n\r]+", _FLAGS).match

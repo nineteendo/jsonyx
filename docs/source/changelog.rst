@@ -27,7 +27,7 @@ jsonyx 2.0.0 (unreleased)
 - Added :exc:`jsonyx.TruncatedSyntaxError`
 - Changed error for big integers to :exc:`jsonyx.JSONSyntaxError`
 - Changed error for deep nesting to :exc:`jsonyx.JSONSyntaxError`
-- Changed unicode decode error to :exc:`jsonyx.TruncatedSyntaxError`
+- Changed unicode errors to :exc:`jsonyx.TruncatedSyntaxError`
 - Fixed canonical string representation of :exc:`jsonyx.JSONSyntaxError`
 - Fixed line comment detection
 - Fixed spelling of "commas" in error messages

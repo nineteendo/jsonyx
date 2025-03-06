@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import sys
 
+from jsonyx import TruncatedSyntaxError
+
 __all__: list[str] = ["Encoder"]
 
 import re
@@ -368,7 +370,7 @@ class Encoder:
         :param filename: the path to the JSON file
         :raises RecursionError: if the object is too deeply nested
         :raises TypeError: for unserializable values
-        :raises UnicodeEncodeError: when failing to encode the file
+        :raises TruncatedSyntaxError: when failing to encode the file
         :raises ValueError: for invalid values
 
         Example:
@@ -384,7 +386,8 @@ class Encoder:
             '["filesystem API"]\n'
 
         """
-        Path(filename).write_text(self._encoder(obj), "utf_8", self._errors)
+        with Path(filename).open("w", -1, "utf_8", self._errors) as fp:
+            self.dump(obj, fp)
 
     def dump(self, obj: object, fp: _SupportsWrite[str] | None = None) -> None:
         r"""Serialize a Python object to an open JSON file.
@@ -393,7 +396,7 @@ class Encoder:
         :param fp: an open JSON file
         :raises RecursionError: if the object is too deeply nested
         :raises TypeError: for unserializable values
-        :raises UnicodeEncodeError: when failing to write to the file
+        :raises TruncatedSyntaxError: when failing to write to the file
         :raises ValueError: for invalid values
 
         Example:
@@ -409,10 +412,16 @@ class Encoder:
 
         """
         s: str = self._encoder(obj)
-        if fp is None:
-            sys.stdout.write(s)  # Use sys.stdout to work with doctest
-        else:
-            fp.write(s)
+        try:
+            if fp is None:
+                sys.stdout.write(s)  # Use sys.stdout to work with doctest
+            else:
+                fp.write(s)
+        except UnicodeEncodeError as exc:
+            raise TruncatedSyntaxError(
+                f"(unicode error) {exc}", "<string>", exc.object, exc.start,
+                exc.end,
+            ) from None
 
     def dumps(self, obj: object) -> str:
         r"""Serialize a Python object to a JSON string.

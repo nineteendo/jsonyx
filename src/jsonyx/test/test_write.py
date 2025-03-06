@@ -11,7 +11,7 @@ import pytest
 
 from jsonyx.allow import SURROGATES
 # pylint: disable-next=W0611
-from jsonyx.test import get_json  # type: ignore # noqa: F401
+from jsonyx.test import check_syntax_err, get_json  # type: ignore # noqa: F401
 
 if TYPE_CHECKING:
     from types import ModuleType
@@ -37,5 +37,6 @@ def test_surrogates(json: ModuleType, s: str) -> None:
 @pytest.mark.parametrize("s", ["\ud800", "\ud800$", "\udf48"])  # noqa: PT014
 def test_surrogates_if_not_allowed(json: ModuleType, s: str) -> None:
     """Test surrogates."""
-    with TemporaryDirectory() as tmpdir, pytest.raises(UnicodeEncodeError):
-        json.write(s, Path(tmpdir) / "file.json")
+    with TemporaryDirectory() as tmpdir:
+        with pytest.raises(json.TruncatedSyntaxError):
+            json.write(s, Path(tmpdir) / "file.json")
