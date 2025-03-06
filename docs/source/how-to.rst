@@ -5,7 +5,7 @@ Better error messages
 ---------------------
 
 Better error messages for other JSON libraries
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 >>> import json, jsonyx
 >>> try:
@@ -20,7 +20,7 @@ Traceback (most recent call last):
 jsonyx.JSONSyntaxError: Expecting value
 
 Better error messages for encoding strings
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 >>> import jsonyx as json
 >>> try:
@@ -39,7 +39,7 @@ jsonyx.TruncatedSyntaxError: (unicode error) 'ascii' codec can't encode characte
 .. _better_decoding_error:
 
 Better error messages for decoding bytes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 >>> import jsonyx as json
 >>> try:
@@ -66,7 +66,7 @@ Encoding objects
 .. _protocol_types:
 
 Encoding protocol-based objects
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. versionadded:: 2.0
 
@@ -102,7 +102,7 @@ Example with :mod:`numpy`:
 .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
 
 Encoding arbitrary objects
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 >>> import jsonyx as json
 >>> def to_json(obj):
@@ -127,7 +127,7 @@ Decoding objects
 .. _using_hooks:
 
 Decoding objects using hooks
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. versionadded:: 2.0
 
@@ -155,7 +155,7 @@ Example with :mod:`numpy`:
 array([np.False_, np.float64(0.0), np.int64(0)], dtype=object)
 
 Decoding arbitrary objects
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 >>> import jsonyx as json
 >>> def from_json(obj):

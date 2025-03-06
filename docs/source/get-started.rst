@@ -88,20 +88,34 @@ Encoding basic Python object hierarchies
 
 .. versionchanged:: 2.0 Made :class:`tuple` JSON serializable.
 
+Dumping to a string:
+
 >>> import jsonyx as json
 >>> json.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
 '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
+
+Writing to standard output:
+
+>>> import jsonyx as json
 >>> json.dump('"foo\bar')
 "\"foo\bar"
 >>> json.dump("\\")
 "\\"
 >>> json.dump("\u20AC")
 "€"
+
+Writing to an open file:
+
+>>> import jsonyx as json
 >>> from io import StringIO
 >>> io = StringIO()
 >>> json.dump(["streaming API"], io)
 >>> io.getvalue()
 '["streaming API"]\n'
+
+Writing to a file:
+
+>>> import jsonyx as json
 >>> from pathlib import Path
 >>> from tempfile import TemporaryDirectory
 >>> with TemporaryDirectory() as tmpdir:
@@ -151,15 +165,25 @@ Pretty printing
 Decoding JSON
 ^^^^^^^^^^^^^
 
+Loading from a string:
+
 >>> import jsonyx as json
 >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
 {'foo': ['bar', None, 1.0, 2]}
 >>> json.loads(r'"\"foo\bar"')
 '"foo\x08ar'
+
+Reading from an open file:
+
+>>> import jsonyx as json
 >>> from io import StringIO
 >>> io = StringIO('["streaming API"]')
 >>> json.load(io)
 ['streaming API']
+
+Reading from a file:
+
+>>> import jsonyx as json
 >>> from pathlib import Path
 >>> from tempfile import TemporaryDirectory
 >>> with TemporaryDirectory() as tmpdir:

@@ -329,9 +329,15 @@ def dump(
     :raises ValueError: for invalid values
 
     Example:
+        Writing to standard output:
+
         >>> import jsonyx as json
         >>> json.dump(["foo", {"bar": ("baz", None, 1.0, 2)}])
         ["foo", {"bar": ["baz", null, 1.0, 2]}]
+
+        Writing to an open file:
+
+        >>> import jsonyx as json
         >>> from io import StringIO
         >>> io = StringIO()
         >>> json.dump(["streaming API"], io)
