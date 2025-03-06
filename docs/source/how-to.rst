@@ -1,8 +1,11 @@
 How-to Guide
 ============
 
+Better error messages
+---------------------
+
 Better error messages for other JSON libraries
-----------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 >>> import json, jsonyx
 >>> try:
@@ -17,7 +20,7 @@ Traceback (most recent call last):
 jsonyx.JSONSyntaxError: Expecting value
 
 Better error messages for encoding strings
-------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 >>> import jsonyx as json
 >>> try:
@@ -36,7 +39,7 @@ jsonyx.TruncatedSyntaxError: (unicode error) 'ascii' codec can't encode characte
 .. _better_decoding_error:
 
 Better error messages for decoding bytes
-----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 >>> import jsonyx as json
 >>> try:
@@ -57,10 +60,13 @@ jsonyx.TruncatedSyntaxError: (unicode error) 'ascii' codec can't decode byte 0xe
 
 .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the exception.
 
+Encoding objects
+----------------
+
 .. _protocol_types:
 
 Encoding protocol-based objects
--------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 2.0
 
@@ -95,10 +101,33 @@ Example with :mod:`numpy`:
     infer serializability based on method presence.
 .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
 
+Encoding arbitrary objects
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+>>> import jsonyx as json
+>>> def to_json(obj):
+...     if isinstance(obj, list):
+...         return [to_json(value) for value in obj]
+...     if isinstance(obj, dict):
+...         return {key: to_json(value) for key, value in obj.items()}
+...     if isinstance(obj, complex):
+...         return {"__complex__": True, "real": obj.real, "imag": obj.imag}
+...     return obj
+... 
+>>> json.dump(to_json(1 + 2j))
+{"__complex__": true, "real": 1.0, "imag": 2.0}
+
+.. tip:: You can use :func:`functools.singledispatch` to make this extensible.
+.. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
+    suited for this.
+
+Decoding objects
+----------------
+
 .. _using_hooks:
 
 Decoding objects using hooks
-----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 2.0
 
@@ -125,28 +154,8 @@ Example with :mod:`numpy`:
 >>> json.loads("[false, 0.0, 0]", hooks=hooks)
 array([np.False_, np.float64(0.0), np.int64(0)], dtype=object)
 
-Encoding arbitrary objects
---------------------------
-
->>> import jsonyx as json
->>> def to_json(obj):
-...     if isinstance(obj, list):
-...         return [to_json(value) for value in obj]
-...     if isinstance(obj, dict):
-...         return {key: to_json(value) for key, value in obj.items()}
-...     if isinstance(obj, complex):
-...         return {"__complex__": True, "real": obj.real, "imag": obj.imag}
-...     return obj
-... 
->>> json.dump(to_json(1 + 2j))
-{"__complex__": true, "real": 1.0, "imag": 2.0}
-
-.. tip:: You can use :func:`functools.singledispatch` to make this extensible.
-.. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
-    suited for this.
-
 Decoding arbitrary objects
---------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 >>> import jsonyx as json
 >>> def from_json(obj):
