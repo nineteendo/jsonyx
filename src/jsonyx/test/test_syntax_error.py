@@ -142,6 +142,10 @@ def test_start_and_end_position(
         #         ^^^^                     ^^^^^^
         (9, "start\x7fend", 5, 6, 6, "start\ufffdend", 7),
         #         ^^^^                     ^^^^^^
+        (9, "start\ud800end", 5, 6, 6, "start\ufffdend", 7),
+        #         ^^^^^^                     ^^^^^^
+        (9, "start\udfffend", 5, 6, 6, "start\ufffdend", 7),  # noqa: PT014
+        #         ^^^^^^                     ^^^^^^
 
         # Truncate start
         (6, "start-middle-end", 13, 16, 4, "...end", 7),  # line_end
