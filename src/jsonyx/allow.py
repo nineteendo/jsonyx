@@ -58,7 +58,8 @@ r"""Allow unpaired surrogates in strings.
 "\ud800"
 
 .. tip:: If you're not using ``read()`` or ``write()``, you still need to
-    set the unicode error handler to ``"surrogatepass"``.
+    use ``ensure_ascii=True`` or set the unicode error handler to
+    ``"surrogatepass"``.
 """
 
 TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
