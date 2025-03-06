@@ -243,6 +243,7 @@ def detect_encoding(b: bytearray | bytes) -> str:
     .. note:: Supports only ``"utf_8"``, ``"utf_8_sig"``, ``"utf_16"``,
         ``"utf_16_be"``, ``"utf_16_le"``, ``"utf_32"``, ``"utf_32_be"`` and
         ``"utf_32_le"``.
+    .. seealso:: :ref:`better_decoding_error`
 
     """
     # JSON must start with ASCII character (not NULL)

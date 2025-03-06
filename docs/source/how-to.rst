@@ -33,6 +33,8 @@ Traceback (most recent call last):
        ^
 jsonyx.TruncatedSyntaxError: (unicode error) 'ascii' codec can't encode character '\xe9' in position 3: ordinal not in range(128)
 
+.. _better_decoding_error:
+
 Better error messages for decoding bytes
 ----------------------------------------
 
