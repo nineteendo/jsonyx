@@ -20,32 +20,29 @@ jsonyx 2.0.0 (unreleased)
 - Added ``--unquoted-keys`` and its alias ``-q`` to ``python -m jsonyx format``
 - Added ``--version`` and its alias ``-v`` to ``python -m jsonyx``
 - Added :data:`jsonyx.allow.UNQUOTED_KEYS`
-- Added :func:`jsonyx.apply_patch` and :func:`jsonyx.make_patch`
+- Added :func:`jsonyx.apply_filter`
+- Added :func:`jsonyx.apply_patch`
 - Added :func:`jsonyx.load_query_value`
-- Added :func:`jsonyx.apply_filter` and :func:`jsonyx.select_nodes`
+- Added :func:`jsonyx.make_patch`
 - Added :func:`jsonyx.paste_values`
+- Added :func:`jsonyx.select_nodes`
 - Added :class:`jsonyx.Manipulator`
 - Added :exc:`jsonyx.TruncatedSyntaxError`
-- Changed error for big integers to :exc:`jsonyx.JSONSyntaxError`
-- Changed error for deep nesting to :exc:`jsonyx.JSONSyntaxError`
-- Changed unicode errors to :exc:`jsonyx.TruncatedSyntaxError`
 - Fixed canonical string representation of :exc:`jsonyx.JSONSyntaxError`
 - Fixed line comment detection
-- Fixed spelling of "commas" in error messages
 - Fixed ``end_offset`` of :exc:`jsonyx.JSONSyntaxError`
 - Improved documentation
+- Improved error messages
 - Made :class:`tuple` JSON serializable
 - Merged ``item_separator`` and ``key_separator`` as ``separators`` for
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
   :func:`jsonyx.write`
 - Rejected invalid unicode escapes
 - Rejected non-ascii numbers conforming to the JSON specification
-- Removed leading and trailing whitespace from error messages
 - Removed :data:`!jsonyx.allow.DUPLICATE_KEYS`
 - Removed :data:`!jsonyx.DuplicateKey`
 - Removed :mod:`!jsonyx.tool`
 - Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
-- Replaced unprintable characters in error messages
 - Sped up decimal encoding
 - Use cache for indentations in the JSON encoder
 
