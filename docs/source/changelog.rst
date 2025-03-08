@@ -14,11 +14,12 @@ jsonyx 2.0.0 (unreleased)
   and ``types`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
   :func:`jsonyx.dumps` and :func:`jsonyx.write`
 - Added ``encoding`` to :func:`jsonyx.write` and :meth:`jsonyx.Encoder.write`
-- Added ``python -m jsonyx diff`` and ``python -m jsonyx patch``
-- Added ``--no-indent-leaves`` and its alias ``-l`` to ``python -m jsonyx format``
-- Added ``--max-indent-level`` and its alias ``-L`` to ``python -m jsonyx format``
-- Added ``--unquoted-keys`` and its alias ``-q`` to ``python -m jsonyx format``
-- Added ``--version`` and its alias ``-v`` to ``python -m jsonyx``
+- Added ``python -m jsonyx diff``
+- Added ``python -m jsonyx patch``
+- Added ``--no-indent-leaves`` (alias ``-l``) to ``python -m jsonyx format``
+- Added ``--max-indent-level`` (alias ``-L``) to ``python -m jsonyx format``
+- Added ``--unquoted-keys`` (alias ``-q``) to ``python -m jsonyx format``
+- Added ``--version`` (alias ``-v``) to ``python -m jsonyx``
 - Added :data:`jsonyx.allow.UNQUOTED_KEYS`
 - Added :func:`jsonyx.apply_filter`
 - Added :func:`jsonyx.apply_patch`
