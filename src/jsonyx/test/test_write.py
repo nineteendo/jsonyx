@@ -22,7 +22,7 @@ def test_value(json: ModuleType) -> None:
     with TemporaryDirectory() as tmpdir:
         filename: Path = Path(tmpdir) / "file.json"
         json.write(0, filename, end="")
-        assert filename.read_text("utf_8") == "0"
+        assert filename.read_text("utf-8") == "0"
 
 
 @pytest.mark.parametrize("s", ["\ud800", "\ud800$", "\udf48"])  # noqa: PT014
@@ -31,7 +31,7 @@ def test_surrogates(json: ModuleType, s: str) -> None:
     with TemporaryDirectory() as tmpdir:
         filename: Path = Path(tmpdir) / "file.json"
         json.write(s, filename, allow=SURROGATES, end="")
-        assert filename.read_text("utf_8", "surrogatepass") == f'"{s}"'
+        assert filename.read_text("utf-8", "surrogatepass") == f'"{s}"'
 
 
 @pytest.mark.parametrize("s", ["\ud800", "\ud800$", "\udf48"])  # noqa: PT014

@@ -361,11 +361,16 @@ class Encoder:
         )
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 
-    def write(self, obj: object, filename: _StrPath) -> None:
+    def write(
+        self, obj: object, filename: _StrPath, encoding: str = "utf-8",
+    ) -> None:
         r"""Serialize a Python object to a JSON file.
+
+        .. versionchanged:: 2.0 Added ``encoding``.
 
         :param obj: a Python object
         :param filename: the path to the JSON file
+        :param encoding: the JSON encoding
         :raises RecursionError: if the object is too deeply nested
         :raises TypeError: for unserializable values
         :raises TruncatedSyntaxError: when failing to encode the file
@@ -379,12 +384,12 @@ class Encoder:
             >>> with TemporaryDirectory() as tmpdir:
             ...     filename = Path(tmpdir) / "file.json"
             ...     encoder.write(["filesystem API"], filename)
-            ...     filename.read_text("utf_8")
+            ...     filename.read_text("utf-8")
             ...
             '["filesystem API"]\n'
 
         """
-        with Path(filename).open("w", -1, "utf_8", self._errors) as fp:
+        with Path(filename).open("w", -1, encoding, self._errors) as fp:
             self.dump(obj, fp)
 
     def dump(self, obj: object, fp: _SupportsWrite[str] | None = None) -> None:

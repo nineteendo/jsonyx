@@ -129,7 +129,7 @@ def read(
         >>> from tempfile import TemporaryDirectory
         >>> with TemporaryDirectory() as tmpdir:
         ...     filename = Path(tmpdir) / "file.json"
-        ...     _ = filename.write_text('["filesystem API"]', "utf_8")
+        ...     _ = filename.write_text('["filesystem API"]', "utf-8")
         ...     json.Decoder().read(filename)
         ...
         ['filesystem API']
@@ -209,6 +209,7 @@ def loads(
 def write(
     obj: object,
     filename: _StrPath,
+    encoding: str = "utf-8",
     *,
     allow: Container[str] = NOTHING,
     commas: bool = True,
@@ -227,13 +228,14 @@ def write(
 
     .. versionchanged:: 2.0
 
-        - Added ``commas``, ``indent_leaves``, ``max_indent_level``,
-          ``quoted_keys`` and ``types``.
+        - Added ``commas``, ``encoding``, ``indent_leaves``,
+          ``max_indent_level``, ``quoted_keys`` and ``types``.
         - Made :class:`tuple` JSON serializable.
         - Merged ``item_separator`` and ``key_separator`` as ``separators``.
 
     :param obj: a Python object
     :param filename: the path to the JSON file
+    :param encoding: the JSON encoding
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
@@ -258,7 +260,7 @@ def write(
         >>> with TemporaryDirectory() as tmpdir:
         ...     filename = Path(tmpdir) / "file.json"
         ...     json.write(["filesystem API"], filename)
-        ...     filename.read_text("utf_8")
+        ...     filename.read_text("utf-8")
         ...
         '["filesystem API"]\n'
 
@@ -280,7 +282,7 @@ def write(
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
         types=types,
-    ).write(obj, filename)
+    ).write(obj, filename, encoding)
 
 
 def dump(

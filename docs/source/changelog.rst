@@ -13,6 +13,7 @@ jsonyx 2.0.0 (unreleased)
 - Added ``commas``, ``indent_leaves``, ``max_indent_level``, ``quoted_keys``
   and ``types`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
   :func:`jsonyx.dumps` and :func:`jsonyx.write`
+- Added ``encoding`` to :func:`jsonyx.write` and :meth:`jsonyx.Encoder.write`
 - Added ``python -m jsonyx diff`` and ``python -m jsonyx patch``
 - Added ``--no-indent-leaves`` and its alias ``-l`` to ``python -m jsonyx format``
 - Added ``--max-indent-level`` and its alias ``-L`` to ``python -m jsonyx format``

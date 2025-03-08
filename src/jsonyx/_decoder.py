@@ -240,39 +240,39 @@ def detect_encoding(b: bytearray | bytes) -> str:
         >>> b.decode(json.detect_encoding(b))
         '"foo"'
 
-    .. note:: Supports only ``"utf_8"``, ``"utf_8_sig"``, ``"utf_16"``,
-        ``"utf_16_be"``, ``"utf_16_le"``, ``"utf_32"``, ``"utf_32_be"`` and
-        ``"utf_32_le"``.
+    .. note:: Supports only ``"utf-8"``, ``"utf-8-sig"``, ``"utf-16"``,
+        ``"utf-16-be"``, ``"utf-16-le"``, ``"utf-32"``, ``"utf-32-be"`` and
+        ``"utf-32-le"``.
     .. seealso:: :ref:`better_decoding_error`
 
     """
     # JSON must start with ASCII character (not NULL)
     # Strings can't contain control characters (including NULL)
-    encoding: str = "utf_8"
+    encoding: str = "utf-8"
     startswith: Callable[[bytes | tuple[bytes, ...]], bool] = b.startswith
     if startswith((BOM_UTF32_BE, BOM_UTF32_LE)):
-        encoding = "utf_32"
+        encoding = "utf-32"
     elif startswith((BOM_UTF16_BE, BOM_UTF16_LE)):
-        encoding = "utf_16"
+        encoding = "utf-16"
     elif startswith(BOM_UTF8):
-        encoding = "utf_8_sig"
+        encoding = "utf-8-sig"
     elif len(b) >= 4:
         if not b[0]:
-            # 00 00 -- -- - utf_32_be
-            # 00 XX -- -- - utf_16_be
-            encoding = "utf_16_be" if b[1] else "utf_32_be"
+            # 00 00 -- -- - utf-32-be
+            # 00 XX -- -- - utf-16-be
+            encoding = "utf-16-be" if b[1] else "utf-32-be"
         elif not b[1]:
-            # XX 00 00 00 - utf_32_le
-            # XX 00 00 XX - utf_16_le
-            # XX 00 XX -- - utf_16_le
-            encoding = "utf_16_le" if b[2] or b[3] else "utf_32_le"
+            # XX 00 00 00 - utf-32-le
+            # XX 00 00 XX - utf-16-le
+            # XX 00 XX -- - utf-16-le
+            encoding = "utf-16-le" if b[2] or b[3] else "utf-32-le"
     elif len(b) == 2:
         if not b[0]:
-            # 00 -- - utf_16_be
-            encoding = "utf_16_be"
+            # 00 -- - utf-16-be
+            encoding = "utf-16-be"
         elif not b[1]:
-            # XX 00 - utf_16_le
-            encoding = "utf_16_le"
+            # XX 00 - utf-16-le
+            encoding = "utf-16-le"
 
     return encoding
 
@@ -683,7 +683,7 @@ class Decoder:
             >>> from tempfile import TemporaryDirectory
             >>> with TemporaryDirectory() as tmpdir:
             ...     filename = Path(tmpdir) / "file.json"
-            ...     _ = filename.write_text('["filesystem API"]', "utf_8")
+            ...     _ = filename.write_text('["filesystem API"]', "utf-8")
             ...     json.Decoder().read(filename)
             ...
             ['filesystem API']

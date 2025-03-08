@@ -121,7 +121,7 @@ Writing to a file:
 >>> with TemporaryDirectory() as tmpdir:
 ...     filename = Path(tmpdir) / "file.json"
 ...     json.write(["filesystem API"], filename)
-...     filename.read_text("utf_8")
+...     filename.read_text("utf-8")
 ...
 '["filesystem API"]\n'
 
@@ -188,7 +188,7 @@ Reading from a file:
 >>> from tempfile import TemporaryDirectory
 >>> with TemporaryDirectory() as tmpdir:
 ...     filename = Path(tmpdir) / "file.json"
-...     _ = filename.write_text('["filesystem API"]', "utf_8")
+...     _ = filename.write_text('["filesystem API"]', "utf-8")
 ...     json.read(filename)
 ...
 ['filesystem API']
