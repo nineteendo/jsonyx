@@ -28,9 +28,7 @@ jsonyx 2.0.0 (unreleased)
 - Added :func:`jsonyx.select_nodes`
 - Added :class:`jsonyx.Manipulator`
 - Added :exc:`jsonyx.TruncatedSyntaxError`
-- Fixed canonical string representation of :exc:`jsonyx.JSONSyntaxError`
 - Fixed line comment detection
-- Fixed ``end_offset`` of :exc:`jsonyx.JSONSyntaxError`
 - Improved documentation
 - Improved error messages
 - Made :class:`tuple` JSON serializable
