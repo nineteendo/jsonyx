@@ -29,14 +29,14 @@ jsonyx 2.0.0 (unreleased)
 - Added :class:`jsonyx.Manipulator`
 - Added :exc:`jsonyx.TruncatedSyntaxError`
 - Fixed line comment detection
+- Fixed `python/cpython#125660 <https://github.com/python/cpython/issues/125660>`_: Python implementation of :func:`jsonyx.loads` accepts invalid unicode escapes
+- Fixed `python/cpython#125682 <https://github.com/python/cpython/issues/125660>`_: Python implementation of :func:`jsonyx.loads` accepts non-ascii digits
 - Improved documentation
 - Improved error messages
 - Made :class:`tuple` JSON serializable
 - Merged ``item_separator`` and ``key_separator`` as ``separators`` for
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
   :func:`jsonyx.write`
-- Rejected invalid unicode escapes
-- Rejected non-ascii numbers conforming to the JSON specification
 - Removed :data:`!jsonyx.allow.DUPLICATE_KEYS`
 - Removed :data:`!jsonyx.DuplicateKey`
 - Removed :mod:`!jsonyx.tool`
