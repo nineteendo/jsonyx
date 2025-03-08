@@ -28,7 +28,7 @@ jsonyx 2.0.0 (unreleased)
 - Added :func:`jsonyx.select_nodes`
 - Added :class:`jsonyx.Manipulator`
 - Added :exc:`jsonyx.TruncatedSyntaxError`
-- Fixed line comment detection
+- Fixed :issue:`32`: Line comments continue until the end of file
 - Fixed :issue:`python/cpython#125660`: Python implementation of :func:`jsonyx.loads` accepts invalid unicode escapes
 - Fixed :issue:`python/cpython#125682`: Python implementation of :func:`jsonyx.loads` accepts non-ascii digits
 - Improved documentation
