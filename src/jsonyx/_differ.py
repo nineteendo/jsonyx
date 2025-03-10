@@ -78,17 +78,19 @@ def _make_patch(
     if isinstance(old, dict) and isinstance(new, dict):
         old_keys: KeysView[Any] = old.keys()  # type: ignore
         new_keys: KeysView[Any] = new.keys()  # type: ignore
-        for key in sorted(old_keys - new_keys):
+        for key in old_keys:
             new_path: str = f"{path}{_encode_query_key(key)}"
-            patch.append({"op": "del", "path": new_path})
+            if key in new_keys:
+                _make_patch(old[key], new[key], patch, new_path)
+            else:
+                patch.append({"op": "del", "path": new_path})
 
-        for key in sorted(new_keys - old_keys):
-            new_path = f"{path}{_encode_query_key(key)}"
-            patch.append({"op": "set", "path": new_path, "value": new[key]})
-
-        for key in sorted(old_keys & new_keys):
-            new_path = f"{path}{_encode_query_key(key)}"
-            _make_patch(old[key], new[key], patch, new_path)
+        for key in new_keys:
+            if key not in old_keys:  # preserve order
+                new_path = f"{path}{_encode_query_key(key)}"
+                patch.append(
+                    {"op": "set", "path": new_path, "value": new[key]}
+                )
     elif isinstance(old, list) and isinstance(new, list):
         lcs: list[Any] = _get_lcs(old, new)  # type: ignore
         old_idx = new_idx = lcs_idx = 0
