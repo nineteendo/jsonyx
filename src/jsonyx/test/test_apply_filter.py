@@ -14,30 +14,34 @@ if TYPE_CHECKING:
     _Node = tuple[dict[Any, Any] | list[Any], int | slice | str]
 
 
-@pytest.mark.parametrize(("obj", "keep"), [
-    # Missing key
-    ([], False),
+@pytest.mark.parametrize(("node", "keep"), [
+    # List
+    (([], 0), False),
+    (([0], 0), True),
 
-    # Key present
-    ([0], True),
-])
-def test_has_key(obj: list[Any], keep: bool) -> None:  # noqa: FBT001
+    # Dict
+    (({}, ""), False),
+    (({"": 0}, ""), True),
+])  # type: ignore
+def test_has_key(node: _Node, keep: bool) -> None:  # noqa: FBT001
     """Test has key."""
-    expected: list[_Node] = [(obj, 0)] if keep else []
-    assert apply_filter((obj, 0), "@") == expected
+    expected: list[_Node] = [node] if keep else []
+    assert apply_filter(node, "@") == expected
 
 
-@pytest.mark.parametrize(("obj", "keep"), [
-    # Missing key
-    ([], True),
+@pytest.mark.parametrize(("node", "keep"), [
+    # List
+    (([], 0), True),
+    (([0], 0), False),
 
-    # Key present
-    ([0], False),
-])
-def test_has_not_key(obj: list[Any], keep: bool) -> None:  # noqa: FBT001
+    # Dict
+    (({}, ""), True),
+    (({"": 0}, ""), False),
+])  # type: ignore
+def test_has_not_key(node: _Node, keep: bool) -> None:  # noqa: FBT001
     """Test has not key."""
-    expected: list[_Node] = [(obj, 0)] if keep else []
-    assert apply_filter((obj, 0), "!@") == expected
+    expected: list[_Node] = [node] if keep else []
+    assert apply_filter(node, "!@") == expected
 
 
 @pytest.mark.parametrize(("query", "keep"), [

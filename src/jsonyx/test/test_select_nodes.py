@@ -1,5 +1,4 @@
 """JSON select_nodes tests."""
-# TODO(Nice Zombies): test condition
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -105,6 +104,43 @@ def test_list_property_mapping(query: str) -> None:
     """Test property on a list with mapping."""
     with pytest.raises(TypeError, match="List index must be int, not"):
         select_nodes(([[]], 0), query, mapping=True)
+
+
+@pytest.mark.parametrize(("node", "keep"), [
+    # List
+    (([], 0), False),
+    (([0], 0), True),
+
+    # Dict
+    (({}, ""), False),
+    (({"": 0}, ""), True),
+])  # type: ignore
+def test_condition(node: _Node, keep: bool) -> None:  # noqa: FBT001
+    """Test condition."""
+    expected: list[_Node] = [node] if keep else []
+    assert select_nodes(node, "${@}") == expected
+
+
+@pytest.mark.parametrize("key", [
+    # Ascending
+    _slicer[:],
+
+    # Descending
+    _slicer[::-1],
+])
+def test_condition_slice(key: slice) -> None:
+    """Test condition."""
+    obj: list[Any] = [1, 2, 3]
+    expected: list[_Node] = [(obj, 0), (obj, 1), (obj, 2)]
+    assert select_nodes((obj, key), "${@}") == expected
+
+
+def test_condition_not_allowed() -> None:
+    """Test condition when not allowed."""
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        select_nodes([], "${@}", mapping=True)
+
+    check_syntax_err(exc_info, "Condition is not allowed", 3)
 
 
 @pytest.mark.parametrize(("query", "expected"), [

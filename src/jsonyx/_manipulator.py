@@ -146,6 +146,10 @@ def _scan_query_string(s: str, end: int) -> tuple[str, int]:
         append_chunk(esc)
 
 
+def _asc_range(r: range) -> range:
+    return r if r.step > 0 else r[::-1]
+
+
 class Manipulator:
     """A configurable JSON manipulator.
 
@@ -325,6 +329,15 @@ class Manipulator:
                 ]
             elif terminator == "{":
                 end += 1
+                nodes = [
+                    (target, new_key)
+                    for target, key in nodes
+                    for new_key in (
+                        _asc_range(range(len(target))[key])
+                        if isinstance(key, slice) else
+                        [key]
+                    )
+                ]
                 if mapping:
                     msg = "Condition is not allowed"
                     raise _errmsg(msg, query, end)
