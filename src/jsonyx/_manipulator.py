@@ -76,15 +76,18 @@ def _get_query_targets(node: _Node, *, mapping: bool = False) -> list[_Target]:
     target, key = node
     _check_query_key(target, key, allow_slice=not mapping)
     if isinstance(key, slice):
-        targets: list[Any] = target[key]
+        new_targets: list[Any] = target[key]
     else:
-        targets = [target[key]]  # type: ignore
+        new_targets = [target[key]]  # type: ignore
 
-    if not all(isinstance(target, (dict, list)) for target in targets):
-        msg: str = f"Target must be dict or list, not {type(target).__name__}"
-        raise TypeError(msg)
+    for new_target in new_targets:
+        if not isinstance(new_target, (dict, list)):
+            msg: str = (
+                f"Target must be dict or list, not {type(new_target).__name__}"
+            )
+            raise TypeError(msg)
 
-    return targets
+    return new_targets
 
 
 def _has_key(target: _Target, key: _Key) -> bool:
