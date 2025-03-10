@@ -74,8 +74,8 @@ _ENCODE_CASES: dict[str, Any] = {
     },
 }
 _ENCODE_FUNCS: dict[str, _Func] = {
-    "json": json.JSONEncoder().encode,
-    "jsonyx": jsonyx.Encoder().dumps,
+    "json": lambda obj: json.JSONEncoder().encode(obj).encode(),
+    "jsonyx": lambda obj: jsonyx.Encoder().dumps(obj).encode(),
     "msgspec": msgspec.json.Encoder().encode,
     # pylint: disable-next=E1101
     "orjson": orjson.dumps,
