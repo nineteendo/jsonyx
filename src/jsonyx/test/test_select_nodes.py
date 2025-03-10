@@ -1,4 +1,5 @@
 """JSON select_nodes tests."""
+# TODO(Nice Zombies): test condition
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -30,7 +31,7 @@ _slicer: _Slicer = _Slicer()
 
 @pytest.mark.parametrize(("node", "keep"), [
     # List
-    (([], slice(0)), True),
+    (([], _slicer[:]), True),
     (([], 0), False),
     (([0], 0), True),
 
@@ -69,7 +70,7 @@ def test_property(key: str) -> None:
     "\x00", " ", "!", "$", "0", "\xb2", "\u0300", "\u037a", "\u0488",
 
     # Remaining characters
-    "A\xb2", "A\u037a", "A\u0488",
+    "A\xb2", "A\u037a", "A\u0488",  # ASCII characters are no candidates
 ])
 def test_invalid_property(key: str) -> None:
     """Test invalid property."""

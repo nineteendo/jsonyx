@@ -323,6 +323,19 @@ class Manipulator:
                     for node in nodes
                     for target in _get_query_targets(node, mapping=mapping)
                 ]
+            elif terminator == "{":
+                end += 1
+                if mapping:
+                    msg = "Condition is not allowed"
+                    raise _errmsg(msg, query, end)
+                else:
+                    nodes, end = self._apply_filter(nodes, query, end)
+
+                if query[end:end + 1] != "}":
+                    msg = "Expecting a closing bracket"
+                    raise _errmsg(msg, query, end)
+
+                end += 1
             elif terminator == "[":
                 end += 1
                 targets: list[_Target] = [
@@ -627,8 +640,9 @@ class Manipulator:
         Example:
             >>> import jsonyx as json
             >>> manipulator = json.Manipulator()
-            >>> root = [[1, 2, 3]]
-            >>> node = root, 0
+            >>> obj = [1, 2, 3]
+            >>> root = [obj]
+            >>> node = root, 0  # pointer to obj
             >>> manipulator.paste_values(node, 4, {"mode": "append"})
             >>> root[0]
             [1, 2, 3, 4]
@@ -666,8 +680,9 @@ class Manipulator:
         Example:
             >>> import jsonyx as json
             >>> manipulator = json.Manipulator()
-            >>> root = [[1, 2, 3, 4, 5, 6]]
-            >>> node = root, 0
+            >>> obj = [1, 2, 3, 4, 5, 6]
+            >>> root = [obj]
+            >>> node = root, 0  # pointer to obj
             >>> for target, key in manipulator.select_nodes(node, "$[@ > 3]"):
             ...     target[key] = None
             ...
@@ -709,7 +724,9 @@ class Manipulator:
         Example:
             >>> import jsonyx as json
             >>> manipulator = json.Manipulator()
-            >>> node = [None], 0
+            >>> obj = None
+            >>> root = [obj]
+            >>> node = root, 0  # pointer to obj
             >>> assert manipulator.apply_filter(node, "@ == null")
 
         """

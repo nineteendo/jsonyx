@@ -545,7 +545,7 @@ def test_unquoted_key_not_allowed(json: ModuleType, key: str) -> None:
     "\x00", "!", "$", "0", "\xb2", "\u0300", "\u037a", "\u0488",
 
     # Remaining characters
-    "A\xb2", "A\u037a", "A\u0488",
+    "A\xb2", "A\u037a", "A\u0488",  # ASCII characters are no candidates
 ])
 def test_invalid_unquoted_key(json: ModuleType, key: str) -> None:
     """Test invalid unquoted key."""

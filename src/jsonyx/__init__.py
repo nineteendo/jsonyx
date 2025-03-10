@@ -497,8 +497,9 @@ def paste_values(
 
     Example:
         >>> import jsonyx as json
-        >>> root = [[1, 2, 3]]
-        >>> node = root, 0
+        >>> obj = [1, 2, 3]
+        >>> root = [obj]
+        >>> node = root, 0  # pointer to obj
         >>> json.paste_values(node, 4, {"mode": "append"})
         >>> root[0]
         [1, 2, 3, 4]
@@ -539,8 +540,9 @@ def select_nodes(
 
     Example:
         >>> import jsonyx as json
-        >>> root = [[1, 2, 3, 4, 5, 6]]
-        >>> node = root, 0
+        >>> obj = [1, 2, 3, 4, 5, 6]
+        >>> root = [obj]
+        >>> node = root, 0  # pointer to obj
         >>> for target, key in json.select_nodes(node, "$[@ > 3]"):
         ...     target[key] = None
         ...
@@ -581,7 +583,9 @@ def apply_filter(
 
     Example:
         >>> import jsonyx as json
-        >>> node = [None], 0
+        >>> obj = None
+        >>> root = [obj]
+        >>> node = root, 0  # pointer to obj
         >>> assert json.apply_filter(node, "@ == null")
 
     """
