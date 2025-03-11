@@ -47,7 +47,7 @@ def test_optional_marker(node: _Node, keep: bool) -> None:  # noqa: FBT001
 def test_optional_marker_not_allowed() -> None:
     """Test optional marker when not allowed."""
     with pytest.raises(JSONSyntaxError) as exc_info:
-        select_nodes([], "$?", mapping=True)
+        select_nodes([], "@?", relative=True)
 
     check_syntax_err(exc_info, "Optional marker is not allowed", 2, 3)
 
@@ -95,15 +95,15 @@ def test_list_property(query: str) -> None:
 
 @pytest.mark.parametrize("query", [
     # At the end
-    "$.a",
+    "@.a",
 
     # In the middle
-    "$.a.b", "$.a[0]",
+    "@.a.b", "@.a[0]",
 ])
-def test_list_property_mapping(query: str) -> None:
-    """Test property on a list with mapping."""
+def test_relative_list_property(query: str) -> None:
+    """Test relative property on a list."""
     with pytest.raises(TypeError, match="List index must be int, not"):
-        select_nodes(([[]], 0), query, mapping=True)
+        select_nodes(([[]], 0), query, relative=True)
 
 
 @pytest.mark.parametrize(("node", "keep"), [
@@ -138,7 +138,7 @@ def test_condition_slice(key: slice) -> None:
 def test_condition_not_allowed() -> None:
     """Test condition when not allowed."""
     with pytest.raises(JSONSyntaxError) as exc_info:
-        select_nodes([], "${@}", mapping=True)
+        select_nodes([], "@{@}", relative=True)
 
     check_syntax_err(exc_info, "Condition is not allowed", 3)
 
@@ -218,15 +218,15 @@ def test_too_big_slice_idx(
 
 @pytest.mark.parametrize("query", [
     # At the end
-    "$[:]",
+    "@[:]",
 
     # In the middle
-    "$[:].b", "$[:][0]",
+    "@[:].b", "@[:][0]",
 ])
 def test_slice_not_allowed(query: str) -> None:
     """Test slice when not allowed."""
     with pytest.raises(TypeError, match="List index must be int, not"):
-        select_nodes(([[]], 0), query, mapping=True)
+        select_nodes(([[]], 0), query, relative=True)
 
 
 @pytest.mark.parametrize("query", [
@@ -293,7 +293,7 @@ def test_filter(obj: _Target, query: str, keys: list[_Key]) -> None:
 def test_filter_not_allowed() -> None:
     """Test filter when not allowed."""
     with pytest.raises(JSONSyntaxError) as exc_info:
-        select_nodes([], "$[@]", mapping=True)
+        select_nodes([], "@[@]", relative=True)
 
     check_syntax_err(exc_info, "Filter is not allowed", 3)
 

@@ -72,9 +72,11 @@ def _check_query_key(
         raise TypeError(msg)
 
 
-def _get_query_targets(node: _Node, *, mapping: bool = False) -> list[_Target]:
+def _get_query_targets(
+    node: _Node, *, relative: bool = False,
+) -> list[_Target]:
     target, key = node
-    _check_query_key(target, key, allow_slice=not mapping)
+    _check_query_key(target, key, allow_slice=not relative)
     if isinstance(key, slice):
         new_targets: list[Any] = target[key]
     else:
@@ -236,7 +238,7 @@ class Manipulator:
                 end += 1
 
             filter_nodes, end = self._select_nodes(
-                nodes, query, end, mapping=True, relative=True,
+                nodes, query, end, relative=True,
             )
             filtered_pairs: list[tuple[_Node, _Node]] = [
                 (node, (filter_target, filter_key))  # type: ignore
@@ -287,7 +289,6 @@ class Manipulator:
         *,
         allow_slice: bool = False,
         relative: bool = False,
-        mapping: bool = False,
     ) -> tuple[list[_Node], int]:
         if relative:
             if query[end:end + 1] != "@":
@@ -301,7 +302,7 @@ class Manipulator:
         while True:
             key: _Key
             if query[end:end + 1] == "?":
-                if mapping:
+                if relative:
                     msg = "Optional marker is not allowed"
                     raise _errmsg(msg, query, end, end + 1)
 
@@ -328,7 +329,7 @@ class Manipulator:
                 nodes = [
                     (target, key)
                     for node in nodes
-                    for target in _get_query_targets(node, mapping=mapping)
+                    for target in _get_query_targets(node, relative=relative)
                 ]
             elif terminator == "{":
                 end += 1
@@ -341,7 +342,7 @@ class Manipulator:
                         [key]
                     )
                 ]
-                if mapping:
+                if relative:
                     msg = "Condition is not allowed"
                     raise _errmsg(msg, query, end)
                 else:
@@ -357,7 +358,7 @@ class Manipulator:
                 targets: list[_Target] = [
                     target
                     for node in nodes
-                    for target in _get_query_targets(node, mapping=mapping)
+                    for target in _get_query_targets(node, relative=relative)
                 ]
                 if match := _match_slice(query, end):
                     (start, stop, step), end = match.groups(), match.end()
@@ -402,7 +403,7 @@ class Manipulator:
                 elif query[end:end + 1] == "'":
                     key, end = _scan_query_string(query, end + 1)
                     nodes = [(target, key) for target in targets]
-                elif mapping:
+                elif relative:
                     msg = "Filter is not allowed"
                     raise _errmsg(msg, query, end)
                 else:
@@ -437,22 +438,18 @@ class Manipulator:
         if (mode := operation["mode"]) == "append":
             dst: str = operation.get("to", "@")
             dst_nodes: list[_Node] = self.select_nodes(
-                current_nodes, dst, mapping=True, relative=True,
+                current_nodes, dst, relative=True,
             )
             for (target, key), value in zip(dst_nodes, values):
                 list.append(target[key], value)  # type: ignore
         elif mode == "extend":
             dst = operation.get("to", "@")
-            dst_nodes = self.select_nodes(
-                current_nodes, dst, mapping=True, relative=True,
-            )
+            dst_nodes = self.select_nodes(current_nodes, dst, relative=True)
             for (target, key), value in zip(dst_nodes, values):
                 list.extend(target[key], value)  # type: ignore
         elif mode == "insert":
             dst = operation["to"]
-            dst_nodes = self.select_nodes(
-                current_nodes, dst, mapping=True, relative=True,
-            )
+            dst_nodes = self.select_nodes(current_nodes, dst, relative=True)
 
             # Reverse to preserve indices for queries
             for (current_target, _current_key), (target, key), value in zip(
@@ -465,19 +462,13 @@ class Manipulator:
         elif mode == "set":
             dst = operation.get("to", "@")
             dst_nodes = self.select_nodes(
-                current_nodes,
-                dst,
-                allow_slice=True,
-                mapping=True,
-                relative=True,
+                current_nodes, dst, allow_slice=True, relative=True,
             )
             for (target, key), value in zip(dst_nodes, values):
                 target[key] = value  # type: ignore
         elif mode == "update":
             dst = operation.get("to", "@")
-            dst_nodes = self.select_nodes(
-                current_nodes, dst, mapping=True, relative=True,
-            )
+            dst_nodes = self.select_nodes(current_nodes, dst, relative=True)
             for (target, key), value in zip(dst_nodes, values):
                 dict.update(target[key], value)  # type: ignore
         else:
@@ -519,11 +510,7 @@ class Manipulator:
                 values: list[Any] = [
                     deepcopy(target[key])  # type: ignore
                     for target, key in self.select_nodes(
-                        current_nodes,
-                        src,
-                        allow_slice=True,
-                        mapping=True,
-                        relative=True,
+                        current_nodes, src, allow_slice=True, relative=True,
                     )
                 ]
                 self.paste_values(current_nodes, values, operation)
@@ -560,11 +547,7 @@ class Manipulator:
                 src = operation["from"]
                 current_nodes = self.select_nodes(node, path)
                 src_nodes: list[_Node] = self.select_nodes(
-                    current_nodes,
-                    src,
-                    allow_slice=True,
-                    mapping=True,
-                    relative=True,
+                    current_nodes, src, allow_slice=True, relative=True,
                 )
                 values = []
 
@@ -678,7 +661,6 @@ class Manipulator:
         query: str,
         *,
         allow_slice: bool = False,
-        mapping: bool = False,
         relative: bool = False,
     ) -> list[_Node]:
         """Select nodes from a node or a list of nodes.
@@ -686,7 +668,6 @@ class Manipulator:
         :param nodes: a node or a list of nodes
         :param query: a JSON select query
         :param allow_slice: allow slice
-        :param mapping: map every input node to a single output node
         :param relative: query must start with ``"@"`` instead of ``"$"``
         :raises IndexError: if an index is out of range
         :raises JSONSyntaxError: if the select query is invalid
@@ -716,7 +697,6 @@ class Manipulator:
             query,
             allow_slice=allow_slice,
             relative=relative,
-            mapping=mapping,
         )
 
         if end < len(query):

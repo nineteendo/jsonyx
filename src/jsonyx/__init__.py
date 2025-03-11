@@ -518,7 +518,6 @@ def select_nodes(
     *,
     allow: Container[str] = NOTHING,
     allow_slice: bool = False,
-    mapping: bool = False,
     relative: bool = False,
     use_decimal: bool = False,
 ) -> list[_Node]:
@@ -530,7 +529,6 @@ def select_nodes(
     :param query: a JSON select query
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param allow_slice: allow slice
-    :param mapping: map every input node to a single output node
     :param relative: query must start with ``"@"`` instead of ``"$"``
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises IndexError: if an index is out of range
@@ -553,11 +551,7 @@ def select_nodes(
 
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).select_nodes(
-        nodes,
-        query,
-        allow_slice=allow_slice,
-        mapping=mapping,
-        relative=relative,
+        nodes, query, allow_slice=allow_slice, relative=relative,
     )
 
 
