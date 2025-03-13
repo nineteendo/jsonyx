@@ -5,7 +5,7 @@ __all__: list[str] = []
 
 from collections import UserString
 from dataclasses import dataclass
-from decimal import Decimal
+from decimal import MAX_EMAX, Decimal
 from math import isnan
 from typing import TYPE_CHECKING, Any
 
@@ -191,9 +191,7 @@ def test_big_number_float(json: ModuleType, s: str) -> None:
     check_syntax_err(exc_info, "Big numbers require decimal", 1, len(s) + 1)
 
 
-@pytest.mark.parametrize(
-    "s", ["1e1000000000000000000", "-1e1000000000000000000"],
-)
+@pytest.mark.parametrize("s", [f"1e{MAX_EMAX + 1}", f"-1e{MAX_EMAX + 1}"])
 def test_too_big_number(json: ModuleType, s: str) -> None:
     """Test too big JSON number."""
     with pytest.raises(json.JSONSyntaxError) as exc_info:

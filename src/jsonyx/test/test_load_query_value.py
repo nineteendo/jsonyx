@@ -3,7 +3,7 @@ from __future__ import annotations
 
 __all__: list[str] = []
 
-from decimal import Decimal
+from decimal import MAX_EMAX, Decimal
 
 import pytest
 
@@ -119,9 +119,7 @@ def test_big_number_float(s: str) -> None:
     check_syntax_err(exc_info, "Big numbers require decimal", 1, len(s) + 1)
 
 
-@pytest.mark.parametrize(
-    "s", ["1e1000000000000000000", "-1e1000000000000000000"],
-)
+@pytest.mark.parametrize("s", [f"1e{MAX_EMAX + 1}", f"-1e{MAX_EMAX + 1}"])
 def test_too_big_number(s: str) -> None:
     """Test too big JSON number."""
     with pytest.raises(JSONSyntaxError) as exc_info:

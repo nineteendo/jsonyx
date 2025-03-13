@@ -267,10 +267,7 @@ except ImportError:
             elif isinstance(obj, Decimal):
                 write(decimalstr(obj))
             else:
-                msg: str = (
-                    f"{type(obj).__name__} is not JSON "  # type: ignore
-                    "serializable"
-                )
+                msg: str = f"{type(obj).__name__} is not JSON serializable"
                 raise TypeError(msg)
 
         def encoder(obj: object) -> str:
