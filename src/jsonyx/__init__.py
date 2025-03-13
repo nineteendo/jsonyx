@@ -174,7 +174,7 @@ def load(
 
 
 def loads(
-    s: bytearray | bytes | str,
+    s: bytes | str,
     *,
     allow: Container[str] = NOTHING,
     filename: _StrPath = "<string>",

@@ -228,7 +228,7 @@ JSONSyntaxError.__module__ = "jsonyx"
 _errmsg: type[JSONSyntaxError] = JSONSyntaxError
 
 
-def detect_encoding(b: bytearray | bytes) -> str:
+def detect_encoding(b: bytes) -> str:
     r"""Detect the JSON encoding.
 
     :param b: a JSON string
@@ -717,7 +717,7 @@ class Decoder:
         return self.loads(fp.read())
 
     def loads(
-        self, s: bytearray | bytes | str, *, filename: _StrPath = "<string>",
+        self, s: bytes | str, *, filename: _StrPath = "<string>",
     ) -> Any:
         """Deserialize a JSON string to a Python object.
 
