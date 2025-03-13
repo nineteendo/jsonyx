@@ -11,7 +11,7 @@ from jsonyx import JSONSyntaxError, apply_filter
 from jsonyx.test import check_syntax_err
 
 if TYPE_CHECKING:
-    _Node = tuple[dict[Any, Any] | list[Any], int | slice | str]
+    _Node = tuple[dict[Any, Any] | list[Any], Any]
 
 
 @pytest.mark.parametrize(("node", "keep"), [

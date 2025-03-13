@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING, Any
 import msgspec
 import orjson
 import simdjson
-from tabulate import tabulate  # type: ignore
+from tabulate import tabulate  # type: ignore[import-untyped]
 
 import jsonyx
 

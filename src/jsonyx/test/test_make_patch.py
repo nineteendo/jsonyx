@@ -41,7 +41,7 @@ def test_equal(obj: object) -> None:
     ({"a": 1, "c": 3, "d": 4}, {"b": 2, "c": 5, "d": 4}, [
         {"op": "del", "path": "$.a"},
         {"op": "set", "path": "$.c", "value": 5},
-        {"op": "set", "path": "$.b", "value": 2}
+        {"op": "set", "path": "$.b", "value": 2},
     ]),
 
     # List

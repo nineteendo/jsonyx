@@ -20,8 +20,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Container
 
     _Target = dict[Any, Any] | list[Any]
-    _Key = int | slice | str
-    _Node = tuple[_Target, _Key]
+    _Node = tuple[_Target, Any]
     _MatchFunc = Callable[[str, int], Match[str] | None]
     _Operation = dict[str, Any]
     _Operator = Callable[[Any, Any], Any]
@@ -57,7 +56,7 @@ def _errmsg(msg: str, query: str, start: int, end: int = 0) -> JSONSyntaxError:
 
 
 def _check_query_key(
-    target: _Target, key: _Key, *, allow_slice: bool = False,
+    target: _Target, key: Any, *, allow_slice: bool = False,
 ) -> None:
     if isinstance(target, dict):
         if not isinstance(key, str):
@@ -80,7 +79,7 @@ def _get_query_targets(
     if isinstance(key, slice):
         new_targets: list[Any] = target[key]
     else:
-        new_targets = [target[key]]  # type: ignore
+        new_targets = [target[key]]
 
     for new_target in new_targets:
         if not isinstance(new_target, (dict, list)):
@@ -92,7 +91,7 @@ def _get_query_targets(
     return new_targets
 
 
-def _has_key(target: _Target, key: _Key) -> bool:
+def _has_key(target: _Target, key: Any) -> bool:
     if isinstance(target, dict):
         return key in target
 
@@ -241,7 +240,7 @@ class Manipulator:
                 nodes, query, end, relative=True,
             )
             filtered_pairs: list[tuple[_Node, _Node]] = [
-                (node, (filter_target, filter_key))  # type: ignore
+                (node, (filter_target, filter_key))
                 for node, (filter_target, filter_key) in zip(
                     nodes, filter_nodes,
                 )
@@ -266,9 +265,7 @@ class Manipulator:
                 nodes = [
                     node
                     for node, (filter_target, filter_key) in filtered_pairs
-                    if operator(
-                        filter_target[filter_key], value,  # type: ignore
-                    )
+                    if operator(filter_target[filter_key], value)
                 ]
                 old_end = end
                 if match := _match_whitespace(query, end):
@@ -300,7 +297,7 @@ class Manipulator:
 
         end += 1
         while True:
-            key: _Key
+            key: Any
             if query[end:end + 1] == "?":
                 if relative:
                     msg = "Optional marker is not allowed"
@@ -345,8 +342,7 @@ class Manipulator:
                 if relative:
                     msg = "Condition is not allowed"
                     raise _errmsg(msg, query, end)
-                else:
-                    nodes, end = self._apply_filter(nodes, query, end)
+                nodes, end = self._apply_filter(nodes, query, end)
 
                 if query[end:end + 1] != "}":
                     msg = "Expecting a closing bracket"
@@ -465,7 +461,7 @@ class Manipulator:
                 current_nodes, dst, allow_slice=True, relative=True,
             )
             for (target, key), value in zip(dst_nodes, values):
-                target[key] = value  # type: ignore
+                target[key] = value
         elif mode == "update":
             dst = operation.get("to", "@")
             dst_nodes = self.select_nodes(current_nodes, dst, relative=True)
@@ -494,7 +490,7 @@ class Manipulator:
             elif op == "clear":
                 path = operation.get("path", "$")
                 for target, key in self.select_nodes(node, path):
-                    new_target: Any = target[key]  # type: ignore
+                    new_target: Any = target[key]
                     if not isinstance(new_target, (dict, list)):
                         msg = (
                             "Target must be dict or list, not "
@@ -508,7 +504,7 @@ class Manipulator:
                 src: str = operation["from"]
                 current_nodes = self.select_nodes(node, path)
                 values: list[Any] = [
-                    deepcopy(target[key])  # type: ignore
+                    deepcopy(target[key])
                     for target, key in self.select_nodes(
                         current_nodes, src, allow_slice=True, relative=True,
                     )
@@ -525,7 +521,7 @@ class Manipulator:
                         msg = "Can not delete the root"
                         raise ValueError(msg)
 
-                    del target[key]  # type: ignore
+                    del target[key]
             elif op == "extend":
                 path = operation.get("path", "$")
                 value = operation["value"]
@@ -558,8 +554,8 @@ class Manipulator:
                     if target is current_target:
                         raise ValueError
 
-                    values.append(target[key])  # type: ignore
-                    del target[key]  # type: ignore
+                    values.append(target[key])
+                    del target[key]
 
                 # Undo reverse
                 self.paste_values(current_nodes, values[::-1], operation)
@@ -573,7 +569,7 @@ class Manipulator:
                 for target, key in self.select_nodes(
                     node, path, allow_slice=True,
                 ):
-                    target[key] = deepcopy(value)  # type: ignore
+                    target[key] = deepcopy(value)
             elif op == "sort":
                 path = operation.get("path", "$")
                 reverse: bool = operation.get("reverse", False)

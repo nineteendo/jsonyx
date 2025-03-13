@@ -14,8 +14,7 @@ from jsonyx.test import check_syntax_err
 
 if TYPE_CHECKING:
     _Target = dict[Any, Any] | list[Any]
-    _Key = int | slice | str
-    _Node = tuple[_Target, _Key]
+    _Node = tuple[_Target, Any]
 
 
 # pylint: disable-next=R0903
@@ -285,7 +284,7 @@ def test_dict_idx(query: str) -> None:
     ([1, 2, 3], "$[@]", [0, 1, 2]),
     ({"a": 1, "b": 2, "c": 3}, "$[@]", ["a", "b", "c"]),
 ])
-def test_filter(obj: _Target, query: str, keys: list[_Key]) -> None:
+def test_filter(obj: _Target, query: str, keys: list[Any]) -> None:
     """Test filter."""
     assert select_nodes(([obj], 0), query) == [(obj, key) for key in keys]
 

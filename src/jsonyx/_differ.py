@@ -89,7 +89,7 @@ def _make_patch(
             if key not in old_keys:  # preserve order
                 new_path = f"{path}{_encode_query_key(key)}"
                 patch.append(
-                    {"op": "set", "path": new_path, "value": new[key]}
+                    {"op": "set", "path": new_path, "value": new[key]},
                 )
     elif isinstance(old, list) and isinstance(new, list):
         lcs: list[Any] = _get_lcs(old, new)  # type: ignore

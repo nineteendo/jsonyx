@@ -51,7 +51,7 @@ if TYPE_CHECKING:
         def write(self, s: _T_contra, /) -> object:
             """Write string."""
 
-    _Node = tuple[dict[Any, Any] | list[Any], int | slice | str]
+    _Node = tuple[dict[Any, Any] | list[Any], Any]
     _Operation = dict[str, Any]
     _StrPath = PathLike[str] | str
     _Hook = Callable[[Any], Any]
