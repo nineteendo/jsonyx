@@ -48,7 +48,8 @@ def test_optional_marker_not_allowed() -> None:
     with pytest.raises(JSONSyntaxError) as exc_info:
         select_nodes([], "@?", relative=True)
 
-    check_syntax_err(exc_info, "Optional marker is not allowed", 2, 3)
+    msg: str = "Optional markers are not allowed in a relative query"
+    check_syntax_err(exc_info, msg, 2, 3)
 
 
 @pytest.mark.parametrize("key", [
@@ -139,7 +140,7 @@ def test_condition_not_allowed() -> None:
     with pytest.raises(JSONSyntaxError) as exc_info:
         select_nodes([], "@{@}", relative=True)
 
-    msg: str = "Condition is not allowed in a relative query"
+    msg: str = "Conditions are not allowed in a relative query"
     check_syntax_err(exc_info, msg, 3)
 
 
@@ -222,6 +223,15 @@ def test_slice_not_allowed() -> None:
         select_nodes(([[]], 0), "$[:]")
 
 
+def test_relative_slice_not_allowed() -> None:
+    """Test slice when not allowed."""
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        select_nodes(([[]], 0), "@[:]", relative=True)
+
+    msg: str = "Slices are not allowed in a relative query"
+    check_syntax_err(exc_info, msg, 3, 4)
+
+
 @pytest.mark.parametrize("query", [
     # At the end
     "$[:]",
@@ -288,7 +298,8 @@ def test_filter_not_allowed() -> None:
     with pytest.raises(JSONSyntaxError) as exc_info:
         select_nodes([], "@[@]", relative=True)
 
-    check_syntax_err(exc_info, "Filter is not allowed in a relative query", 3)
+    msg: str = "Filters are not allowed in a relative query"
+    check_syntax_err(exc_info, msg, 3)
 
 
 @pytest.mark.parametrize(("obj", "query", "expected"), [
