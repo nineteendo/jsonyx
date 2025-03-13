@@ -84,7 +84,7 @@ def test_invalid_property(key: str) -> None:
     "$.a",
 
     # In the middle
-    "$.a?", "$.a.b", "$.a[0]",
+    "$.a?", "$.a.b", "$.a[:]", "$.a[0]", "$.a['']", "$.a[@]",
 ])
 def test_list_property(query: str) -> None:
     """Test property on a list."""
@@ -98,7 +98,7 @@ def test_list_property(query: str) -> None:
     "@.a",
 
     # In the middle
-    "@.a.b", "@.a[0]",
+    "@.a.b", "@.a[0]", "@.a['']",
 ])
 def test_relative_list_property(query: str) -> None:
     """Test relative property on a list."""
@@ -224,7 +224,7 @@ def test_slice_not_allowed() -> None:
 
 
 def test_relative_slice_not_allowed() -> None:
-    """Test slice when not allowed."""
+    """Test relative slice when not allowed."""
     with pytest.raises(JSONSyntaxError) as exc_info:
         select_nodes(([[]], 0), "@[:]", relative=True)
 
@@ -237,7 +237,7 @@ def test_relative_slice_not_allowed() -> None:
     "$[:]",
 
     # In the middle
-    "$[:]?", "$[:].b", "$[:][0]",
+    "$[:]?", "$[:].b", "$[:][:]", "$[:][0]", "$[:]['']", "$[:][@]",
 ])
 def test_dict_slice(query: str) -> None:
     """Test slice on a dict."""
@@ -276,7 +276,7 @@ def test_too_big_idx(big_num: str) -> None:
     "$[0]",
 
     # In the middle
-    "$[0]?", "$[0].b", "$[0][0]",
+    "$[0]?", "$[0].b", "$[0][:]", "$[0][0]", "$[0]['']", "$[0][@]",
 ])
 def test_dict_idx(query: str) -> None:
     """Test index on a dict."""
@@ -345,7 +345,7 @@ def test_invalid_relative_query(query: str) -> None:
     "$[0]",
 
     # In the middle
-    "$[0].b", "$[0][0]",
+    "$[0]?", "$[0].b", "$[0][:]", "$[0][0]", "$[0]['']", "$[0][@]",
 ])
 def test_invalid_target(query: str) -> None:
     """Test invalid target."""
