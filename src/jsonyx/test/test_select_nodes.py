@@ -217,19 +217,17 @@ def test_too_big_slice_idx(
     check_syntax_err(exc_info, msg, colno, colno + len(big_num))
 
 
-def test_slice_not_allowed() -> None:
+@pytest.mark.parametrize("query", [
+    # At the end
+    "@[:]",
+
+    # In the middle
+    "@[:].b", "@[:][:]", "@[:][0]", "@[:]['']",
+])
+def test_slice_not_allowed(query: str) -> None:
     """Test slice when not allowed."""
     with pytest.raises(TypeError, match="List index must be int, not"):
-        select_nodes(([[]], 0), "$[:]")
-
-
-def test_relative_slice_not_allowed() -> None:
-    """Test relative slice when not allowed."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
-        select_nodes(([[]], 0), "@[:]", relative=True)
-
-    msg: str = "Slices are not allowed in a relative query"
-    check_syntax_err(exc_info, msg, 3, 4)
+        select_nodes(([[]], 0), query, relative=True)
 
 
 @pytest.mark.parametrize("query", [

@@ -359,12 +359,7 @@ class Manipulator:
                     for target in _get_query_targets(node, relative=relative)
                 ]
                 if match := _match_slice(query, end):
-                    slice_start = end
                     (start, stop, step), end = match.groups(), match.end()
-                    if relative:
-                        msg = "Slices are not allowed in a relative query"
-                        raise _errmsg(msg, query, slice_start, end)
-
                     try:
                         if start is not None:
                             start = int(start)

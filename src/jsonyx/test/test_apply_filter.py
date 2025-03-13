@@ -130,3 +130,9 @@ def test_invalid_query(
         apply_filter([], query)
 
     check_syntax_err(exc_info, msg, colno, end_colno)
+
+
+def test_slice() -> None:
+    """Test slice."""
+    with pytest.raises(TypeError, match="List index must be int"):
+        apply_filter(([[]], 0), "@[:]")
