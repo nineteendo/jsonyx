@@ -139,7 +139,8 @@ def test_condition_not_allowed() -> None:
     with pytest.raises(JSONSyntaxError) as exc_info:
         select_nodes([], "@{@}", relative=True)
 
-    check_syntax_err(exc_info, "Condition is not allowed", 3)
+    msg: str = "Condition is not allowed in a relative query"
+    check_syntax_err(exc_info, msg, 3)
 
 
 @pytest.mark.parametrize(("query", "expected"), [
@@ -215,17 +216,10 @@ def test_too_big_slice_idx(
     check_syntax_err(exc_info, msg, colno, colno + len(big_num))
 
 
-@pytest.mark.parametrize("query", [
-    # At the end
-    "@[:]",
-
-    # In the middle
-    "@[:].b", "@[:][0]",
-])
-def test_slice_not_allowed(query: str) -> None:
+def test_slice_not_allowed() -> None:
     """Test slice when not allowed."""
     with pytest.raises(TypeError, match="List index must be int, not"):
-        select_nodes(([[]], 0), query, relative=True)
+        select_nodes(([[]], 0), "$[:]")
 
 
 @pytest.mark.parametrize("query", [
@@ -294,7 +288,7 @@ def test_filter_not_allowed() -> None:
     with pytest.raises(JSONSyntaxError) as exc_info:
         select_nodes([], "@[@]", relative=True)
 
-    check_syntax_err(exc_info, "Filter is not allowed", 3)
+    check_syntax_err(exc_info, "Filter is not allowed in a relative query", 3)
 
 
 @pytest.mark.parametrize(("obj", "query", "expected"), [

@@ -340,10 +340,10 @@ class Manipulator:
                     )
                 ]
                 if relative:
-                    msg = "Condition is not allowed"
+                    msg = "Condition is not allowed in a relative query"
                     raise _errmsg(msg, query, end)
-                nodes, end = self._apply_filter(nodes, query, end)
 
+                nodes, end = self._apply_filter(nodes, query, end)
                 if query[end:end + 1] != "}":
                     msg = "Expecting a closing bracket"
                     raise _errmsg(msg, query, end)
@@ -357,7 +357,12 @@ class Manipulator:
                     for target in _get_query_targets(node, relative=relative)
                 ]
                 if match := _match_slice(query, end):
+                    slice_start = end
                     (start, stop, step), end = match.groups(), match.end()
+                    if relative:
+                        msg = "Slice is not allowed in a relative query"
+                        raise _errmsg(msg, query, slice_start, end)
+
                     try:
                         if start is not None:
                             start = int(start)
@@ -400,7 +405,7 @@ class Manipulator:
                     key, end = _scan_query_string(query, end + 1)
                     nodes = [(target, key) for target in targets]
                 elif relative:
-                    msg = "Filter is not allowed"
+                    msg = "Filter is not allowed in a relative query"
                     raise _errmsg(msg, query, end)
                 else:
                     nodes = [

@@ -118,8 +118,9 @@ def test_and_whitespace(query: str) -> None:
 @pytest.mark.parametrize(("query", "msg", "colno", "end_colno"), [
     ("", "Expecting a relative query", 1, -1),
     ("@?", "Optional marker is not allowed", 2, 3),
-    ("@{@}", "Condition is not allowed", 3, -1),
-    ("@[@]", "Filter is not allowed", 3, -1),
+    ("@{@}", "Condition is not allowed in a relative query", 3, -1),
+    ("@[:]", "Slice is not allowed in a relative query", 3, 4),
+    ("@[@]", "Filter is not allowed in a relative query", 3, -1),
     ("@ == ", "Expecting value", 6, -1),
     ("@ && ", "Expecting a relative query", 6, -1),
     ("!@ == 0", "Unexpected operator", 4, 6),
@@ -133,9 +134,3 @@ def test_invalid_query(
         apply_filter([], query)
 
     check_syntax_err(exc_info, msg, colno, end_colno)
-
-
-def test_slice() -> None:
-    """Test slice."""
-    with pytest.raises(TypeError, match="List index must be int"):
-        apply_filter(([[]], 0), "@[:]")

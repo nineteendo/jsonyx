@@ -15,11 +15,13 @@ if TYPE_CHECKING:
     _Operation = dict[str, Any]
     _SubFunc = Callable[[str | Callable[[Match[str]], str], str], str]
 
+_REPL: str = r"~\1"
+
 _escape: _SubFunc = re.compile(r"['~]", VERBOSE | MULTILINE | DOTALL).sub
 
 
 def _encode_query_key(key: str) -> str:
-    return f".{key}" if key.isidentifier() else f"['{_escape(r"~\1", key)}']"
+    return f".{key}" if key.isidentifier() else f"['{_escape(_REPL, key)}']"
 
 
 def _eq(a: Any, b: Any) -> bool:

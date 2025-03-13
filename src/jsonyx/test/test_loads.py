@@ -533,9 +533,8 @@ def test_unquoted_key_not_allowed(json: ModuleType, key: str) -> None:
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(f"{{{key}: 0}}")
 
-    check_syntax_err(
-        exc_info, "Unquoted keys are not allowed", 2, 2 + len(key),
-    )
+    msg: str = "Unquoted keys are not allowed"
+    check_syntax_err(exc_info, msg, 2, 2 + len(key))
 
 
 @pytest.mark.parametrize("key", [
