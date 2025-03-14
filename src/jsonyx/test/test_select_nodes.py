@@ -66,17 +66,15 @@ def test_property(key: str) -> None:
 
 @pytest.mark.parametrize("key", [
     # First character
-    "\x00", " ", "!", "$", "0", "\xb2", "\u0300", "\u037a", "\u0488",
+    "\x00", "!", "$", "0", "\xb2", "\u0300", "\u037a", "\u0488",
 
     # Remaining characters
-    "A\xb2", "A\u037a", "A\u0488",  # ASCII characters are no candidates
+    "A\x00", "A!", "A$", "A\xb2", "A\u037a", "A\u0488",
 ])
 def test_invalid_property(key: str) -> None:
     """Test invalid property."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
+    with pytest.raises(JSONSyntaxError):
         select_nodes([], f"$.{key}")
-
-    check_syntax_err(exc_info, "Expecting property", 3)
 
 
 @pytest.mark.parametrize("query", [

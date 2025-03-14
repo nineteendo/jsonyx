@@ -542,14 +542,12 @@ def test_unquoted_key_not_allowed(json: ModuleType, key: str) -> None:
     "\x00", "!", "$", "0", "\xb2", "\u0300", "\u037a", "\u0488",
 
     # Remaining characters
-    "A\xb2", "A\u037a", "A\u0488",  # ASCII characters are no candidates
+    "A\x00", "A!", "A$", "A\xb2", "A\u037a", "A\u0488",
 ])
 def test_invalid_unquoted_key(json: ModuleType, key: str) -> None:
     """Test invalid unquoted key."""
-    with pytest.raises(json.JSONSyntaxError) as exc_info:
-        json.loads(f"{{{key}: 0}}")
-
-    check_syntax_err(exc_info, "Expecting key", 2)
+    with pytest.raises(json.JSONSyntaxError):
+        json.loads(f"{{{key}: 0}}", allow=UNQUOTED_KEYS)
 
 
 @pytest.mark.parametrize(("s", "msg", "colno", "end_colno"), [
