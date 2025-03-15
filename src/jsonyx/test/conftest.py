@@ -1,4 +1,4 @@
-"""Pytest fixtures."""
+"""pytest fixtures."""
 from __future__ import annotations
 
 __all__: list[str] = ["get_big_num", "get_json"]
