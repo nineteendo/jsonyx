@@ -1,5 +1,5 @@
 """JSON make_patch tests."""
-# TODO(Nice Zombies): test update
+# TODO(Nice Zombies): test zipping
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -63,4 +63,16 @@ def test_set(obj: Any, value: Any, kwargs: _Operation, expected: Any) -> None:
     """Test set."""
     root: list[Any] = [obj]
     paste_values((root, 0), value, {"mode": "set", **kwargs})
+    assert root[0] == expected
+
+
+@pytest.mark.parametrize(("obj", "kwargs", "expected"), [
+    ({"a": 1, "b": 2, "c": 3}, {}, {"a": 4, "b": 5, "c": 6}),
+    ([{"a": 1, "b": 2, "c": 3}], {"to": "@[0]"}, [{"a": 4, "b": 5, "c": 6}]),
+])
+def test_update(obj: Any, kwargs: _Operation, expected: Any) -> None:
+    """Test update."""
+    root: list[Any] = [obj]
+    value: dict[str, Any] = {"a": 4, "b": 5, "c": 6}
+    paste_values((root, 0), value, {"mode": "update", **kwargs})
     assert root[0] == expected

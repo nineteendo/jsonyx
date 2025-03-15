@@ -242,7 +242,7 @@ def test_sort(obj: Any, kwargs: _Operation, expected: Any) -> None:
 ])
 def test_update(obj: Any, kwargs: _Operation, expected: Any) -> None:
     """Test update."""
-    value: _Operation = {"a": 4, "b": 5, "c": 6}
+    value: dict[str, Any] = {"a": 4, "b": 5, "c": 6}
     patch: _Operation = {"op": "update", "value": value, **kwargs}
     assert apply_patch(obj, patch) == expected
 
