@@ -219,18 +219,18 @@ except ImportError:
                     msg = f"Keys must be str, not {type(key).__name__}"
                     raise TypeError(msg)
 
-                key = str(key)  # noqa: PLW2901
+                s = str(key)
                 if first:
                     first = False
                 else:
                     write(current_item_separator)
 
-                if not quoted_keys and key.isidentifier() and (
-                    not ensure_ascii or key.isascii()
+                if not quoted_keys and s.isidentifier() and (
+                    not ensure_ascii or s.isascii()
                 ):
-                    write(key)
+                    write(s)
                 else:
-                    write(encode_string(key))
+                    write(encode_string(s))
 
                 write(key_separator)
                 write_value(value, write, indent_level, current_indent)

@@ -5,6 +5,7 @@ from __future__ import annotations
 __all__: list[str] = []
 
 import json
+from functools import partial
 from math import inf
 from pathlib import Path
 from random import random, seed
@@ -103,8 +104,7 @@ def _run_benchmark(
         for lib, func in funcs.items():
             print(end=".", flush=True)
             try:
-                # pylint: disable-next=W0640
-                timer: Timer = Timer(lambda: func(obj))  # noqa: B023
+                timer: Timer = Timer(partial(func, obj))
                 number, time_taken = timer.autorange()
                 times[lib] = time_taken / number
             except TypeError:

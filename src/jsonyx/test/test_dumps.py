@@ -342,7 +342,7 @@ def test_quoted_keys_ensure_ascii(
     assert s == f'{{"{expected}": 0}}'
 
 
-@pytest.mark.parametrize(("key", "expected"), [
+@pytest.mark.parametrize("key", [
     # Empty string
     "",
 
