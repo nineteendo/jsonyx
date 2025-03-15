@@ -48,7 +48,7 @@ def test_optional_marker_not_allowed() -> None:
     with pytest.raises(JSONSyntaxError) as exc_info:
         select_nodes([], "@?", relative=True)
 
-    msg: str = "Optional markers are not allowed in a relative query"
+    msg: str = "Optional markers are not allowed in relative query"
     check_syntax_err(exc_info, msg, 2, 3)
 
 
@@ -138,7 +138,7 @@ def test_condition_not_allowed() -> None:
     with pytest.raises(JSONSyntaxError) as exc_info:
         select_nodes([], "@{@}", relative=True)
 
-    msg: str = "Conditions are not allowed in a relative query"
+    msg: str = "Conditions are not allowed in relative query"
     check_syntax_err(exc_info, msg, 3)
 
 
@@ -294,8 +294,7 @@ def test_filter_not_allowed() -> None:
     with pytest.raises(JSONSyntaxError) as exc_info:
         select_nodes([], "@[@]", relative=True)
 
-    msg: str = "Filters are not allowed in a relative query"
-    check_syntax_err(exc_info, msg, 3)
+    check_syntax_err(exc_info, "Filters are not allowed in relative query", 3)
 
 
 @pytest.mark.parametrize(("obj", "query", "expected"), [

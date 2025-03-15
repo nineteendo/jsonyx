@@ -300,9 +300,7 @@ class Manipulator:
             key: Any
             if query[end:end + 1] == "?":
                 if relative:
-                    msg = (
-                        "Optional markers are not allowed in a relative query"
-                    )
+                    msg = "Optional markers are not allowed in relative query"
                     raise _errmsg(msg, query, end, end + 1)
 
                 end += 1
@@ -342,7 +340,7 @@ class Manipulator:
                     )
                 ]
                 if relative:
-                    msg = "Conditions are not allowed in a relative query"
+                    msg = "Conditions are not allowed in relative query"
                     raise _errmsg(msg, query, end)
 
                 nodes, end = self._apply_filter(nodes, query, end)
@@ -402,7 +400,7 @@ class Manipulator:
                     key, end = _scan_query_string(query, end + 1)
                     nodes = [(target, key) for target in targets]
                 elif relative:
-                    msg = "Filters are not allowed in a relative query"
+                    msg = "Filters are not allowed in relative query"
                     raise _errmsg(msg, query, end)
                 else:
                     nodes = [

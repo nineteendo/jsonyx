@@ -1,4 +1,8 @@
-"""Allow JSON deviations not requiring human intervention."""
+"""Allow minimal and unambiguous JSON deviations for developer convenience.
+
+Combine flags (e.g. ``COMMENTS`` | ``UNQUOTED_KEYS``) to allow multiple
+deviations.
+"""
 from __future__ import annotations
 
 __all__: list[str] = [
@@ -13,7 +17,7 @@ __all__: list[str] = [
 ]
 
 NOTHING: frozenset[str] = frozenset()
-"""Raise an error for all JSON deviations."""
+"""Raise an error for all deviations from :RFC:`8259`."""
 
 COMMENTS: frozenset[str] = frozenset({"comments"})
 """Allow block and line comments.
@@ -25,7 +29,7 @@ COMMENTS: frozenset[str] = frozenset({"comments"})
 """
 
 MISSING_COMMAS: frozenset[str] = frozenset({"missing_commas"})
-"""Allow separating items with whitespace.
+"""Allow separating items with whitespace or comments.
 
 >>> import jsonyx as json
 >>> import jsonyx.allow

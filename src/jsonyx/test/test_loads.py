@@ -615,8 +615,7 @@ def test_recursion(json: ModuleType, start: str, msg: str) -> None:
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(start * 100_000)
 
-    exc: Any = exc_info.value
-    assert exc.msg == msg
+    assert exc_info.value.msg == msg
 
 
 @pytest.mark.parametrize("s", [
