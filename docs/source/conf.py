@@ -44,7 +44,12 @@ intersphinx_mapping: dict[str, tuple[str, None]] = {
 }
 intersphinx_disabled_domains: list[str] = ["std"]
 nitpicky: bool = True
-nitpick_ignore: list[tuple[str, str]] = []
+nitpick_ignore: list[tuple[str, str]] = [
+    ("py:class", "jsonyx._decoder._SupportsRead"),
+    ("py:class", "jsonyx._encoder._SupportsWrite"),
+    ("py:class", "jsonyx._SupportsRead"),
+    ("py:class", "jsonyx._SupportsWrite"),
+]
 templates_path = ["_templates"]
 
 # -- Options for HTML output
