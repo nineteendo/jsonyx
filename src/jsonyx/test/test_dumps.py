@@ -166,13 +166,25 @@ def test_string_ensure_ascii(
     assert json.dumps(obj, end="", ensure_ascii=True) == f'"{expected}"'
 
 
-@pytest.mark.parametrize(("obj", "expected"), [
+@pytest.mark.parametrize("obj", [
     # Empty string
-    ("", ""),
+    "",
 
     # One character
-    ("$", "$"),
+    "$",
 
+    # Multiple characters
+    "foo",
+])
+@pytest.mark.parametrize("ensure_ascii", [True, False])
+def test_ascii_string(
+    json: ModuleType, obj: str, ensure_ascii: bool,  # noqa: FBT001
+) -> None:
+    """Test ascii string."""
+    assert json.dumps(obj, end="", ensure_ascii=ensure_ascii) == f'"{obj}"'
+
+
+@pytest.mark.parametrize(("obj", "expected"), [
     # Control characters
     ("\x00", r"\u0000"),
     ("\x08", r"\b"),
@@ -184,17 +196,16 @@ def test_string_ensure_ascii(
     ("\\", r"\\"),
 
     # Multiple characters
-    ("foo", "foo"),
     (r"foo\bar", r"foo\\bar"),
 ])
 @pytest.mark.parametrize("ensure_ascii", [True, False])
-def test_ascii_string(
+def test_control_characters(
     json: ModuleType,
     obj: str,
     ensure_ascii: bool,  # noqa: FBT001
     expected: str,
 ) -> None:
-    """Test ascii string."""
+    """Test control characters."""
     s: str = json.dumps(obj, end="", ensure_ascii=ensure_ascii)
     assert s == f'"{expected}"'
 
@@ -340,29 +351,39 @@ def test_quoted_keys_ensure_ascii(
 
 @pytest.mark.parametrize(("key", "expected"), [
     # Empty string
-    ("", ""),
+    "",
 
     # First character
-    ("\x00", r"\u0000"),
-    (" ", " "),
-    ("!", "!"),
-    ("$", "$"),
-    ("0", "0"),
+    " ", "!", "$", "0",
 
     # Remaining characters
-    ("A\x00", r"A\u0000"),
-    ("A ", "A "),
-    ("A!", "A!"),
-    ("A$", "A$"),
+    "A ", "A!", "A$",
 ])
 @pytest.mark.parametrize("ensure_ascii", [True, False])
 def test_quoted_ascii_keys(
+    json: ModuleType, key: str, ensure_ascii: bool,  # noqa: FBT001
+) -> None:
+    """Test quoted ascii keys."""
+    assert json.dumps(
+        {key: 0}, end="", ensure_ascii=ensure_ascii, quoted_keys=False,
+    ) == f'{{"{key}": 0}}'
+
+
+@pytest.mark.parametrize(("key", "expected"), [
+    # First character
+    ("\x00", r"\u0000"),
+
+    # Remaining characters
+    ("A\x00", r"A\u0000"),
+])
+@pytest.mark.parametrize("ensure_ascii", [True, False])
+def test_control_characters_key(
     json: ModuleType,
     key: str,
     ensure_ascii: bool,  # noqa: FBT001
     expected: str,
 ) -> None:
-    """Test quoted ascii keys."""
+    """Test control characters in key."""
     assert json.dumps(
         {key: 0}, end="", ensure_ascii=ensure_ascii, quoted_keys=False,
     ) == f'{{"{expected}": 0}}'
