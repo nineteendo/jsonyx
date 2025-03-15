@@ -102,6 +102,11 @@ to :ref:`install <installation>` the project.
     cli/index
 
 .. toctree::
+    :caption: Specification
+
+    jsonyx-spec
+
+.. toctree::
     :caption: About the Project
     :hidden:
 
