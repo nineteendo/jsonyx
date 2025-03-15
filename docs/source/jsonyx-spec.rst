@@ -2,10 +2,10 @@ jsonyx Specification
 ====================
 
 .. productionlist:: jsonyx-grammar
- 
-    jsonyx ::= value
+    comments ::= ( '//' [^#xA#xD]* | '/*' ( ( [^*]* '*'+ ) ++ [^*/] ) '/' | [#x9#xA#xD#x20] )+
 
 ..
+    jsonyx ::= value
     value ::= comments? ( object | array | string | number | 'true' | 'false' | 'null' ) comments?
     object ::= '{' ( comments? | ( ( key ':' value ) ++ ( ',' | comments ) ) ( ',' comments? )? ) '}'
     array ::= '[' ( comments? | ( value ++ ( ',' | comments ) ) ( ',' comments? )? ) ']'
