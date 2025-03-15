@@ -35,7 +35,7 @@ _slicer: _Slicer = _Slicer()
     (({}, ""), False),
     (({"": 0}, ""), True),
 ])  # type: ignore
-def test_optional_marker(node: _Node, keep: bool) -> None:  # noqa: FBT001
+def test_optional_marker(node: _Node, keep: bool) -> None:
     """Test optional marker."""
     expected: list[_Node] = [node] if keep else []
     assert select_nodes(node, "$?", allow_slice=True) == expected
@@ -111,7 +111,7 @@ def test_relative_list_property(query: str) -> None:
     (({}, ""), False),
     (({"": 0}, ""), True),
 ])  # type: ignore
-def test_condition(node: _Node, keep: bool) -> None:  # noqa: FBT001
+def test_condition(node: _Node, keep: bool) -> None:
     """Test condition."""
     expected: list[_Node] = [node] if keep else []
     assert select_nodes(node, "${@}") == expected

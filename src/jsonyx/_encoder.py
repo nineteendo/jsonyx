@@ -65,13 +65,13 @@ except ImportError:
         long_item_separator: str,
         key_separator: str,
         max_indent_level: int,
-        allow_nan_and_infinity: bool,  # noqa: FBT001
-        allow_surrogates: bool,  # noqa: FBT001
-        ensure_ascii: bool,  # noqa: FBT001
-        indent_leaves: bool,  # noqa: FBT001
-        quoted_keys: bool,  # noqa: FBT001
-        sort_keys: bool,  # noqa: FBT001
-        trailing_comma: bool,  # noqa: FBT001
+        allow_nan_and_infinity: bool,
+        allow_surrogates: bool,
+        ensure_ascii: bool,
+        indent_leaves: bool,
+        quoted_keys: bool,
+        sort_keys: bool,
+        trailing_comma: bool,
     ) -> _EncodeFunc[object]:
         """Make JSON encoder."""
         markers: dict[int, object] = {}

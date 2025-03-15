@@ -17,14 +17,14 @@ from jsonyx.test import check_syntax_err
     ("false", False),
     ("null", None),
 ])
-def test_literal_names(s: str, expected: bool | None) -> None:  # noqa: FBT001
+def test_literal_names(s: str, expected: bool | None) -> None:
     """Test literal names."""
     assert load_query_value(s) is expected
 
 
 @pytest.mark.parametrize("s", ["Infinity", "-Infinity"])
 @pytest.mark.parametrize("use_decimal", [True, False])
-def test_infinity(s: str, use_decimal: bool) -> None:  # noqa: FBT001
+def test_infinity(s: str, use_decimal: bool) -> None:
     """Test infinity."""
     obj: object = load_query_value(
         s, allow=NAN_AND_INFINITY, use_decimal=use_decimal,
@@ -36,9 +36,7 @@ def test_infinity(s: str, use_decimal: bool) -> None:  # noqa: FBT001
 
 @pytest.mark.parametrize("s", ["Infinity", "-Infinity"])
 @pytest.mark.parametrize("use_decimal", [True, False])
-def test_infinity_not_allowed(
-    s: str, use_decimal: bool,  # noqa: FBT001
-) -> None:
+def test_infinity_not_allowed(s: str, use_decimal: bool) -> None:
     """Test infinity when not allowed."""
     with pytest.raises(JSONSyntaxError) as exc_info:
         load_query_value(s, use_decimal=use_decimal)
@@ -94,7 +92,7 @@ def test_too_big_int(big_num: str) -> None:
     "1.1e1", "-1e1", "-1.1", "-1.1e1",
 ])
 @pytest.mark.parametrize("use_decimal", [True, False])
-def test_rational_number(s: str, use_decimal: bool) -> None:  # noqa: FBT001
+def test_rational_number(s: str, use_decimal: bool) -> None:
     """Test rational number."""
     obj: object = load_query_value(s, use_decimal=use_decimal)
     expected_type: type[Decimal | float] = Decimal if use_decimal else float

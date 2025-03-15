@@ -23,7 +23,7 @@ if TYPE_CHECKING:
     (({}, ""), False),
     (({"": 0}, ""), True),
 ])  # type: ignore
-def test_has_key(node: _Node, keep: bool) -> None:  # noqa: FBT001
+def test_has_key(node: _Node, keep: bool) -> None:
     """Test has key."""
     expected: list[_Node] = [node] if keep else []
     assert apply_filter(node, "@") == expected
@@ -38,7 +38,7 @@ def test_has_key(node: _Node, keep: bool) -> None:  # noqa: FBT001
     (({}, ""), True),
     (({"": 0}, ""), False),
 ])  # type: ignore
-def test_has_not_key(node: _Node, keep: bool) -> None:  # noqa: FBT001
+def test_has_not_key(node: _Node, keep: bool) -> None:
     """Test has not key."""
     expected: list[_Node] = [node] if keep else []
     assert apply_filter(node, "!@") == expected
@@ -73,7 +73,7 @@ def test_has_not_key(node: _Node, keep: bool) -> None:  # noqa: FBT001
     ("@ > 0", False),
     ("@ > -1", True),
 ])
-def test_operator(query: str, keep: bool) -> None:  # noqa: FBT001
+def test_operator(query: str, keep: bool) -> None:
     """Test operator."""
     expected: list[_Node] = [([0], 0)] if keep else []
     assert apply_filter(([0], 0), query) == expected

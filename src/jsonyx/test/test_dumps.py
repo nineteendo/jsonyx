@@ -52,9 +52,7 @@ class _IntEnum(int, Enum):
     (False, "false"),
     (None, "null"),
 ])
-def test_singletons(
-    json: ModuleType, obj: bool | None, expected: str,  # noqa: FBT001
-) -> None:
+def test_singletons(json: ModuleType, obj: bool | None, expected: str) -> None:
     """Test singletons."""
     assert json.dumps(obj, end="") == expected
 
@@ -177,9 +175,7 @@ def test_string_ensure_ascii(
     "foo",
 ])
 @pytest.mark.parametrize("ensure_ascii", [True, False])
-def test_ascii_string(
-    json: ModuleType, obj: str, ensure_ascii: bool,  # noqa: FBT001
-) -> None:
+def test_ascii_string(json: ModuleType, obj: str, ensure_ascii: bool) -> None:
     """Test ascii string."""
     assert json.dumps(obj, end="", ensure_ascii=ensure_ascii) == f'"{obj}"'
 
@@ -200,10 +196,7 @@ def test_ascii_string(
 ])
 @pytest.mark.parametrize("ensure_ascii", [True, False])
 def test_control_characters(
-    json: ModuleType,
-    obj: str,
-    ensure_ascii: bool,  # noqa: FBT001
-    expected: str,
+    json: ModuleType, obj: str, ensure_ascii: bool, expected: str,
 ) -> None:
     """Test control characters."""
     s: str = json.dumps(obj, end="", ensure_ascii=ensure_ascii)
@@ -361,7 +354,7 @@ def test_quoted_keys_ensure_ascii(
 ])
 @pytest.mark.parametrize("ensure_ascii", [True, False])
 def test_quoted_ascii_keys(
-    json: ModuleType, key: str, ensure_ascii: bool,  # noqa: FBT001
+    json: ModuleType, key: str, ensure_ascii: bool,
 ) -> None:
     """Test quoted ascii keys."""
     assert json.dumps(
@@ -378,10 +371,7 @@ def test_quoted_ascii_keys(
 ])
 @pytest.mark.parametrize("ensure_ascii", [True, False])
 def test_control_characters_key(
-    json: ModuleType,
-    key: str,
-    ensure_ascii: bool,  # noqa: FBT001
-    expected: str,
+    json: ModuleType, key: str, ensure_ascii: bool, expected: str,
 ) -> None:
     """Test control characters in key."""
     assert json.dumps(
@@ -410,7 +400,7 @@ def test_unquoted_keys(json: ModuleType, key: str) -> None:
 ])
 @pytest.mark.parametrize("ensure_ascii", [True, False])
 def test_unquoted_ascii_keys(
-    json: ModuleType, key: str, ensure_ascii: bool,  # noqa: FBT001
+    json: ModuleType, key: str, ensure_ascii: bool,
 ) -> None:
     """Test unquoted ascii keys."""
     assert json.dumps(
@@ -541,7 +531,7 @@ def test_no_commas_indent(
     json: ModuleType,
     obj: dict[str, object] | list[object],
     expected: str,
-    trailing_comma: bool,  # noqa: FBT001
+    trailing_comma: bool,
 ) -> None:
     """Test no commas with indent."""
     assert json.dumps(

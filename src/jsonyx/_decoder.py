@@ -290,13 +290,13 @@ except ImportError:
         mapping_hook: _Hook,
         sequence_hook: _Hook,
         str_hook: _Hook,
-        allow_comments: bool,  # noqa: FBT001
-        allow_missing_commas: bool,  # noqa: FBT001
-        allow_nan_and_infinity: bool,  # noqa: FBT001
-        allow_surrogates: bool,  # noqa: FBT001
-        allow_trailing_comma: bool,  # noqa: FBT001
-        allow_unquoted_keys: bool,  # noqa: FBT001
-        use_decimal: bool,  # noqa: FBT001
+        allow_comments: bool,
+        allow_missing_commas: bool,
+        allow_nan_and_infinity: bool,
+        allow_surrogates: bool,
+        allow_trailing_comma: bool,
+        allow_unquoted_keys: bool,
+        use_decimal: bool,
     ) -> _Scanner:
         """Make JSON scanner."""
         memo: dict[Any, Any] = {}

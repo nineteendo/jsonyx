@@ -74,7 +74,7 @@ def test_null(json: ModuleType) -> None:
 ])
 @pytest.mark.parametrize("bool_type", [_MyNumber, bool])
 def test_bool(
-    json: ModuleType, s: str, expected: bool, bool_type: type,  # noqa: FBT001
+    json: ModuleType, s: str, expected: bool, bool_type: type,
 ) -> None:
     """Test bool."""
     obj: object = json.loads(s, hooks={"bool": bool_type})
@@ -163,9 +163,7 @@ def test_int_type(json: ModuleType) -> None:
     "1.1e1", "-1e1", "-1.1", "-1.1e1",
 ])
 @pytest.mark.parametrize("use_decimal", [True, False])
-def test_rational_number(
-    json: ModuleType, s: str, use_decimal: bool,  # noqa: FBT001
-) -> None:
+def test_rational_number(json: ModuleType, s: str, use_decimal: bool) -> None:
     """Test rational number."""
     obj: object = json.loads(s, use_decimal=use_decimal)
     expected_type: type[Decimal | float] = Decimal if use_decimal else float
