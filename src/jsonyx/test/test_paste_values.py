@@ -72,3 +72,12 @@ def test_update(obj: Any, kwargs: _Operation, expected: Any) -> None:
     """Test update."""
     value: dict[str, Any] = {"a": 4, "b": 5, "c": 6}
     assert _apply_paste(obj, value, {"mode": "update", **kwargs}) == expected
+
+
+@pytest.mark.parametrize("mode", [
+    "assert", "clear", "copy", "del", "move", "reverse", "sort",
+])
+def test_unknown_mode(mode: str) -> None:
+    """Test unknown mode."""
+    with pytest.raises(ValueError, match="Unknown mode"):
+        _apply_paste(0, 0, {"mode": mode})

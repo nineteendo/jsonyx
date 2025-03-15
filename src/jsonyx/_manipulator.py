@@ -1,5 +1,4 @@
 """JSON manipulator."""
-# TODO(Nice Zombies): add error messages
 # TODO(Nice Zombies): pin schema ID
 from __future__ import annotations
 
@@ -469,7 +468,8 @@ class Manipulator:
             for (target, key), value in zip(dst_nodes, values):
                 dict.update(target[key], value)  # type: ignore
         else:
-            raise ValueError
+            msg = "Unknown mode"
+            raise ValueError(msg)
 
     def _apply_patch(
         self, root: list[Any], operations: list[_Operation],
