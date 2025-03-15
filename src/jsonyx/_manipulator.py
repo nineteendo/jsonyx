@@ -447,7 +447,7 @@ class Manipulator:
             dst = operation["to"]
             dst_nodes = self.select_nodes(current_nodes, dst, relative=True)
 
-            # Reverse to preserve indices for queries
+            # Future proofing: Reverse to preserve indices for filters
             for (current_target, _current_key), (target, key), value in zip(
                 current_nodes[::-1], dst_nodes[::-1], values[::-1],
             ):
@@ -513,12 +513,12 @@ class Manipulator:
             elif op == "del":
                 path = operation["path"]
 
-                # Reverse to preserve indices for queries
+                # Reverse to preserve indices for filters
                 for target, key in self.select_nodes(
                     node, path, allow_slice=True,
                 )[::-1]:
                     if target is root:
-                        msg = "Can not delete the root"
+                        msg = "Can not delete root"
                         raise ValueError(msg)
 
                     del target[key]
@@ -531,10 +531,10 @@ class Manipulator:
                 path = operation["path"]
                 value = operation["value"]
 
-                # Reverse to preserve indices for queries
+                # Reverse to preserve indices for filters
                 for target, key in self.select_nodes(node, path)[::-1]:
                     if target is root:
-                        msg = "Can not insert at the root"
+                        msg = "Can not insert at root"
                         raise ValueError(msg)
 
                     list.insert(target, key, deepcopy(value))  # type: ignore
@@ -547,12 +547,13 @@ class Manipulator:
                 )
                 values = []
 
-                # Reverse to preserve indices for queries
+                # Future proofing: Reverse to preserve indices for filters
                 for (current_target, _current_key), (target, key) in zip(
                     current_nodes[::-1], src_nodes[::-1],
                 ):
                     if target is current_target:
-                        raise ValueError
+                        msg = "Can not move current object"
+                        raise ValueError(msg)
 
                     values.append(target[key])
                     del target[key]

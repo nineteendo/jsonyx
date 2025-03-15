@@ -1,5 +1,4 @@
 """JSON apply_patch tests."""
-# TODO(Nice Zombies): Test copy and move
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -53,11 +52,11 @@ def test_failed_assert(obj: Any, kwargs: _Operation, match: str) -> None:
 
 
 @pytest.mark.parametrize(("obj", "kwargs", "expected"), [
-    # without path
+    # Without path
     ([1, 2, 3], {}, []),
     ({"a": 1, "b": 2, "c": 3}, {}, {}),
 
-    # with path
+    # With path
     ([[1, 2, 3]], {"path": "$[0]"}, [[]]),
     ([{"a": 1, "b": 2, "c": 3}], {"path": "$[0]"}, [{}]),
 ])  # type: ignore
@@ -70,6 +69,36 @@ def test_invalid_clear() -> None:
     """Test invalid clear."""
     with pytest.raises(TypeError, match="Target must be dict or list, not"):
         apply_patch(0, {"op": "clear"})
+
+
+@pytest.mark.parametrize(("obj", "kwargs", "expected"), [
+    # Without path
+    ([0], {"mode": "append", "from": "@[0]"}, [0, 0]),
+    ({"a": 0}, {"mode": "set", "from": "@.a", "to": "@.b"}, {"a": 0, "b": 0}),
+
+    # With path
+    ([[0]], {"mode": "append", "path": "$[0]", "from": "@[0]"}, [[0, 0]]),
+    (
+        [{"a": 0}],
+        {"mode": "set", "path": "$[0]", "from": "@.a", "to": "@.b"},
+        [{"a": 0, "b": 0}],
+    ),
+
+    # Allow slice
+    ([1, 2, 3], {"mode": "extend", "from": "@[::-1]"}, [1, 2, 3, 3, 2, 1]),
+])
+def test_copy(obj: Any, kwargs: _Operation, expected: Any) -> None:
+    """Test copy."""
+    assert apply_patch(obj, {"op": "copy", **kwargs}) == expected
+
+
+def test_copy_copy() -> None:
+    """Test if copy makes a copy."""
+    value: list[Any] = [0]
+    patch: _Operation = {"op": "copy", "mode": "set", "from": "@[0]"}
+    result: list[Any] = apply_patch([value], patch)
+    assert result == value  # sanity check
+    assert result is not value
 
 
 @pytest.mark.parametrize(("obj", "path", "expected"), [
@@ -90,7 +119,7 @@ def test_del(obj: Any, path: str, expected: Any) -> None:
 
 def test_del_root() -> None:
     """Test delete root."""
-    with pytest.raises(ValueError, match="Can not delete the root"):
+    with pytest.raises(ValueError, match="Can not delete root"):
         apply_patch(0, {"op": "del", "path": "$"})
 
 
@@ -135,9 +164,36 @@ def test_insert_copy() -> None:
 
 
 def test_insert_root() -> None:
-    """Test insert at the root."""
-    with pytest.raises(ValueError, match="Can not insert at the root"):
+    """Test insert at root."""
+    with pytest.raises(ValueError, match="Can not insert at root"):
         apply_patch(0, {"op": "insert", "path": "$", "value": 0})
+
+
+@pytest.mark.parametrize(("obj", "kwargs", "expected"), [
+    # Without path
+    ([1, 2], {"mode": "append", "from": "@[0]"}, [2, 1]),
+    ({"a": 0}, {"mode": "set", "from": "@.a", "to": "@.b"}, {"b": 0}),
+
+    # With path
+    ([[1, 2]], {"mode": "append", "path": "$[0]", "from": "@[0]"}, [[2, 1]]),
+    (
+        [{"a": 0}],
+        {"mode": "set", "path": "$[0]", "from": "@.a", "to": "@.b"},
+        [{"b": 0}],
+    ),
+
+    # Allow slice
+    ([1, 2, 3], {"mode": "extend", "from": "@[::-1]"}, [3, 2, 1]),
+])
+def test_move(obj: Any, kwargs: _Operation, expected: Any) -> None:
+    """Test move."""
+    assert apply_patch(obj, {"op": "move", **kwargs}) == expected
+
+
+def test_move_current_object() -> None:
+    """Test move current object."""
+    with pytest.raises(ValueError, match="Can not move current object"):
+        apply_patch(0, {"op": "move", "mode": "set", "from": "@"})
 
 
 @pytest.mark.parametrize(("obj", "kwargs", "expected"), [
@@ -149,18 +205,18 @@ def test_reverse(obj: Any, kwargs: _Operation, expected: Any) -> None:
     assert apply_patch(obj, {"op": "reverse", **kwargs}) == expected
 
 
-@pytest.mark.parametrize(("obj", "kwargs", "value", "expected"), [
+@pytest.mark.parametrize(("obj", "kwargs", "expected"), [
     # Normal
-    (0, {}, 1, 1),
-    ([0], {"path": "$[0]"}, 1, [1]),
-    ({"a": 0}, {"path": "$.a"}, 1, {"a": 1}),
+    (0, {"value": 1}, 1),
+    ([0], {"path": "$[0]", "value": 1}, [1]),
+    ({"a": 0}, {"path": "$.a", "value": 1}, {"a": 1}),
 
     # Allow slice
-    ([1, 2, 3], {"path": "$[:]"}, [3, 4, 5], [3, 4, 5]),
+    ([1, 2, 3], {"path": "$[:]", "value": [4, 5, 6]}, [4, 5, 6]),
 ])
-def test_set(obj: Any, kwargs: _Operation, value: Any, expected: Any) -> None:
+def test_set(obj: Any, kwargs: _Operation, expected: Any) -> None:
     """Test set."""
-    patch: _Operation = {"op": "set", "value": value, **kwargs}
+    patch: _Operation = {"op": "set", **kwargs}
     assert apply_patch(obj, patch) == expected
 
 
