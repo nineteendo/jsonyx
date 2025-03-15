@@ -1,6 +1,6 @@
 """JSON manipulator."""
 # TODO(Nice Zombies): add error messages
-# TODO(Nice Zombies): update schema ID
+# TODO(Nice Zombies): pin schema ID
 from __future__ import annotations
 
 __all__: list[str] = ["Manipulator"]

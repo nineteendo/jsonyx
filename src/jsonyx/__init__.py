@@ -1,5 +1,5 @@
 """Customizable JSON library for Python."""
-# TODO(Nice Zombies): update badge branch
+# TODO(Nice Zombies): pin badge branch
 from __future__ import annotations
 
 __all__: list[str] = [
@@ -271,7 +271,7 @@ def write(
     .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
 
     """
-    return Encoder(
+    Encoder(
         allow=allow,
         commas=commas,
         end=end,
@@ -513,7 +513,7 @@ def paste_values(
     .. tip:: Using queries instead of indices is more robust.
 
     """
-    return Manipulator(allow=allow, use_decimal=use_decimal).paste_values(
+    Manipulator(allow=allow, use_decimal=use_decimal).paste_values(
         current_nodes, values, operation,
     )
 
