@@ -17,7 +17,7 @@ __all__: list[str] = [
 ]
 
 NOTHING: frozenset[str] = frozenset()
-"""Raise an error for all deviations from :RFC:`8259`."""
+"""Raise an error for all deviations from :rfc:`8259`."""
 
 COMMENTS: frozenset[str] = frozenset({"comments"})
 """Allow block and line comments.
@@ -38,7 +38,7 @@ MISSING_COMMAS: frozenset[str] = frozenset({"missing_commas"})
 """
 
 NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
-"""Allow ``NaN``, ``Infinity`` and ``-Infinity``
+"""Allow ``NaN``, ``Infinity`` and ``-Infinity``.
 
 >>> import jsonyx as json
 >>> import jsonyx.allow

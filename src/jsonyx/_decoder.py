@@ -719,7 +719,7 @@ class Decoder:
     def loads(
         self, s: bytes | str, *, filename: _StrPath = "<string>",
     ) -> Any:
-        """Deserialize a JSON string to a Python object.
+        r"""Deserialize a JSON string to a Python object.
 
         :param s: a JSON string
         :param filename: the path to the JSON file
@@ -731,6 +731,8 @@ class Decoder:
             >>> decoder = json.Decoder()
             >>> decoder.loads('{"foo": ["bar", null, 1.0, 2]}')
             {'foo': ['bar', None, 1.0, 2]}
+            >>> decoder.loads(r'"\"foo\bar"')
+            '"foo\x08ar'
 
         .. tip:: Specify ``filename`` to display the filename in error
             messages.

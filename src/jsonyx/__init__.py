@@ -181,7 +181,7 @@ def loads(
     hooks: dict[str, _Hook] | None = None,
     use_decimal: bool = False,
 ) -> Any:
-    """Deserialize a JSON string to a Python object.
+    r"""Deserialize a JSON string to a Python object.
 
     .. versionchanged:: 2.0 Added ``hooks``.
 
@@ -197,6 +197,8 @@ def loads(
         >>> import jsonyx as json
         >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
         {'foo': ['bar', None, 1.0, 2]}
+        >>> json.loads(r'"\"foo\bar"')
+        '"foo\x08ar'
 
     .. tip:: Specify ``filename`` to display the filename in error messages.
 
@@ -334,8 +336,12 @@ def dump(
         Writing to standard output:
 
         >>> import jsonyx as json
-        >>> json.dump(["foo", {"bar": ("baz", None, 1.0, 2)}])
-        ["foo", {"bar": ["baz", null, 1.0, 2]}]
+        >>> json.dump('"foo\bar')
+        "\"foo\bar"
+        >>> json.dump("\\")
+        "\\"
+        >>> json.dump("\u20AC")
+        "€"
 
         Writing to an open file:
 

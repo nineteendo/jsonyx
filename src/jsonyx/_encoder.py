@@ -404,8 +404,13 @@ class Encoder:
 
             >>> import jsonyx as json
             >>> encoder = json.Encoder()
-            >>> encoder.dump(["foo", {"bar": ("baz", None, 1.0, 2)}])
-            ["foo", {"bar": ["baz", null, 1.0, 2]}]
+            >>> import jsonyx as json
+            >>> encoder.dump('"foo\bar')
+            "\"foo\bar"
+            >>> encoder.dump("\\")
+            "\\"
+            >>> encoder.dump("\u20AC")
+            "€"
 
             Writing to an open file:
 
