@@ -1,9 +1,11 @@
 jsonyx Specification
 ====================
 
-.. code-block:: ebnf
+.. productionlist:: jsonyx-grammar
  
     jsonyx ::= value
+
+..
     value ::= comments? ( object | array | string | number | 'true' | 'false' | 'null' ) comments?
     object ::= '{' ( comments? | ( ( key ':' value ) ++ ( ',' | comments ) ) ( ',' comments? )? ) '}'
     array ::= '[' ( comments? | ( value ++ ( ',' | comments ) ) ( ',' comments? )? ) ']'
