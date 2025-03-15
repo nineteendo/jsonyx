@@ -25,8 +25,7 @@ def test_append(obj: Any, kwargs: _Operation, expected: Any) -> None:
 def test_append_copy() -> None:
     """Test if append makes a copy."""
     value: list[Any] = [0]
-    patch: _Operation = {"op": "append", "value": value}
-    result: list[Any] = apply_patch([], patch)[0]
+    result: list[Any] = apply_patch([], {"op": "append", "value": value})[0]
     assert result == value  # sanity check
     assert result is not value
 
@@ -216,15 +215,13 @@ def test_reverse(obj: Any, kwargs: _Operation, expected: Any) -> None:
 ])
 def test_set(obj: Any, kwargs: _Operation, expected: Any) -> None:
     """Test set."""
-    patch: _Operation = {"op": "set", **kwargs}
-    assert apply_patch(obj, patch) == expected
+    assert apply_patch(obj, {"op": "set", **kwargs}) == expected
 
 
 def test_set_copy() -> None:
     """Test if set makes a copy."""
     value: list[Any] = [1]
-    patch: _Operation = {"op": "set", "value": value}
-    result: list[Any] = apply_patch([0], patch)
+    result: list[Any] = apply_patch([0], {"op": "set", "value": value})
     assert result == value  # sanity check
     assert result is not value
 
