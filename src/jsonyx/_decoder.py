@@ -231,8 +231,6 @@ _errmsg: type[JSONSyntaxError] = JSONSyntaxError
 def detect_encoding(b: bytes) -> str:
     r"""Detect the JSON encoding.
 
-    .. module:: jsonyx._decoder
-
     :param b: a JSON string
     :return: the detected encoding
 

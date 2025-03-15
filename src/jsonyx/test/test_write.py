@@ -10,8 +10,6 @@ from typing import TYPE_CHECKING
 import pytest
 
 from jsonyx.allow import SURROGATES
-# pylint: disable-next=W0611
-from jsonyx.test import check_syntax_err, get_json  # type: ignore # noqa: F401
 
 if TYPE_CHECKING:
     from types import ModuleType

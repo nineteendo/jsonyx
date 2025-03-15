@@ -7,9 +7,6 @@ from contextlib import redirect_stdout
 from io import StringIO
 from typing import TYPE_CHECKING
 
-# pylint: disable-next=W0611
-from jsonyx.test import get_json  # type: ignore # noqa: F401
-
 if TYPE_CHECKING:
     from types import ModuleType
 

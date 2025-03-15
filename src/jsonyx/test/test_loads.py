@@ -17,9 +17,6 @@ from jsonyx.allow import (
 )
 from jsonyx.test import check_syntax_err
 
-# pylint: disable-next=W0611 # isort: split
-from jsonyx.test import get_big_num, get_json  # type: ignore # noqa: F401
-
 if TYPE_CHECKING:
     from types import ModuleType
 

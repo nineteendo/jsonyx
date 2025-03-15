@@ -9,8 +9,6 @@ import pytest
 
 from jsonyx import JSONSyntaxError, load_query_value
 from jsonyx.allow import NAN_AND_INFINITY
-# pylint: disable-next=W0611
-from jsonyx.test import get_big_num  # type: ignore # noqa: F401
 from jsonyx.test import check_syntax_err
 
 
