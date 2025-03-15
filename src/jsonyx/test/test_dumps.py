@@ -121,7 +121,7 @@ def test_nan_payload_not_allowed(json: ModuleType, num: str) -> None:
 def test_signaling_nan(json: ModuleType) -> None:
     """Test signaling NaN."""
     with pytest.raises(ValueError, match="is not JSON serializable"):
-        json.dumps(Decimal("sNaN"))
+        json.dumps(Decimal("sNaN"), allow=NAN_AND_INFINITY)
 
 
 def test_float_types(json: ModuleType) -> None:

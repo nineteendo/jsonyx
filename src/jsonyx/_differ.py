@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     _Operation = dict[str, Any]
     _SubFunc = Callable[[str | Callable[[Match[str]], str], str], str]
 
-_REPL: str = r"~\1"
+_REPL: str = r"~\0"
 
 _escape: _SubFunc = re.compile(r"['~]", VERBOSE | MULTILINE | DOTALL).sub
 
