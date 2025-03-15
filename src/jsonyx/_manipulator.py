@@ -452,7 +452,8 @@ class Manipulator:
                 current_nodes[::-1], dst_nodes[::-1], values[::-1],
             ):
                 if target is current_target:
-                    raise ValueError
+                    msg: str = "Can not insert at current object"
+                    raise ValueError(msg)
 
                 list.insert(target, key, value)  # type: ignore
         elif mode == "set":
