@@ -133,23 +133,31 @@ def test_invalid_number(s: str) -> None:
         load_query_value(s)
 
 
-@pytest.mark.parametrize(("s", "expected"), [
+@pytest.mark.parametrize("s", [
     # Empty string
-    ("", ""),
+    "",
 
     # One character
-    ("$", "$"),
+    "$",
 
+    # Multiple characters
+    "foo",
+])
+def test_string(s: str) -> None:
+    """Test JSON string."""
+    assert load_query_value(f"'{s}'") == s
+
+
+@pytest.mark.parametrize(("s", "expected"), [
     # Tilde escapes
     ("~'", "'"),
     ("~~", "~"),
 
     # Multiple characters
-    ("foo", "foo"),
     ("foo~~bar", "foo~bar"),
 ])
-def test_string(s: str, expected: str) -> None:
-    """Test JSON string."""
+def test_string_escapes(s: str, expected: str) -> None:
+    """Test string escapes."""
     assert load_query_value(f"'{s}'") == expected
 
 

@@ -211,25 +211,26 @@ def test_float_type(json: ModuleType) -> None:
     assert obj == _MyNumber(0.0)
 
 
-@pytest.mark.parametrize(("s", "expected"), [
+@pytest.mark.parametrize("s", [
     # Empty string
-    ("", ""),
+    "",
 
     # UTF-8
-    ("$", "$"),
-    ("\xa3", "\xa3"),
-    ("\u0418", "\u0418"),
-    ("\u0939", "\u0939"),
-    ("\u20ac", "\u20ac"),
-    ("\ud55c", "\ud55c"),
-    ("\U00010348", "\U00010348"),
-    ("\U001096b3", "\U001096b3"),
+    "$", "\xa3", "\u0418", "\u0939", "\u20ac", "\ud55c", "\U00010348",
+    "\U001096b3",
 
     # Surrogates
-    ("\ud800", "\ud800"),
-    ("\ud800$", "\ud800$"),
-    ("\udf48", "\udf48"),  # noqa: PT014
+    "\ud800", "\ud800$", "\udf48",  # noqa: PT014
 
+    # Multiple characters
+    "foo",
+])
+def test_string(json: ModuleType, s: str) -> None:
+    """Test JSON string."""
+    assert json.loads(f'"{s}"') == s
+
+
+@pytest.mark.parametrize(("s", "expected"), [
     # Backslash escapes
     (r"\"", '"'),
     (r"\\", "\\"),
@@ -251,11 +252,10 @@ def test_float_type(json: ModuleType) -> None:
     (r"\udbe5\udeb3", "\U001096b3"),
 
     # Multiple characters
-    ("foo", "foo"),
     (r"foo\\bar", r"foo\bar"),
 ])
-def test_string(json: ModuleType, s: str, expected: str) -> None:
-    """Test JSON string."""
+def test_string_escapes(json: ModuleType, s: str, expected: str) -> None:
+    """Test string escapes."""
     assert json.loads(f'"{s}"') == expected
 
 

@@ -15,6 +15,48 @@ if TYPE_CHECKING:
     _Operation = dict[str, Any]
 
 
+@pytest.mark.parametrize("key", [
+    # Empty string
+    "",
+
+    # First character
+    "\x00", " ", "!", "$", "0", "\xb2", "\u0300", "\u037a", "\u0488",
+
+    # Remaining characters
+    "A\x00", "A ", "A!", "A$", "A\xb2", "A\u037a", "A\u0488",
+])
+def test_string(key: str) -> None:
+    """Test string."""
+    assert make_patch({key: 0}, {}) == [{"op": "del", "path": f"$['{key}']"}]
+
+
+@pytest.mark.parametrize(("key", "expected"), [
+    # Tilde escapes
+    ("'", "~'"),
+    ("~", "~~"),
+
+    # Multiple characters
+    ("foo~bar", "foo~~bar"),
+])
+def test_string_escapes(key: str, expected: str) -> None:
+    """Test string escapes."""
+    assert make_patch({key: 0}, {}) == [
+        {"op": "del", "path": f"$['{expected}']"},
+    ]
+
+
+@pytest.mark.parametrize("key", [
+    # First character
+    "A", "_", "\u16ee", "\u1885", "\u2118",
+
+    # Remaining characters
+    "A0", "AA", "A_", "A\u0300", "A\u2118",
+])
+def test_property(key: str) -> None:
+    """Test property."""
+    assert make_patch({key: 0}, {}) == [{"op": "del", "path": f"$.{key}"}]
+
+
 @pytest.mark.parametrize("obj", [
     # Dict
     {}, {"": 0},
@@ -31,35 +73,6 @@ if TYPE_CHECKING:
 def test_equal(obj: object) -> None:
     """Test equal."""
     assert not make_patch(obj, obj)
-
-
-@pytest.mark.parametrize("key", [
-    # Empty string
-    "",
-
-    # First character
-    "\x00", " ", "!", "$", "0", "\xb2", "\u0300", "\u037a", "\u0488",
-
-    # TODO(Nice Zombies): test tilde escapes
-
-    # Remaining characters
-    "A\x00", "A ", "A!", "A$", "A\xb2", "A\u037a", "A\u0488",
-])
-def test_quoted_keys(key: str) -> None:
-    """Test quoted keys."""
-    assert make_patch({key: 0}, {}) == [{"op": "del", "path": f"$['{key}']"}]
-
-
-@pytest.mark.parametrize("key", [
-    # First character
-    "A", "_", "\u16ee", "\u1885", "\u2118",
-
-    # Remaining characters
-    "A0", "AA", "A_", "A\u0300", "A\u2118",
-])
-def test_unquoted_keys(key: str) -> None:
-    """Test unquoted keys."""
-    assert make_patch({key: 0}, {}) == [{"op": "del", "path": f"$.{key}"}]
 
 
 @pytest.mark.parametrize(("old", "new", "expected"), [
