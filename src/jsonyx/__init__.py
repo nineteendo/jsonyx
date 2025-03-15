@@ -480,7 +480,7 @@ def apply_patch(
 
 def paste_values(
     current_nodes: _Node | list[_Node],
-    values: list[Any] | Any,
+    values: Any | list[Any],
     operation: _Operation,
     *,
     allow: Container[str] = NOTHING,

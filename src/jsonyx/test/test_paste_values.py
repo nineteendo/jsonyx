@@ -1,5 +1,5 @@
 """JSON make_patch tests."""
-# TODO(Nice Zombies): test set and update
+# TODO(Nice Zombies): test update
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -20,8 +20,9 @@ if TYPE_CHECKING:
 ])
 def test_append(obj: Any, kwargs: _Operation, expected: Any) -> None:
     """Test append."""
-    paste_values(([obj], 0), 4, {"mode": "append", **kwargs})
-    assert obj == expected
+    root: list[Any] = [obj]
+    paste_values((root, 0), 4, {"mode": "append", **kwargs})
+    assert root[0] == expected
 
 
 @pytest.mark.parametrize(("obj", "kwargs", "expected"), [
@@ -30,18 +31,36 @@ def test_append(obj: Any, kwargs: _Operation, expected: Any) -> None:
 ])
 def test_extend(obj: Any, kwargs: _Operation, expected: Any) -> None:
     """Test extend."""
-    paste_values(([obj], 0), [4, 5, 6], {"mode": "extend", **kwargs})
-    assert obj == expected
+    root: list[Any] = [obj]
+    paste_values((root, 0), [4, 5, 6], {"mode": "extend", **kwargs})
+    assert root[0] == expected
 
 
 def test_insert() -> None:
     """Test insert."""
     obj: list[Any] = [1, 2, 3]
-    paste_values(([obj], 0), 0, {"mode": "insert", "to": "@[0]"})
-    assert obj == [0, 1, 2, 3]
+    root: list[Any] = [obj]
+    paste_values((root, 0), 0, {"mode": "insert", "to": "@[0]"})
+    assert root[0] == [0, 1, 2, 3]
 
 
 def test_insert_current_object() -> None:
     """Test insert at current object."""
     with pytest.raises(ValueError, match="Can not insert at current object"):
         paste_values(([0], 0), 0, {"mode": "insert", "to": "@"})
+
+
+@pytest.mark.parametrize(("obj", "value", "kwargs", "expected"), [
+    # Normal
+    (0, 1, {}, 1),
+    ([0], 1, {"to": "@[0]"}, [1]),
+    ({"a": 0}, 1, {"to": "@.a"}, {"a": 1}),
+
+    # Allow slice
+    ([1, 2, 3], [4, 5, 6], {"to": "@[:]"}, [4, 5, 6]),
+])
+def test_set(obj: Any, value: Any, kwargs: _Operation, expected: Any) -> None:
+    """Test set."""
+    root: list[Any] = [obj]
+    paste_values((root, 0), value, {"mode": "set", **kwargs})
+    assert root[0] == expected
