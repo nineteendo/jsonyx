@@ -70,15 +70,16 @@ Encoding protocol-based objects
 
 .. versionadded:: 2.0
 
-Required methods:
-
-- ``"bool"``: :meth:`~object.__bool__`, :meth:`~object.__len__` or absent for
-  ``true``
-- ``"float"``: :meth:`~object.__float__` or :meth:`~object.__index__`
-- ``"int"``: :meth:`~object.__int__` or :meth:`~object.__index__`
-- ``"mapping"``: :meth:`~object.__len__`, :meth:`!values` and :meth:`!items`
-- ``"sequence"``: :meth:`~object.__len__`, and :meth:`~object.__iter__`
-- ``"str"``: :meth:`~object.__str__` or :meth:`~object.__repr__`
+============== ========================================================================
+Type           Required methods
+============== ========================================================================
+``"bool"``     :meth:`~object.__bool__`, :meth:`~object.__len__` or absent for ``true``
+``"float"``    :meth:`~object.__float__` or :meth:`~object.__index__`
+``"int"``      :meth:`~object.__int__` or :meth:`~object.__index__`
+``"mapping"``  :meth:`~object.__len__`, :meth:`!values` and :meth:`!items`
+``"sequence"`` :meth:`~object.__len__`, and :meth:`~object.__iter__`
+``"str"``      :meth:`~object.__str__` or :meth:`~object.__repr__`
+============== ========================================================================
 
 Example with :mod:`numpy`:
 
@@ -132,14 +133,16 @@ Decoding objects using hooks
 
 .. versionadded:: 2.0
 
-Called with:
-
-- ``"bool"``: :class:`bool`
-- ``"float"``: :class:`float`
-- ``"int"``: :class:`int`
-- ``"mapping"``: ``list[tuple[Any, Any]]``
-- ``"sequence"``: :class:`list`
-- ``"str"``: :class:`str`
+============== =========================
+Hook           Called with
+============== =========================
+``"bool"``     :class:`bool`
+``"float"``    :class:`float`
+``"int"``      :class:`int`
+``"mapping"``  ``list[tuple[Any, Any]]``
+``"sequence"`` :class:`list`
+``"str"``      :class:`str`
+============== =========================
 
 Example with :mod:`numpy`:
 
