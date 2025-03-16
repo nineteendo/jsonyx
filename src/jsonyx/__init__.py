@@ -53,7 +53,7 @@ if TYPE_CHECKING:
 
     _Node = tuple[dict[Any, Any] | list[Any], Any]
     _Operation = dict[str, Any]
-    _StrPath = PathLike[str] | str
+    _StrPathX = PathLike[str] | str
     _Hook = Callable[[Any], Any]
 
 
@@ -106,7 +106,7 @@ def format_syntax_error(exc: TruncatedSyntaxError) -> list[str]:
 
 
 def read(
-    filename: _StrPath,
+    filename: _StrPathX,
     *,
     allow: Container[str] = NOTHING,
     hooks: dict[str, _Hook] | None = None,
@@ -145,7 +145,7 @@ def load(
     *,
     allow: Container[str] = NOTHING,
     hooks: dict[str, _Hook] | None = None,
-    root: _StrPath = ".",
+    root: _StrPathX = ".",
     use_decimal: bool = False,
 ) -> Any:
     """Deserialize an open JSON file to a Python object.
@@ -177,7 +177,7 @@ def loads(
     s: bytes | str,
     *,
     allow: Container[str] = NOTHING,
-    filename: _StrPath = "<string>",
+    filename: _StrPathX = "<string>",
     hooks: dict[str, _Hook] | None = None,
     use_decimal: bool = False,
 ) -> Any:
@@ -210,7 +210,7 @@ def loads(
 
 def write(
     obj: object,
-    filename: _StrPath,
+    filename: _StrPathX,
     encoding: str = "utf-8",
     *,
     allow: Container[str] = NOTHING,
