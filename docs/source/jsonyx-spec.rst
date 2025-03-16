@@ -13,7 +13,7 @@ jsonyx
     .. productionlist:: jsonyx-grammar
         jsonyx: `value`
 
-.. image:: /_images/light/jsonyx/jsonyx.png
+.. image:: /_images/light/jsonyx/jsonyx.svg
     :class: only-light
 
 .. only:: not latex
@@ -29,7 +29,7 @@ value
     .. productionlist:: jsonyx-grammar
         value: `comments`? ( `object` | `array` | `string` | `number` | 'true' | 'false' | 'null' ) `comments`?
 
-.. image:: /_images/light/jsonyx/value.png
+.. image:: /_images/light/jsonyx/value.svg
     :class: only-light
 
 .. only:: not latex
@@ -45,7 +45,7 @@ object
     .. productionlist:: jsonyx-grammar
         object: '{' ( `comments`? | ( ( `key` ':' `value` ) ++ ( ',' | `comments` ) ) ( ',' `comments`? )? ) '}'
 
-.. image:: /_images/light/jsonyx/object.png
+.. image:: /_images/light/jsonyx/object.svg
     :class: only-light
 
 .. only:: not latex
@@ -61,7 +61,7 @@ array
     .. productionlist:: jsonyx-grammar
         array: '[' ( `comments`? | ( `value` ++ ( ',' | `comments` ) ) ( ',' `comments`? )? ) ']'
 
-.. image:: /_images/light/jsonyx/array.png
+.. image:: /_images/light/jsonyx/array.svg
     :class: only-light
 
 .. only:: not latex
@@ -80,7 +80,7 @@ string
               :     | '\' ( ["\/bfnrt] | 'u' [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] )
               : )* '"'
 
-.. image:: /_images/light/jsonyx/string.png
+.. image:: /_images/light/jsonyx/string.svg
     :class: only-light
 
 .. only:: not latex
@@ -97,7 +97,7 @@ number
         number: '-'? ( ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )? | 'Infinity' )
               : | 'NaN'
 
-.. image:: /_images/light/jsonyx/number.png
+.. image:: /_images/light/jsonyx/number.svg
     :class: only-light
 
 .. only:: not latex
@@ -113,7 +113,7 @@ key
     .. productionlist:: jsonyx-grammar
         key: `comments`? ( `string` | `~python-grammar:identifier` ) `comments`?
 
-.. image:: /_images/light/jsonyx/key.png
+.. image:: /_images/light/jsonyx/key.svg
     :class: only-light
 
 .. only:: not latex
@@ -129,7 +129,7 @@ comments
     .. productionlist:: jsonyx-grammar
         comments: ( '//' [^#xA#xD]* | '/*' ( ( [^*]* '*'+ ) ++ [^*/] ) '/' | [#x9#xA#xD#x20] )+
 
-.. image:: /_images/light/jsonyx/comments.png
+.. image:: /_images/light/jsonyx/comments.svg
     :class: only-light
 
 .. only:: not latex
