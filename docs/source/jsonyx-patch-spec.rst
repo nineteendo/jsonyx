@@ -25,7 +25,11 @@ absolute_query
 .. container:: highlight
 
     .. productionlist:: jsonyx-patch-grammar
-        absolute_query: '$' ( '?'? ( '.' `~python-grammar:identifier` | '{' `filter` '}' | '[' ( `slice` | `integer` | `string` | `filter` ) ']' ) )* '?'?
+        absolute_query: '$' ( '?'? (
+                      :     '.' `~python-grammar:identifier`
+                      :     | '{' `filter` '}'
+                      :     | '[' ( `slice` | `integer` | `string` | `filter` ) ']' )
+                      : )* '?'?
 
 .. image:: /_images/light/jsonyx-patch/absolute_query.png
     :class: only-light
@@ -57,7 +61,10 @@ filter
 .. container:: highlight
 
     .. productionlist:: jsonyx-patch-grammar
-        filter: ( '!' `relative_query` | `relative_query` `whitespace` `operator` `whitespace` `value` ) ++ ( `whitespace` '&&' `whitespace` )
+        filter: (
+              :     '!' `relative_query`
+              :     | `relative_query` `whitespace` `operator` `whitespace` `value`
+              : ) ++ ( `whitespace` '&&' `whitespace` )
 
 .. image:: /_images/light/jsonyx-patch/filter.png
     :class: only-light

@@ -71,7 +71,10 @@ string
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        string: '"' ( [^"\#x0-#x1F] | '\' ( ["\/bfnrt] | 'u' [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] ) )* '"'
+        string: '"' (
+              :     [^"\#x0-#x1F]
+              :     | '\' ( ["\/bfnrt] | 'u' [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] )
+              : )* '"'
 
 .. image:: /_images/light/jsonyx/string.png
     :class: only-light
@@ -87,7 +90,8 @@ number
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        number: '-'? ( ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )? | 'Infinity' ) | 'NaN'
+        number: '-'? ( ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )? | 'Infinity' )
+              : | 'NaN'
 
 .. image:: /_images/light/jsonyx/number.png
     :class: only-light
