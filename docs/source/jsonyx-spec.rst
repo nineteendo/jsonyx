@@ -136,6 +136,3 @@ comments
 
     .. image:: /_images/dark/jsonyx/comments.png
         :class: only-dark
-
-.. image:: /_images/Railroad-Diagram-Generator.png
-    :align: left
