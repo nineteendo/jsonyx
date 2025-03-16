@@ -19,7 +19,11 @@ absolute_query
 --------------
 
 .. productionlist:: jsonyx-patch-grammar
-    absolute_query: '$' ( '?'? ( '.' `~python-grammar:identifier` | '{' `filter` '}' | '[' ( `slice` | `integer` | `string` | `filter` ) ']' ) )* '?'?
+    absolute_query: '$' ( '?'? (
+                  :     '.' `~python-grammar:identifier`
+                  :     | '{' `filter` '}'
+                  :     | '[' ( `slice` | `integer` | `string` | `filter` ) ']'
+                  : ) )* '?'?
 
 .. image:: /_images/light/jsonyx-patch/absolute_query.png
     :class: only-light
@@ -47,7 +51,10 @@ filter
 ------
 
 .. productionlist:: jsonyx-patch-grammar
-    filter: ( '!' `relative_query` | `relative_query` `whitespace` ( '<=' | '<' | '==' | '!=' | '>=' | '>' ) `whitespace` `value` ) ++ ( `whitespace` '&&' `whitespace` )
+    filter: (
+          :     '!' `relative_query`
+          :     | `relative_query` `whitespace` ( '<=' | '<' | '==' | '!=' | '>=' | '>' ) `whitespace` `value`
+          : ) ++ ( `whitespace` '&&' `whitespace` )
 
 .. image:: /_images/light/jsonyx-patch/filter.png
     :class: only-light
@@ -117,7 +124,10 @@ number
 ------
 
 .. productionlist:: jsonyx-patch-grammar
-    number: '-'? ( ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )? | 'Infinity' )
+    number: '-'? (
+          :     ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )?
+          :     | 'Infinity'
+          : )
 
 .. image:: /_images/light/jsonyx-patch/number.png
     :class: only-light
