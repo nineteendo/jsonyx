@@ -53,7 +53,7 @@ filter
 .. productionlist:: jsonyx-patch-grammar
     filter: (
           :     '!' `relative_query`
-          :     | `relative_query` `whitespace` ( '<=' | '<' | '==' | '!=' | '>=' | '>' ) `whitespace` `value`
+          :     | `relative_query` `whitespace` `operator` `whitespace` `value`
           : ) ++ ( `whitespace` '&&' `whitespace` )
 
 .. image:: /_images/light/jsonyx-patch/filter.png
@@ -136,6 +136,21 @@ number
 
     .. image:: /_images/dark/jsonyx-patch/number.png
         :class: only-dark
+
+operator
+--------
+
+.. productionlist:: jsonyx-patch-grammar
+    operator: '<=' | '<' | '==' | '!=' | '>=' | '>'
+
+.. image:: /_images/light/jsonyx-patch/operator.png
+    :class: only-light
+
+.. only:: not latex
+
+    .. image:: /_images/dark/jsonyx-patch/operator.png
+        :class: only-dark
+
 
 whitespace
 ----------
