@@ -54,7 +54,7 @@ filter
 
 .. only:: not latex
 
-    .. image:: /_images/dark/filter/jsonyx.png
+    .. image:: /_images/dark/jsonyx-patch/filter.png
         :class: only-dark
 
 value
@@ -68,7 +68,7 @@ value
 
 .. only:: not latex
 
-    .. image:: /_images/dark/valuex/jsonyx.png
+    .. image:: /_images/dark/jsonyx-patch/value.png
         :class: only-dark
 
 slice
@@ -82,7 +82,7 @@ slice
 
 .. only:: not latex
 
-    .. image:: /_images/dark/slicex/jsonyx.png
+    .. image:: /_images/dark/jsonyx-patch/slice.png
         :class: only-dark
 
 string
@@ -96,7 +96,7 @@ string
 
 .. only:: not latex
 
-    .. image:: /_images/dark/string/jsonyx.png
+    .. image:: /_images/dark/jsonyx-patch/string.png
         :class: only-dark
 
 integer
@@ -110,7 +110,7 @@ integer
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyxintegerjsonyx.png
+    .. image:: /_images/dark/jsonyx-patch/integer.png
         :class: only-dark
 
 number
@@ -124,7 +124,7 @@ number
 
 .. only:: not latex
 
-    .. image:: /_images/dark/number/jsonyx.png
+    .. image:: /_images/dark/jsonyx-patch/number.png
         :class: only-dark
 
 whitespace
@@ -138,5 +138,5 @@ whitespace
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx-patch/whitespacenyx.png
+    .. image:: /_images/dark/jsonyx-patch/whitespace.png
         :class: only-dark
