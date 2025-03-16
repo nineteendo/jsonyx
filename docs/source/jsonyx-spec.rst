@@ -23,9 +23,7 @@ value
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        value: `comments`?
-             : ( `object` | `array` | `string` | `number` | 'true' | 'false' | 'null' )
-             : `comments`?
+        value: `comments`? ( `object` | `array` | `string` | `number` | 'true' | 'false' | 'null' ) `comments`?
 
 .. image:: /_images/light/jsonyx/value.png
     :class: only-light
@@ -41,10 +39,7 @@ object
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        object: '{' (
-              :     `comments`?
-              :     | ( ( `key` ':' `value` ) ++ ( ',' | `comments` ) ) ( ',' `comments`? )?
-              : ) '}'
+        object: '{' ( `comments`? | ( ( `key` ':' `value` ) ++ ( ',' | `comments` ) ) ( ',' `comments`? )? ) '}'
 
 .. image:: /_images/light/jsonyx/object.png
     :class: only-light
@@ -76,10 +71,7 @@ string
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        string: '"' ( [^"\#x0-#x1F] | '\' (
-              :     ["\/bfnrt]
-              :     | 'u' [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F]
-              : ) )* '"'
+        string: '"' ( [^"\#x0-#x1F] | '\' ( ["\/bfnrt] | 'u' [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] ) )* '"'
 
 .. image:: /_images/light/jsonyx/string.png
     :class: only-light
@@ -95,10 +87,7 @@ number
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        number: '-'? (
-              :     ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )?
-              :     | 'Infinity'
-              : ) | 'NaN'
+        number: '-'? ( ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )? | 'Infinity' ) | 'NaN'
 
 .. image:: /_images/light/jsonyx/number.png
     :class: only-light
@@ -130,11 +119,7 @@ comments
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        comments:   (
-                :       '//' [^#xA#xD]*
-                :       | '/*' ( ( [^*]* '*'+ ) ++ [^*/] ) '/'
-                :       | [#x9#xA#xD#x20]
-                :   )+
+        comments: ( '//' [^#xA#xD]* | '/*' ( ( [^*]* '*'+ ) ++ [^*/] ) '/' | [#x9#xA#xD#x20] )+
 
 .. image:: /_images/light/jsonyx/comments.png
     :class: only-light
