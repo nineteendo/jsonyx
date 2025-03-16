@@ -22,12 +22,14 @@ jsonyx_expression
 absolute_query
 --------------
 
-.. productionlist:: jsonyx-patch-grammar
-    absolute_query: '$' ( '?'? (
-                  :     '.' `~python-grammar:identifier`
-                  :     | '{' `filter` '}'
-                  :     | '[' ( `slice` | `integer` | `string` | `filter` ) ']'
-                  : ) )* '?'?
+.. container:: highlight
+
+    .. productionlist:: jsonyx-patch-grammar
+        absolute_query: '$' ( '?'? (
+                      :     '.' `~python-grammar:identifier`
+                      :     | '{' `filter` '}'
+                      :     | '[' ( `slice` | `integer` | `string` | `filter` ) ']'
+                      : ) )* '?'?
 
 .. image:: /_images/light/jsonyx-patch/absolute_query.png
     :class: only-light
@@ -40,8 +42,10 @@ absolute_query
 relative_query
 --------------
 
-.. productionlist:: jsonyx-patch-grammar
-    relative_query: '@' ( '.' `~python-grammar:identifier` | '[' ( `slice` | `string` | `integer` ) ']' )*
+.. container:: highlight
+
+    .. productionlist:: jsonyx-patch-grammar
+        relative_query: '@' ( '.' `~python-grammar:identifier` | '[' ( `slice` | `string` | `integer` ) ']' )*
 
 .. image:: /_images/light/jsonyx-patch/relative_query.png
     :class: only-light
@@ -54,11 +58,13 @@ relative_query
 filter
 ------
 
-.. productionlist:: jsonyx-patch-grammar
-    filter: (
-          :     '!' `relative_query`
-          :     | `relative_query` `whitespace` `operator` `whitespace` `value`
-          : ) ++ ( `whitespace` '&&' `whitespace` )
+.. container:: highlight
+
+    .. productionlist:: jsonyx-patch-grammar
+        filter: (
+              :     '!' `relative_query`
+              :     | `relative_query` `whitespace` `operator` `whitespace` `value`
+              : ) ++ ( `whitespace` '&&' `whitespace` )
 
 .. image:: /_images/light/jsonyx-patch/filter.png
     :class: only-light
@@ -71,8 +77,10 @@ filter
 value
 -----
 
-.. productionlist:: jsonyx-patch-grammar
-    value: `string` | `number` | 'true' | 'false' | 'null'
+.. container:: highlight
+
+    .. productionlist:: jsonyx-patch-grammar
+        value: `string` | `number` | 'true' | 'false' | 'null'
 
 .. image:: /_images/light/jsonyx-patch/value.png
     :class: only-light
@@ -85,8 +93,10 @@ value
 slice
 -----
 
-.. productionlist:: jsonyx-patch-grammar
-    slice: `integer`? ':' `integer`? ( ':' `integer`? )?
+.. container:: highlight
+
+    .. productionlist:: jsonyx-patch-grammar
+        slice: `integer`? ':' `integer`? ( ':' `integer`? )?
 
 .. image:: /_images/light/jsonyx-patch/slice.png
     :class: only-light
@@ -99,8 +109,10 @@ slice
 string
 ------
 
-.. productionlist:: jsonyx-patch-grammar
-    string: "'" ( [^'~] | '~' ['~] )* "'"
+.. container:: highlight
+
+    .. productionlist:: jsonyx-patch-grammar
+        string: "'" ( [^'~] | '~' ['~] )* "'"
 
 .. image:: /_images/light/jsonyx-patch/string.png
     :class: only-light
@@ -113,8 +125,10 @@ string
 integer
 -------
 
-.. productionlist:: jsonyx-patch-grammar
-    integer: '-'? ( '0' | [1-9] [0-9]* )
+.. container:: highlight
+
+    .. productionlist:: jsonyx-patch-grammar
+        integer: '-'? ( '0' | [1-9] [0-9]* )
 
 .. image:: /_images/light/jsonyx-patch/integer.png
     :class: only-light
@@ -127,11 +141,13 @@ integer
 number
 ------
 
-.. productionlist:: jsonyx-patch-grammar
-    number: '-'? (
-          :     ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )?
-          :     | 'Infinity'
-          : )
+.. container:: highlight
+
+    .. productionlist:: jsonyx-patch-grammar
+        number: '-'? (
+              :     ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )?
+              :     | 'Infinity'
+              : )
 
 .. image:: /_images/light/jsonyx-patch/number.png
     :class: only-light
@@ -144,8 +160,10 @@ number
 operator
 --------
 
-.. productionlist:: jsonyx-patch-grammar
-    operator: '<=' | '<' | '==' | '!=' | '>=' | '>'
+.. container:: highlight
+
+    .. productionlist:: jsonyx-patch-grammar
+        operator: '<=' | '<' | '==' | '!=' | '>=' | '>'
 
 .. image:: /_images/light/jsonyx-patch/operator.png
     :class: only-light
@@ -159,8 +177,10 @@ operator
 whitespace
 ----------
 
-.. productionlist:: jsonyx-patch-grammar
-    whitespace: '#x20'*
+.. container:: highlight
+
+    .. productionlist:: jsonyx-patch-grammar
+        whitespace: '#x20'*
 
 .. image:: /_images/light/jsonyx-patch/whitespace.png
     :class: only-light
