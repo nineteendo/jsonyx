@@ -6,8 +6,9 @@ jsonyx Patch Specification
 jsonyx_expression
 -----------------
 
-.. productionlist:: jsonyx-patch-grammar
-    jsonyx_expression: `absolute_query` | `relative_query` | `filter`
+.. div:: highlight
+    .. productionlist:: jsonyx-patch-grammar
+        jsonyx_expression: `absolute_query` | `relative_query` | `filter`
 
 .. image:: /_images/light/jsonyx-patch/jsonyx_expression.png
     :class: only-light
