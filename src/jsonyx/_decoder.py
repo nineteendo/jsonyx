@@ -33,7 +33,7 @@ if TYPE_CHECKING:
 
     _MatchFunc = Callable[[str, int], Match[str] | None]
     _Scanner = Callable[[str, str], Any]
-    _StrPathX = PathLike[str] | str
+    _StrPath = PathLike[str] | str
     _SubFunc = Callable[[str | Callable[[Match[str]], str], str], str]
     _Hook = Callable[[Any], Any]
 
@@ -670,7 +670,7 @@ class Decoder:
             "trailing_comma" in allow, "unquoted_keys" in allow, use_decimal,
         )
 
-    def read(self, filename: _StrPathX) -> Any:
+    def read(self, filename: _StrPath) -> Any:
         """Deserialize a JSON file to a Python object.
 
         :param filename: the path to the JSON file
@@ -692,7 +692,7 @@ class Decoder:
         return self.loads(Path(filename).read_bytes(), filename=filename)
 
     def load(
-        self, fp: _SupportsRead[bytes | str], *, root: _StrPathX = ".",
+        self, fp: _SupportsRead[bytes | str], *, root: _StrPath = ".",
     ) -> Any:
         """Deserialize an open JSON file to a Python object.
 
@@ -717,7 +717,7 @@ class Decoder:
         return self.loads(fp.read())
 
     def loads(
-        self, s: bytes | str, *, filename: _StrPathX = "<string>",
+        self, s: bytes | str, *, filename: _StrPath = "<string>",
     ) -> Any:
         r"""Deserialize a JSON string to a Python object.
 

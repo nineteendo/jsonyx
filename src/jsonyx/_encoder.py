@@ -28,7 +28,7 @@ if TYPE_CHECKING:
             """Write string."""
 
     _EncodeFunc = Callable[[_T], str]
-    _StrPathX = PathLike[str] | str
+    _StrPath = PathLike[str] | str
     _SubFunc = Callable[[str | Callable[[Match[str]], str], str], str]
     _WriteFunc = Callable[[str], object]
 
@@ -359,7 +359,7 @@ class Encoder:
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 
     def write(
-        self, obj: object, filename: _StrPathX, encoding: str = "utf-8",
+        self, obj: object, filename: _StrPath, encoding: str = "utf-8",
     ) -> None:
         r"""Serialize a Python object to a JSON file.
 
