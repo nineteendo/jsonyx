@@ -7,12 +7,12 @@ jsonyx
 .. productionlist:: jsonyx-grammar
     jsonyx: `value`
 
-.. image:: /_images/light/jsonyx.png
+.. image:: /_images/light/jsonyx/jsonyx.png
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx.png
+    .. image:: /_images/dark/jsonyx/jsonyx.png
         :class: only-dark
 
 value
@@ -23,12 +23,12 @@ value
          : ( `object` | `array` | `string` | `number` | 'true' | 'false' | 'null' )
          : `comments`?
 
-.. image:: /_images/light/value.png
+.. image:: /_images/light/jsonyx/value.png
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/value.png
+    .. image:: /_images/dark/jsonyx/value.png
         :class: only-dark
 
 object
@@ -40,12 +40,12 @@ object
           :     | ( ( `key` ':' `value` ) ++ ( ',' | `comments` ) ) ( ',' `comments`? )?
           : ) '}'
 
-.. image:: /_images/light/object.png
+.. image:: /_images/light/jsonyx/object.png
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/object.png
+    .. image:: /_images/dark/jsonyx/object.png
         :class: only-dark
 
 array
@@ -54,12 +54,12 @@ array
 .. productionlist:: jsonyx-grammar
     array: '[' ( `comments`? | ( `value` ++ ( ',' | `comments` ) ) ( ',' `comments`? )? ) ']'
 
-.. image:: /_images/light/array.png
+.. image:: /_images/light/jsonyx/array.png
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/array.png
+    .. image:: /_images/dark/jsonyx/array.png
         :class: only-dark
 
 string
@@ -71,12 +71,12 @@ string
           :     | 'u' [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F]
           : ) )* '"'
 
-.. image:: /_images/light/string.png
+.. image:: /_images/light/jsonyx/string.png
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/string.png
+    .. image:: /_images/dark/jsonyx/string.png
         :class: only-dark
 
 number
@@ -88,12 +88,12 @@ number
           :     | 'Infinity'
           : ) | 'NaN'
 
-.. image:: /_images/light/number.png
+.. image:: /_images/light/jsonyx/number.png
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/number.png
+    .. image:: /_images/dark/jsonyx/number.png
         :class: only-dark
 
 key
@@ -102,12 +102,12 @@ key
 .. productionlist:: jsonyx-grammar
     key: `comments`? ( `string` | `~python-grammar:identifier` ) `comments`?
 
-.. image:: /_images/light/key.png
+.. image:: /_images/light/jsonyx/key.png
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/key.png
+    .. image:: /_images/dark/jsonyx/key.png
         :class: only-dark
 
 comments
@@ -120,10 +120,10 @@ comments
             :       | [#x9#xA#xD#x20]
             :   )+
 
-.. image:: /_images/light/comments.png
+.. image:: /_images/light/jsonyx/comments.png
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/comments.png
+    .. image:: /_images/dark/jsonyx/comments.png
         :class: only-dark

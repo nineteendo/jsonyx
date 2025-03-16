@@ -106,6 +106,7 @@ to :ref:`install <installation>` the project.
     :hidden:
 
     jsonyx-spec
+    jsonyx-patch-spec
 
 .. toctree::
     :caption: About the Project
