@@ -66,10 +66,10 @@ string
 ------
 
 .. productionlist:: jsonyx-grammar
-    string: '"' (
-          :     [^"\#x0-#x1F]
-          :     | '\' ( ["\/bfnrt] | 'u' [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] )
-          : )* '"'
+    string: '"' ( [^"\#x0-#x1F] | '\' (
+          :     ["\/bfnrt]
+          :     | 'u' [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F]
+          : ) )* '"'
 
 .. image:: /_images/light/string.png
     :class: only-light
