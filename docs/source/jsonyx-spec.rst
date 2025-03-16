@@ -1,6 +1,8 @@
 jsonyx Specification
 ====================
 
+.. image:: _images/jsonyx.svg
+
 .. productionlist:: jsonyx-grammar
     jsonyx: `value`
     value: `comments`? ( `object` | `array` | `string` | `number` | 'true' | 'false' | 'null' ) `comments`?
@@ -8,5 +10,5 @@ jsonyx Specification
     array: '[' ( `comments`? | ( `value` ++ ( ',' | `comments` ) ) ( ',' `comments`? )? ) ']'
     string: '"' ( [^"\#x0-#x1F] | '\' ( ["\/bfnrt] | 'u' [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] ) )* '"'
     number: '-'? ( ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )? | 'Infinity' ) | 'NaN'
-    key: `comments`? ( `string` | `python-grammar:identifier` ) `comments`?
+    key: `comments`? ( `string` | `~python-grammar:identifier` ) `comments`?
     comments: ( '//' [^#xA#xD]* | '/*' ( ( [^*]* '*'+ ) ++ [^*/] ) '/' | [#x9#xA#xD#x20] )+
