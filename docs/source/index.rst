@@ -8,8 +8,6 @@ Welcome to jsonyx's Documentation!
 3.8+. It is written in pure Python with an optional C extension for better
 performance and no dependencies.
 
-.. todo:: Add specification
-
 .. rubric:: Key Features
 
 - JSON decoding, encoding and patching

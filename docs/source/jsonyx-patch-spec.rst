@@ -1,6 +1,8 @@
 jsonyx Patch Specification
 ==========================
 
+.. todo:: Specify operations
+
 jsonyx_expression
 -----------------
 
