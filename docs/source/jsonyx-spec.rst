@@ -9,6 +9,7 @@ jsonyx
 .. image:: /_images/light/jsonyx.png
     :class: only-light
 .. only:: not latex
+
     .. image:: /_images/dark/jsonyx.png
         :class: only-dark
 
@@ -20,6 +21,7 @@ value
 .. image:: /_images/light/value.png
     :class: only-light
 .. only:: not latex
+
     .. image:: /_images/dark/value.png
         :class: only-dark
 
@@ -31,6 +33,7 @@ object
 .. image:: /_images/light/object.png
     :class: only-light
 .. only:: not latex
+
     .. image:: /_images/dark/object.png
         :class: only-dark
 
@@ -42,6 +45,7 @@ array
 .. image:: /_images/light/array.png
     :class: only-light
 .. only:: not latex
+
     .. image:: /_images/dark/array.png
         :class: only-dark
 
@@ -53,6 +57,7 @@ string
 .. image:: /_images/light/string.png
     :class: only-light
 .. only:: not latex
+
     .. image:: /_images/dark/string.png
         :class: only-dark
 
@@ -64,6 +69,7 @@ number
 .. image:: /_images/light/number.png
     :class: only-light
 .. only:: not latex
+
     .. image:: /_images/dark/number.png
         :class: only-dark
 
@@ -75,6 +81,7 @@ key
 .. image:: /_images/light/key.png
     :class: only-light
 .. only:: not latex
+
     .. image:: /_images/dark/key.png
         :class: only-dark
 
@@ -86,5 +93,6 @@ comments
 .. image:: /_images/light/comments.png
     :class: only-light
 .. only:: not latex
+
     .. image:: /_images/dark/comments.png
         :class: only-dark
