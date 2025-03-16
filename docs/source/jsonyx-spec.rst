@@ -1,7 +1,7 @@
 jsonyx Specification
 ====================
 
-.. image:: _images/jsonyx.svg
+.. image:: /_images/jsonyx.png
 
 .. productionlist:: jsonyx-grammar
     jsonyx: `value`
