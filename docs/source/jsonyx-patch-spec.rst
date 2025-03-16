@@ -6,7 +6,8 @@ jsonyx Patch Specification
 jsonyx_expression
 -----------------
 
-.. div:: highlight
+ .. container:: highlight
+
     .. productionlist:: jsonyx-patch-grammar
         jsonyx_expression: `absolute_query` | `relative_query` | `filter`
 
