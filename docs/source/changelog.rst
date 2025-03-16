@@ -30,8 +30,10 @@ jsonyx 2.0.0 (unreleased)
 - Added :class:`jsonyx.Manipulator`
 - Added :exc:`jsonyx.TruncatedSyntaxError`
 - Fixed :issue:`32`: Line comments continue until the end of file
-- Fixed :issue:`python/cpython#125660`: Python implementation of :func:`jsonyx.loads` accepts invalid unicode escapes
-- Fixed :issue:`python/cpython#125682`: Python implementation of :func:`jsonyx.loads` accepts non-ascii digits
+- Fixed :issue:`python/cpython#125660`: Python implementation of
+  :func:`jsonyx.loads` accepts invalid unicode escapes
+- Fixed :issue:`python/cpython#125682`: Python implementation of
+  :func:`jsonyx.loads` accepts non-ascii digits
 - Improved documentation
 - Improved error messages
 - Made :class:`tuple` JSON serializable
