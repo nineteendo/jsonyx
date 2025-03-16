@@ -8,6 +8,5 @@ jsonyx Specification
     array: '[' ( `comments`? | ( `value` ++ ( ',' | `comments` ) ) ( ',' `comments`? )? ) ']'
     string: '"' ( [^"\#x0-#x1F] | '\' ( ["\/bfnrt] | 'u' [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] ) )* '"'
     number: '-'? ( ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )? | 'Infinity' ) | 'NaN'
-    key: `comments`? ( `string` | `identifier` ) `comments`?
-    identifier: [`https://docs.python.org/3/reference/lexical_analysis.html#identifiers`_]
+    key: `comments`? ( `string` | `python-grammar:identifier` ) `comments`?
     comments: ( '//' [^#xA#xD]* | '/*' ( ( [^*]* '*'+ ) ++ [^*/] ) '/' | [#x9#xA#xD#x20] )+
