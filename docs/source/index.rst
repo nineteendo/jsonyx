@@ -20,7 +20,8 @@ performance and no dependencies.
         "bar": {"a": 1, "b": 2, "c": 3}
     }
 
-- Optionally supports these JSON deviations:
+- Optionally supports these JSON deviations (according to
+  :doc:`this specification <jsonyx-patch-spec>`):
 
 .. code-block:: javascript
 

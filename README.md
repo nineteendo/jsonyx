@@ -23,7 +23,7 @@ https://jsonyx.readthedocs.io
         "bar": {"a": 1, "b": 2, "c": 3}
     }
     ```
-- Optionally supports these JSON deviations:
+- Optionally supports these JSON deviations (specified in the documentation):
     ```javascript
     {
         /* Block */ // and line comments

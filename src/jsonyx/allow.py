@@ -2,6 +2,8 @@
 
 Combine flags (e.g. ``COMMENTS`` | ``UNQUOTED_KEYS``) to allow multiple
 deviations.
+
+See :doc:`the specification <jsonyx-patch-spec>` for more information.
 """
 from __future__ import annotations
 
