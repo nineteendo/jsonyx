@@ -1,4 +1,4 @@
-<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="767" height="199">
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="623" height="265">
    <ns0:defs>
       <ns0:style type="text/css">
     @namespace "http://www.w3.org/2000/svg";
@@ -39,38 +39,38 @@
       <ns0:text class="nonterminal" x="107" y="53">comments</ns0:text>
    </ns0:a>
    <ns0:a ns1:href="#key" ns1:title="key">
-      <ns0:rect x="119" y="101" width="42" height="32" />
-      <ns0:rect x="117" y="99" width="42" height="32" class="nonterminal" />
-      <ns0:text class="nonterminal" x="127" y="119">key</ns0:text>
+      <ns0:rect x="119" y="167" width="42" height="32" />
+      <ns0:rect x="117" y="165" width="42" height="32" class="nonterminal" />
+      <ns0:text class="nonterminal" x="127" y="185">key</ns0:text>
    </ns0:a>
-   <ns0:rect x="181" y="101" width="24" height="32" rx="10" />
-   <ns0:rect x="179" y="99" width="24" height="32" class="terminal" rx="10" />
-   <ns0:text class="terminal" x="189" y="119">:</ns0:text>
+   <ns0:rect x="181" y="167" width="24" height="32" rx="10" />
+   <ns0:rect x="179" y="165" width="24" height="32" class="terminal" rx="10" />
+   <ns0:text class="terminal" x="189" y="185">:</ns0:text>
    <ns0:a ns1:href="#value" ns1:title="value">
-      <ns0:rect x="225" y="101" width="54" height="32" />
-      <ns0:rect x="223" y="99" width="54" height="32" class="nonterminal" />
-      <ns0:text class="nonterminal" x="233" y="119">value</ns0:text>
+      <ns0:rect x="225" y="167" width="54" height="32" />
+      <ns0:rect x="223" y="165" width="54" height="32" class="nonterminal" />
+      <ns0:text class="nonterminal" x="233" y="185">value</ns0:text>
    </ns0:a>
-   <ns0:rect x="339" y="101" width="24" height="32" rx="10" />
-   <ns0:rect x="337" y="99" width="24" height="32" class="terminal" rx="10" />
-   <ns0:text class="terminal" x="347" y="119">,</ns0:text>
+   <ns0:rect x="119" y="123" width="24" height="32" rx="10" />
+   <ns0:rect x="117" y="121" width="24" height="32" class="terminal" rx="10" />
+   <ns0:text class="terminal" x="127" y="141">,</ns0:text>
    <ns0:a ns1:href="#comments" ns1:title="comments">
-      <ns0:rect x="339" y="145" width="84" height="32" />
-      <ns0:rect x="337" y="143" width="84" height="32" class="nonterminal" />
-      <ns0:text class="nonterminal" x="347" y="163">comments</ns0:text>
+      <ns0:rect x="119" y="79" width="84" height="32" />
+      <ns0:rect x="117" y="77" width="84" height="32" class="nonterminal" />
+      <ns0:text class="nonterminal" x="127" y="97">comments</ns0:text>
    </ns0:a>
-   <ns0:rect x="483" y="133" width="24" height="32" rx="10" />
-   <ns0:rect x="481" y="131" width="24" height="32" class="terminal" rx="10" />
-   <ns0:text class="terminal" x="491" y="151">,</ns0:text>
+   <ns0:rect x="339" y="199" width="24" height="32" rx="10" />
+   <ns0:rect x="337" y="197" width="24" height="32" class="terminal" rx="10" />
+   <ns0:text class="terminal" x="347" y="217">,</ns0:text>
    <ns0:a ns1:href="#comments" ns1:title="comments">
-      <ns0:rect x="547" y="165" width="84" height="32" />
-      <ns0:rect x="545" y="163" width="84" height="32" class="nonterminal" />
-      <ns0:text class="nonterminal" x="555" y="183">comments</ns0:text>
+      <ns0:rect x="403" y="231" width="84" height="32" />
+      <ns0:rect x="401" y="229" width="84" height="32" class="nonterminal" />
+      <ns0:text class="nonterminal" x="411" y="249">comments</ns0:text>
    </ns0:a>
-   <ns0:rect x="711" y="3" width="28" height="32" rx="10" />
-   <ns0:rect x="709" y="1" width="28" height="32" class="terminal" rx="10" />
-   <ns0:text class="terminal" x="719" y="21">}</ns0:text>
-   <ns0:path class="line" d="m17 17 h2 m0 0 h10 m28 0 h10 m20 0 h10 m0 0 h582 m-612 0 h20 m592 0 h20 m-632 0 q10 0 10 10 m612 0 q0 -10 10 -10 m-622 10 v12 m612 0 v-12 m-612 12 q0 10 10 10 m592 0 q10 0 10 -10 m-602 10 h10 m84 0 h10 m0 0 h488 m-602 -10 v20 m612 0 v-20 m-612 20 v46 m612 0 v-46 m-612 46 q0 10 10 10 m592 0 q10 0 10 -10 m-582 10 h10 m42 0 h10 m0 0 h10 m24 0 h10 m0 0 h10 m54 0 h10 m-200 0 l20 0 m-1 0 q-9 0 -9 -10 l0 -12 q0 -10 10 -10 m180 32 l20 0 m-20 0 q10 0 10 -10 l0 -12 q0 -10 -10 -10 m-180 0 h10 m0 0 h170 m40 32 h10 m24 0 h10 m0 0 h60 m-124 0 h20 m104 0 h20 m-144 0 q10 0 10 10 m124 0 q0 -10 10 -10 m-134 10 v24 m124 0 v-24 m-124 24 q0 10 10 10 m104 0 q10 0 10 -10 m-114 10 h10 m84 0 h10 m40 -44 h10 m0 0 h178 m-208 0 h20 m188 0 h20 m-228 0 q10 0 10 10 m208 0 q0 -10 10 -10 m-218 10 v12 m208 0 v-12 m-208 12 q0 10 10 10 m188 0 q10 0 10 -10 m-198 10 h10 m24 0 h10 m20 0 h10 m0 0 h94 m-124 0 h20 m104 0 h20 m-144 0 q10 0 10 10 m124 0 q0 -10 10 -10 m-134 10 v12 m124 0 v-12 m-124 12 q0 10 10 10 m104 0 q10 0 10 -10 m-114 10 h10 m84 0 h10 m60 -162 h10 m28 0 h10 m3 0 h-3" />
-   <ns0:polygon points="757 17 765 13 765 21" />
-   <ns0:polygon points="757 17 749 13 749 21" />
+   <ns0:rect x="567" y="3" width="28" height="32" rx="10" />
+   <ns0:rect x="565" y="1" width="28" height="32" class="terminal" rx="10" />
+   <ns0:text class="terminal" x="575" y="21">}</ns0:text>
+   <ns0:path class="line" d="m17 17 h2 m0 0 h10 m28 0 h10 m20 0 h10 m0 0 h438 m-468 0 h20 m448 0 h20 m-488 0 q10 0 10 10 m468 0 q0 -10 10 -10 m-478 10 v12 m468 0 v-12 m-468 12 q0 10 10 10 m448 0 q10 0 10 -10 m-458 10 h10 m84 0 h10 m0 0 h344 m-458 -10 v20 m468 0 v-20 m-468 20 v112 m468 0 v-112 m-468 112 q0 10 10 10 m448 0 q10 0 10 -10 m-438 10 h10 m42 0 h10 m0 0 h10 m24 0 h10 m0 0 h10 m54 0 h10 m-200 0 l20 0 m-1 0 q-9 0 -9 -10 l0 -24 q0 -10 10 -10 m180 44 l20 0 m-20 0 q10 0 10 -10 l0 -24 q0 -10 -10 -10 m-180 0 h10 m24 0 h10 m0 0 h136 m-190 10 l0 -44 q0 -10 10 -10 m190 54 l0 -44 q0 -10 -10 -10 m-180 0 h10 m84 0 h10 m0 0 h76 m40 88 h10 m0 0 h178 m-208 0 h20 m188 0 h20 m-228 0 q10 0 10 10 m208 0 q0 -10 10 -10 m-218 10 v12 m208 0 v-12 m-208 12 q0 10 10 10 m188 0 q10 0 10 -10 m-198 10 h10 m24 0 h10 m20 0 h10 m0 0 h94 m-124 0 h20 m104 0 h20 m-144 0 q10 0 10 10 m124 0 q0 -10 10 -10 m-134 10 v12 m124 0 v-12 m-124 12 q0 10 10 10 m104 0 q10 0 10 -10 m-114 10 h10 m84 0 h10 m60 -228 h10 m28 0 h10 m3 0 h-3" />
+   <ns0:polygon points="613 17 621 13 621 21" />
+   <ns0:polygon points="613 17 605 13 605 21" />
 </ns0:svg>
