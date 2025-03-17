@@ -21,7 +21,7 @@ performance and no dependencies.
     }
 
 - Optionally supports these JSON deviations (according to
-  :doc:`this specification <jsonyx-patch-spec>`):
+  :doc:`this specification <jsonyx-spec>`):
 
 .. code-block:: javascript
 
