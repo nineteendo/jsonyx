@@ -1,11 +1,12 @@
-<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="543" height="265">
-   <ns0:defs>
-      <ns0:style type="text/css">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="543" height="265">
+   <defs>
+      <style type="text/css">
     @namespace "http://www.w3.org/2000/svg";
-    .line                 {fill: none; stroke: #d9d9d9; stroke-width: 1;}
+    .line                 {fill: none; stroke: #D9D9D9; stroke-width: 1;}
     .bold-line            {stroke: #F5F5F5; shape-rendering: crispEdges; stroke-width: 2;}
     .thin-line            {stroke: #F0F0F0; shape-rendering: crispEdges}
-    .filled               {fill: #d9d9d9; stroke: none;}
+    .filled               {fill: #D9D9D9; stroke: none;}
     text.terminal         {font-family: Verdana, Sans-serif;
                             font-size: 12px;
                             fill: #F5F5F5;
@@ -21,48 +22,77 @@
                             fill: #F0F0F0;
                             font-weight: normal;
                           }
-    rect, circle, polygon {fill: #d9d9d9; stroke: #d9d9d9;}
-    rect.terminal         {fill: #000000; stroke: #d9d9d9; stroke-width: 1;}
-    rect.nonterminal      {fill: #000000; stroke: #d9d9d9; stroke-width: 1;}
+    rect, circle, polygon {fill: #D9D9D9; stroke: #D9D9D9;}
+    rect.terminal         {fill: #000000; stroke: #D9D9D9; stroke-width: 1;}
+    rect.nonterminal      {fill: #000000; stroke: #D9D9D9; stroke-width: 1;}
     rect.text             {fill: none; stroke: none;}
-    polygon.regexp        {fill: #000000; stroke: #d9d9d9; stroke-width: 1;}
-  </ns0:style>
-   </ns0:defs>
-   <ns0:polygon points="9 17 1 13 1 21" />
-   <ns0:polygon points="17 17 9 13 9 21" />
-   <ns0:rect x="31" y="3" width="26" height="32" rx="10" />
-   <ns0:rect x="29" y="1" width="26" height="32" class="terminal" rx="10" />
-   <ns0:text class="terminal" x="39" y="21">[</ns0:text>
-   <ns0:a ns1:href="#comments" ns1:title="comments">
-      <ns0:rect x="97" y="35" width="84" height="32" />
-      <ns0:rect x="95" y="33" width="84" height="32" class="nonterminal" />
-      <ns0:text class="nonterminal" x="105" y="53">comments</ns0:text>
-   </ns0:a>
-   <ns0:a ns1:href="#value" ns1:title="value">
-      <ns0:rect x="117" y="167" width="54" height="32" />
-      <ns0:rect x="115" y="165" width="54" height="32" class="nonterminal" />
-      <ns0:text class="nonterminal" x="125" y="185">value</ns0:text>
-   </ns0:a>
-   <ns0:rect x="117" y="123" width="24" height="32" rx="10" />
-   <ns0:rect x="115" y="121" width="24" height="32" class="terminal" rx="10" />
-   <ns0:text class="terminal" x="125" y="141">,</ns0:text>
-   <ns0:a ns1:href="#comments" ns1:title="comments">
-      <ns0:rect x="117" y="79" width="84" height="32" />
-      <ns0:rect x="115" y="77" width="84" height="32" class="nonterminal" />
-      <ns0:text class="nonterminal" x="125" y="97">comments</ns0:text>
-   </ns0:a>
-   <ns0:rect x="261" y="199" width="24" height="32" rx="10" />
-   <ns0:rect x="259" y="197" width="24" height="32" class="terminal" rx="10" />
-   <ns0:text class="terminal" x="269" y="217">,</ns0:text>
-   <ns0:a ns1:href="#comments" ns1:title="comments">
-      <ns0:rect x="325" y="231" width="84" height="32" />
-      <ns0:rect x="323" y="229" width="84" height="32" class="nonterminal" />
-      <ns0:text class="nonterminal" x="333" y="249">comments</ns0:text>
-   </ns0:a>
-   <ns0:rect x="489" y="3" width="26" height="32" rx="10" />
-   <ns0:rect x="487" y="1" width="26" height="32" class="terminal" rx="10" />
-   <ns0:text class="terminal" x="497" y="21">]</ns0:text>
-   <ns0:path class="line" d="m17 17 h2 m0 0 h10 m26 0 h10 m20 0 h10 m0 0 h362 m-392 0 h20 m372 0 h20 m-412 0 q10 0 10 10 m392 0 q0 -10 10 -10 m-402 10 v12 m392 0 v-12 m-392 12 q0 10 10 10 m372 0 q10 0 10 -10 m-382 10 h10 m84 0 h10 m0 0 h268 m-382 -10 v20 m392 0 v-20 m-392 20 v112 m392 0 v-112 m-392 112 q0 10 10 10 m372 0 q10 0 10 -10 m-362 10 h10 m54 0 h10 m0 0 h30 m-124 0 l20 0 m-1 0 q-9 0 -9 -10 l0 -24 q0 -10 10 -10 m104 44 l20 0 m-20 0 q10 0 10 -10 l0 -24 q0 -10 -10 -10 m-104 0 h10 m24 0 h10 m0 0 h60 m-114 10 l0 -44 q0 -10 10 -10 m114 54 l0 -44 q0 -10 -10 -10 m-104 0 h10 m84 0 h10 m40 88 h10 m0 0 h178 m-208 0 h20 m188 0 h20 m-228 0 q10 0 10 10 m208 0 q0 -10 10 -10 m-218 10 v12 m208 0 v-12 m-208 12 q0 10 10 10 m188 0 q10 0 10 -10 m-198 10 h10 m24 0 h10 m20 0 h10 m0 0 h94 m-124 0 h20 m104 0 h20 m-144 0 q10 0 10 10 m124 0 q0 -10 10 -10 m-134 10 v12 m124 0 v-12 m-124 12 q0 10 10 10 m104 0 q10 0 10 -10 m-114 10 h10 m84 0 h10 m60 -228 h10 m26 0 h10 m3 0 h-3" />
-   <ns0:polygon points="533 17 541 13 541 21" />
-   <ns0:polygon points="533 17 525 13 525 21" />
-</ns0:svg>
+    polygon.regexp        {fill: #000000; stroke: #D9D9D9; stroke-width: 1;}
+  </style>
+   </defs>
+   <polygon points="9 17 1 13 1 21"/>
+   <polygon points="17 17 9 13 9 21"/>
+   <rect x="31" y="3" width="26" height="32" rx="10"/>
+   <rect x="29"
+         y="1"
+         width="26"
+         height="32"
+         class="terminal"
+         rx="10"/>
+   <text class="terminal" x="39" y="21">[</text>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+      xlink:href="#comments"
+      xlink:title="comments">
+      <rect x="97" y="35" width="84" height="32"/>
+      <rect x="95" y="33" width="84" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="105" y="53">comments</text>
+   </a>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+      xlink:href="#value"
+      xlink:title="value">
+      <rect x="117" y="167" width="54" height="32"/>
+      <rect x="115" y="165" width="54" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="125" y="185">value</text>
+   </a>
+   <rect x="117" y="123" width="24" height="32" rx="10"/>
+   <rect x="115"
+         y="121"
+         width="24"
+         height="32"
+         class="terminal"
+         rx="10"/>
+   <text class="terminal" x="125" y="141">,</text>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+      xlink:href="#comments"
+      xlink:title="comments">
+      <rect x="117" y="79" width="84" height="32"/>
+      <rect x="115" y="77" width="84" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="125" y="97">comments</text>
+   </a>
+   <rect x="261" y="199" width="24" height="32" rx="10"/>
+   <rect x="259"
+         y="197"
+         width="24"
+         height="32"
+         class="terminal"
+         rx="10"/>
+   <text class="terminal" x="269" y="217">,</text>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+      xlink:href="#comments"
+      xlink:title="comments">
+      <rect x="325" y="231" width="84" height="32"/>
+      <rect x="323" y="229" width="84" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="333" y="249">comments</text>
+   </a>
+   <rect x="489" y="3" width="26" height="32" rx="10"/>
+   <rect x="487"
+         y="1"
+         width="26"
+         height="32"
+         class="terminal"
+         rx="10"/>
+   <text class="terminal" x="497" y="21">]</text>
+   <path class="line"
+         d="m17 17 h2 m0 0 h10 m26 0 h10 m20 0 h10 m0 0 h362 m-392 0 h20 m372 0 h20 m-412 0 q10 0 10 10 m392 0 q0 -10 10 -10 m-402 10 v12 m392 0 v-12 m-392 12 q0 10 10 10 m372 0 q10 0 10 -10 m-382 10 h10 m84 0 h10 m0 0 h268 m-382 -10 v20 m392 0 v-20 m-392 20 v112 m392 0 v-112 m-392 112 q0 10 10 10 m372 0 q10 0 10 -10 m-362 10 h10 m54 0 h10 m0 0 h30 m-124 0 l20 0 m-1 0 q-9 0 -9 -10 l0 -24 q0 -10 10 -10 m104 44 l20 0 m-20 0 q10 0 10 -10 l0 -24 q0 -10 -10 -10 m-104 0 h10 m24 0 h10 m0 0 h60 m-114 10 l0 -44 q0 -10 10 -10 m114 54 l0 -44 q0 -10 -10 -10 m-104 0 h10 m84 0 h10 m40 88 h10 m0 0 h178 m-208 0 h20 m188 0 h20 m-228 0 q10 0 10 10 m208 0 q0 -10 10 -10 m-218 10 v12 m208 0 v-12 m-208 12 q0 10 10 10 m188 0 q10 0 10 -10 m-198 10 h10 m24 0 h10 m20 0 h10 m0 0 h94 m-124 0 h20 m104 0 h20 m-144 0 q10 0 10 10 m124 0 q0 -10 10 -10 m-134 10 v12 m124 0 v-12 m-124 12 q0 10 10 10 m104 0 q10 0 10 -10 m-114 10 h10 m84 0 h10 m60 -228 h10 m26 0 h10 m3 0 h-3"/>
+   <polygon points="533 17 541 13 541 21"/>
+   <polygon points="533 17 525 13 525 21"/>
+</svg>
