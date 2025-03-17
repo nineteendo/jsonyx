@@ -22,6 +22,7 @@ jsonyx_expression
     :file: /_images/dark/jsonyx-patch/jsonyx_expression.svg
 
 .. only:: latex
+
     .. image:: /_images/light/jsonyx-patch/jsonyx_expression.svg
 
 absolute_query
