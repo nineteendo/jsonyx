@@ -3,12 +3,15 @@ jsonyx Patch Specification
 
 .. todo:: Specify operations
 
+Grammar
+-------
+
 Generated with
 `RR - Railroad Diagram Generator <https://www.bottlecaps.de/rr/ui>`_ by
 `Gunther Rademacher <https://github.com/GuntherRademacher>`_.
 
 jsonyx_expression
------------------
+^^^^^^^^^^^^^^^^^
 
 .. container:: highlight
 
@@ -24,7 +27,7 @@ jsonyx_expression
         :class: only-dark
 
 absolute_query
---------------
+^^^^^^^^^^^^^^
 
 .. container:: highlight
 
@@ -44,7 +47,7 @@ absolute_query
         :class: only-dark
 
 relative_query
---------------
+^^^^^^^^^^^^^^
 
 .. container:: highlight
 
@@ -60,7 +63,7 @@ relative_query
         :class: only-dark
 
 filter
-------
+^^^^^^
 
 .. container:: highlight
 
@@ -79,7 +82,7 @@ filter
         :class: only-dark
 
 value
------
+^^^^^
 
 .. container:: highlight
 
@@ -95,7 +98,7 @@ value
         :class: only-dark
 
 slice
------
+^^^^^
 
 .. container:: highlight
 
@@ -111,7 +114,7 @@ slice
         :class: only-dark
 
 string
-------
+^^^^^^
 
 .. container:: highlight
 
@@ -127,7 +130,7 @@ string
         :class: only-dark
 
 integer
--------
+^^^^^^^
 
 .. container:: highlight
 
@@ -143,7 +146,7 @@ integer
         :class: only-dark
 
 number
-------
+^^^^^^
 
 .. container:: highlight
 
@@ -162,7 +165,7 @@ number
         :class: only-dark
 
 operator
---------
+^^^^^^^^
 
 .. container:: highlight
 
@@ -179,7 +182,7 @@ operator
 
 
 whitespace
-----------
+^^^^^^^^^^
 
 .. container:: highlight
 
