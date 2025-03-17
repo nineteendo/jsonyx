@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="555" height="265">
+<svg xmlns="http://www.w3.org/2000/svg" width="545" height="201">
    <defs>
       <style type="text/css">
     @namespace "http://www.w3.org/2000/svg";
@@ -42,57 +42,53 @@
    <a xmlns:xlink="http://www.w3.org/1999/xlink"
       xlink:href="#whitespace"
       xlink:title="whitespace">
-      <rect x="97" y="35" width="90" height="32"/>
-      <rect x="95" y="33" width="90" height="32" class="nonterminal"/>
-      <text class="nonterminal" x="105" y="53">whitespace</text>
+      <rect x="97" y="3" width="90" height="32"/>
+      <rect x="95" y="1" width="90" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="105" y="21">whitespace</text>
    </a>
    <a xmlns:xlink="http://www.w3.org/1999/xlink"
       xlink:href="#value"
       xlink:title="value">
-      <rect x="117" y="167" width="54" height="32"/>
-      <rect x="115" y="165" width="54" height="32" class="nonterminal"/>
-      <text class="nonterminal" x="125" y="185">value</text>
+      <rect x="117" y="135" width="54" height="32"/>
+      <rect x="115" y="133" width="54" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="125" y="153">value</text>
    </a>
-   <rect x="117" y="123" width="24" height="32" rx="10"/>
+   <rect x="117" y="91" width="24" height="32" rx="10"/>
    <rect x="115"
-         y="121"
+         y="89"
          width="24"
          height="32"
          class="terminal"
          rx="10"/>
-   <text class="terminal" x="125" y="141">,</text>
-   <a xmlns:xlink="http://www.w3.org/1999/xlink"
-      xlink:href="#whitespace"
-      xlink:title="whitespace">
-      <rect x="117" y="79" width="90" height="32"/>
-      <rect x="115" y="77" width="90" height="32" class="nonterminal"/>
-      <text class="nonterminal" x="125" y="97">whitespace</text>
-   </a>
-   <rect x="267" y="199" width="24" height="32" rx="10"/>
-   <rect x="265"
-         y="197"
+   <text class="terminal" x="125" y="109">,</text>
+   <polygon points="117 63 124 47 230 47 237 63 230 79 124 79"/>
+   <polygon points="115 61 122 45 228 45 235 61 228 77 122 77" class="regexp"/>
+   <text class="regexp" x="130" y="65">whitespace - ''</text>
+   <rect x="297" y="167" width="24" height="32" rx="10"/>
+   <rect x="295"
+         y="165"
          width="24"
          height="32"
          class="terminal"
          rx="10"/>
-   <text class="terminal" x="275" y="217">,</text>
+   <text class="terminal" x="305" y="185">,</text>
    <a xmlns:xlink="http://www.w3.org/1999/xlink"
       xlink:href="#whitespace"
       xlink:title="whitespace">
-      <rect x="331" y="231" width="90" height="32"/>
-      <rect x="329" y="229" width="90" height="32" class="nonterminal"/>
-      <text class="nonterminal" x="339" y="249">whitespace</text>
+      <rect x="341" y="167" width="90" height="32"/>
+      <rect x="339" y="165" width="90" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="349" y="185">whitespace</text>
    </a>
-   <rect x="501" y="3" width="26" height="32" rx="10"/>
-   <rect x="499"
+   <rect x="491" y="3" width="26" height="32" rx="10"/>
+   <rect x="489"
          y="1"
          width="26"
          height="32"
          class="terminal"
          rx="10"/>
-   <text class="terminal" x="509" y="21">]</text>
+   <text class="terminal" x="499" y="21">]</text>
    <path class="line"
-         d="m17 17 h2 m0 0 h10 m26 0 h10 m20 0 h10 m0 0 h374 m-404 0 h20 m384 0 h20 m-424 0 q10 0 10 10 m404 0 q0 -10 10 -10 m-414 10 v12 m404 0 v-12 m-404 12 q0 10 10 10 m384 0 q10 0 10 -10 m-394 10 h10 m90 0 h10 m0 0 h274 m-394 -10 v20 m404 0 v-20 m-404 20 v112 m404 0 v-112 m-404 112 q0 10 10 10 m384 0 q10 0 10 -10 m-374 10 h10 m54 0 h10 m0 0 h36 m-130 0 l20 0 m-1 0 q-9 0 -9 -10 l0 -24 q0 -10 10 -10 m110 44 l20 0 m-20 0 q10 0 10 -10 l0 -24 q0 -10 -10 -10 m-110 0 h10 m24 0 h10 m0 0 h66 m-120 10 l0 -44 q0 -10 10 -10 m120 54 l0 -44 q0 -10 -10 -10 m-110 0 h10 m90 0 h10 m40 88 h10 m0 0 h184 m-214 0 h20 m194 0 h20 m-234 0 q10 0 10 10 m214 0 q0 -10 10 -10 m-224 10 v12 m214 0 v-12 m-214 12 q0 10 10 10 m194 0 q10 0 10 -10 m-204 10 h10 m24 0 h10 m20 0 h10 m0 0 h100 m-130 0 h20 m110 0 h20 m-150 0 q10 0 10 10 m130 0 q0 -10 10 -10 m-140 10 v12 m130 0 v-12 m-130 12 q0 10 10 10 m110 0 q10 0 10 -10 m-120 10 h10 m90 0 h10 m60 -228 h10 m26 0 h10 m3 0 h-3"/>
-   <polygon points="545 17 553 13 553 21"/>
-   <polygon points="545 17 537 13 537 21"/>
+         d="m17 17 h2 m0 0 h10 m26 0 h10 m20 0 h10 m90 0 h10 m0 0 h264 m-394 0 h20 m374 0 h20 m-414 0 q10 0 10 10 m394 0 q0 -10 10 -10 m-404 10 v112 m394 0 v-112 m-394 112 q0 10 10 10 m374 0 q10 0 10 -10 m-364 10 h10 m54 0 h10 m0 0 h66 m-160 0 l20 0 m-1 0 q-9 0 -9 -10 l0 -24 q0 -10 10 -10 m140 44 l20 0 m-20 0 q10 0 10 -10 l0 -24 q0 -10 -10 -10 m-140 0 h10 m24 0 h10 m0 0 h96 m-150 10 l0 -44 q0 -10 10 -10 m150 54 l0 -44 q0 -10 -10 -10 m-140 0 h10 m120 0 h10 m40 88 h10 m0 0 h144 m-174 0 h20 m154 0 h20 m-194 0 q10 0 10 10 m174 0 q0 -10 10 -10 m-184 10 v12 m174 0 v-12 m-174 12 q0 10 10 10 m154 0 q10 0 10 -10 m-164 10 h10 m24 0 h10 m0 0 h10 m90 0 h10 m40 -164 h10 m26 0 h10 m3 0 h-3"/>
+   <polygon points="535 17 543 13 543 21"/>
+   <polygon points="535 17 527 13 527 21"/>
 </svg>

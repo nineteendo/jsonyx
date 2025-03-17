@@ -27,9 +27,9 @@ value
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        value:  `whitespace`?
+        value:  `whitespace`
              :  ( `object` | `array` | `string` | `number` | 'true' | 'false' | 'null' )
-             :  `whitespace`?
+             :  `whitespace`
 
 .. image:: /_images/light/jsonyx/value.svg
     :class: only-light
@@ -46,8 +46,8 @@ object
 
     .. productionlist:: jsonyx-grammar
         object: '{' (
-              :     `whitespace`?
-              :     | ( ( `key` ':' `value` ) ++ ( ',' | `whitespace` ) ) ( ',' `whitespace`? )?
+              :     `whitespace`
+              :     | ( ( `key` ':' `value` ) ++ ( ',' | `whitespace` - '' ) ) ( ',' `whitespace` )?
               : ) '}'
 
 .. image:: /_images/light/jsonyx/object.svg
@@ -64,7 +64,7 @@ array
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        array: '[' ( `whitespace`? | ( `value` ++ ( ',' | `whitespace` ) ) ( ',' `whitespace`? )? ) ']'
+        array: '[' ( `whitespace` | ( `value` ++ ( ',' | `whitespace` - '' ) ) ( ',' `whitespace` )? ) ']'
 
 .. image:: /_images/light/jsonyx/array.svg
     :class: only-light
@@ -118,7 +118,7 @@ key
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        key: `whitespace`? ( `string` | `~python-grammar:identifier` ) `whitespace`?
+        key: `whitespace` ( `string` | `~python-grammar:identifier` ) `whitespace`
 
 .. image:: /_images/light/jsonyx/key.svg
     :class: only-light
@@ -134,7 +134,7 @@ whitespace
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        whitespace: ( '//' [^#xA#xD]* | '/*' ( ( [^*]* '*'+ ) ++ [^*/] ) '/' | [#x9#xA#xD#x20] )+
+        whitespace: ( '//' [^#xA#xD]* | '/*' ( ( [^*]* '*'+ ) ++ [^*/] ) '/' | [#x9#xA#xD#x20] )*
 
 .. image:: /_images/light/jsonyx/whitespace.svg
     :class: only-light
