@@ -16,10 +16,10 @@ jsonyx_expression
         jsonyx_expression: `absolute_query` | `relative_query` | `filter`
 
 .. raw:: html
-    :file: /_images/light/jsonyx-patch/jsonyx_expression.svg
+    :file: _images/light/jsonyx-patch/jsonyx_expression.svg
 
 .. raw:: html
-    :file: /_images/dark/jsonyx-patch/jsonyx_expression.svg
+    :file: _images/dark/jsonyx-patch/jsonyx_expression.svg
 
 .. only:: latex
 
