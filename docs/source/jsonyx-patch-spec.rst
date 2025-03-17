@@ -12,16 +12,8 @@ jsonyx_expression
 
 .. container:: highlight
 
-    .. raw:: latex
-
-        \begin{sphinxVerbatim}
-
     .. productionlist:: jsonyx-patch-grammar
         jsonyx_expression: `absolute_query` | `relative_query` | `filter`
-
-    .. raw:: latex
-
-        \end{sphinxVerbatim}
 
 .. image:: /_images/light/jsonyx-patch/jsonyx_expression.svg
     :class: only-light

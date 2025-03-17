@@ -5,20 +5,20 @@ Generated with
 `RR - Railroad Diagram Generator <https://www.bottlecaps.de/rr/ui>`_ by
 `Gunther Rademacher <https://github.com/GuntherRademacher>`_.
 
-jsonyx
-------
+jsonyx_document
+---------------
 
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        jsonyx: `value`
+        jsonyx_document: `value`
 
-.. image:: /_images/light/jsonyx/jsonyx.svg
+.. image:: /_images/light/jsonyx/jsonyx_document.svg
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/jsonyx.svg
+    .. image:: /_images/dark/jsonyx/jsonyx_document.svg
         :class: only-dark
 
 value
