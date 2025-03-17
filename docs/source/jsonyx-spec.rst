@@ -64,7 +64,10 @@ array
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        array: '[' ( `whitespace` | ( `value` ++ ( ',' | `whitespace` - '' ) ) ( ',' `whitespace` )? ) ']'
+        array:  '[' (
+             :      `whitespace`
+             :      | ( `value` ++ ( ',' | `whitespace` - '' ) ) ( ',' `whitespace` )?
+             :  ) ']'
 
 .. image:: /_images/light/jsonyx/array.svg
     :class: only-light
