@@ -23,6 +23,14 @@ jsonyx_expression
     .. image:: /_images/dark/jsonyx-patch/jsonyx_expression.svg
         :class: only-dark
 
+.. raw:: html
+
+    <map name="jsonyx_expression.map">
+       <area shape="rect" coords="49,1,169,33" href="#absolute_query" title="absolute_query" />
+       <area shape="rect" coords="49,45,161,77" href="#relative_query" title="relative_query" />
+       <area shape="rect" coords="49,89,97,121" href="#filter" title="filter" />
+    </map>
+
 absolute_query
 --------------
 
