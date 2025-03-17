@@ -27,9 +27,9 @@ value
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        value:  `comments`?
+        value:  `whitespace`?
              :  ( `object` | `array` | `string` | `number` | 'true' | 'false' | 'null' )
-             :  `comments`?
+             :  `whitespace`?
 
 .. image:: /_images/light/jsonyx/value.svg
     :class: only-light
@@ -46,8 +46,8 @@ object
 
     .. productionlist:: jsonyx-grammar
         object: '{' (
-              :     `comments`?
-              :     | ( ( `key` ':' `value` ) ++ ( ',' | `comments` ) ) ( ',' `comments`? )?
+              :     `whitespace`?
+              :     | ( ( `key` ':' `value` ) ++ ( ',' | `whitespace` ) ) ( ',' `whitespace`? )?
               : ) '}'
 
 .. image:: /_images/light/jsonyx/object.svg
@@ -64,7 +64,7 @@ array
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        array: '[' ( `comments`? | ( `value` ++ ( ',' | `comments` ) ) ( ',' `comments`? )? ) ']'
+        array: '[' ( `whitespace`? | ( `value` ++ ( ',' | `whitespace` ) ) ( ',' `whitespace`? )? ) ']'
 
 .. image:: /_images/light/jsonyx/array.svg
     :class: only-light
@@ -118,7 +118,7 @@ key
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        key: `comments`? ( `string` | `~python-grammar:identifier` ) `comments`?
+        key: `whitespace`? ( `string` | `~python-grammar:identifier` ) `whitespace`?
 
 .. image:: /_images/light/jsonyx/key.svg
     :class: only-light
@@ -128,18 +128,18 @@ key
     .. image:: /_images/dark/jsonyx/key.svg
         :class: only-dark
 
-comments
---------
+whitespace
+----------
 
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        comments: ( '//' [^#xA#xD]* | '/*' ( ( [^*]* '*'+ ) ++ [^*/] ) '/' | [#x9#xA#xD#x20] )+
+        whitespace: ( '//' [^#xA#xD]* | '/*' ( ( [^*]* '*'+ ) ++ [^*/] ) '/' | [#x9#xA#xD#x20] )+
 
-.. image:: /_images/light/jsonyx/comments.svg
+.. image:: /_images/light/jsonyx/whitespace.svg
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/comments.svg
+    .. image:: /_images/dark/jsonyx/whitespace.svg
         :class: only-dark
