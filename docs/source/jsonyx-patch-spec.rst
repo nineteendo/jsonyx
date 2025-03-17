@@ -16,17 +16,12 @@ jsonyx_expression
         jsonyx_expression: `absolute_query` | `relative_query` | `filter`
 
 .. raw:: html
+    :file: /_images/light/jsonyx-patch/jsonyx_expression.svg
 
-    <img alt="_images/jsonyx_expression.svg" class="only-light" src="_images/jsonyx_expression.svg" usemap="#jsonyx_expression.map">
-    <img alt="_images/jsonyx_expression1.svg" class="only-dark" src="_images/jsonyx_expression1.svg" usemap="#jsonyx_expression.map">
-    <map name="jsonyx_expression.map">
-       <area shape="rect" coords="49,1,169,33" href="#absolute_query" title="absolute_query" />
-       <area shape="rect" coords="49,45,161,77" href="#relative_query" title="relative_query" />
-       <area shape="rect" coords="49,89,97,121" href="#filter" title="filter" />
-    </map>
+.. raw:: html
+    :file: /_images/dark/jsonyx-patch/jsonyx_expression.svg
 
 .. only:: latex
-
     .. image:: /_images/light/jsonyx-patch/jsonyx_expression.svg
 
 absolute_query
