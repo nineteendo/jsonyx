@@ -15,15 +15,13 @@ jsonyx_expression
     .. productionlist:: jsonyx-patch-grammar
         jsonyx_expression: `absolute_query` | `relative_query` | `filter`
 
-.. raw:: html
-    :file: _images/light/jsonyx-patch/jsonyx_expression.svg
+.. image:: /_images/light/jsonyx-patch/jsonyx_expression.svg
+    :class: only-light
 
-.. raw:: html
-    :file: _images/dark/jsonyx-patch/jsonyx_expression.svg
+.. only:: not latex
 
-.. only:: latex
-
-    .. image:: /_images/light/jsonyx-patch/jsonyx_expression.svg
+    .. image:: /_images/dark/jsonyx-patch/jsonyx_expression.svg
+        :class: only-dark
 
 absolute_query
 --------------
