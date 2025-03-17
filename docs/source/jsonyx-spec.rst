@@ -27,7 +27,9 @@ value
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        value: `comments`? ( `object` | `array` | `string` | `number` | 'true' | 'false' | 'null' ) `comments`?
+        value:  `comments`?
+             :  ( `object` | `array` | `string` | `number` | 'true' | 'false' | 'null' )
+             :  `comments`?
 
 .. image:: /_images/light/jsonyx/value.svg
     :class: only-light
@@ -43,7 +45,10 @@ object
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        object: '{' ( `comments`? | ( ( `key` ':' `value` ) ++ ( ',' | `comments` ) ) ( ',' `comments`? )? ) '}'
+        object: '{' (
+              :     `comments`?
+              :     | ( ( `key` ':' `value` ) ++ ( ',' | `comments` ) ) ( ',' `comments`? )?
+              : ) '}'
 
 .. image:: /_images/light/jsonyx/object.svg
     :class: only-light
@@ -94,8 +99,10 @@ number
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        number: '-'? ( ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )? | 'Infinity' )
-              : | 'NaN'
+        number: '-'? (
+              :     ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )?
+              :     | 'Infinity'
+              : ) | 'NaN'
 
 .. image:: /_images/light/jsonyx/number.svg
     :class: only-light

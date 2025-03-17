@@ -148,7 +148,10 @@ number
 .. container:: highlight
 
     .. productionlist:: jsonyx-patch-grammar
-        number: '-'? ( ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )? | 'Infinity' )
+        number: '-'? (
+              :     ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )?
+              :     | 'Infinity'
+              : )
 
 .. image:: /_images/light/jsonyx-patch/number.svg
     :class: only-light
