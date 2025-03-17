@@ -1,4 +1,4 @@
 msgspec==0.19.0
 orjson==3.10.15
-pysimdjson @ git+https://github.com/TkTech/pysimdjson@c6f89f99b77e31a3bce0bb10da9977b6a4306822
+pysimdjson==6.0.2
 tabulate==0.9.0

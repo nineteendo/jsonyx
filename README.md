@@ -46,7 +46,7 @@ https://jsonyx.readthedocs.io
     ```
 - Dedicated functions for reading and writing files and pretty printing
 
-## Benchmark (Feb 5, 2025)
+## Benchmark (Mar 17, 2025)
 
 We recommend to use [`orjson`](https://pypi.org/project/orjson),
 [`msgspec`](https://pypi.org/project/msgspec) or
@@ -55,25 +55,25 @@ applications:
 
 | encode                                      |   json | jsonyx | msgspec |  orjson | fastest time |
 |:--------------------------------------------|-------:|-------:|--------:|--------:|-------------:|
-| List of 256 booleans                        |  4.49x |  4.47x |   1.00x |   1.07x |      1.95 μs |
-| List of 256 ASCII strings                   | 12.41x | 14.20x |   1.55x |   1.00x |      3.76 μs |
-| List of 256 floats                          | 23.03x | 23.68x |   1.31x |   1.00x |      8.08 μs |
-| List of 256 dicts with 1 int                | 11.08x | 13.61x |   1.33x |   1.00x |      7.86 μs |
-| Medium complex object                       | 10.29x | 11.47x |   1.14x |   1.00x |     13.71 μs |
-| List of 256 strings                         | 22.45x | 14.65x |   2.15x |   1.00x |     14.31 μs |
-| Complex object                              |  7.11x |  5.47x |   1.00x | DNF[^1] |    212.52 μs |
-| Dict with 256 lists of 256 dicts with 1 int |  9.32x | 11.44x |   1.31x |   1.00x |   2359.82 μs |
+| List of 256 booleans                        |  4.69x |  5.64x |   1.00x |   1.04x |      1.92 μs |
+| List of 256 ASCII strings                   | 13.08x | 15.03x |   1.62x |   1.00x |      3.67 μs |
+| List of 256 floats                          | 24.38x | 24.69x |   1.35x |   1.00x |      7.89 μs |
+| List of 256 dicts with 1 int                | 11.34x | 14.32x |   1.35x |   1.00x |      7.67 μs |
+| Medium complex object                       | 10.64x | 12.05x |   1.15x |   1.00x |     13.38 μs |
+| List of 256 strings                         | 21.28x | 15.85x |   1.95x |   1.00x |     15.16 μs |
+| Complex object                              |  7.14x |  7.65x |   1.00x | DNF[^1] |    213.74 μs |
+| Dict with 256 lists of 256 dicts with 1 int |  9.03x | 11.34x |   1.14x |   1.00x |   2423.70 μs |
 
 | decode                                      |   json | jsonyx | msgspec | orjson | simdjson | fastest time |
 |:--------------------------------------------|-------:|-------:|--------:|-------:|---------:|-------------:|
-| List of 256 booleans                        |  4.64x |  7.19x |   2.99x |  1.40x |    1.00x |      1.42 μs |
-| List of 256 ASCII strings                   |  7.61x | 12.30x |   5.04x |  4.66x |    1.00x |      2.87 μs |
-| List of 256 floats                          | 11.04x | 12.00x |   2.18x |  1.64x |    1.00x |      6.23 μs |
-| List of 256 dicts with 1 int                | 12.14x | 15.93x |   6.82x |  5.02x |    1.00x |      6.22 μs |
-| Medium complex object                       | 12.53x | 19.08x |   5.24x |  4.46x |    1.00x |      7.72 μs |
-| List of 256 strings                         |  5.37x |  4.11x |   9.40x |  7.26x |    1.00x |     17.52 μs |
-| Complex object                              |  9.21x |  8.66x |   8.91x |  7.95x |    1.00x |    130.93 μs |
-| Dict with 256 lists of 256 dicts with 1 int | 18.00x | 22.32x |  12.38x | 10.84x |    1.00x |   1622.21 μs |
+| List of 256 booleans                        |  4.65x |  7.19x |   3.02x |  1.41x |    1.00x |      1.43 μs |
+| List of 256 ASCII strings                   |  7.35x | 12.65x |   4.73x |  4.42x |    1.00x |      2.98 μs |
+| List of 256 floats                          | 10.85x | 12.17x |   2.16x |  1.66x |    1.00x |      6.10 μs |
+| List of 256 dicts with 1 int                | 13.56x | 16.11x |   6.92x |  5.24x |    1.00x |      6.17 μs |
+| Medium complex object                       | 12.47x | 18.84x |   5.25x |  4.34x |    1.00x |      7.68 μs |
+| List of 256 strings                         |  4.01x |  3.41x |  14.99x |  8.04x |    1.00x |     23.47 μs |
+| Complex object                              |  8.92x |  7.75x |   9.09x |  9.16x |    1.00x |    145.17 μs |
+| Dict with 256 lists of 256 dicts with 1 int | 17.95x | 22.36x |  12.42x | 10.53x |    1.00x |   1621.17 μs |
 
 > [!WARNING]
 > The Python version of `jsonyx` is up to 36.25x slower, so make sure you have
