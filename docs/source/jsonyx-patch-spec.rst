@@ -55,17 +55,17 @@ Example:
 
         false
 
-    Patch:
+    Good patch:
+
+    .. code-block:: json
+
+        {"op": "assert", "expr": "@ == false"}
+
+    Bad patch:
 
     .. code-block:: json
 
         {"op": "assert", "expr": "@ == true"}
-
-    Output:
-
-    .. code-block:: none
-
-        AssertionError: Path $: @ == true
 
 clear
 ^^^^^
@@ -202,6 +202,38 @@ Example:
     .. code-block:: json
 
         [1, 2, 3, 4, 5, 6]
+
+insert
+^^^^^^
+
+Insert a value at the specified index in an array.
+
+Fields:
+    - **op** (string) - the operation to perform. Must be ``"insert"``.
+    - **path** (string) - the :ref:`absolute path <absolute_path>` with the
+      index in the array.
+    - **value** (any) - a value.
+
+Example:
+    Input:
+
+    .. code-block:: json
+
+        [1, 2, 3]
+
+    Patch:
+
+    .. code-block:: json
+
+        {"op": "insert", "path": "$[0]", "value": 0}
+
+    Output:
+
+    .. code-block:: json
+
+        [0, 1, 2, 3]
+
+.. note:: You can't insert at the root.
 
 Grammar
 -------
