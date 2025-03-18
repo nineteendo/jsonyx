@@ -17,6 +17,25 @@ Fields:
       `absolute path <absolute_query>`_ to the array.
     - **value** (any): A value.
 
+Example:
+    Input:
+
+    .. code-block:: json
+
+        [1, 2, 3]
+
+    Patch:
+
+    .. code-block:: json
+
+        {"op": "append", "value": 4}
+
+    Output:
+
+    .. code-block:: json
+
+        [1, 2, 3, 4]
+
 Grammar
 -------
 
