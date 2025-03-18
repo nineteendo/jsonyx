@@ -105,14 +105,14 @@ Fields:
     - **op** (string) - the operation to perform. Must be ``"copy"``.
     - **mode** (string) - the paste mode. Must be:
 
-        - ``"append"`` - append the source value to the end of a target array.
-        - ``"extend"`` - extend a target array with the contents of the source
-          array.
-        - ``"insert"`` - insert the source value at the specified index in the
-          target array. In this mode, the **to** field is required.
-        - ``"set"`` - replace the target value by the source value.
-        - ``"update"`` - update the target object with key/value pairs from the
-          source object, overwriting existing keys.
+      - ``"append"`` - append the source value to the end of a target array.
+      - ``"extend"`` - extend a target array with the contents of the source
+        array.
+      - ``"insert"`` - insert the source value at the specified index in the
+        target array. In this mode, the **to** field is required.
+      - ``"set"`` - replace the target value by the source value.
+      - ``"update"`` - update the target object with key/value pairs from the
+        source object, overwriting existing keys.
 
     - **path** (string, default: ``"$"``) - the
       :ref:`absolute path <absolute_path>` where the operation is applied.
