@@ -12,13 +12,12 @@ performance and no dependencies.
 
 - JSON decoding, encoding and patching
 - Pretty-printing:
+    .. code-block:: json
 
-.. code-block:: json
-
-    {
-        "foo": [1, 2, 3],
-        "bar": {"a": 1, "b": 2, "c": 3}
-    }
+        {
+            "foo": [1, 2, 3],
+            "bar": {"a": 1, "b": 2, "c": 3}
+        }
 
 - Optionally supports these JSON deviations (according to
   :doc:`this specification <jsonyx-spec>`):
