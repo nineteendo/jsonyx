@@ -235,6 +235,52 @@ Example:
 
 .. note:: You can't insert at the root.
 
+move
+^^^^
+
+Move a value.
+
+Fields:
+    - **op** (string) - the operation to perform. Must be ``"move"``.
+    - **mode** (string) - the paste mode. Must be:
+
+      - ``"append"`` - append the source value to the end of a target array.
+      - ``"extend"`` - extend a target array with the values of the source
+        array.
+      - ``"insert"`` - insert the source value at the specified index in the
+        target array. In this mode, the **to** field is required.
+      - ``"set"`` - replace the target value by the source value.
+      - ``"update"`` - update the target object with key/value pairs from the
+        source object, overwriting existing keys.
+
+    - **path** (string, default: ``"$"``) - the
+      :ref:`absolute path <absolute_path>` where the operation is applied.
+    - **from** (string) - the
+      :ref:`relative path <relative_path>` to the source value.
+    - **to** (string, default: ``"@"``) - the
+      :ref:`relative path <relative_path>` to the target value.
+
+Example:
+    Input:
+
+    .. code-block:: json
+
+        {"a": 0}
+
+    Patch:
+
+    .. code-block:: json
+
+        {"op": "move", "mode": "set", "from": "@.a", "to": "@.b"}
+
+    Output:
+
+    .. code-block:: json
+
+        {"b": 0}
+
+.. note:: You can't move the current object or insert at the current object.
+
 Grammar
 -------
 
