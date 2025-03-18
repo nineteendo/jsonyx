@@ -13,38 +13,38 @@ performance and no dependencies.
 - JSON decoding, encoding and patching
 - Pretty-printing:
 
-.. code-block:: json
+  .. code-block:: json
 
-    {
-        "foo": [1, 2, 3],
-        "bar": {"a": 1, "b": 2, "c": 3}
-    }
+      {
+          "foo": [1, 2, 3],
+          "bar": {"a": 1, "b": 2, "c": 3}
+      }
 
 - Optionally supports these JSON deviations (according to
   :doc:`this specification <jsonyx-spec>`):
 
-.. code-block:: javascript
+  .. code-block:: javascript
 
-    {
-        /* Block */ // and line comments
-        "Decimal numbers": [1.0000000000000001, 1e400],
-        "Duplicate keys": {"key": "value 1", "key": "value 2"},
-        "Missing commas": [1 2 3],
-        "NaN and infinity": [NaN, Infinity, -Infinity],
-        "Surrogates": "\ud800",
-        "Trailing comma": [0,],
-        "Unquoted keys": {key: "value"}
-    }
+      {
+          /* Block */ // and line comments
+          "Decimal numbers": [1.0000000000000001, 1e400],
+          "Duplicate keys": {"key": "value 1", "key": "value 2"},
+          "Missing commas": [1 2 3],
+          "NaN and infinity": [NaN, Infinity, -Infinity],
+          "Surrogates": "\ud800",
+          "Trailing comma": [0,],
+          "Unquoted keys": {key: "value"}
+      }
 
 - Detailed error messages:
 
-.. code-block:: none
+  .. code-block:: none
 
-    Traceback (most recent call last):
-      File "/Users/wannes/Downloads/broken.json", line 1, column 99-381
-        ...sList": {"GlossEntry": {"ID": "SGM..."GML", "XML"]}, "GlossSee": "markup"
-                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    jsonyx.JSONSyntaxError: Unterminated object
+      Traceback (most recent call last):
+        File "/Users/wannes/Downloads/broken.json", line 1, column 99-381
+          ...sList": {"GlossEntry": {"ID": "SGM..."GML", "XML"]}, "GlossSee": "markup"
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      jsonyx.JSONSyntaxError: Unterminated object
 
 - Dedicated functions for reading and writing files and pretty printing
 
