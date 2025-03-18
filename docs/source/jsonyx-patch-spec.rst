@@ -12,11 +12,10 @@ append
 Append a value to the end of an array.
 
 Fields:
-
-- **op** (string): The operation type. Must be `"append"`.
-- **path** (string, default: `"$"`): The `absolute path <absolute_query>` to
-  the array.
-- **value** (any): A value.
+    - **op** (string): The operation type. Must be ``"append"``.
+    - **path** (string, default: ``"$"``): The
+      `absolute path <absolute_query>`_ to the array.
+    - **value** (any): A value.
 
 Grammar
 -------
