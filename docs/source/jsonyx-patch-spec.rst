@@ -46,7 +46,7 @@ Fields:
     - **path** (string, default: ``"$"``) - the
       :ref:`absolute path <absolute_path>` to the value.
     - **expr** (any) - :ref:`an expression <expression>`.
-    - **msg** (string, default: *path*): an error message
+    - **msg** (string, default: ``"Path <path>: <expr>"``): an error message
 
 Example
     Input:
