@@ -145,12 +145,11 @@ Example:
 del
 ^^^
 
-Delete item from an array or object.
+Delete an item from an array or object.
 
 Fields:
     - **op** (string) - the operation to perform. Must be ``"del"``.
-    - **path** (string, default: ``"$"``) - the
-      :ref:`absolute path <absolute_path>` to item.
+    - **path** (string) - the :ref:`absolute path <absolute_path>` to the item.
 
 Example:
     Input:
@@ -171,7 +170,7 @@ Example:
 
         [1, 3]
 
-.. tip:: Using queries instead of indices is more robust.
+.. tip:: Using a :ref:`filter` instead of an index is more robust.
 .. note:: You can't delete the root.
 
 Grammar
@@ -238,6 +237,7 @@ relative_query
         :class: only-dark
 
 .. _expression:
+.. _filter:
 
 filter
 ^^^^^^

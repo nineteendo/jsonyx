@@ -467,7 +467,7 @@ def apply_patch(
         >>> json.apply_patch([1, 2, 3], {"op": "del", "path": "$[1]"})
         [1, 3]
 
-    .. tip:: Using queries instead of indices is more robust.
+    .. tip:: Using a :ref:`filter` instead of an index is more robust.
 
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).apply_patch(
