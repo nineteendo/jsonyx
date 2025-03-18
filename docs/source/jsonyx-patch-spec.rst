@@ -233,6 +233,7 @@ Example:
 
         [0, 1, 2, 3]
 
+.. tip:: Using a :ref:`filter` instead of an index is more robust.
 .. note:: You can't insert at the root.
 
 move
@@ -280,6 +281,35 @@ Example:
         {"b": 0}
 
 .. note:: You can't move the current object or insert at the current object.
+
+reverse
+^^^^^^^
+
+Reverse the items from an array.
+
+Fields:
+    - **op** (string) - the operation to perform. Must be ``"reverse"``.
+    - **path** (string, default: ``"$"``) - the
+      :ref:`absolute path <absolute_path>` to the array.
+
+Example:
+    Input:
+
+    .. code-block:: json
+
+        [1, 2, 3]
+
+    Patch:
+
+    .. code-block:: json
+
+        {"op": "reverse"}
+
+    Output:
+
+    .. code-block:: json
+
+        [3, 2, 1]
 
 Grammar
 -------
