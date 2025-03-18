@@ -44,7 +44,7 @@ Test if a condition is true.
 Fields:
     - **op** (string) - the operation to perform. Must be ``"assert"``.
     - **path** (string, default: ``"$"``) - the
-      :ref:`absolute path <absolute_path>` to the value.
+      :ref:`absolute path <absolute_path>` where the expression is evaluated.
     - **expr** (any) - :ref:`an expression <expression>`.
     - **msg** (string, default: ``"Path <path>: <expr>"``): an error message
 
@@ -139,6 +139,40 @@ Example:
     .. code-block:: json
 
         {"a": 0, "b": 0}
+
+.. note:: You can't insert at the current object.
+
+del
+^^^
+
+Delete item from an array or object.
+
+Fields:
+    - **op** (string) - the operation to perform. Must be ``"del"``.
+    - **path** (string, default: ``"$"``) - the
+      :ref:`absolute path <absolute_path>` to item.
+
+Example:
+    Input:
+
+    .. code-block:: json
+
+        [1, 2, 3]
+
+    Patch:
+
+    .. code-block:: json
+
+        {"op": "del", "path": "$[1]"}
+
+    Output:
+
+    .. code-block:: json
+
+        [1, 3]
+
+.. tip:: Using queries instead of indices is more robust.
+.. note:: You can't delete the root.
 
 Grammar
 -------

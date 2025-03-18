@@ -267,7 +267,6 @@ def write(
         '["filesystem API"]\n'
 
     .. note:: The item separator is automatically stripped when indented.
-
     .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
 
     """
@@ -353,7 +352,6 @@ def dump(
         '["streaming API"]\n'
 
     .. note:: The item separator is automatically stripped when indented.
-
     .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
 
     """
@@ -422,7 +420,6 @@ def dumps(
         '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
 
     .. note:: The item separator is automatically stripped when indented.
-
     .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
 
     """
@@ -510,8 +507,6 @@ def paste_values(
         >>> root[0]
         [1, 2, 3, 4]
 
-    .. tip:: Using queries instead of indices is more robust.
-
     """
     Manipulator(allow=allow, use_decimal=use_decimal).paste_values(
         current_nodes, values, operation,
@@ -552,8 +547,6 @@ def select_nodes(
         ...
         >>> root[0]
         [1, 2, 3, None, None, None]
-
-    .. tip:: Using queries instead of indices is more robust.
 
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).select_nodes(

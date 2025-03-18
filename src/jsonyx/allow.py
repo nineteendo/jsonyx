@@ -31,7 +31,7 @@ COMMENTS: frozenset[str] = frozenset({"comments"})
 """
 
 MISSING_COMMAS: frozenset[str] = frozenset({"missing_commas"})
-"""Allow separating items with whitespace or comments.
+"""Allow separating items with whitespace.
 
 >>> import jsonyx as json
 >>> import jsonyx.allow

@@ -644,8 +644,6 @@ class Manipulator:
             >>> root[0]
             [1, 2, 3, 4]
 
-        .. tip:: Using queries instead of indices is more robust.
-
         """
         if isinstance(current_nodes, tuple):
             current_nodes = [current_nodes]
@@ -683,8 +681,6 @@ class Manipulator:
             ...
             >>> root[0]
             [1, 2, 3, None, None, None]
-
-        .. tip:: Using queries instead of indices is more robust.
 
         """
         if isinstance(nodes, tuple):
