@@ -48,7 +48,7 @@ Fields:
     - **expr** (any) - :ref:`an expression <expression>`.
     - **msg** (string, default: ``"Path <path>: <expr>"``): an error message
 
-Example
+Example:
     Input:
 
     .. code-block:: json
@@ -66,6 +66,35 @@ Example
     .. code-block:: none
 
         AssertionError: Path $: @ == true
+
+clear
+^^^^^
+
+Remove all items from an array or object.
+
+Fields:
+    - **op** (string) - the operation to perform. Must be ``"clear"``.
+    - **path** (string, default: ``"$"``) - the
+      :ref:`absolute path <absolute_path>` to the array or object.
+
+Example:
+    Input:
+
+    .. code-block:: json
+
+        [1, 2, 3]
+
+    Patch:
+
+    .. code-block:: json
+
+        {"op": "clear"}
+
+    Output:
+
+    .. code-block:: json
+
+        []
 
 Grammar
 -------
