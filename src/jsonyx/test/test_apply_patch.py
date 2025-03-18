@@ -3,6 +3,7 @@ from __future__ import annotations
 
 __all__: list[str] = []
 
+from re import escape
 from typing import TYPE_CHECKING, Any
 
 import pytest
@@ -40,13 +41,13 @@ def test_assert(obj: Any, kwargs: _Operation) -> None:
 
 
 @pytest.mark.parametrize(("obj", "kwargs", "match"), [
-    (1, {}, "@ == 0"),
-    ([1], {"path": "$[0]"}, "@ == 0"),
+    (1, {}, "Path $: @ == 0"),
+    ([1], {"path": "$[0]"}, "Path $[0]: @ == 0"),
     (1, {"msg": "msg"}, "msg"),
 ])
 def test_failed_assert(obj: Any, kwargs: _Operation, match: str) -> None:
     """Test failed assert."""
-    with pytest.raises(AssertionError, match=match):
+    with pytest.raises(AssertionError, match=escape(match)):
         apply_patch(obj, {"op": "assert", "expr": "@ == 0", **kwargs})
 
 

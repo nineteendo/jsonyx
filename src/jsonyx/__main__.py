@@ -240,7 +240,9 @@ def _run(args: _Namespace) -> None:
     except TruncatedSyntaxError as exc:
         stderr.write("".join(format_syntax_error(exc)))
         sys.exit(1)
-    except (AssertionError, TypeError, ValueError) as exc:
+    except (
+        AssertionError, LookupError, RecursionError, TypeError, ValueError,
+    ) as exc:
         stderr.write("".join(format_exception_only(None, exc)))
         sys.exit(1)
 

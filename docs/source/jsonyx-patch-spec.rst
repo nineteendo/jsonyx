@@ -12,14 +12,12 @@ append
 Append a value to the end of an array.
 
 Fields:
-
     - **op** (string) - the operation to perform. Must be ``"append"``.
     - **path** (string, default: ``"$"``) - the
       :ref:`absolute path <absolute_path>` to the array.
     - **value** (any) - a value.
 
 Example:
-
     Input:
 
     .. code-block:: json
@@ -44,7 +42,6 @@ assert
 Test if a condition is true.
 
 Fields:
-
     - **op** (string) - the operation to perform. Must be ``"assert"``.
     - **path** (string, default: ``"$"``) - the
       :ref:`absolute path <absolute_path>` to the value.
@@ -52,7 +49,6 @@ Fields:
     - **msg** (string, default: *path*): an error message
 
 Example
-
     Input:
 
     .. code-block:: json
@@ -69,7 +65,7 @@ Example
 
     .. code-block:: none
 
-        AssertionError: @ == true
+        AssertionError: Path $: @ == true
 
 Grammar
 -------

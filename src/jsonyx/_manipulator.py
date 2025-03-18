@@ -484,7 +484,7 @@ class Manipulator:
             elif op == "assert":
                 path = operation.get("path", "$")
                 expr: str = operation["expr"]
-                msg: str = operation.get("msg", expr)
+                msg: str = operation.get("msg", f"Path {path}: {expr}")
                 current_nodes: list[_Node] = self.select_nodes(node, path)
                 if current_nodes != self.apply_filter(current_nodes, expr):
                     raise AssertionError(msg)
