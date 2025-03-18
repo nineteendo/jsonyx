@@ -15,7 +15,7 @@ Fields:
 
     - **op** (string) - the operation to perform. Must be ``"append"``.
     - **path** (string, default: ``"$"``) - the
-      :ref:`absolute path <absolute_query>` to the array.
+      :ref:`absolute path <absolute_path>` to the array.
     - **value** (any) - a value.
 
 Example:
@@ -47,7 +47,7 @@ Fields:
 
     - **op** (string) - the operation to perform. Must be ``"assert"``.
     - **path** (string, default: ``"$"``) - the
-      :ref:`absolute path <absolute path>` to the value.
+      :ref:`absolute path <absolute_path>` to the value.
     - **expr** (any) - :ref:`an expression <expression>`.
     - **msg** (string, default: *path*): an error message
 
