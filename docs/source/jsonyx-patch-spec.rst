@@ -12,12 +12,14 @@ append
 Append a value to the end of an array.
 
 Fields:
-    - **op** (string) - the operation type. Must be ``"append"``.
+
+    - **op** (string) - the operation to perform. Must be ``"append"``.
     - **path** (string, default: ``"$"``) - the
-      `absolute path <absolute_query>`_ to the array.
+      :ref:`absolute path <absolute_query>`_ to the array.
     - **value** (any) - a value.
 
 Example:
+
     Input:
 
     .. code-block:: json
@@ -35,6 +37,39 @@ Example:
     .. code-block:: json
 
         [1, 2, 3, 4]
+
+assert
+^^^^^^
+
+Test if a condition is true.
+
+Fields:
+
+    - **op** (string) - the operation to perform. Must be ``"assert"``.
+    - **path** (string, default: ``"$"``) - the
+      :ref:`absolute path <absolute_query>`_ to the value.
+    - **expr** (any) - :ref:`an expression <filter>`.
+    - **msg** (string, default: *path*): an error message
+
+Example
+
+    Input:
+
+    .. code-block:: json
+
+        false
+
+    Patch:
+
+    .. code-block:: json
+
+        {"op": "assert", "expr": "@ == true"}
+
+    Output:
+
+    .. code-block:: none
+
+        AssertionError: @ == true
 
 Grammar
 -------
