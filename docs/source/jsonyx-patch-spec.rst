@@ -47,8 +47,8 @@ Fields:
 
     - **op** (string) - the operation to perform. Must be ``"assert"``.
     - **path** (string, default: ``"$"``) - the
-      :ref:`absolute path <absolute_query>` to the value.
-    - **expr** (any) - :ref:`an expression <filter>`.
+      :ref:`absolute path <absolute path>` to the value.
+    - **expr** (any) - :ref:`an expression <expression>`.
     - **msg** (string, default: *path*): an error message
 
 Example
@@ -94,6 +94,8 @@ jsonyx_expression
     .. image:: /_images/dark/jsonyx-patch/jsonyx_expression.svg
         :class: only-dark
 
+.. _absolute_path:
+
 absolute_query
 ^^^^^^^^^^^^^^
 
@@ -129,6 +131,8 @@ relative_query
 
     .. image:: /_images/dark/jsonyx-patch/relative_query.svg
         :class: only-dark
+
+.. _expression:
 
 filter
 ^^^^^^
