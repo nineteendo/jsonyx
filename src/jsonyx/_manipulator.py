@@ -525,9 +525,9 @@ class Manipulator:
                     del target[key]
             elif op == "extend":
                 path = operation.get("path", "$")
-                value = operation["value"]
+                values = operation["values"]
                 for target, key in self.select_nodes(node, path):
-                    list.extend(target[key], deepcopy(value))  # type: ignore
+                    list.extend(target[key], deepcopy(values))  # type: ignore
             elif op == "insert":
                 path = operation["path"]
                 value = operation["value"]

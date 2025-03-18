@@ -106,7 +106,7 @@ Fields:
     - **mode** (string) - the paste mode. Must be:
 
       - ``"append"`` - append the source value to the end of a target array.
-      - ``"extend"`` - extend a target array with the contents of the source
+      - ``"extend"`` - extend a target array with the values of the source
         array.
       - ``"insert"`` - insert the source value at the specified index in the
         target array. In this mode, the **to** field is required.
@@ -172,6 +172,36 @@ Example:
 
 .. tip:: Using a :ref:`filter` instead of an index is more robust.
 .. note:: You can't delete the root.
+
+extend
+^^^^^^
+
+Extend an array with a list of values.
+
+Fields:
+    - **op** (string) - the operation to perform. Must be ``"extend"``.
+    - **path** (string, default: ``"$"``) - the
+      :ref:`absolute path <absolute_path>` to the array.
+    - **values** (any) - a list of values.
+
+Example:
+    Input:
+
+    .. code-block:: json
+
+        [1, 2, 3]
+
+    Patch:
+
+    .. code-block:: json
+
+        {"op": "extend", "values": [4, 5, 6]}
+
+    Output:
+
+    .. code-block:: json
+
+        [1, 2, 3, 4, 5, 6]
 
 Grammar
 -------

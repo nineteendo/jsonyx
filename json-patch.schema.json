@@ -19,7 +19,7 @@
                     "if": {
                         "properties": {
                             "op": {
-                                "enum": ["append", "extend", "insert", "set", "update"]
+                                "enum": ["append", "insert", "set", "update"]
                             }
                         },
                         "required": ["op"]
@@ -88,6 +88,20 @@
                     },
                     "then": {
                         "required": ["path"]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "op": {"const": "extend"}
+                        },
+                        "required": ["op"]
+                    },
+                    "then": {
+                        "properties": {
+                            "values": {"description": "The values to use."}
+                        },
+                        "required": ["values"]
                     }
                 },
                 {

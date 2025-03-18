@@ -129,14 +129,14 @@ def test_del_root() -> None:
 ])
 def test_extend(obj: Any, kwargs: _Operation, expected: Any) -> None:
     """Test extend."""
-    patch: _Operation = {"op": "extend", "value": [4, 5, 6], **kwargs}
+    patch: _Operation = {"op": "extend", "values": [4, 5, 6], **kwargs}
     assert apply_patch(obj, patch) == expected
 
 
 def test_extend_copy() -> None:
     """Test if extend makes a copy."""
     value: list[Any] = [0]
-    result: list[Any] = apply_patch([], {"op": "extend", "value": [value]})[0]
+    result: list[Any] = apply_patch([], {"op": "extend", "values": [value]})[0]
     assert result == value  # sanity check
     assert result is not value
 
