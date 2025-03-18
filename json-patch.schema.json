@@ -99,7 +99,7 @@
                     },
                     "then": {
                         "properties": {
-                            "values": {"description": "The values to use."}
+                            "values": {"description": "The values to use.", "type": "array"}
                         },
                         "required": ["values"]
                     }
