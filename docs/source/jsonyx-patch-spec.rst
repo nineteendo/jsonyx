@@ -311,6 +311,36 @@ Example:
 
         [3, 2, 1]
 
+set
+^^^
+
+Replace an item of an object, array or replace the root.
+
+Fields:
+    - **op** (string) - the operation to perform. Must be ``"set"``.
+    - **path** (string, default: ``"$"``) - the
+      :ref:`absolute path <absolute_path>` to the value.
+    - **value** (any) - a value.
+
+Example:
+    Input:
+
+    .. code-block:: json
+
+        false
+
+    Patch:
+
+    .. code-block:: json
+
+        {"op": "set", "value": true}
+
+    Output:
+
+    .. code-block:: json
+
+        true
+
 Grammar
 -------
 
