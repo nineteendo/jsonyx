@@ -341,6 +341,36 @@ Example:
 
         true
 
+sort
+^^^^
+
+Sort an array.
+
+Fields:
+    - **op** (string) - the operation to perform. Must be ``"sort"``.
+    - **path** (string, default: ``"$"``) - the
+      :ref:`absolute path <absolute_path>` to the array.
+    - **reverse** (boolean, default: ``false``) - sort in descending order.
+
+Example:
+    Input:
+
+    .. code-block:: json
+
+        [3, 1, 2]
+
+    Patch:
+
+    .. code-block:: json
+
+        {"op": "sort"}
+
+    Output:
+
+    .. code-block:: json
+
+        [1, 2, 3]
+
 Grammar
 -------
 
