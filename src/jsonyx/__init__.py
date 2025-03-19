@@ -451,7 +451,7 @@ def apply_patch(
     .. versionadded:: 2.0
 
     :param obj: a Python object
-    :param patch: a :doc:`JSON patch </jsonyx-patch-spec.rst>`
+    :param patch: a :doc:`JSON patch </jsonyx-patch-spec>`
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises AssertionError: if an assertion fails
@@ -489,7 +489,7 @@ def paste_values(
 
     :param current_nodes: a node or a list of nodes
     :param values: a value or a list of values
-    :param operation: a JSON paste operation
+    :param operation: a JSON :ref:`copy` or :ref:`move` operation
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises IndexError: if an index is out of range

@@ -592,7 +592,7 @@ class Manipulator:
         """Apply a JSON patch to a Python object.
 
         :param obj: a Python object
-        :param patch: a :doc:`JSON patch </jsonyx-patch-spec.rst>`
+        :param patch: a :doc:`JSON patch </jsonyx-patch-spec>`
         :raises AssertionError: if an assertion fails
         :raises IndexError: if an index is out of range
         :raises JSONSyntaxError: if a query is invalid
@@ -627,7 +627,7 @@ class Manipulator:
 
         :param current_nodes: a node or a list of nodes
         :param values: a value or a list of values
-        :param operation: a JSON paste operation
+        :param operation: a JSON :ref:`copy` or :ref:`move` operation
         :raises IndexError: if an index is out of range
         :raises JSONSyntaxError: if a query is invalid
         :raises KeyError: if a key is not found

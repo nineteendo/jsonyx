@@ -94,6 +94,8 @@ Example:
 
         []
 
+.. _copy:
+
 copy
 ^^^^
 
@@ -233,6 +235,8 @@ Example:
 
 .. tip:: Using a :ref:`filter` instead of an index is more robust.
 .. note:: You can't insert at the root.
+
+.. _move:
 
 move
 ^^^^
