@@ -204,8 +204,8 @@ Using :class:`decimal.Decimal` instead of :class:`float`
 .. note:: :class:`decimal.Decimal` can be natively serialized, but not as fast
     as :class:`float`.
 
-Making a patch from two Python objects
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Making a :doc:`patch </jsonyx-patch-spec.rst>` from two Python objects
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. versionadded:: 2.0
 
@@ -213,8 +213,8 @@ Making a patch from two Python objects
 >>> json.make_patch([1, 2, 3], [1, 3])
 [{'op': 'del', 'path': '$[1]'}]
 
-Applying a patch
-^^^^^^^^^^^^^^^^
+Applying a :doc:`patch </jsonyx-patch-spec.rst>`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. versionadded:: 2.0
 
