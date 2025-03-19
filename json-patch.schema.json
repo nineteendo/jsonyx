@@ -11,7 +11,7 @@
                     "type": "string",
                     "enum": ["append", "assert", "clear", "copy", "del", "extend", "insert", "move", "reverse", "set", "sort", "update"]
                 },
-                "path": {"description": "A JSON path.", "type": "string", "default": "$"}
+                "path": {"description": "An absolute JSON path.", "type": "string", "default": "$"}
             },
             "required": ["op"],
             "allOf": [
@@ -62,8 +62,8 @@
                                 "type": "string",
                                 "enum": ["append", "extend", "insert", "set", "update"]
                             },
-                            "from": {"description": "The source JSON path.", "type": "string", "default": "@"},
-                            "to": {"description": "The destination JSON path.", "type": "string", "default": "@"}
+                            "from": {"description": "The relative source JSON path.", "type": "string", "default": "@"},
+                            "to": {"description": "The relative destination JSON path.", "type": "string", "default": "@"}
                         },
                         "required": ["mode", "from"],
                         "if": {
@@ -114,6 +114,19 @@
                     "then": {
                         "properties": {
                             "reverse": {"description": "Sort in descending order.", "type": "boolean", "default": false}
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "op": {"const": "update"}
+                        },
+                        "required": ["op"]
+                    },
+                    "then": {
+                        "properties": {
+                            "value": {"type": "object"}
                         }
                     }
                 }

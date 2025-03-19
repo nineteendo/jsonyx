@@ -45,7 +45,7 @@ Fields:
     - **op** (string) - the operation to perform. Must be ``"assert"``.
     - **path** (string, default: ``"$"``) - the
       :ref:`absolute path <absolute_path>` where the expression is evaluated.
-    - **expr** (any) - :ref:`an expression <expression>`.
+    - **expr** (string) - :ref:`an expression <expression>`.
     - **msg** (string, default: ``"Path <path>: <expr>"``): an error message
 
 Example:
@@ -370,6 +370,36 @@ Example:
     .. code-block:: json
 
         [1, 2, 3]
+
+update
+^^^^^^
+
+Update an object with key/value pairs, overwriting existing keys.
+
+Fields:
+    - **op** (string) - the operation to perform. Must be ``"update"``.
+    - **path** (string, default: ``"$"``) - the
+      :ref:`absolute path <absolute_path>` to the object.
+    - **value** (object) - an object.
+
+Example:
+    Input:
+
+    .. code-block:: json
+
+        {"a": 1, "b": 2, "c": 3}
+
+    Patch:
+
+    .. code-block:: json
+
+        {"op": "update", "value": {"a": 4, "b": 5, "c": 6}}
+
+    Output:
+
+    .. code-block:: json
+
+        {"a": 4, "b": 5, "c": 6}
 
 Grammar
 -------
