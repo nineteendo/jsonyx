@@ -1,4 +1,6 @@
 """JSON decoder."""
+# TODO(Nice Zombies): change int_hook and float_hook to parse_int and
+# parse_float
 from __future__ import annotations
 
 __all__: list[str] = [

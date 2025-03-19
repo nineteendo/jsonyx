@@ -145,8 +145,6 @@ Example:
 
         {"a": 0, "b": 0}
 
-.. note:: You can't insert at the current object.
-
 del
 ^^^
 
@@ -176,7 +174,6 @@ Example:
         [1, 3]
 
 .. tip:: Using a :ref:`filter` instead of an index is more robust.
-.. note:: You can't delete the root.
 
 extend
 ^^^^^^
@@ -239,7 +236,6 @@ Example:
         [0, 1, 2, 3]
 
 .. tip:: Using a :ref:`filter` instead of an index is more robust.
-.. note:: You can't insert at the root.
 
 .. _move:
 
@@ -286,8 +282,6 @@ Example:
     .. code-block:: json
 
         {"b": 0}
-
-.. note:: You can't move the current object or insert at the current object.
 
 reverse
 ^^^^^^^
