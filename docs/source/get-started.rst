@@ -244,4 +244,4 @@ Using the ``jsonyx`` application
          ^
     jsonyx.JSONSyntaxError: Expecting string
 
-See :doc:`api/index` and :doc:`cli/index` for more details.
+See :doc:`/api/index` and :doc:`/cli/index` for more details.

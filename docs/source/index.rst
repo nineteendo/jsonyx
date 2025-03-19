@@ -21,7 +21,7 @@ performance and no dependencies.
       }
 
 - Optionally supports these JSON deviations (according to
-  :doc:`this specification <jsonyx-spec>`):
+  :doc:`this specification </jsonyx-spec>`):
 
   .. code-block:: javascript
 
@@ -84,8 +84,8 @@ Dict with 256 lists of 256 dicts with 1 int 17.95x 22.36x  12.42x 10.53x    1.00
     `C compiler <https://wiki.python.org/moin/WindowsCompilers>`_ installed on
     Windows.
 
-Check out the :doc:`get-started` section for further information, including how
-to :ref:`install <installation>` the project.
+Check out the :doc:`/get-started` section for further information, including
+how to :ref:`install <installation>` the project.
 
 .. rubric:: Footnotes
 

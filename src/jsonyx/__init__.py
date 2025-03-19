@@ -451,7 +451,7 @@ def apply_patch(
     .. versionadded:: 2.0
 
     :param obj: a Python object
-    :param patch: a JSON patch
+    :param patch: a :doc:`JSON patch </jsonyx-patch-spec.rst>`
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises AssertionError: if an assertion fails
@@ -527,7 +527,7 @@ def select_nodes(
     .. versionadded:: 2.0
 
     :param nodes: a node or a list of nodes
-    :param query: a JSON select query
+    :param query: an :ref:`JSON select query <query>`
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param allow_slice: allow slice
     :param relative: query must start with ``"@"`` instead of ``"$"``
@@ -566,7 +566,7 @@ def apply_filter(
     .. versionadded:: 2.0
 
     :param nodes: a node or a list of nodes
-    :param query: a JSON filter query
+    :param query: a :ref:`JSON filter query <filter>`
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises IndexError: if an index is out of range
@@ -597,7 +597,7 @@ def load_query_value(
 
     .. versionadded:: 2.0
 
-    :param s: a JSON query value
+    :param s: a :ref:`JSON query value <query_value>`
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the query value is invalid

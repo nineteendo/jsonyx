@@ -10,20 +10,22 @@ Generated with
 `RR - Railroad Diagram Generator <https://www.bottlecaps.de/rr/ui>`_ by
 `Gunther Rademacher <https://github.com/GuntherRademacher>`_.
 
-jsonyx_expression
-^^^^^^^^^^^^^^^^^
+.. _query:
+
+query
+^^^^^
 
 .. container:: highlight
 
     .. productionlist:: jsonyx-path-grammar
-        jsonyx_expression: `absolute_query` | `relative_query` | `filter`
+        query: `absolute_query` | `relative_query`
 
-.. image:: /_images/light/jsonyx-path/jsonyx_expression.svg
+.. image:: /_images/light/jsonyx-path/query.svg
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx-path/jsonyx_expression.svg
+    .. image:: /_images/dark/jsonyx-path/query.svg
         :class: only-dark
 
 .. _absolute_path:
@@ -87,6 +89,8 @@ filter
 
     .. image:: /_images/dark/jsonyx-path/filter.svg
         :class: only-dark
+
+.. _query_value:
 
 value
 ^^^^^

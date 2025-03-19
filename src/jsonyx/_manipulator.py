@@ -592,7 +592,7 @@ class Manipulator:
         """Apply a JSON patch to a Python object.
 
         :param obj: a Python object
-        :param patch: a JSON patch
+        :param patch: a :doc:`JSON patch </jsonyx-patch-spec.rst>`
         :raises AssertionError: if an assertion fails
         :raises IndexError: if an index is out of range
         :raises JSONSyntaxError: if a query is invalid
@@ -662,7 +662,7 @@ class Manipulator:
         """Select nodes from a node or a list of nodes.
 
         :param nodes: a node or a list of nodes
-        :param query: a JSON select query
+        :param query: a :ref:`JSON select query <query>`
         :param allow_slice: allow slice
         :param relative: query must start with ``"@"`` instead of ``"$"``
         :raises IndexError: if an index is out of range
@@ -705,7 +705,7 @@ class Manipulator:
         """Apply a JSON filter query to a node or a list of nodes.
 
         :param nodes: a node or a list of nodes
-        :param query: a JSON filter query
+        :param query: a :ref:`JSON filter query <filter>`
         :raises IndexError: if an index is out of range
         :raises JSONSyntaxError: if the filter query is invalid
         :raises KeyError: if a key is not found
@@ -733,7 +733,7 @@ class Manipulator:
     def load_query_value(self, s: str) -> Any:
         """Deserialize a JSON query value to a Python object.
 
-        :param s: a JSON query value
+        :param s: a :ref:`JSON query value <query_value>`
         :raises JSONSyntaxError: if the query value is invalid
         :return: a Python object
 
