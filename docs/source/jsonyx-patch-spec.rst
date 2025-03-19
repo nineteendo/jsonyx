@@ -1,6 +1,11 @@
 jsonyx Patch Specification
 ==========================
 
+Schema
+------
+
+https://github.com/nineteendo/jsonyx/blob/main/json-patch.schema.json
+
 Operations
 ----------
 
