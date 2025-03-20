@@ -9,7 +9,7 @@ maintainers = [
 ]
 description = "Customizable JSON manipulator for Python"
 readme = "README.md"
-license = "GPL-3.0-only"
+license-files = ["LICENSE"]
 requires-python = ">=3.8"
 keywords = ["python", "json", "json-parser"]
 classifiers = [
