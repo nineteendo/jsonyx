@@ -32,9 +32,6 @@ class _MyNumber:
     def __float__(self) -> float:
         return float(self.value)
 
-    def __int__(self) -> int:
-        return int(self.value)
-
 
 @pytest.mark.parametrize(
     "string", ["\ud800", "\ud800$", "\udf48"],  # noqa: PT014
@@ -132,9 +129,9 @@ def test_too_big_int(json: ModuleType, big_num: str) -> None:
 
 def test_int_type(json: ModuleType) -> None:
     """Test int_type."""
-    obj: object = json.loads("0", hooks={"int": _MyNumber})
-    assert isinstance(obj, _MyNumber)
-    assert obj == _MyNumber(0)
+    obj: object = json.loads("0", hooks={"int": Decimal})
+    assert isinstance(obj, Decimal)
+    assert obj == Decimal(0)
 
 
 @pytest.mark.parametrize("s", [
@@ -203,7 +200,7 @@ def test_invalid_number(json: ModuleType, s: str) -> None:
 
 
 def test_float_type(json: ModuleType) -> None:
-    """Test int_type."""
+    """Test float_type."""
     obj: object = json.loads("0.0", hooks={"float": _MyNumber})
     assert isinstance(obj, _MyNumber)
     assert obj == _MyNumber(0.0)

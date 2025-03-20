@@ -1588,7 +1588,7 @@ encoder_encode_float(PyEncoderObject *s, PyObject *obj)
     /* Return the JSON representation of a PyFloat. */
     double i = PyFloat_AS_DOUBLE(obj);
     if (isfinite(i)) {
-        return PyFloat_Type.tp_repr(obj);
+        return PyObject_Str(obj);
     }
     else if (!s->allow_nan_and_infinity) {
         PyErr_Format(
@@ -1719,7 +1719,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         new_obj = PyNumber_Long(obj);
         if (new_obj == NULL)
             return -1;
-        PyObject *encoded = PyLong_Type.tp_repr(new_obj);
+        PyObject *encoded = PyObject_Str(new_obj);
         Py_DECREF(new_obj);
         if (encoded == NULL)
             return -1;

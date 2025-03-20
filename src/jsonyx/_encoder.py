@@ -107,7 +107,7 @@ except ImportError:
 
         def floatstr(num: float) -> str:
             if isfinite(num):
-                return repr(num)
+                return str(num)
 
             if not allow_nan_and_infinity:
                 msg: str = f"{num!r} is not allowed"
@@ -258,7 +258,7 @@ except ImportError:
             elif isinstance(obj, (str, str_types)):
                 write(encode_string(str(obj)))
             elif isinstance(obj, (int, int_types)):
-                write(repr(int(obj)))  # type: ignore
+                write(str(int(obj)))  # type: ignore
             elif isinstance(obj, (float, float_types)):
                 write(floatstr(float(obj)))  # type: ignore
             elif isinstance(obj, (list, tuple, sequence_types)):
