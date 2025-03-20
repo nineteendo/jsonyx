@@ -52,64 +52,52 @@ def test_bool_types(json: ModuleType) -> None:
 
 @pytest.mark.parametrize("num", [0, 1])
 @pytest.mark.parametrize("int_type", [Decimal, int])
-def test_int(
-    json: ModuleType, num: int, int_type: type[Decimal | int],
-) -> None:
+def test_int(json: ModuleType, num: int, int_type: type) -> None:
     """Test integer."""
-    assert json.dumps(
-        int_type(num), end="", types={"int": int_type},
-    ) == str(num)
+    types: dict[str, type] = {"int": int_type}
+    assert json.dumps(int_type(num), end="", types=types) == str(num)
 
 
 @pytest.mark.parametrize("float_type", [Decimal, float])
-def test_rational_number(
-    json: ModuleType, float_type: type[Decimal | float],
-) -> None:
+def test_rational_number(json: ModuleType, float_type: type) -> None:
     """Test rational number."""
-    assert json.dumps(
-        float_type("0.0"), end="", types={"float": float_type},
-    ) == "0.0"
+    types: dict[str, type] = {"float": float_type}
+    assert json.dumps(float_type("0.0"), end="", types=types) == "0.0"
 
 
 @pytest.mark.parametrize("num", ["NaN", "Infinity", "-Infinity"])
 @pytest.mark.parametrize("float_type", [Decimal, float])
 def test_nan_and_infinity(
-    json: ModuleType, num: str, float_type: type[Decimal | float],
+    json: ModuleType, num: str, float_type: type,
 ) -> None:
     """Test NaN and (negative) infinity."""
-    assert json.dumps(
-        float_type(num),
-        allow=NAN_AND_INFINITY,
-        end="",
-        types={"float": float_type},
-    ) == num
+    allow: frozenset[str] = NAN_AND_INFINITY
+    types: dict[str, type] = {"float": float_type}
+    assert json.dumps(float_type(num), allow=allow, end="", types=types) == num
 
 
 @pytest.mark.parametrize("num", ["NaN", "Infinity", "-Infinity"])
 @pytest.mark.parametrize("float_type", [Decimal, float])
 def test_nan_and_infinity_not_allowed(
-    json: ModuleType, num: str, float_type: type[Decimal | float],
+    json: ModuleType, num: str, float_type: type,
 ) -> None:
     """Test NaN and (negative) infinity when not allowed."""
     with pytest.raises(ValueError, match="is not allowed"):
         json.dumps(float_type(num), types={"float": float_type})
 
 
-@pytest.mark.parametrize("num", ["NaN2", "-NaN", "-NaN2"])
+@pytest.mark.parametrize("num", [
+    # Quiet NaN
+    "NaN2", "-NaN", "-NaN2",
+
+    # Signaling NaN
+    "sNaN", "sNaN2", "-sNaN", "-sNaN2",
+])
 def test_nan_payload(json: ModuleType, num: str) -> None:
     """Test NaN payload."""
+    types: dict[str, type] = {"float": Decimal}
     with pytest.raises(ValueError, match="is not JSON serializable"):
-        json.dumps(
-            Decimal(num), allow=NAN_AND_INFINITY, types={"float": Decimal},
-        )
-
-
-def test_signaling_nan(json: ModuleType) -> None:
-    """Test signaling NaN."""
-    with pytest.raises(ValueError, match="is not JSON serializable"):
-        json.dumps(
-            Decimal("sNaN"), allow=NAN_AND_INFINITY, types={"float": Decimal},
-        )
+        json.dumps(Decimal(num), allow=NAN_AND_INFINITY, types=types)
 
 
 @pytest.mark.parametrize("obj", [_IntEnum.ZERO, _FloatEnum.ZERO])

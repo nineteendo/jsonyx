@@ -36,6 +36,7 @@ jsonyx 2.0.0 (unreleased)
   :func:`jsonyx.loads` accepts non-ascii digits
 - Improved documentation
 - Improved error messages
+- Made :class:`Enum` not JSON serializable
 - Made :class:`decimal.Decimal` not JSON serializable by default
 - Made :class:`tuple` JSON serializable
 - Merged ``item_separator`` and ``key_separator`` as ``separators`` for

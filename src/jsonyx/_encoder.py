@@ -1,5 +1,4 @@
 """JSON encoder."""
-# TODO(Nice Zombies): use __str__ for encoding int_types and float_types
 from __future__ import annotations
 
 __all__: list[str] = ["Encoder"]
