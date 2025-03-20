@@ -1,4 +1,4 @@
-"""jsonyx extension modules."""
+"""jsonyx setup."""
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -10,7 +10,7 @@ if __name__ == "__main__":
     setup(
         name="jsonyx",
         version="2.0.0",
-        description="Customizable JSON manipulator for Python",
+        description="Customizable JSON library for Python",
         long_description="file: README.md",
         author="Nice Zombies",
         author_email="nineteendo19d0@gmail.com",
@@ -36,10 +36,8 @@ if __name__ == "__main__":
         license="GPL-3.0",
         keywords=["python", "json", "json-parser"],
         package_dir={"": "src"},
-        # setuptools
-        entry_points={
-            "console_scripts": ["jsonyx = jsonyx.__main__:main"],
-        },
+        # setuptools arguments
+        entry_points={"console_scripts": ["jsonyx = jsonyx.__main__:main"]},
         python_requires=">=3.8",
         project_urls={
             "Homepage": "https://github.com/nineteendo/jsonyx",
