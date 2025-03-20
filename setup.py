@@ -16,7 +16,7 @@ if __name__ == "__main__":
         author_email="nineteendo19d0@gmail.com",
         maintainer="Nice Zombies",
         maintainer_email="nineteendo19d0@gmail.com",
-        packages=["jsonyx"],
+        packages=["jsonyx", "jsonyx.test"],
         ext_modules=[
             Extension("_jsonyx", ["src/jsonyx/_speedups.c"], optional=True),
         ],
