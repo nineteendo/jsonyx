@@ -1401,10 +1401,6 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     Py_INCREF(s->long_item_separator);
     Py_INCREF(s->key_separator);
     return (PyObject *)s;
-
-bail:
-    Py_DECREF(s);
-    return NULL;
 }
 
 
@@ -1568,8 +1564,6 @@ encoder_encode_number(PyEncoderObject *s, PyObject *obj)
         goto bail;
     }
 
-    const void *str = PyUnicode_DATA(encoded);
-    int kind = PyUnicode_KIND(encoded);
     Py_ssize_t len = PyUnicode_GET_LENGTH(encoded);
 
     Py_ssize_t match_len = 0;
@@ -1601,13 +1595,13 @@ encoder_encode_number(PyEncoderObject *s, PyObject *obj)
         goto bail;
     }
 
-    Py_DECREF(encoded);
     if (!s->allow_nan_and_infinity) {
         Py_DECREF(new_encoded);
         PyErr_Format(PyExc_ValueError, "%R is not allowed", obj);
         goto bail;
     }
 
+    Py_DECREF(encoded);
     return new_encoded;
 
 bail:

@@ -107,7 +107,9 @@ def test_nan_payload(json: ModuleType, num: str) -> None:
 def test_signaling_nan(json: ModuleType) -> None:
     """Test signaling NaN."""
     with pytest.raises(ValueError, match="is not JSON serializable"):
-        json.dumps(Decimal("sNaN"), allow=NAN_AND_INFINITY)
+        json.dumps(
+            Decimal("sNaN"), allow=NAN_AND_INFINITY, types={"float": Decimal},
+        )
 
 
 @pytest.mark.parametrize("obj", [_IntEnum.ZERO, _FloatEnum.ZERO])

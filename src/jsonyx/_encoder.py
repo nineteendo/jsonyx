@@ -253,9 +253,7 @@ except ImportError:
                 write("true" if obj else "false")
             elif isinstance(obj, (str, str_types)):
                 write(encode_string(str(obj)))
-            elif isinstance(obj, (int, int_types)):
-                write(str(int(obj)))  # type: ignore
-            elif isinstance(obj, (float, float_types)):
+            elif isinstance(obj, (float, int, float_types, int_types)):
                 write(encode_float(obj))  # type: ignore
             elif isinstance(obj, (list, tuple, sequence_types)):
                 write_sequence(obj, write, indent_level, current_indent)
