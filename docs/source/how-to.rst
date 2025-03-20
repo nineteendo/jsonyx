@@ -88,7 +88,7 @@ Example with :mod:`numpy`:
 >>> obj = np.array([
 ...     np.bool_(), np.int8(), np.uint8(), np.int16(), np.uint16(), np.int32(),
 ...     np.uint32(), np.intp(), np.uintp(), np.int64(), np.uint64(), np.float16(),
-...     np.float32(), np.float64(), np.float128()
+...     np.float32(), np.float64()
 ... ], dtype="O")
 >>> types = {
 ...     "bool": np.bool_,
