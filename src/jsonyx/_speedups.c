@@ -1600,7 +1600,7 @@ encoder_encode_number(PyEncoderObject *s, PyObject *obj)
         PyErr_Format(PyExc_ValueError, "%R is not JSON serializable", obj);
         goto bail;
     }
-    
+
     Py_DECREF(encoded);
     if (!s->allow_nan_and_infinity) {
         Py_DECREF(new_encoded);
@@ -1611,7 +1611,7 @@ encoder_encode_number(PyEncoderObject *s, PyObject *obj)
     return new_encoded;
 
 bail:
-    Py_DECREF(encoded);
+    Py_XDECREF(encoded);
     return NULL;
 }
 
