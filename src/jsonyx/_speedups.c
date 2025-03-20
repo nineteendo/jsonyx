@@ -35,14 +35,12 @@ typedef struct _PyScannerObject {
     int allow_surrogates;
     int allow_trailing_comma;
     int allow_unquoted_keys;
-    int use_decimal;
 } PyScannerObject;
 
 #define PyScannerObject_CAST(op)    ((PyScannerObject *)(op))
 
 typedef struct _PyEncoderObject {
     PyObject_HEAD
-    PyObject *Decimal;
     PyObject *bool_types;
     PyObject *float_types;
     PyObject *indent;
@@ -914,23 +912,13 @@ bail:
     return NULL;
 }
 
-static PyObject *
-_match_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py_ssize_t start, Py_ssize_t *next_idx_ptr) {
-    /* Read a JSON number from PyUnicode pystr.
-    idx is the index of the first character of the number
-    *next_idx_ptr is a return-by-reference index to the first character after
-        the number.
-
-    Returns a new PyObject representation of that number: PyLong, or PyFloat.
-    */
+static int
+_match_number_unicode(PyObject *pystr, Py_ssize_t *idx_ptr, int *is_float)
+{
     const void *str;
     int kind;
     Py_ssize_t end_idx;
-    Py_ssize_t idx = start;
-    int is_float = 0;
-    PyObject *rval;
-    PyObject *numstr = NULL;
-    PyObject *custom_func;
+    Py_ssize_t idx = *idx_ptr;
 
     str = PyUnicode_DATA(pystr);
     kind = PyUnicode_KIND(pystr);
@@ -940,8 +928,7 @@ _match_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr,
     if (PyUnicode_READ(kind, str, idx) == '-') {
         idx++;
         if (idx > end_idx) {
-            raise_errmsg("Expecting value", pyfilename, pystr, start, 0);
-            return NULL;
+            return -1;
         }
     }
 
@@ -956,13 +943,12 @@ _match_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr,
     }
     /* no integer digits, error */
     else {
-        raise_errmsg("Expecting value", pyfilename, pystr, start, 0);
-        return NULL;
+        return -1;
     }
 
     /* if the next char is '.' followed by a digit then read all float digits */
     if (idx < end_idx && PyUnicode_READ(kind, str, idx) == '.' && PyUnicode_READ(kind, str, idx + 1) >= '0' && PyUnicode_READ(kind, str, idx + 1) <= '9') {
-        is_float = 1;
+        *is_float = 1;
         idx += 2;
         while (idx <= end_idx && PyUnicode_READ(kind, str, idx) >= '0' && PyUnicode_READ(kind, str, idx) <= '9') idx++;
     }
@@ -980,11 +966,40 @@ _match_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr,
 
         /* if we got a digit, then parse as float. if not, backtrack */
         if (PyUnicode_READ(kind, str, idx - 1) >= '0' && PyUnicode_READ(kind, str, idx - 1) <= '9') {
-            is_float = 1;
+            *is_float = 1;
         }
         else {
             idx = e_start;
         }
+    }
+
+    *idx_ptr = idx;
+    return 0;
+}
+
+static PyObject *
+_parse_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py_ssize_t start, Py_ssize_t *next_idx_ptr) {
+    /* Read a JSON number from PyUnicode pystr.
+    idx is the index of the first character of the number
+    *next_idx_ptr is a return-by-reference index to the first character after
+        the number.
+
+    Returns a new PyObject representation of that number: PyLong, or PyFloat.
+    */
+    const void *str;
+    int kind;
+    Py_ssize_t idx = start;
+    int is_float = 0;
+    PyObject *rval;
+    PyObject *numstr = NULL;
+    PyObject *custom_func;
+
+    str = PyUnicode_DATA(pystr);
+    kind = PyUnicode_KIND(pystr);
+
+    if (_match_number_unicode(pystr, &idx, &is_float) < 0) {
+        raise_errmsg("Expecting value", pyfilename, pystr, start, 0);
+        return NULL;
     }
 
     if (is_float && s->float_hook != (PyObject *)&PyFloat_Type)
@@ -1206,7 +1221,7 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
             break;
     }
     /* Didn't find a string, object, array, or named constant. Look for a number. */
-    return _match_number_unicode(s, pyfilename, pystr, idx, next_idx_ptr);
+    return _parse_number_unicode(s, pyfilename, pystr, idx, next_idx_ptr);
 }
 
 static PyObject *
@@ -1355,15 +1370,6 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     if (s == NULL)
         return NULL;
 
-    PyObject *decimal = PyImport_ImportModule((char *) "decimal");
-    if (decimal == NULL) {
-        goto bail;
-    }
-    s->Decimal = PyObject_GetAttrString(decimal, (char *) "Decimal");
-    Py_DECREF(decimal);
-    if (s->Decimal == NULL) {
-        goto bail;
-    }
     s->bool_types = bool_types;
     s->float_types = float_types;
     s->indent = indent;
@@ -1554,48 +1560,59 @@ encoder_encode_float(PyEncoderObject *s, PyObject *obj)
 }
 
 static PyObject *
-encoder_encode_decimal(PyEncoderObject *s, PyObject *obj)
+encoder_encode_number(PyEncoderObject *s, PyObject *obj)
 {
-    /* Return the JSON representation of a Decimal. */
-    PyObject *is_finite = PyObject_CallMethod(obj, "is_finite", NULL);
-    if (is_finite == NULL) {
-        return NULL;
+    /* Return the JSON representation of a number. */
+    PyObject *encoded = PyObject_Str(obj);
+    if (encoded == NULL) {
+        goto bail;
     }
 
-    if (!PyObject_IsTrue(is_finite)) {
-        Py_DECREF(is_finite);
-        PyObject *is_snan = PyObject_CallMethod(obj, "is_snan", NULL);
-        if (is_snan == NULL) {
-            return NULL;
-        }
+    const void *str = PyUnicode_DATA(encoded);
+    int kind = PyUnicode_KIND(encoded);
+    Py_ssize_t len = PyUnicode_GET_LENGTH(encoded);
 
-        if (PyObject_IsTrue(is_snan)) {
-            Py_DECREF(is_snan);
-            PyErr_Format(PyExc_ValueError, "%R is not JSON serializable", obj);
-            return NULL;
-        }
-
-        Py_DECREF(is_snan);
-        if (!s->allow_nan_and_infinity) {
-            PyErr_Format(PyExc_ValueError, "%R is not allowed", obj);
-            return NULL;
-        }
-
-        PyObject *is_qnan = PyObject_CallMethod(obj, "is_qnan", NULL);
-        if (is_qnan == NULL) {
-            return NULL;
-        }
-
-        if (PyObject_IsTrue(is_qnan)) {
-            Py_DECREF(is_qnan);
-            return PyUnicode_FromString("NaN");
-        }
-
-        Py_DECREF(is_qnan);
+    Py_ssize_t match_len = 0;
+    int _is_float = 0;
+    if (_match_number_unicode(encoded, &match_len, &_is_float) >= 0 &&
+        match_len == len)
+    {
+        return encoded;
     }
 
-    Py_DECREF(is_finite);
-    return PyObject_Str(obj);
+    PyObject *new_encoded;
+    if (PyUnicode_CompareWithASCIIString(encoded, "nan") == 0 ||
+        PyUnicode_CompareWithASCIIString(encoded, "NaN") == 0)
+    {
+        new_encoded = PyUnicode_FromString("NaN");
+    }
+    else if (PyUnicode_CompareWithASCIIString(encoded, "inf") == 0 ||
+             PyUnicode_CompareWithASCIIString(encoded, "Infinity") == 0)
+    {
+        new_encoded = PyUnicode_FromString("Infinity");
+    }
+    else if (PyUnicode_CompareWithASCIIString(encoded, "-inf") == 0 ||
+             PyUnicode_CompareWithASCIIString(encoded, "-Infinity") == 0)
+    {
+        new_encoded = PyUnicode_FromString("-Infinity");
+    }
+    else {
+        PyErr_Format(PyExc_ValueError, "%R is not JSON serializable", obj);
+        goto bail;
+    }
+    
+    Py_DECREF(encoded);
+    if (!s->allow_nan_and_infinity) {
+        Py_DECREF(new_encoded);
+        PyErr_Format(PyExc_ValueError, "%R is not allowed", obj);
+        goto bail;
+    }
+
+    return new_encoded;
+
+bail:
+    Py_DECREF(encoded);
+    return NULL;
 }
 
 static PyObject *
@@ -1657,26 +1674,26 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
             return -1;
         return _steal_accumulate(writer, encoded);
     }
-    else if (PyLong_Check(obj) || PyObject_IsInstance(obj, s->int_types)) {
-        if (PyErr_Occurred())
-            return -1;
-        new_obj = PyNumber_Long(obj);
-        if (new_obj == NULL)
-            return -1;
-        PyObject *encoded = PyObject_Str(new_obj);
-        Py_DECREF(new_obj);
+    else if (PyLong_Check(obj)) {
+        PyObject *encoded;
+        if (PyLong_CheckExact(obj)) {
+            encoded = PyObject_Str(obj);
+        }
+        else {
+            encoded = encoder_encode_number(s, obj);
+        }
         if (encoded == NULL)
             return -1;
         return _steal_accumulate(writer, encoded);
     }
-    else if (PyFloat_Check(obj) || PyObject_IsInstance(obj, s->float_types)) {
-        if (PyErr_Occurred())
-            return -1;
-        new_obj = PyNumber_Float(obj);
-        if (new_obj == NULL)
-            return -1;
-        PyObject *encoded = encoder_encode_float(s, new_obj);
-        Py_DECREF(new_obj);
+    else if (PyFloat_Check(obj)) {
+        PyObject *encoded;
+        if (PyFloat_CheckExact(obj)) {
+            encoded = encoder_encode_float(s, obj);
+        }
+        else {
+            encoded = encoder_encode_number(s, obj);
+        }
         if (encoded == NULL)
             return -1;
         return _steal_accumulate(writer, encoded);
@@ -1704,8 +1721,12 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         _Py_LeaveRecursiveCall();
         return rv;
     }
-    else if (PyObject_TypeCheck(obj, (PyTypeObject *)s->Decimal)) {
-        PyObject *encoded = encoder_encode_decimal(s, obj);
+    else if (PyObject_IsInstance(obj, s->int_types) ||
+             PyObject_IsInstance(obj, s->float_types))
+    {
+        if (PyErr_Occurred())
+            return -1;
+        PyObject *encoded = encoder_encode_number(s, obj);
         if (encoded == NULL)
             return -1;
         return _steal_accumulate(writer, encoded);

@@ -211,6 +211,7 @@ def _run(args: _Namespace) -> None:
         separators=(",", ":") if args.compact else (", ", ": "),
         sort_keys=args.sort_keys,
         trailing_comma=args.trailing_comma,
+        types={"float": Decimal},
     )
     manipulator: Manipulator = Manipulator(
         allow=EVERYTHING if args.nonstrict else NOTHING,

@@ -6,9 +6,7 @@ __all__: list[str] = ["Encoder"]
 
 import re
 import sys
-from decimal import Decimal
 from io import StringIO
-from math import inf, isfinite
 from pathlib import Path
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
@@ -29,6 +27,7 @@ if TYPE_CHECKING:
             """Write string."""
 
     _EncodeFunc = Callable[[_T], str]
+    _MatchFunc = Callable[[str], Match[str] | None]
     _StrPath = PathLike[str] | str
     _SubFunc = Callable[[str | Callable[[Match[str]], str], str], str]
     _WriteFunc = Callable[[str], object]
@@ -48,6 +47,13 @@ _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
 _escape: _SubFunc = re.compile(r'["\\\x00-\x1f]', _FLAGS).sub
 _escape_ascii: _SubFunc = re.compile(r'["\\]|[^\x20-\x7e]', _FLAGS).sub
+_match_number: _MatchFunc = re.compile(
+    r"""
+    (-?0|-?[1-9][0-9]*) # integer
+    (\.[0-9]+)?         # [frac]
+    ([eE][-+]?[0-9]+)?  # [exp]
+    """, _FLAGS,
+).fullmatch
 
 try:
     if not TYPE_CHECKING:
@@ -105,36 +111,26 @@ except ImportError:
             def encode_string(s: str) -> str:
                 return f'"{_escape_ascii(replace, s)}"'
 
-        def floatstr(num: float) -> str:
-            if isfinite(num):
-                return str(num)
+        def encode_float(num: Any) -> str:
+            s: str = str(num)
+            if _match_number(s):
+                return s
 
-            if not allow_nan_and_infinity:
-                msg: str = f"{num!r} is not allowed"
+            if s in {"nan", "NaN"}:
+                s = "NaN"
+            elif s in {"inf", "Infinity"}:
+                s = "Infinity"
+            elif s in {"-inf", "-Infinity"}:
+                s = "-Infinity"
+            else:
+                msg: str = f"{num!r} is not JSON serializable"
                 raise ValueError(msg)
 
-            if num == inf:
-                return "Infinity"
+            if not allow_nan_and_infinity:
+                msg = f"{num!r} is not allowed"
+                raise ValueError(msg)
 
-            if num == -inf:
-                return "-Infinity"
-
-            return "NaN"
-
-        def decimalstr(decimal: Decimal) -> str:
-            if not decimal.is_finite():
-                if decimal.is_snan():
-                    msg: str = f"{decimal!r} is not JSON serializable"
-                    raise ValueError(msg)
-
-                if not allow_nan_and_infinity:
-                    msg = f"{decimal!r} is not allowed"
-                    raise ValueError(msg)
-
-                if decimal.is_qnan():
-                    return "NaN"
-
-            return str(decimal)
+            return s
 
         def write_sequence(
             seq: Any, write: _WriteFunc, indent_level: int, old_indent: str,
@@ -260,13 +256,11 @@ except ImportError:
             elif isinstance(obj, (int, int_types)):
                 write(str(int(obj)))  # type: ignore
             elif isinstance(obj, (float, float_types)):
-                write(floatstr(float(obj)))  # type: ignore
+                write(encode_float(obj))  # type: ignore
             elif isinstance(obj, (list, tuple, sequence_types)):
                 write_sequence(obj, write, indent_level, current_indent)
             elif isinstance(obj, (dict, mapping_types)):
                 write_mapping(obj, write, indent_level, current_indent)
-            elif isinstance(obj, Decimal):
-                write(decimalstr(obj))
             else:
                 msg: str = f"{type(obj).__name__} is not JSON serializable"
                 raise TypeError(msg)

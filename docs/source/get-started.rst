@@ -199,11 +199,10 @@ Using :class:`decimal.Decimal` instead of :class:`float`
 
 >>> import jsonyx as json
 >>> from decimal import Decimal
->>> json.loads("[1.0000000000000001, 1e400]", hooks={"float": Decimal})
-[Decimal('1.0000000000000001'), Decimal('1E+400')]
-
-.. note:: :class:`decimal.Decimal` can be natively serialized, but not as fast
-    as :class:`float`.
+>>> json.loads("1.1", hooks={"float": Decimal})
+Decimal('1.1')
+>>> json.dump(Decimal('1.1'), types={"float": Decimal})
+1.1
 
 Making a :doc:`patch </jsonyx-patch-spec>` from two Python objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

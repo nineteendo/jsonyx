@@ -27,18 +27,6 @@ class _MyBool:
         return False
 
 
-# pylint: disable-next=R0903
-class _MyInt:
-    def __int__(self) -> int:
-        return 0
-
-
-# pylint: disable-next=R0903
-class _MyFloat:
-    def __float__(self) -> float:
-        return 0.0
-
-
 class _FloatEnum(float, Enum):
     ZERO = 0.0
 
@@ -63,57 +51,57 @@ def test_bool_types(json: ModuleType) -> None:
 
 
 @pytest.mark.parametrize("num", [0, 1])
-@pytest.mark.parametrize("num_type", [Decimal, int])
+@pytest.mark.parametrize("int_type", [Decimal, int])
 def test_int(
-    json: ModuleType, num: int, num_type: type[Decimal | int],
+    json: ModuleType, num: int, int_type: type[Decimal | int],
 ) -> None:
     """Test integer."""
-    assert json.dumps(num_type(num), end="") == repr(num)
+    assert json.dumps(
+        int_type(num), end="", types={"int": int_type},
+    ) == str(num)
 
 
-def test_int_types(json: ModuleType) -> None:
-    """Test int_types."""
-    assert json.dumps(_MyInt(), end="", types={"int": _MyInt}) == "0"
-
-
-@pytest.mark.parametrize("num_type", [Decimal, float])
+@pytest.mark.parametrize("float_type", [Decimal, float])
 def test_rational_number(
-    json: ModuleType, num_type: type[Decimal | float],
+    json: ModuleType, float_type: type[Decimal | float],
 ) -> None:
     """Test rational number."""
-    assert json.dumps(num_type("0.0"), end="") == "0.0"
+    assert json.dumps(
+        float_type("0.0"), end="", types={"float": float_type},
+    ) == "0.0"
 
 
 @pytest.mark.parametrize("num", ["NaN", "Infinity", "-Infinity"])
-@pytest.mark.parametrize("num_type", [Decimal, float])
+@pytest.mark.parametrize("float_type", [Decimal, float])
 def test_nan_and_infinity(
-    json: ModuleType, num: str, num_type: type[Decimal | float],
+    json: ModuleType, num: str, float_type: type[Decimal | float],
 ) -> None:
     """Test NaN and (negative) infinity."""
-    assert json.dumps(num_type(num), allow=NAN_AND_INFINITY, end="") == num
+    assert json.dumps(
+        float_type(num),
+        allow=NAN_AND_INFINITY,
+        end="",
+        types={"float": float_type},
+    ) == num
 
 
 @pytest.mark.parametrize("num", ["NaN", "Infinity", "-Infinity"])
-@pytest.mark.parametrize("num_type", [Decimal, float])
+@pytest.mark.parametrize("float_type", [Decimal, float])
 def test_nan_and_infinity_not_allowed(
-    json: ModuleType, num: str, num_type: type[Decimal | float],
+    json: ModuleType, num: str, float_type: type[Decimal | float],
 ) -> None:
     """Test NaN and (negative) infinity when not allowed."""
     with pytest.raises(ValueError, match="is not allowed"):
-        json.dumps(num_type(num))
+        json.dumps(float_type(num), types={"float": float_type})
 
 
 @pytest.mark.parametrize("num", ["NaN2", "-NaN", "-NaN2"])
 def test_nan_payload(json: ModuleType, num: str) -> None:
     """Test NaN payload."""
-    assert json.dumps(Decimal(num), allow=NAN_AND_INFINITY, end="") == "NaN"
-
-
-@pytest.mark.parametrize("num", ["NaN2", "-NaN", "-NaN2"])
-def test_nan_payload_not_allowed(json: ModuleType, num: str) -> None:
-    """Test NaN payload when not allowed."""
-    with pytest.raises(ValueError, match="is not allowed"):
-        json.dumps(Decimal(num))
+    with pytest.raises(ValueError, match="is not JSON serializable"):
+        json.dumps(
+            Decimal(num), allow=NAN_AND_INFINITY, types={"float": Decimal},
+        )
 
 
 def test_signaling_nan(json: ModuleType) -> None:
@@ -122,18 +110,11 @@ def test_signaling_nan(json: ModuleType) -> None:
         json.dumps(Decimal("sNaN"), allow=NAN_AND_INFINITY)
 
 
-def test_float_types(json: ModuleType) -> None:
-    """Test float_types."""
-    assert json.dumps(_MyFloat(), end="", types={"float": _MyFloat}) == "0.0"
-
-
-@pytest.mark.parametrize(("obj", "expected"), [
-    (_IntEnum.ZERO, "0"),
-    (_FloatEnum.ZERO, "0.0"),
-])
-def test_enum(json: ModuleType, obj: float, expected: str) -> None:
+@pytest.mark.parametrize("obj", [_IntEnum.ZERO, _FloatEnum.ZERO])
+def test_enum(json: ModuleType, obj: float) -> None:
     """Test enum."""
-    assert json.dumps(obj, end="") == expected
+    with pytest.raises(ValueError, match="is not JSON serializable"):
+        json.dumps(obj)
 
 
 @pytest.mark.parametrize("obj", [
