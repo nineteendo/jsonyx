@@ -63,7 +63,7 @@ def test_too_big_int(big_num: str) -> None:
     with pytest.raises(JSONSyntaxError) as exc_info:
         load_query_value(big_num)
 
-    check_syntax_err(exc_info, "Number is too big", 1, len(big_num) + 1)
+    check_syntax_err(exc_info, "Invalid number", 1, len(big_num) + 1)
 
 
 @pytest.mark.parametrize("s", [
@@ -90,6 +90,9 @@ def test_too_big_int(big_num: str) -> None:
 
     # Parts
     "1.1e1", "-1e1", "-1.1", "-1.1e1",
+
+    # Big exponent
+    "1e400", "-1e400",
 ])
 @pytest.mark.parametrize("use_decimal", [True, False])
 def test_rational_number(s: str, use_decimal: bool) -> None:
@@ -100,28 +103,13 @@ def test_rational_number(s: str, use_decimal: bool) -> None:
     assert obj == expected_type(s)
 
 
-@pytest.mark.parametrize("s", ["1e400", "-1e400"])
-def test_big_number_decimal(s: str) -> None:
-    """Test big JSON number with decimal."""
-    assert load_query_value(s, use_decimal=True) == Decimal(s)
-
-
-@pytest.mark.parametrize("s", ["1e400", "-1e400"])
-def test_big_number_float(s: str) -> None:
-    """Test big JSON number with float."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
-        load_query_value(s)
-
-    check_syntax_err(exc_info, "Big numbers require decimal", 1, len(s) + 1)
-
-
 @pytest.mark.parametrize("s", [f"1e{MAX_EMAX + 1}", f"-1e{MAX_EMAX + 1}"])
 def test_too_big_number(s: str) -> None:
     """Test too big JSON number."""
     with pytest.raises(JSONSyntaxError) as exc_info:
         load_query_value(s, use_decimal=True)
 
-    check_syntax_err(exc_info, "Number is too big", 1, len(s) + 1)
+    check_syntax_err(exc_info, "Invalid number", 1, len(s) + 1)
 
 
 @pytest.mark.parametrize("s", ["1\uff10", "0.\uff10", "0e\uff10"])

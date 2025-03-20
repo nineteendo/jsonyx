@@ -6,6 +6,7 @@ __all__: list[str] = ["main"]
 
 import sys
 from argparse import ArgumentParser
+from decimal import Decimal
 from sys import modules, stderr, stdin
 from traceback import format_exception_only
 from typing import Any, Literal, cast
@@ -197,7 +198,7 @@ def _configure(parser: ArgumentParser) -> None:
 def _run(args: _Namespace) -> None:
     decoder: Decoder = Decoder(
         allow=EVERYTHING if args.nonstrict else NOTHING,
-        use_decimal=args.use_decimal,
+        hooks={"float": Decimal if args.use_decimal else float},
     )
     encoder: Encoder = Encoder(
         allow=EVERYTHING if args.nonstrict else NOTHING,

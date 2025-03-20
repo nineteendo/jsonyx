@@ -23,7 +23,6 @@
 
 typedef struct _PyScannerObject {
     PyObject_HEAD
-    PyObject *Decimal;
     PyObject *bool_hook;
     PyObject *float_hook;
     PyObject *int_hook;
@@ -929,9 +928,9 @@ _match_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr,
     Py_ssize_t end_idx;
     Py_ssize_t idx = start;
     int is_float = 0;
-    PyObject *old_rval;
     PyObject *rval;
     PyObject *numstr = NULL;
+    PyObject *custom_func;
 
     str = PyUnicode_DATA(pystr);
     kind = PyUnicode_KIND(pystr);
@@ -988,17 +987,24 @@ _match_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr,
         }
     }
 
-    if (is_float && s->use_decimal) {
+    if (is_float && s->float_hook != (PyObject *)&PyFloat_Type)
+        custom_func = s->float_hook;
+    else if (!is_float && s->int_hook != (PyObject *) &PyLong_Type)
+        custom_func = s->int_hook;
+    else
+        custom_func = NULL;
+
+    if (custom_func) {
         /* copy the section we determined to be a number */
         numstr = PyUnicode_FromKindAndData(kind,
                                            (char*)str + kind * start,
                                            idx - start);
         if (numstr == NULL)
             return NULL;
-        rval = PyObject_CallOneArg(s->Decimal, numstr);
-        if (PyErr_ExceptionMatches(PyExc_ArithmeticError)) {
+        rval = PyObject_CallOneArg(custom_func, numstr);
+        if (PyErr_ExceptionMatches(PyExc_Exception)) {
             PyErr_Clear();
-            raise_errmsg("Number is too big", pyfilename, pystr, start, idx);
+            raise_errmsg("Invalid number", pyfilename, pystr, start, idx);
             goto bail;
         }
     }
@@ -1016,33 +1022,14 @@ _match_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr,
             buf[i] = (char) PyUnicode_READ(kind, str, i + start);
         }
         if (is_float) {
-            old_rval = PyFloat_FromString(numstr);
-            if (!isfinite(PyFloat_AS_DOUBLE(old_rval))) {
-                Py_DECREF(old_rval);
-                raise_errmsg("Big numbers require decimal", pyfilename, pystr, start, idx);
-                goto bail;
-            }
-            if (s->float_hook != (PyObject *)&PyFloat_Type) {
-                rval = PyObject_CallOneArg(s->float_hook, old_rval);
-                Py_DECREF(old_rval);
-            }
-            else {
-                rval = old_rval;
-            }
+            rval = PyFloat_FromString(numstr);
         }
         else {
-            old_rval = PyLong_FromString(buf, NULL, 10);
+            rval = PyLong_FromString(buf, NULL, 10);
             if (PyErr_ExceptionMatches(PyExc_ValueError)) {
                 PyErr_Clear();
-                raise_errmsg("Number is too big", pyfilename, pystr, start, idx);
+                raise_errmsg("Invalid number", pyfilename, pystr, start, idx);
                 goto bail;
-            }
-            if (s->int_hook != (PyObject *)&PyLong_Type) {
-                rval = PyObject_CallOneArg(s->int_hook, old_rval);
-                Py_DECREF(old_rval);
-            }
-            else {
-                rval = old_rval;
             }
         }
     }
@@ -1152,17 +1139,8 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
                     return NULL;
                 }
                 *next_idx_ptr = idx + 3;
-                if (s->use_decimal) {
-                    old_res = PyUnicode_FromString("NaN");
-                    if (old_res == NULL) {
-                        return NULL;
-                    }
-                    res = PyObject_CallOneArg(s->Decimal, old_res);
-                    Py_DECREF(old_res);
-                    return res;
-                }
                 if (s->float_hook != (PyObject *)&PyFloat_Type) {
-                    old_res = PyFloat_FromDouble(Py_NAN);
+                    old_res = PyUnicode_FromString("NaN");
                     if (old_res == NULL) {
                         return NULL;
                     }
@@ -1187,17 +1165,8 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
                     return NULL;
                 }
                 *next_idx_ptr = idx + 8;
-                if (s->use_decimal) {
-                    old_res = PyUnicode_FromString("Infinity");
-                    if (old_res == NULL) {
-                        return NULL;
-                    }
-                    res = PyObject_CallOneArg(s->Decimal, old_res);
-                    Py_DECREF(old_res);
-                    return res;
-                }
                 if (s->float_hook != (PyObject *)&PyFloat_Type) {
-                    old_res = PyFloat_FromDouble(+Py_INFINITY);
+                    old_res = PyUnicode_FromString("Infinity");
                     if (old_res == NULL) {
                         return NULL;
                     }
@@ -1223,17 +1192,8 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
                     raise_errmsg("-Infinity is not allowed", pyfilename, pystr, idx, idx + 9);
                     return NULL;
                 }
-                if (s->use_decimal) {
-                    old_res = PyUnicode_FromString("-Infinity");
-                    if (old_res == NULL) {
-                        return NULL;
-                    }
-                    res = PyObject_CallOneArg(s->Decimal, old_res);
-                    Py_DECREF(old_res);
-                    return res;
-                }
                 if (s->float_hook != (PyObject *)&PyFloat_Type) {
-                    old_res = PyFloat_FromDouble(-Py_INFINITY);
+                    old_res = PyUnicode_FromString("-Infinity");
                     if (old_res == NULL) {
                         return NULL;
                     }
@@ -1301,21 +1261,19 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
                              "allow_comments", "allow_missing_commas",
                              "allow_nan_and_infinity", "allow_surrogates",
                              "allow_trailing_comma", "allow_unquoted_keys",
-                             "use_decimal", NULL};
+                             NULL};
 
     PyScannerObject *s;
     PyObject *bool_hook, *float_hook, *int_hook, *mapping_hook, *sequence_hook;
     PyObject *str_hook;
     int allow_comments, allow_missing_commas, allow_nan_and_infinity;
     int allow_surrogates, allow_trailing_comma, allow_unquoted_keys;
-    int use_decimal;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOppppppp:make_scanner", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOpppppp:make_scanner", kwlist,
         &bool_hook, &float_hook, &int_hook, &mapping_hook, &sequence_hook,
         &str_hook,
         &allow_comments, &allow_missing_commas, &allow_nan_and_infinity,
-        &allow_surrogates, &allow_trailing_comma, &allow_unquoted_keys,
-        &use_decimal))
+        &allow_surrogates, &allow_trailing_comma, &allow_unquoted_keys))
         return NULL;
 
     s = (PyScannerObject *)type->tp_alloc(type, 0);
@@ -1323,15 +1281,6 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
         return NULL;
     }
 
-    PyObject *decimal = PyImport_ImportModule((char *) "decimal");
-    if (decimal == NULL) {
-        goto bail;
-    }
-    s->Decimal = PyObject_GetAttrString(decimal, (char *) "Decimal");
-    Py_DECREF(decimal);
-    if (s->Decimal == NULL) {
-        goto bail;
-    }
     s->bool_hook = bool_hook;
     s->float_hook = float_hook;
     s->int_hook = int_hook;
@@ -1344,7 +1293,6 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->allow_surrogates = allow_surrogates;
     s->allow_trailing_comma = allow_trailing_comma;
     s->allow_unquoted_keys = allow_unquoted_keys;
-    s->use_decimal = use_decimal;
     Py_INCREF(s->bool_hook);
     Py_INCREF(s->float_hook);
     Py_INCREF(s->int_hook);
@@ -1352,10 +1300,6 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     Py_INCREF(s->sequence_hook);
     Py_INCREF(s->str_hook);
     return (PyObject *)s;
-
-bail:
-    Py_DECREF(s);
-    return NULL;
 }
 
 PyDoc_STRVAR(scanner_doc, "Make JSON scanner");

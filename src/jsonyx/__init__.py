@@ -110,7 +110,6 @@ def read(
     *,
     allow: Container[str] = NOTHING,
     hooks: dict[str, _Hook] | None = None,
-    use_decimal: bool = False,
 ) -> Any:
     """Deserialize a JSON file to a Python object.
 
@@ -119,7 +118,6 @@ def read(
     :param filename: the path to the JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises TruncatedSyntaxError: when failing to decode the file
     :return: a Python object.
 
@@ -135,9 +133,7 @@ def read(
         ['filesystem API']
 
     """
-    return Decoder(allow=allow, hooks=hooks, use_decimal=use_decimal).read(
-        filename,
-    )
+    return Decoder(allow=allow, hooks=hooks).read(filename)
 
 
 def load(
@@ -146,7 +142,6 @@ def load(
     allow: Container[str] = NOTHING,
     hooks: dict[str, _Hook] | None = None,
     root: _StrPath = ".",
-    use_decimal: bool = False,
 ) -> Any:
     """Deserialize an open JSON file to a Python object.
 
@@ -156,7 +151,6 @@ def load(
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
     :param root: the path to the archive containing this JSON file
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises TruncatedSyntaxError: when failing to decode the file
     :return: a Python object
 
@@ -168,9 +162,7 @@ def load(
         ['streaming API']
 
     """
-    return Decoder(allow=allow, hooks=hooks, use_decimal=use_decimal).load(
-        fp, root=root,
-    )
+    return Decoder(allow=allow, hooks=hooks).load(fp, root=root)
 
 
 def loads(
@@ -179,7 +171,6 @@ def loads(
     allow: Container[str] = NOTHING,
     filename: _StrPath = "<string>",
     hooks: dict[str, _Hook] | None = None,
-    use_decimal: bool = False,
 ) -> Any:
     r"""Deserialize a JSON string to a Python object.
 
@@ -189,7 +180,6 @@ def loads(
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param filename: the path to the JSON file
     :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises TruncatedSyntaxError: when failing to decode the string
     :return: a Python object
 
@@ -203,9 +193,7 @@ def loads(
     .. tip:: Specify ``filename`` to display the filename in error messages.
 
     """
-    return Decoder(allow=allow, hooks=hooks, use_decimal=use_decimal).loads(
-        s, filename=filename,
-    )
+    return Decoder(allow=allow, hooks=hooks).loads(s, filename=filename)
 
 
 def write(

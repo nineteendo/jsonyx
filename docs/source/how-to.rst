@@ -137,8 +137,8 @@ Decoding objects using hooks
 Hook           Called with
 ============== =========================
 ``"bool"``     :class:`bool`
-``"float"``    :class:`float`
-``"int"``      :class:`int`
+``"float"``    :class:`str`
+``"int"``      :class:`str`
 ``"mapping"``  ``list[tuple[Any, Any]]``
 ``"sequence"`` :class:`list`
 ``"str"``      :class:`str`

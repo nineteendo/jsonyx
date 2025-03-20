@@ -1,6 +1,4 @@
 """JSON decoder."""
-# TODO(Nice Zombies): change int_hook and float_hook to parse_int and
-# parse_float
 from __future__ import annotations
 
 __all__: list[str] = [
@@ -12,8 +10,6 @@ import sys
 from codecs import (
     BOM_UTF8, BOM_UTF16_BE, BOM_UTF16_LE, BOM_UTF32_BE, BOM_UTF32_LE,
 )
-from decimal import Decimal, InvalidOperation
-from math import isinf
 from os import PathLike, fspath
 from os.path import realpath
 from pathlib import Path
@@ -121,10 +117,7 @@ def _get_err_context(doc: str, start: int, end: int) -> tuple[int, str, int]:
 
 def _unescape_unicode(filename: str, s: str, end: int) -> int:
     if match := _match_hex_digits(s, end):
-        try:
-            return int(match.group(), 16)
-        except ValueError:
-            pass
+        return int(match.group(), 16)
 
     msg: str = "Expecting 4 hex digits"
     raise _errmsg(msg, filename, s, end, -4)
@@ -298,14 +291,10 @@ except ImportError:
         allow_surrogates: bool,
         allow_trailing_comma: bool,
         allow_unquoted_keys: bool,
-        use_decimal: bool,
     ) -> _Scanner:
         """Make JSON scanner."""
         memo: dict[Any, Any] = {}
         memoize: Callable[[Any, Any], Any] = memo.setdefault
-        parse_float: Callable[
-            [str], Decimal | float,
-        ] = Decimal if use_decimal else float
 
         def skip_comments(filename: str, s: str, end: int) -> int:
             find: Callable[[str, int], int] = s.find
@@ -572,45 +561,36 @@ except ImportError:
                 end = number.end()
                 if not frac and not exp:
                     try:
-                        value = int(integer)
-                    except ValueError:
-                        msg = "Number is too big"
+                        value = int_hook(integer)
+                    except Exception:  # noqa: BLE001
+                        msg = "Invalid number"
                         raise _errmsg(msg, filename, s, idx, end) from None
-
-                    value = int_hook(value)
                 else:
                     try:
-                        value = parse_float(
+                        value = float_hook(
                             integer + (frac or "") + (exp or ""),
                         )
-                    except InvalidOperation:
-                        msg = "Number is too big"
+                    except Exception:  # noqa: BLE001
+                        msg = "Invalid number"
                         raise _errmsg(msg, filename, s, idx, end) from None
-
-                    if not use_decimal and isinf(value):
-                        msg = "Big numbers require decimal"
-                        raise _errmsg(msg, filename, s, idx, end)
-
-                    if not use_decimal:
-                        value = float_hook(value)
             elif nextchar == "N" and s[idx:idx + 3] == "NaN":
                 if not allow_nan_and_infinity:
                     msg = "NaN is not allowed"
                     raise _errmsg(msg, filename, s, idx, idx + 3)
 
-                value, end = float_hook(parse_float("NaN")), idx + 3
+                value, end = float_hook("NaN"), idx + 3
             elif nextchar == "I" and s[idx:idx + 8] == "Infinity":
                 if not allow_nan_and_infinity:
                     msg = "Infinity is not allowed"
                     raise _errmsg(msg, filename, s, idx, idx + 8)
 
-                value, end = float_hook(parse_float("Infinity")), idx + 8
+                value, end = float_hook("Infinity"), idx + 8
             elif nextchar == "-" and s[idx:idx + 9] == "-Infinity":
                 if not allow_nan_and_infinity:
                     msg = "-Infinity is not allowed"
                     raise _errmsg(msg, filename, s, idx, idx + 9)
 
-                value, end = float_hook(parse_float("-Infinity")), idx + 9
+                value, end = float_hook("-Infinity"), idx + 9
             else:
                 msg = "Expecting value"
                 raise _errmsg(msg, filename, s, idx)
@@ -646,7 +626,6 @@ class Decoder:
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     """
 
     def __init__(
@@ -654,7 +633,6 @@ class Decoder:
         *,
         allow: Container[str] = NOTHING,
         hooks: dict[str, _Hook] | None = None,
-        use_decimal: bool = False,
     ) -> None:
         """Create a new JSON decoder."""
         allow_surrogates: bool = "surrogates" in allow
@@ -669,7 +647,7 @@ class Decoder:
             hooks.get("sequence", list), hooks.get("str", str),
             "comments" in allow, "missing_commas" in allow,
             "nan_and_infinity" in allow, allow_surrogates,
-            "trailing_comma" in allow, "unquoted_keys" in allow, use_decimal,
+            "trailing_comma" in allow, "unquoted_keys" in allow,
         )
 
     def read(self, filename: _StrPath) -> Any:

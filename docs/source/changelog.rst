@@ -40,6 +40,8 @@ jsonyx 2.0.0 (unreleased)
 - Merged ``item_separator`` and ``key_separator`` as ``separators`` for
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
   :func:`jsonyx.write`
+- Removed ``use_decimal`` from :class:`jsonyx.Decoder`, :func:`jsonyx.load`,
+  :func:`jsonyx.loads` and :func:`jsonyx.read`
 - Removed :data:`!jsonyx.allow.DUPLICATE_KEYS`
 - Removed :data:`!jsonyx.DuplicateKey`
 - Removed :mod:`!jsonyx.tool`

@@ -7,7 +7,6 @@ __all__: list[str] = ["Manipulator"]
 import re
 from copy import deepcopy
 from decimal import Decimal, InvalidOperation
-from math import isinf
 from operator import eq, ge, gt, le, lt, ne
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from typing import TYPE_CHECKING, Any
@@ -195,7 +194,7 @@ class Manipulator:
                 try:
                     value = int(integer)
                 except ValueError:
-                    msg = "Number is too big"
+                    msg = "Invalid number"
                     raise _errmsg(msg, s, idx, end) from None
             else:
                 try:
@@ -203,12 +202,8 @@ class Manipulator:
                         integer + (frac or "") + (exp or ""),
                     )
                 except InvalidOperation:
-                    msg = "Number is too big"
+                    msg = "Invalid number"
                     raise _errmsg(msg, s, idx, end) from None
-
-                if not self._use_decimal and isinf(value):
-                    msg = "Big numbers require decimal"
-                    raise _errmsg(msg, s, idx, end)
         elif nextchar == "I" and s[idx:idx + 8] == "Infinity":
             if not self._allow_nan_and_infinity:
                 msg = "Infinity is not allowed"
