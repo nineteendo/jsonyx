@@ -9,17 +9,21 @@
 #define _Py_EnterRecursiveCall Py_EnterRecursiveCall
 #define _Py_LeaveRecursiveCall Py_LeaveRecursiveCall
 
+#if PY_VERSION_HEX < 0x03100000
+#if !defined(Py_NewRef)
+static inline PyObject* Py_NewRef(PyObject *obj)
+{
+    Py_INCREF(obj);
+    return obj;
+}
+#endif
+#endif /* PY_VERSION_HEX < 0x03100000 */
+
 #if PY_VERSION_HEX < 0x03090000
 #if !defined(PyObject_CallOneArg)
 #define PyObject_CallOneArg(callable, arg) PyObject_CallFunctionObjArgs(callable, arg, NULL)
 #endif
 #endif /* PY_VERSION_HEX < 0x03090000 */
-
-#if PY_VERSION_HEX < 0x03120000
-#if !defined(Py_INFINITY)
-#define Py_INFINITY Py_HUGE_VAL
-#endif
-#endif /* PY_VERSION_HEX < 0x03120000 */
 
 typedef struct _PyScannerObject {
     PyObject_HEAD
@@ -1296,24 +1300,18 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
         return NULL;
     }
 
-    s->bool_hook = bool_hook;
-    s->float_hook = float_hook;
-    s->int_hook = int_hook;
-    s->mapping_hook = mapping_hook;
-    s->sequence_hook = sequence_hook;
-    s->str_hook = str_hook;
+    s->bool_hook = Py_NewRef(bool_hook);
+    s->float_hook = Py_NewRef(float_hook);
+    s->int_hook = Py_NewRef(int_hook);
+    s->mapping_hook = Py_NewRef(mapping_hook);
+    s->sequence_hook = Py_NewRef(sequence_hook);
+    s->str_hook = Py_NewRef(str_hook);
     s->allow_comments = allow_comments;
     s->allow_missing_commas = allow_missing_commas;
     s->allow_nan_and_infinity = allow_nan_and_infinity;
     s->allow_surrogates = allow_surrogates;
     s->allow_trailing_comma = allow_trailing_comma;
     s->allow_unquoted_keys = allow_unquoted_keys;
-    Py_INCREF(s->bool_hook);
-    Py_INCREF(s->float_hook);
-    Py_INCREF(s->int_hook);
-    Py_INCREF(s->mapping_hook);
-    Py_INCREF(s->sequence_hook);
-    Py_INCREF(s->str_hook);
     return (PyObject *)s;
 }
 
@@ -1370,17 +1368,17 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     if (s == NULL)
         return NULL;
 
-    s->bool_types = bool_types;
-    s->float_types = float_types;
-    s->indent = indent;
-    s->int_types = int_types;
-    s->mapping_types = mapping_types;
-    s->sequence_types = sequence_types;
-    s->str_types = str_types;
-    s->end = end;
-    s->item_separator = item_separator;
-    s->long_item_separator = long_item_separator;
-    s->key_separator = key_separator;
+    s->bool_types = Py_NewRef(bool_types);
+    s->float_types = Py_NewRef(float_types);
+    s->indent = Py_NewRef(indent);
+    s->int_types = Py_NewRef(int_types);
+    s->mapping_types = Py_NewRef(mapping_types);
+    s->sequence_types = Py_NewRef(sequence_types);
+    s->str_types = Py_NewRef(str_types);
+    s->end = Py_NewRef(end);
+    s->item_separator = Py_NewRef(item_separator);
+    s->long_item_separator = Py_NewRef(long_item_separator);
+    s->key_separator = Py_NewRef(key_separator);
     s->max_indent_level = max_indent_level;
     s->allow_nan_and_infinity = allow_nan_and_infinity;
     s->allow_surrogates = allow_surrogates;
@@ -1389,17 +1387,6 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->quoted_keys = quoted_keys;
     s->sort_keys = sort_keys;
     s->trailing_comma = trailing_comma;
-    Py_INCREF(s->bool_types);
-    Py_INCREF(s->float_types);
-    Py_INCREF(s->indent);
-    Py_INCREF(s->int_types);
-    Py_INCREF(s->mapping_types);
-    Py_INCREF(s->sequence_types);
-    Py_INCREF(s->str_types);
-    Py_INCREF(s->end);
-    Py_INCREF(s->item_separator);
-    Py_INCREF(s->long_item_separator);
-    Py_INCREF(s->key_separator);
     return (PyObject *)s;
 }
 
