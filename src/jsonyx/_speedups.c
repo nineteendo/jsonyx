@@ -1574,19 +1574,23 @@ encoder_encode_number(PyEncoderObject *s, PyObject *obj)
         return encoded;
     }
 
-    PyObject *new_encoded;
-    if (PyUnicode_CompareWithASCIIString(encoded, "nan") == 0 ||
-        PyUnicode_CompareWithASCIIString(encoded, "NaN") == 0)
+    PyObject *new_encoded = PyObject_CallMethod(encoded, "lower", NULL);
+    if (new_encoded == NULL) {
+        goto bail;
+    }
+
+    Py_SETREF(encoded, new_encoded);
+    if (PyUnicode_CompareWithASCIIString(encoded, "nan") == 0)
     {
         new_encoded = PyUnicode_FromString("NaN");
     }
     else if (PyUnicode_CompareWithASCIIString(encoded, "inf") == 0 ||
-             PyUnicode_CompareWithASCIIString(encoded, "Infinity") == 0)
+             PyUnicode_CompareWithASCIIString(encoded, "infinity") == 0)
     {
         new_encoded = PyUnicode_FromString("Infinity");
     }
     else if (PyUnicode_CompareWithASCIIString(encoded, "-inf") == 0 ||
-             PyUnicode_CompareWithASCIIString(encoded, "-Infinity") == 0)
+             PyUnicode_CompareWithASCIIString(encoded, "-infinity") == 0)
     {
         new_encoded = PyUnicode_FromString("-Infinity");
     }
@@ -1595,14 +1599,13 @@ encoder_encode_number(PyEncoderObject *s, PyObject *obj)
         goto bail;
     }
 
+    Py_SETREF(encoded, new_encoded);
     if (!s->allow_nan_and_infinity) {
-        Py_DECREF(new_encoded);
         PyErr_Format(PyExc_ValueError, "%R is not allowed", obj);
         goto bail;
     }
 
-    Py_DECREF(encoded);
-    return new_encoded;
+    return encoded;
 
 bail:
     Py_XDECREF(encoded);

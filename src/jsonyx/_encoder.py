@@ -115,11 +115,11 @@ except ImportError:
             if _match_number(s):
                 return s
 
-            if s in {"nan", "NaN"}:
+            if s.lower() == "nan":
                 s = "NaN"
-            elif s in {"inf", "Infinity"}:
+            elif s.lower() in {"inf", "infinity"}:
                 s = "Infinity"
-            elif s in {"-inf", "-Infinity"}:
+            elif s.lower() in {"-inf", "-infinity"}:
                 s = "-Infinity"
             else:
                 msg: str = f"{num!r} is not JSON serializable"

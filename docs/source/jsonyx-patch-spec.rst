@@ -148,7 +148,7 @@ Example:
 del
 ^^^
 
-Delete an item from an array or property from an object.
+Delete an item from an array or a property from an object.
 
 Fields:
     - **op** (string) - the operation to perform. Must be ``"del"``.
@@ -315,7 +315,7 @@ Example:
 set
 ^^^
 
-Replace an item of an array, property of an object or the root.
+Replace an item of an array, a property of an object or the root.
 
 Fields:
     - **op** (string) - the operation to perform. Must be ``"set"``.
