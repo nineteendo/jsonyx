@@ -243,15 +243,15 @@ def test_sort(obj: Any, kwargs: _Operation, expected: Any) -> None:
 ])
 def test_update(obj: Any, kwargs: _Operation, expected: Any) -> None:
     """Test update."""
-    value: dict[str, Any] = {"a": 4, "b": 5, "c": 6}
-    patch: _Operation = {"op": "update", "value": value, **kwargs}
+    properties: dict[str, Any] = {"a": 4, "b": 5, "c": 6}
+    patch: _Operation = {"op": "update", "properties": properties, **kwargs}
     assert apply_patch(obj, patch) == expected
 
 
 def test_update_copy() -> None:
     """Test if update makes a copy."""
     value: list[Any] = [1]
-    patch: _Operation = {"op": "update", "value": {"a": [1]}}
+    patch: _Operation = {"op": "update", "properties": {"a": [1]}}
     result: list[Any] = apply_patch({}, patch)["a"]
     assert result == value  # sanity check
     assert result is not value

@@ -19,7 +19,7 @@
                     "if": {
                         "properties": {
                             "op": {
-                                "enum": ["append", "insert", "set", "update"]
+                                "enum": ["append", "insert", "set"]
                             }
                         },
                         "required": ["op"]
@@ -126,8 +126,9 @@
                     },
                     "then": {
                         "properties": {
-                            "value": {"type": "object"}
-                        }
+                            "properties": {"description": "The properties to use.", "type": "object"}
+                        },
+                        "required": ["properties"]
                     }
                 }
             ],

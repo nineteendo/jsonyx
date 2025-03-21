@@ -574,9 +574,11 @@ class Manipulator:
                     list.sort(target[key], reverse=reverse)  # type: ignore
             elif op == "update":
                 path = operation.get("path", "$")
-                value = operation["value"]
+                properties: dict[Any, Any] = operation["properties"]
                 for target, key in self.select_nodes(node, path):
-                    dict.update(target[key], deepcopy(value))  # type: ignore
+                    dict.update(  # type: ignore
+                        target[key], deepcopy(properties),
+                    )
             else:
                 msg = "Unknown operation"
                 raise ValueError(msg)

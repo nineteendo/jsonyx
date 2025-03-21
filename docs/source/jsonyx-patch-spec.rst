@@ -73,7 +73,7 @@ Example:
 clear
 ^^^^^
 
-Remove all items from an array or object.
+Remove all items from an array or all properties of an object.
 
 Fields:
     - **op** (string) - the operation to perform. Must be ``"clear"``.
@@ -115,9 +115,9 @@ Fields:
         array.
       - ``"insert"`` - insert the source value at the specified index in the
         target array. In this mode, the **to** field is required.
-      - ``"set"`` - replace the target value by the source value.
-      - ``"update"`` - update the target object with the items of the source
-        object, overwriting the values of existing keys.
+      - ``"set"`` - replace the target value with the source value.
+      - ``"update"`` - update the target object with the properties of the
+        source object, overwriting existing properties.
 
     - **path** (string, default: ``"$"``) - the
       :ref:`absolute path <absolute_path>` where the operation is applied.
@@ -148,7 +148,7 @@ Example:
 del
 ^^^
 
-Delete an item from an array or object.
+Delete an item from an array or property from an object.
 
 Fields:
     - **op** (string) - the operation to perform. Must be ``"del"``.
@@ -253,7 +253,7 @@ Fields:
         array.
       - ``"insert"`` - insert the source value at the specified index in the
         target array. In this mode, the **to** field is required.
-      - ``"set"`` - replace the target value by the source value.
+      - ``"set"`` - replace the target value with the source value.
       - ``"update"`` - update the target object with the items of the source
         object, overwriting the values of existing keys.
 
@@ -315,7 +315,7 @@ Example:
 set
 ^^^
 
-Replace an item of an object, array or replace the root.
+Replace an item of an array, property of an object or the root.
 
 Fields:
     - **op** (string) - the operation to perform. Must be ``"set"``.
@@ -375,14 +375,14 @@ Example:
 update
 ^^^^^^
 
-Update an object with the items of another object, overwriting the values of
-existing keys.
+Update an object with the properties of another object, overwriting existing
+properties.
 
 Fields:
     - **op** (string) - the operation to perform. Must be ``"update"``.
     - **path** (string, default: ``"$"``) - the
       :ref:`absolute path <absolute_path>` to the object.
-    - **value** (object) - another object.
+    - **properties** (object) - another object.
 
 Example:
     Input:
@@ -395,7 +395,7 @@ Example:
 
     .. code-block:: json
 
-        {"op": "update", "value": {"a": 4, "b": 5, "c": 6}}
+        {"op": "update", "properties": {"a": 4, "b": 5, "c": 6}}
 
     Output:
 
