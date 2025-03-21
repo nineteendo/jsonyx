@@ -86,7 +86,7 @@ Quick start
 Encoding basic Python object hierarchies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. versionchanged:: 2.0 Made :class:`tuple` JSON serializable.
+.. versionchanged:: 2.0 Made :class:`tuple` serializable by default.
 
 Dumping to a string:
 
@@ -200,7 +200,7 @@ Using :class:`decimal.Decimal` instead of :class:`float`
 .. versionchanged:: 2.0
 
     - Added ``types``.
-    - Made :class:`decimal.Decimal` not JSON serializable.
+    - Made :class:`decimal.Decimal` not serializable by default.
     - Replaced ``use_decimal`` with ``hooks``.
 
 >>> import jsonyx as json

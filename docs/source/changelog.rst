@@ -34,17 +34,17 @@ jsonyx 2.0.0 (unreleased)
   :func:`jsonyx.loads` accepts non-ascii digits
 - Improved documentation
 - Improved error messages
-- Made :class:`tuple` JSON serializable instead of :class:`enum.Enum` and
+- Made :class:`tuple` serializable by default instead of :class:`enum.Enum` and
   :class:`decimal.Decimal`
+- Removed :data:`!jsonyx.allow.DUPLICATE_KEYS`
+- Removed :data:`!jsonyx.DuplicateKey`
+- Removed :mod:`!jsonyx.tool`
+- Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
 - Replaced ``item_separator`` and ``key_separator`` with ``separators`` for
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
   :func:`jsonyx.write`
 - Replaced ``use_decimal`` with ``hooks`` for :class:`jsonyx.Decoder`,
   :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`jsonyx.read`
-- Removed :data:`!jsonyx.allow.DUPLICATE_KEYS`
-- Removed :data:`!jsonyx.DuplicateKey`
-- Removed :mod:`!jsonyx.tool`
-- Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
 - Use cache for indentations in the JSON encoder
 
 jsonyx 1.2.1 (Aug 3, 2024)

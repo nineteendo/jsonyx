@@ -285,8 +285,8 @@ class Encoder:
 
         - Added ``commas``, ``indent_leaves``, ``max_indent_level``,
           ``quoted_keys`` and ``types``.
-        - Made :class:`tuple` JSON serializable instead of :class:`enum.Enum`
-          and :class:`decimal.Decimal`.
+        - Made :class:`tuple` serializable by default instead of
+          :class:`enum.Enum` and :class:`decimal.Decimal`.
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
