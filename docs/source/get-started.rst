@@ -133,7 +133,7 @@ Compact encoding
 .. versionchanged:: 2.0
 
     - Added ``quoted_keys``.
-    - Merged ``item_separator`` and ``key_separator`` as ``separators``.
+    - Replaced ``item_separator`` and ``key_separator`` with ``separators``.
 
 >>> import jsonyx as json
 >>> json.dumps({"a": 1, "b": 2, "c": 3}, end="", separators=(",", ":"))
