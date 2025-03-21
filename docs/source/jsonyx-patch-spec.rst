@@ -111,13 +111,13 @@ Fields:
     - **mode** (string) - the paste mode. Must be:
 
       - ``"append"`` - append the source value to the end of a target array.
-      - ``"extend"`` - extend a target array with the values of the source
+      - ``"extend"`` - extend the target array with the values of the source
         array.
       - ``"insert"`` - insert the source value at the specified index in the
         target array. In this mode, the **to** field is required.
       - ``"set"`` - replace the target value by the source value.
-      - ``"update"`` - update the target object with key/value pairs from the
-        source object, overwriting existing keys.
+      - ``"update"`` - update the target object with the items of the source
+        object, overwriting the values of existing keys.
 
     - **path** (string, default: ``"$"``) - the
       :ref:`absolute path <absolute_path>` where the operation is applied.
@@ -178,13 +178,13 @@ Example:
 extend
 ^^^^^^
 
-Extend an array with a list of values.
+Extend an array with the values of another array.
 
 Fields:
     - **op** (string) - the operation to perform. Must be ``"extend"``.
     - **path** (string, default: ``"$"``) - the
       :ref:`absolute path <absolute_path>` to the array.
-    - **values** (any) - a list of values.
+    - **values** (array) - another array.
 
 Example:
     Input:
@@ -249,13 +249,13 @@ Fields:
     - **mode** (string) - the paste mode. Must be:
 
       - ``"append"`` - append the source value to the end of a target array.
-      - ``"extend"`` - extend a target array with the values of the source
+      - ``"extend"`` - extend the target array with the values of the source
         array.
       - ``"insert"`` - insert the source value at the specified index in the
         target array. In this mode, the **to** field is required.
       - ``"set"`` - replace the target value by the source value.
-      - ``"update"`` - update the target object with key/value pairs from the
-        source object, overwriting existing keys.
+      - ``"update"`` - update the target object with the items of the source
+        object, overwriting the values of existing keys.
 
     - **path** (string, default: ``"$"``) - the
       :ref:`absolute path <absolute_path>` where the operation is applied.
@@ -375,13 +375,14 @@ Example:
 update
 ^^^^^^
 
-Update an object with key/value pairs, overwriting existing keys.
+Update an object with the items of another object, overwriting the values of
+existing keys.
 
 Fields:
     - **op** (string) - the operation to perform. Must be ``"update"``.
     - **path** (string, default: ``"$"``) - the
       :ref:`absolute path <absolute_path>` to the object.
-    - **value** (object) - an object.
+    - **value** (object) - another object.
 
 Example:
     Input:
