@@ -197,6 +197,12 @@ Reading from a file:
 Using :class:`decimal.Decimal` instead of :class:`float`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. versionchanged:: 2.0
+
+    - Added ``types``.
+    - Made :class:`decimal.Decimal` not JSON serializable.
+    - Replaced ``use_decimal`` with ``hooks``.
+
 >>> import jsonyx as json
 >>> from decimal import Decimal
 >>> json.loads("1.1", hooks={"float": Decimal})

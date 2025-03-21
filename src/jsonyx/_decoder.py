@@ -622,7 +622,7 @@ except ImportError:
 class Decoder:
     """A configurable JSON decoder.
 
-    .. versionchanged:: 2.0 Added ``types``.
+    .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param hooks: the :ref:`hooks <using_hooks>` used for transforming data

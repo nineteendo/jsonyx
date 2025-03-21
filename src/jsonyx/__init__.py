@@ -113,7 +113,7 @@ def read(
 ) -> Any:
     """Deserialize a JSON file to a Python object.
 
-    .. versionchanged:: 2.0 Added ``hooks``.
+    .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
 
     :param filename: the path to the JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
@@ -145,7 +145,7 @@ def load(
 ) -> Any:
     """Deserialize an open JSON file to a Python object.
 
-    .. versionchanged:: 2.0 Added ``hooks``.
+    .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
 
     :param fp: an open JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
@@ -174,7 +174,7 @@ def loads(
 ) -> Any:
     r"""Deserialize a JSON string to a Python object.
 
-    .. versionchanged:: 2.0 Added ``hooks``.
+    .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
 
     :param s: a JSON string
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
@@ -220,8 +220,10 @@ def write(
 
         - Added ``commas``, ``encoding``, ``indent_leaves``,
           ``max_indent_level``, ``quoted_keys`` and ``types``.
-        - Made :class:`tuple` JSON serializable.
-        - Merged ``item_separator`` and ``key_separator`` as ``separators``.
+        - Made :class:`tuple` JSON serializable instead of :class:`enum.Enum`
+          and :class:`decimal.Decimal`.
+        - Replaced ``item_separator`` and ``key_separator`` with
+          ``separators``.
 
     :param obj: a Python object
     :param filename: the path to the JSON file
@@ -297,8 +299,10 @@ def dump(
 
         - Added ``commas``, ``indent_leaves``, ``max_indent_level``,
           ``quoted_keys`` and ``types``.
-        - Made :class:`tuple` JSON serializable.
-        - Merged ``item_separator`` and ``key_separator`` as ``separators``.
+        - Made :class:`tuple` JSON serializable instead of :class:`enum.Enum`
+          and :class:`decimal.Decimal`.
+        - Replaced ``item_separator`` and ``key_separator`` with
+          ``separators``.
 
     :param obj: a Python object
     :param fp: an open JSON file
@@ -381,8 +385,10 @@ def dumps(
 
         - Added ``commas``, ``indent_leaves``, ``max_indent_level``,
           ``quoted_keys`` and ``types``.
-        - Made :class:`tuple` JSON serializable.
-        - Merged ``item_separator`` and ``key_separator`` as ``separators``.
+        - Made :class:`tuple` JSON serializable instead of :class:`enum.Enum`
+          and :class:`decimal.Decimal`.
+        - Replaced ``item_separator`` and ``key_separator`` with
+          ``separators``.
 
     :param obj: a Python object
     :param allow: the JSON deviations from :mod:`jsonyx.allow`

@@ -8,8 +8,6 @@ jsonyx 2.0.0 (unreleased)
 
 - Added support for Python 3.8 and Python 3.9
 - Added the ``jsonyx`` application
-- Added ``hooks`` to :class:`jsonyx.Decoder`, :func:`jsonyx.load`,
-  :func:`jsonyx.loads` and :func:`jsonyx.read`
 - Added ``commas``, ``indent_leaves``, ``max_indent_level``, ``quoted_keys``
   and ``types`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
   :func:`jsonyx.dumps` and :func:`jsonyx.write`
@@ -36,14 +34,13 @@ jsonyx 2.0.0 (unreleased)
   :func:`jsonyx.loads` accepts non-ascii digits
 - Improved documentation
 - Improved error messages
-- Made :class:`enum.Enum` not JSON serializable
-- Made :class:`decimal.Decimal` not JSON serializable by default
-- Made :class:`tuple` JSON serializable
-- Merged ``item_separator`` and ``key_separator`` as ``separators`` for
+- Made :class:`tuple` JSON serializable instead of :class:`enum.Enum` and
+  :class:`decimal.Decimal`
+- Replaced ``item_separator`` and ``key_separator`` with ``separators`` for
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
   :func:`jsonyx.write`
-- Removed ``use_decimal`` from :class:`jsonyx.Decoder`, :func:`jsonyx.load`,
-  :func:`jsonyx.loads` and :func:`jsonyx.read`
+- Replaced ``use_decimal`` with ``hooks`` for :class:`jsonyx.Decoder`,
+  :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`jsonyx.read`
 - Removed :data:`!jsonyx.allow.DUPLICATE_KEYS`
 - Removed :data:`!jsonyx.DuplicateKey`
 - Removed :mod:`!jsonyx.tool`

@@ -285,8 +285,10 @@ class Encoder:
 
         - Added ``commas``, ``indent_leaves``, ``max_indent_level``,
           ``quoted_keys`` and ``types``.
-        - Made :class:`tuple` JSON serializable.
-        - Merged ``item_separator`` and ``key_separator`` as ``separators``.
+        - Made :class:`tuple` JSON serializable instead of :class:`enum.Enum`
+          and :class:`decimal.Decimal`.
+        - Replaced ``item_separator`` and ``key_separator`` with
+          ``separators``.
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param commas: separate items by commas when indented
