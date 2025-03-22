@@ -73,7 +73,7 @@ Example:
 clear
 ^^^^^
 
-Remove all items from an array or all properties of an object.
+Remove all items from an array or all properties from an object.
 
 Fields:
     - **op** (string) - the operation to perform. Must be ``"clear"``.
@@ -255,7 +255,7 @@ Fields:
         target array. In this mode, the **to** field is required.
       - ``"set"`` - replace the target value with the source value.
       - ``"update"`` - update the target object with the items of the source
-        object, overwriting the values of existing keys.
+        object, overwriting existing properties.
 
     - **path** (string, default: ``"$"``) - the
       :ref:`absolute path <absolute_path>` where the operation is applied.
