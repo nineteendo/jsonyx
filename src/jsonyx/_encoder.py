@@ -59,12 +59,12 @@ try:
         from _jsonyx import make_encoder
 except ImportError:
     def make_encoder(
+        array_types: type | tuple[type, ...],
         bool_types: type | tuple[type, ...],
         float_types: type | tuple[type, ...],
         indent: str | None,
         int_types: type | tuple[type, ...],
-        mapping_types: type | tuple[type, ...],
-        sequence_types: type | tuple[type, ...],
+        object_types: type | tuple[type, ...],
         str_types: type | tuple[type, ...],
         end: str,
         item_separator: str,
@@ -147,7 +147,7 @@ except ImportError:
             current_indent: str = old_indent
             if indent is None or indent_level >= max_indent_level or (
                 not indent_leaves and not any(isinstance(
-                    value, (list, tuple, dict, sequence_types, mapping_types),
+                    value, (list, tuple, dict, array_types, object_types),
                 ) for value in seq)
             ):
                 indented: bool = False
@@ -196,7 +196,7 @@ except ImportError:
             current_indent: str = old_indent
             if indent is None or indent_level >= max_indent_level or (
                 not indent_leaves and not any(isinstance(
-                    value, (list, tuple, dict, sequence_types, mapping_types),
+                    value, (list, tuple, dict, array_types, object_types),
                 ) for value in mapping.values())
             ):
                 indented: bool = False
@@ -254,9 +254,9 @@ except ImportError:
                 write(encode_string(str(obj)))
             elif isinstance(obj, (float, int, float_types, int_types)):
                 write(encode_float(obj))  # type: ignore
-            elif isinstance(obj, (list, tuple, sequence_types)):
+            elif isinstance(obj, (list, tuple, array_types)):
                 write_sequence(obj, write, indent_level, current_indent)
-            elif isinstance(obj, (dict, mapping_types)):
+            elif isinstance(obj, (dict, object_types)):
                 write_mapping(obj, write, indent_level, current_indent)
             else:
                 msg: str = f"{type(obj).__name__} is not JSON serializable"
@@ -341,9 +341,9 @@ class Encoder:
             types = {}
 
         self._encoder: _EncodeFunc[object] = make_encoder(
-            types.get("bool", ()), types.get("float", ()), indent,
-            types.get("int", ()), types.get("mapping", ()),
-            types.get("sequence", ()), types.get("str", ()), end,
+            types.get("array", ()), types.get("bool", ()),
+            types.get("float", ()), indent, types.get("int", ()),
+            types.get("object", ()), types.get("str", ()), end,
             item_separator, long_item_separator, key_separator,
             max_indent_level, "nan_and_infinity" in allow, allow_surrogates,
             ensure_ascii, indent_leaves, quoted_keys, sort_keys,

@@ -70,16 +70,16 @@ Encoding protocol-based objects
 
 .. versionadded:: 2.0
 
-============== ========================================================================
-Type           Required methods
-============== ========================================================================
-``"bool"``     :meth:`~object.__bool__`, :meth:`~object.__len__` or absent for ``true``
-``"float"``    :meth:`~object.__str__` or :meth:`~object.__repr__`
-``"int"``      :meth:`~object.__str__` or :meth:`~object.__repr__`
-``"mapping"``  :meth:`~object.__len__`, :meth:`!values` and :meth:`!items`
-``"sequence"`` :meth:`~object.__len__`, and :meth:`~object.__iter__`
-``"str"``      :meth:`~object.__str__` or :meth:`~object.__repr__`
-============== ========================================================================
+============ ========================================================================
+Type         Required methods
+============ ========================================================================
+``"array"``  :meth:`~object.__len__`, and :meth:`~object.__iter__`
+``"bool"``   :meth:`~object.__bool__`, :meth:`~object.__len__` or absent for ``true``
+``"float"``  :meth:`~object.__str__` or :meth:`~object.__repr__`
+``"int"``    :meth:`~object.__str__` or :meth:`~object.__repr__`
+``"object"`` :meth:`~object.__len__`, :meth:`!values` and :meth:`!items`
+``"str"``    :meth:`~object.__str__` or :meth:`~object.__repr__`
+============ ========================================================================
 
 Example with :mod:`numpy`:
 
@@ -91,10 +91,10 @@ Example with :mod:`numpy`:
 ...     np.float32(), np.float64()
 ... ], dtype="O")
 >>> types = {
+...     "array": np.ndarray,
 ...     "bool": np.bool_,
 ...     "float": np.floating,
-...     "int": np.integer,
-...     "sequence": np.ndarray
+...     "int": np.integer
 ... }
 >>> json.dump(obj, types=types)
 [false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0]
@@ -133,16 +133,16 @@ Decoding objects using hooks
 
 .. versionadded:: 2.0
 
-============== =========================
+============ =========================
 Hook           Called with
-============== =========================
-``"bool"``     :class:`bool`
-``"float"``    :class:`str`
-``"int"``      :class:`str`
-``"mapping"``  ``list[tuple[Any, Any]]``
-``"sequence"`` :class:`list`
-``"str"``      :class:`str`
-============== =========================
+============ =========================
+``"array"``  :class:`list`
+``"bool"``   :class:`bool`
+``"float"``  :class:`str`
+``"int"``    :class:`str`
+``"object"`` ``list[tuple[Any, Any]]``
+``"str"``    :class:`str`
+============ =========================
 
 Example with :mod:`numpy`:
 
@@ -150,10 +150,10 @@ Example with :mod:`numpy`:
 >>> from functools import partial
 >>> import numpy as np
 >>> hooks = {
+...     "array": partial(np.array, dtype="O"),
 ...     "bool": np.bool_,
 ...     "float": np.float64,
-...     "int": np.int64,
-...     "sequence": partial(np.array, dtype="O")
+...     "int": np.int64
 ... }
 >>> json.loads("[false, 0.0, 0]", hooks=hooks)
 array([np.False_, np.float64(0.0), np.int64(0)], dtype=object)
@@ -174,7 +174,7 @@ Decoding arbitrary objects
 >>> from_json(json.loads('{"__complex__": true, "real": 1.0, "imag": 2.0}'))
 (1+2j)
 
-.. note:: The ``"mapping"`` hook is not intended for this purpose.
+.. note:: The ``"object"`` hook is not intended for this purpose.
 .. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
     suited for this.
 

@@ -279,11 +279,11 @@ try:
         from _jsonyx import make_scanner
 except ImportError:
     def make_scanner(
+        array_hook: _Hook,
         bool_hook: _Hook,
         float_hook: _Hook,
         int_hook: _Hook,
-        mapping_hook: _Hook,
-        sequence_hook: _Hook,
+        object_hook: _Hook,
         str_hook: _Hook,
         allow_comments: bool,
         allow_missing_commas: bool,
@@ -409,7 +409,7 @@ except ImportError:
                 raise _errmsg(msg, filename, s, obj_idx, end) from None
 
             if nextchar == "}":
-                return mapping_hook([]), end + 1
+                return object_hook([]), end + 1
 
             pairs: list[tuple[Any, Any]] = []
             append_pair: Callable[[tuple[Any, Any]], None] = pairs.append
@@ -453,7 +453,7 @@ except ImportError:
                     comma_idx = end
                     end = skip_comments(filename, s, end + 1)
                 elif nextchar == "}":
-                    return mapping_hook(pairs), end + 1
+                    return object_hook(pairs), end + 1
                 elif end == comma_idx:
                     msg = "Expecting comma"
                     raise _errmsg(msg, filename, s, comma_idx)
@@ -474,7 +474,7 @@ except ImportError:
                             msg, filename, s, comma_idx, comma_idx + 1,
                         )
 
-                    return mapping_hook(pairs), end + 1
+                    return object_hook(pairs), end + 1
 
         def scan_array(filename: str, s: str, end: int) -> tuple[Any, int]:
             arr_idx: int = end - 1
@@ -486,7 +486,7 @@ except ImportError:
                 raise _errmsg(msg, filename, s, arr_idx, end) from None
 
             if nextchar == "]":
-                return sequence_hook([]), end + 1
+                return array_hook([]), end + 1
 
             values: list[Any] = []
             append_value: Callable[[Any], None] = values.append
@@ -505,7 +505,7 @@ except ImportError:
                     comma_idx = end
                     end = skip_comments(filename, s, end + 1)
                 elif nextchar == "]":
-                    return sequence_hook(values), end + 1
+                    return array_hook(values), end + 1
                 elif end == comma_idx:
                     msg = "Expecting comma"
                     raise _errmsg(msg, filename, s, comma_idx)
@@ -526,7 +526,7 @@ except ImportError:
                             msg, filename, s, comma_idx, comma_idx + 1,
                         )
 
-                    return sequence_hook(values), end + 1
+                    return array_hook(values), end + 1
 
         def scan_value(filename: str, s: str, idx: int) -> tuple[Any, int]:
             try:
@@ -642,9 +642,9 @@ class Decoder:
             hooks = {}
 
         self._scanner: _Scanner = make_scanner(
-            hooks.get("bool", bool), hooks.get("float", float),
-            hooks.get("int", int), hooks.get("mapping", dict),
-            hooks.get("sequence", list), hooks.get("str", str),
+            hooks.get("array", list), hooks.get("bool", bool),
+            hooks.get("float", float), hooks.get("int", int),
+            hooks.get("object", dict), hooks.get("str", str),
             "comments" in allow, "missing_commas" in allow,
             "nan_and_infinity" in allow, allow_surrogates,
             "trailing_comma" in allow, "unquoted_keys" in allow,

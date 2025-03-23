@@ -249,10 +249,10 @@ def test_list_recursion(json: ModuleType) -> None:
         json.dumps(obj)
 
 
-def test_sequence_types(json: ModuleType) -> None:
-    """Test sequence_types."""
+def test_array_types(json: ModuleType) -> None:
+    """Test array_types."""
     obj: UserList[object] = UserList([1, 2, 3])
-    assert json.dumps(obj, end="", types={"sequence": UserList}) == "[1, 2, 3]"
+    assert json.dumps(obj, end="", types={"array": UserList}) == "[1, 2, 3]"
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
@@ -441,10 +441,10 @@ def test_dict_recursion(json: ModuleType) -> None:
         json.dumps(obj)
 
 
-def test_mapping_types(json: ModuleType) -> None:
-    """Test mapping_types."""
+def test_object_types(json: ModuleType) -> None:
+    """Test object_types."""
     obj: UserDict[str, object] = UserDict({"a": 1, "b": 2, "c": 3})
-    s: str = json.dumps(obj, end="", types={"mapping": UserDict})
+    s: str = json.dumps(obj, end="", types={"object": UserDict})
     assert s == '{"a": 1, "b": 2, "c": 3}'
 
 

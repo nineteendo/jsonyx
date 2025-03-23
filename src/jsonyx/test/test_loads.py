@@ -317,13 +317,13 @@ def test_str_type(json: ModuleType) -> None:
     # Multiple values
     ("[1, 2, 3]", [1, 2, 3]),
 ])
-@pytest.mark.parametrize("sequence_type", [list, tuple])
+@pytest.mark.parametrize("array_type", [list, tuple])
 def test_array(
-    json: ModuleType, s: str, expected: list[object], sequence_type: type,
+    json: ModuleType, s: str, expected: list[object], array_type: type,
 ) -> None:
     """Test JSON array."""
-    types: dict[str, type] = {"sequence": sequence_type}
-    assert json.loads(s, hooks=types) == sequence_type(expected)
+    types: dict[str, type] = {"array": array_type}
+    assert json.loads(s, hooks=types) == array_type(expected)
 
 
 @pytest.mark.parametrize(("s", "expected"), [
@@ -407,14 +407,14 @@ def test_invalid_array(
     # Duplicate keys
     ('{"a": 1, "a": 2, "a": 3}', [("a", 1), ("a", 2), ("a", 3)]),
 ])
-@pytest.mark.parametrize("mapping_type", [dict, list])
+@pytest.mark.parametrize("object_type", [dict, list])
 def test_object(
     json: ModuleType, s: str, expected: list[tuple[str, object]],
-    mapping_type: type,
+    object_type: type,
 ) -> None:
     """Test JSON object."""
-    types: dict[str, type] = {"mapping": mapping_type}
-    assert json.loads(s, hooks=types) == mapping_type(expected)
+    types: dict[str, type] = {"object": object_type}
+    assert json.loads(s, hooks=types) == object_type(expected)
 
 
 @pytest.mark.parametrize(("s", "expected"), [

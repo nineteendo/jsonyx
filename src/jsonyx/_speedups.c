@@ -27,11 +27,11 @@ static inline PyObject* Py_NewRef(PyObject *obj)
 
 typedef struct _PyScannerObject {
     PyObject_HEAD
+    PyObject *array_hook;
     PyObject *bool_hook;
     PyObject *float_hook;
     PyObject *int_hook;
-    PyObject *mapping_hook;
-    PyObject *sequence_hook;
+    PyObject *object_hook;
     PyObject *str_hook;
     int allow_comments;
     int allow_missing_commas;
@@ -45,12 +45,12 @@ typedef struct _PyScannerObject {
 
 typedef struct _PyEncoderObject {
     PyObject_HEAD
+    PyObject *array_types;
     PyObject *bool_types;
     PyObject *float_types;
     PyObject *indent;
     PyObject *int_types;
-    PyObject *mapping_types;
-    PyObject *sequence_types;
+    PyObject *object_types;
     PyObject *str_types;
     PyObject *end;
     PyObject *item_separator;
@@ -601,11 +601,11 @@ scanner_traverse(PyObject *op, visitproc visit, void *arg)
 {
     PyScannerObject *self = PyScannerObject_CAST(op);
     Py_VISIT(Py_TYPE(self));
+    Py_VISIT(self->array_hook);
     Py_VISIT(self->bool_hook);
     Py_VISIT(self->float_hook);
     Py_VISIT(self->int_hook);
-    Py_VISIT(self->mapping_hook);
-    Py_VISIT(self->sequence_hook);
+    Py_VISIT(self->object_hook);
     Py_VISIT(self->str_hook);
     return 0;
 }
@@ -614,11 +614,11 @@ static int
 scanner_clear(PyObject *op)
 {
     PyScannerObject *self = PyScannerObject_CAST(op);
+    Py_CLEAR(self->array_hook);
     Py_CLEAR(self->bool_hook);
     Py_CLEAR(self->float_hook);
     Py_CLEAR(self->int_hook);
-    Py_CLEAR(self->mapping_hook);
-    Py_CLEAR(self->sequence_hook);
+    Py_CLEAR(self->object_hook);
     Py_CLEAR(self->str_hook);
     return 0;
 }
@@ -639,7 +639,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
     PyObject *val = NULL;
     PyObject *rval = NULL;
     PyObject *key = NULL;
-    int use_pairs = s->mapping_hook != (PyObject *)&PyDict_Type;
+    int use_pairs = s->object_hook != (PyObject *)&PyDict_Type;
     Py_ssize_t next_idx;
     Py_ssize_t obj_idx = idx - 1;
     Py_ssize_t colon_idx;
@@ -796,7 +796,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
     *next_idx_ptr = idx + 1;
 
     if (use_pairs) {
-        val = PyObject_CallOneArg(s->mapping_hook, rval);
+        val = PyObject_CallOneArg(s->object_hook, rval);
         Py_DECREF(rval);
         return val;
     }
@@ -904,8 +904,8 @@ _parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, P
     assert(idx <= end_idx && PyUnicode_READ(kind, str, idx) == ']');
 #endif
     *next_idx_ptr = idx + 1;
-    if (s->sequence_hook != (PyObject *)&PyList_Type) {
-        val = PyObject_CallOneArg(s->sequence_hook, rval);
+    if (s->array_hook != (PyObject *)&PyList_Type) {
+        val = PyObject_CallOneArg(s->array_hook, rval);
         Py_DECREF(rval);
         return val;
     }
@@ -1275,21 +1275,21 @@ scanner_call(PyObject *op, PyObject *args, PyObject *kwds)
 static PyObject *
 scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    static char *kwlist[] = {"bool_hook", "float_hook", "int_hook",
-                             "mapping_hook", "sequence_hook", "str_hook",
+    static char *kwlist[] = {"array_hook", "bool_hook", "float_hook",
+                             "int_hook", "object_hook", "str_hook",
                              "allow_comments", "allow_missing_commas",
                              "allow_nan_and_infinity", "allow_surrogates",
                              "allow_trailing_comma", "allow_unquoted_keys",
                              NULL};
 
     PyScannerObject *s;
-    PyObject *bool_hook, *float_hook, *int_hook, *mapping_hook, *sequence_hook;
+    PyObject *bool_hook, *float_hook, *int_hook, *object_hook, *array_hook;
     PyObject *str_hook;
     int allow_comments, allow_missing_commas, allow_nan_and_infinity;
     int allow_surrogates, allow_trailing_comma, allow_unquoted_keys;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOpppppp:make_scanner", kwlist,
-        &bool_hook, &float_hook, &int_hook, &mapping_hook, &sequence_hook,
+        &array_hook, &bool_hook, &float_hook, &int_hook, &object_hook,
         &str_hook,
         &allow_comments, &allow_missing_commas, &allow_nan_and_infinity,
         &allow_surrogates, &allow_trailing_comma, &allow_unquoted_keys))
@@ -1300,11 +1300,11 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
         return NULL;
     }
 
+    s->array_hook = Py_NewRef(array_hook);
     s->bool_hook = Py_NewRef(bool_hook);
     s->float_hook = Py_NewRef(float_hook);
     s->int_hook = Py_NewRef(int_hook);
-    s->mapping_hook = Py_NewRef(mapping_hook);
-    s->sequence_hook = Py_NewRef(sequence_hook);
+    s->object_hook = Py_NewRef(object_hook);
     s->str_hook = Py_NewRef(str_hook);
     s->allow_comments = allow_comments;
     s->allow_missing_commas = allow_missing_commas;
@@ -1338,8 +1338,8 @@ static PyType_Spec PyScannerType_spec = {
 static PyObject *
 encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    static char *kwlist[] = {"bool_types", "float_types", "indent",
-                             "int_types", "mapping_types", "sequence_types",
+    static char *kwlist[] = {"array_types", "bool_types", "float_types",
+                             "indent", "int_types", "object_types", 
                              "str_types", "end", "item_separator",
                              "long_item_separator", "key_separator",
                              "max_indent_level", "allow_nan_and_infinity",
@@ -1348,16 +1348,16 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
                              "trailing_comma", NULL};
 
     PyEncoderObject *s;
-    PyObject *bool_types, *float_types, *indent, *int_types, *mapping_types;
-    PyObject *sequence_types, *str_types;
+    PyObject *bool_types, *float_types, *indent, *int_types, *object_types;
+    PyObject *array_types, *str_types;
     PyObject *end, *item_separator, *long_item_separator, *key_separator;
     Py_ssize_t max_indent_level;
     int allow_nan_and_infinity, allow_surrogates, ensure_ascii, indent_leaves;
     int quoted_keys, sort_keys, trailing_comma;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOUUUUnppppppp:make_encoder", kwlist,
-        &bool_types, &float_types, &indent, &int_types, &mapping_types,
-        &sequence_types, &str_types, &end, &item_separator,
+        &array_types, &bool_types, &float_types, &indent, &int_types,
+        &object_types, &str_types, &end, &item_separator,
         &long_item_separator, &key_separator,
         &max_indent_level,
         &allow_nan_and_infinity, &allow_surrogates, &ensure_ascii,
@@ -1368,12 +1368,12 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     if (s == NULL)
         return NULL;
 
+    s->array_types = Py_NewRef(array_types);
     s->bool_types = Py_NewRef(bool_types);
     s->float_types = Py_NewRef(float_types);
     s->indent = Py_NewRef(indent);
     s->int_types = Py_NewRef(int_types);
-    s->mapping_types = Py_NewRef(mapping_types);
-    s->sequence_types = Py_NewRef(sequence_types);
+    s->object_types = Py_NewRef(object_types);
     s->str_types = Py_NewRef(str_types);
     s->end = Py_NewRef(end);
     s->item_separator = Py_NewRef(item_separator);
@@ -1683,7 +1683,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         return _steal_accumulate(writer, encoded);
     }
     else if (PyList_Check(obj) || PyTuple_Check(obj) ||
-             PyObject_IsInstance(obj, s->sequence_types))
+             PyObject_IsInstance(obj, s->array_types))
     {
         // See https://github.com/python/cpython/issues/123593 
         if (PyErr_Occurred())
@@ -1695,7 +1695,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         _Py_LeaveRecursiveCall();
         return rv;
     }
-    else if (PyDict_Check(obj) || PyObject_IsInstance(obj, s->mapping_types)) {
+    else if (PyDict_Check(obj) || PyObject_IsInstance(obj, s->object_types)) {
         if (PyErr_Occurred())
             return -1;
 
@@ -1834,8 +1834,8 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
         for (Py_ssize_t  i = 0; i < PyList_GET_SIZE(values); i++) {
             PyObject *obj = PyList_GET_ITEM(values, i);
             if (PyList_Check(obj) || PyTuple_Check(obj) || PyDict_Check(obj) ||
-                PyObject_IsInstance(obj, s->sequence_types) ||
-                PyObject_IsInstance(obj, s->mapping_types))
+                PyObject_IsInstance(obj, s->array_types) ||
+                PyObject_IsInstance(obj, s->object_types))
             {
                 if (PyErr_Occurred()) {
                     goto bail;
@@ -1970,8 +1970,8 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
         for (i = 0; i < PySequence_Fast_GET_SIZE(s_fast); i++) {
             PyObject *obj = PySequence_Fast_GET_ITEM(s_fast, i);
             if (PyList_Check(obj) || PyTuple_Check(obj) || PyDict_Check(obj) ||
-                PyObject_IsInstance(obj, s->sequence_types) ||
-                PyObject_IsInstance(obj, s->mapping_types))
+                PyObject_IsInstance(obj, s->array_types) ||
+                PyObject_IsInstance(obj, s->object_types))
             {
                 if (PyErr_Occurred()) {
                     goto bail;
@@ -2047,12 +2047,12 @@ encoder_traverse(PyObject *op, visitproc visit, void *arg)
 {
     PyEncoderObject *self = PyEncoderObject_CAST(op);
     Py_VISIT(Py_TYPE(self));
+    Py_VISIT(self->array_types);
     Py_VISIT(self->bool_types);
     Py_VISIT(self->float_types);
     Py_VISIT(self->indent);
     Py_VISIT(self->int_types);
-    Py_VISIT(self->mapping_types);
-    Py_VISIT(self->sequence_types);
+    Py_VISIT(self->object_types);
     Py_VISIT(self->str_types);
     Py_VISIT(self->end);
     Py_VISIT(self->key_separator);
@@ -2066,12 +2066,12 @@ encoder_clear(PyObject *op)
 {
     PyEncoderObject *self = PyEncoderObject_CAST(op);
     /* Deallocate Encoder */
+    Py_CLEAR(self->array_types);
     Py_CLEAR(self->bool_types);
     Py_CLEAR(self->float_types);
     Py_CLEAR(self->indent);
     Py_CLEAR(self->int_types);
-    Py_CLEAR(self->mapping_types);
-    Py_CLEAR(self->sequence_types);
+    Py_CLEAR(self->object_types);
     Py_CLEAR(self->str_types);
     Py_CLEAR(self->end);
     Py_CLEAR(self->key_separator);
