@@ -145,6 +145,8 @@ Example:
 
         {"a": 0, "b": 0}
 
+.. note:: You can't use a :ref:`filter` in the **from** and **to** fields.
+
 del
 ^^^
 
@@ -282,6 +284,8 @@ Example:
     .. code-block:: json
 
         {"b": 0}
+
+.. note:: You can't use a :ref:`filter` in the **from** and **to** fields.
 
 reverse
 ^^^^^^^
