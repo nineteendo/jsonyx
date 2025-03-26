@@ -27,8 +27,6 @@ performance and no dependencies.
 
       {
           /* Block */ // and line comments
-          "Decimal numbers": [1.0000000000000001, 1e400],
-          "Duplicate keys": {"key": "value 1", "key": "value 2"},
           "Missing commas": [1 2 3],
           "NaN and infinity": [NaN, Infinity, -Infinity],
           "Surrogates": "\ud800",

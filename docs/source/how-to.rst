@@ -134,7 +134,7 @@ Decoding objects using hooks
 .. versionadded:: 2.0
 
 ============ =========================
-Hook           Called with
+Hook         Called with
 ============ =========================
 ``"array"``  :class:`list`
 ``"bool"``   :class:`bool`
