@@ -4,7 +4,7 @@ Welcome to jsonyx's Documentation!
 .. meta::
     :google-site-verification: Htf0oc5j12UrWDfRoSv2B_0mn4S_mJ2P7eFiE63wwgg
 
-:mod:`jsonyx` is a customizable `JSON <http://json.org>`_ library for Python
+:mod:`jsonyx` is a customizable `JSON <https://json.org>`_ library for Python
 3.8+. It is written in pure Python with an optional C extension for better
 performance and no dependencies.
 
@@ -103,8 +103,8 @@ how to :ref:`install <installation>` the project.
     :hidden:
 
     jsonyx-spec
-    jsonyx-patch-spec
-    jsonyx-path-spec
+    json-patch-spec
+    json-path-spec
 
 .. toctree::
     :caption: About the Project
