@@ -18,6 +18,7 @@ jsonyx 2.0.0 (unreleased)
 - Added ``--max-indent-level`` (alias ``-L``) to ``python -m jsonyx format``
 - Added ``--unquoted-keys`` (alias ``-q``) to ``python -m jsonyx format``
 - Added ``--version`` (alias ``-v``) to ``python -m jsonyx``
+- Added :data:`jsonyx.allow.NON_STR_KEYS`
 - Added :data:`jsonyx.allow.UNQUOTED_KEYS`
 - Added :func:`jsonyx.apply_filter`
 - Added :func:`jsonyx.apply_patch`

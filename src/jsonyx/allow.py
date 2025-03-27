@@ -54,6 +54,20 @@ NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
 .. note:: ``Decimal("sNan")`` can't be (de)serialised this way.
 """
 
+NON_STR_KEYS: frozenset[str] = frozenset({"non_str_keys"})
+"""Allow non-string keys.
+
+.. versionadded:: 2.0
+
+>>> import jsonyx as json
+>>> jsonyx.allow
+>>> json.dump({1: 0}, allow=jsonyx.allow.NON_STR_KEYS)
+{"1": 0}
+
+.. warning:: This can create duplicate keys if a non-string key is serialised
+to the same string as an existing key.
+"""
+
 SURROGATES: frozenset[str] = frozenset({"surrogates"})
 r"""Allow unpaired surrogates in strings.
 
@@ -90,11 +104,11 @@ UNQUOTED_KEYS: frozenset[str] = frozenset({"unquoted_keys"})
 """
 
 EVERYTHING: frozenset[str] = (
-    COMMENTS | MISSING_COMMAS | NAN_AND_INFINITY | SURROGATES | TRAILING_COMMA
-    | UNQUOTED_KEYS
+    COMMENTS | MISSING_COMMAS | NAN_AND_INFINITY | NON_STR_KEYS | SURROGATES
+    | TRAILING_COMMA | UNQUOTED_KEYS
 )
 """Allow all JSON deviations.
 
 This is equivalent to ``COMMENTS | MISSING_COMMAS | NAN_AND_INFINITY
-| SURROGATES | TRAILING_COMMA | UNQUOTED_KEYS``.
+| NON_STR_KEYS | SURROGATES | TRAILING_COMMA | UNQUOTED_KEYS``.
 """

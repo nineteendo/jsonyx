@@ -68,10 +68,11 @@ except ImportError:
         str_types: type | tuple[type, ...],
         end: str,
         item_separator: str,
-        long_item_separator: str,
         key_separator: str,
+        long_item_separator: str,
         max_indent_level: int,
         allow_nan_and_infinity: bool,
+        allow_non_str_keys: bool,
         allow_surrogates: bool,
         ensure_ascii: bool,
         indent_leaves: bool,
@@ -211,11 +212,23 @@ except ImportError:
             first: bool = True
             items: ItemsView[object, object] = mapping.items()
             for key, value in sorted(items) if sort_keys else items:
-                if not isinstance(key, (str, str_types)):
-                    msg = f"Keys must be str, not {type(key).__name__}"
-                    raise TypeError(msg)
+                if isinstance(key, (str, str_types)):
+                    s = str(key)
+                else:
+                    if key is None:
+                        s = "null"
+                    elif isinstance(key, (bool, bool_types)):
+                        s = "true" if key else "false"
+                    elif isinstance(key, (float, int, float_types, int_types)):
+                        s = encode_float(key)  # type: ignore
+                    else:
+                        msg = f"Keys must be str, not {type(key).__name__}"
+                        raise TypeError(msg)
 
-                s = str(key)
+                    if not allow_non_str_keys:
+                        msg = "Non-string keys are not allowed"
+                        raise TypeError(msg)
+
                 if first:
                     first = False
                 else:
@@ -344,10 +357,10 @@ class Encoder:
             types.get("array", ()), types.get("bool", ()),
             types.get("float", ()), indent, types.get("int", ()),
             types.get("object", ()), types.get("str", ()), end,
-            item_separator, long_item_separator, key_separator,
-            max_indent_level, "nan_and_infinity" in allow, allow_surrogates,
-            ensure_ascii, indent_leaves, quoted_keys, sort_keys,
-            commas and trailing_comma,
+            item_separator, key_separator, long_item_separator,
+            max_indent_level, "nan_and_infinity" in allow,
+            "non_str_keys" in allow, allow_surrogates, ensure_ascii,
+            indent_leaves, quoted_keys, sort_keys, commas and trailing_comma,
         )
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 
