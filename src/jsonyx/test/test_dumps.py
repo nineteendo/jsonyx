@@ -1,5 +1,4 @@
 """JSON dumps tests."""
-# TODO(Nice Zombies): test allow=NON_STR_KEYS
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -11,7 +10,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from jsonyx.allow import NAN_AND_INFINITY, SURROGATES
+from jsonyx.allow import NAN_AND_INFINITY, NON_STR_KEYS, SURROGATES
 
 if TYPE_CHECKING:
     from types import ModuleType
@@ -44,11 +43,6 @@ class _IntEnum(int, Enum):
 def test_singletons(json: ModuleType, obj: bool | None, expected: str) -> None:
     """Test singletons."""
     assert json.dumps(obj, end="") == expected
-
-
-def test_bool_types(json: ModuleType) -> None:
-    """Test bool_types."""
-    assert json.dumps(_MyBool(), end="", types={"bool": _MyBool}) == "false"
 
 
 @pytest.mark.parametrize("num", [0, 1])
@@ -101,11 +95,17 @@ def test_nan_payload(json: ModuleType, num: str) -> None:
         json.dumps(Decimal(num), allow=NAN_AND_INFINITY, types=types)
 
 
-@pytest.mark.parametrize("obj", [_IntEnum.ZERO, _FloatEnum.ZERO])
-def test_enum(json: ModuleType, obj: float) -> None:
+@pytest.mark.parametrize("obj", [
+    # Key
+    {_IntEnum.ZERO: 0}, {_FloatEnum.ZERO: 0},
+
+    # Value
+    _IntEnum.ZERO, _FloatEnum.ZERO,
+])
+def test_enum(json: ModuleType, obj: float | dict[object, object]) -> None:
     """Test enum."""
     with pytest.raises(ValueError, match="is not JSON serializable"):
-        json.dumps(obj)
+        json.dumps(obj, allow=NON_STR_KEYS)
 
 
 @pytest.mark.parametrize("obj", [
@@ -376,9 +376,47 @@ def test_unquoted_ascii_keys(
     ) == f"{{{key}: 0}}"
 
 
+@pytest.mark.parametrize(("key", "expected"), [
+    (True, "true"),
+    (False, "false"),
+    (None, "null"),
+])
+def test_singleton_keys(
+    json: ModuleType, key: bool | None, expected: str,
+) -> None:
+    """Test singleton keys."""
+    s: str = json.dumps({key: 0}, allow=NON_STR_KEYS, end="")
+    assert s == f'{{"{expected}": 0}}'
+
+
+@pytest.mark.parametrize("int_type", [Decimal, int])
+def test_int_key(json: ModuleType, int_type: type) -> None:
+    """Test int key."""
+    obj: dict[object, object] = {int_type(0): 0}
+    types: dict[str, type] = {"int": int_type}
+    s: str = json.dumps(obj, allow=NON_STR_KEYS, end="", types=types)
+    assert s == '{"0": 0}'
+
+
+@pytest.mark.parametrize("float_type", [Decimal, float])
+def test_float_key(json: ModuleType, float_type: type) -> None:
+    """Test float key."""
+    obj: dict[object, object] = {float_type("0.0"): 0}
+    types: dict[str, type] = {"float": float_type}
+    s: str = json.dumps(obj, allow=NON_STR_KEYS, end="", types=types)
+    assert s == '{"0.0": 0}'
+
+
+@pytest.mark.parametrize("key", [0, 0.0, True, False, None])
+def test_non_str_keys_not_allowed(json: ModuleType, key: object) -> None:
+    """Test non-string keys if not allowed."""
+    with pytest.raises(TypeError, match="Non-string keys are not allowed"):
+        json.dumps({key: 0})
+
+
 @pytest.mark.parametrize("key", [
     # JSON values
-    0, Decimal(0), 0.0, Decimal("0.0"), (), True, False, None,
+    (),
 
     # No JSON values
     b"", 0j, frozenset(), memoryview(b""), object(),
@@ -457,6 +495,18 @@ def test_unserializable_value(json: ModuleType, obj: object) -> None:
     """Test unserializable value."""
     with pytest.raises(TypeError, match="is not JSON serializable"):
         json.dumps(obj)
+
+
+@pytest.mark.parametrize(("obj", "expected"), [
+    (_MyBool(), "false"),
+    ({_MyBool(): 0}, '{"false": 0}'),
+])
+def test_bool_types(
+    json: ModuleType, obj: _MyBool | dict[object, object], expected: str,
+) -> None:
+    """Test bool_types."""
+    types: dict[str, type] = {"bool": _MyBool}
+    assert json.dumps(obj, end="", allow=NON_STR_KEYS, types=types) == expected
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
