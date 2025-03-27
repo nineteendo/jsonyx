@@ -1,7 +1,8 @@
 """Allow minimal and unambiguous JSON deviations for developer convenience.
 
-Combine flags (e.g. ``COMMENTS`` | ``UNQUOTED_KEYS``) to allow multiple
-deviations.
+Combine flags (e.g. ``COMMENTS | UNQUOTED_KEYS``) to allow multiple deviations.
+
+Exclude flags (e.g. ``EVERYTHING - MISSING_COMMAS``) to disallow deviations.
 
 See :doc:`the specification </jsonyx-spec>` for more information.
 """
