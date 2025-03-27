@@ -3,15 +3,18 @@ from __future__ import annotations
 
 __all__: list[str] = []
 
+from pathlib import Path
+
 # pylint: disable-next=E0401
 from setuptools import Extension, setup  # type: ignore
 
 if __name__ == "__main__":
     setup(
         name="jsonyx",
-        version="2.0.0",
+        version="2.0.0.post2",
         description="Customizable JSON library for Python",
-        long_description="file: README.md",
+        long_description=Path("README.md").read_text(encoding="utf-8"),
+        long_description_content_type="text/markdown",
         author="Nice Zombies",
         author_email="nineteendo19d0@gmail.com",
         maintainer="Nice Zombies",

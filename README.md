@@ -4,7 +4,7 @@
 [![conda-forge](https://img.shields.io/conda/vn/conda-forge/jsonyx.svg)](https://anaconda.org/conda-forge/jsonyx)
 [![python](https://img.shields.io/pypi/pyversions/jsonyx.svg)](http://pypi.org/project/jsonyx)
 [![license](https://img.shields.io/pypi/l/jsonyx.svg)](http://pypi.org/project/jsonyx)
-[![pytest](https://github.com/nineteendo/jsonyx/actions/workflows/pytest.yml/badge.svg?branch=main)](https://github.com/nineteendo/jsonyx/actions/workflows/pytest.yml)
+[![pytest](https://github.com/nineteendo/jsonyx/actions/workflows/pytest.yml/badge.svg?branch=2.0.x)](https://github.com/nineteendo/jsonyx/actions/workflows/pytest.yml)
 [![docs](https://readthedocs.org/projects/jsonyx/badge/?version=stable)](https://jsonyx.readthedocs.io/en/stable/?badge=stable)
 [![downloads](https://img.shields.io/pypi/dm/jsonyx.svg)](http://pypi.org/project/jsonyx)
 
@@ -60,7 +60,7 @@ applications:
 | List of 256 dicts with 1 int                | 11.34x | 14.32x |   1.35x |   1.00x |      7.67 μs |
 | Medium complex object                       | 10.64x | 12.05x |   1.15x |   1.00x |     13.38 μs |
 | List of 256 strings                         | 21.28x | 15.85x |   1.95x |   1.00x |     15.16 μs |
-| Complex object                              |  7.14x |  7.65x |   1.00x | DNF[^1] |    213.74 μs |
+| Complex object                              |  7.14x |  7.65x |   1.00x |     DNF |    213.74 μs |
 | Dict with 256 lists of 256 dicts with 1 int |  9.03x | 11.34x |   1.14x |   1.00x |   2423.70 μs |
 
 | decode                                      |   json | jsonyx | msgspec | orjson | simdjson | fastest time |
@@ -73,10 +73,3 @@ applications:
 | List of 256 strings                         |  4.01x |  3.41x |  14.99x |  8.04x |    1.00x |     23.47 μs |
 | Complex object                              |  8.92x |  7.75x |   9.09x |  9.16x |    1.00x |    145.17 μs |
 | Dict with 256 lists of 256 dicts with 1 int | 17.95x | 22.36x |  12.42x | 10.53x |    1.00x |   1621.17 μs |
-
-> [!WARNING]
-> The Python version of `jsonyx` is up to 36.25x slower, so make sure you have
-> a [C compiler](https://wiki.python.org/moin/WindowsCompilers) installed on
-> Windows.
-
-[^1]: failed due to recursion error

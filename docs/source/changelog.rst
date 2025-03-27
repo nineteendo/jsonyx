@@ -1,10 +1,8 @@
 Changelog
 =========
 
-jsonyx 2.0.0 (unreleased)
--------------------------
-
-.. todo:: Add release date
+jsonyx 2.0.0 (Mar 27, 2025)
+---------------------------
 
 - Added support for Python 3.8 and Python 3.9
 - Added the ``jsonyx`` application

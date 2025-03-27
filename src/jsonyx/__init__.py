@@ -1,5 +1,4 @@
 """Customizable JSON library for Python."""
-# TODO(Nice Zombies): pin badge branch
 from __future__ import annotations
 
 __all__: list[str] = [

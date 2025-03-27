@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "https://raw.githubusercontent.com/nineteendo/jsonyx/main/json-patch.schema.json",
+    "$id": "https://raw.githubusercontent.com/nineteendo/jsonyx/2.0.x/json-patch.schema.json",
     "definitions": {
         "operation": {
             "description": "A JSON patch operation.",
