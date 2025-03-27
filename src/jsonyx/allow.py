@@ -56,7 +56,7 @@ NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
 """
 
 NON_STR_KEYS: frozenset[str] = frozenset({"non_str_keys"})
-"""Allow non-string keys.
+"""Allow non-string keys in ``"object"`` types.
 
 .. versionadded:: 2.0
 
@@ -65,8 +65,8 @@ NON_STR_KEYS: frozenset[str] = frozenset({"non_str_keys"})
 >>> json.dump({1: 0}, allow=jsonyx.allow.NON_STR_KEYS)
 {"1": 0}
 
-.. warning:: This can create duplicate keys if a non-string key is serialised
-    to the same string as an existing key.
+.. warning:: This can result in duplicate keys if a non-string key is
+    serialised to the same string as an existing key.
 """
 
 SURROGATES: frozenset[str] = frozenset({"surrogates"})
