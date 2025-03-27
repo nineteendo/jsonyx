@@ -3,14 +3,14 @@ JSON Path Specification
 
 JSON Path is a query language for JSON documents.
 
-Operators
+Selectors
 ---------
 
 .. tabularcolumns:: \X{1}{2}\X{1}{2}
 
-==================== ====================
-Operator             Description
-==================== ====================
+==================== =====================
+Selectors            Description
+==================== =====================
 ``$``                The root object
 ``@``                The current object
 ``.<name>``          Dot-notated child
@@ -18,10 +18,10 @@ Operator             Description
 ``[<number>]``       Array index
 ``[start:end]``      Array slice
 ``[start:end:step]`` Extended array slice
-``[<expression>]``   Filter expression
-``{<expression>}``   Condition
-``?``                Optional marker 
-==================== ====================
+``[<expression>]``   Filter
+``{<expression>}``   Non-descending filter
+``?``                Existence check
+==================== =====================
 
 Examples
 --------
@@ -56,7 +56,8 @@ Examples
                 "isbn": "0-395-19395-8",
                 "price": 22.99
             }
-        ]
+        ],
+        "'~'": "value"
     }
 
 .. tabularcolumns:: \X{1}{2}\X{1}{2}
@@ -74,6 +75,7 @@ JSON Path                                            Result
 ``$.books[@.price < 10]``                            All books cheaper than 10
 ``$.books[:].price{@ < 10}``                         The prices of all books cheaper than 10
 ``$.books[@.category == 'fiction' && @.price < 20]`` All fiction books cheaper than 20
+``$['~'~~~'']``                                      The value of the key ``'~'``
 ==================================================== =======================================
 
 Grammar
@@ -87,6 +89,8 @@ Generated with
 
 query
 ^^^^^
+
+A query can be absolute or relative.
 
 .. container:: highlight
 
@@ -105,6 +109,8 @@ query
 
 absolute_query
 ^^^^^^^^^^^^^^
+
+An absolute query starts with ``$`` followed by zero or more selectors.
 
 .. container:: highlight
 
@@ -128,6 +134,8 @@ absolute_query
 relative_query
 ^^^^^^^^^^^^^^
 
+A relative query starts with ``@`` followed by zero or more child selectors.
+
 .. container:: highlight
 
     .. productionlist:: json-path-grammar
@@ -146,6 +154,8 @@ relative_query
 
 filter
 ^^^^^^
+
+A filter consists of one or more (non-)existence checks / comparisons.
 
 .. container:: highlight
 
@@ -168,6 +178,8 @@ filter
 value
 ^^^^^
 
+A value can be a string, number, ``true``, ``false`` or ``null``.
+
 .. container:: highlight
 
     .. productionlist:: json-path-grammar
@@ -183,6 +195,8 @@ value
 
 slice
 ^^^^^
+
+A slice has a start and an end index (exclusive) with an optional step.
 
 .. container:: highlight
 
@@ -200,6 +214,9 @@ slice
 string
 ^^^^^^
 
+A string is a sequence of characters, wrapped in single quotes, using tilde
+escapes.
+
 .. container:: highlight
 
     .. productionlist:: json-path-grammar
@@ -216,6 +233,8 @@ string
 integer
 ^^^^^^^
 
+An integer is a signed decimal number.
+
 .. container:: highlight
 
     .. productionlist:: json-path-grammar
@@ -231,6 +250,9 @@ integer
 
 number
 ^^^^^^
+
+A number is a signed decimal number, optionally in scientific notation or one
+of the special values ``Infinity`` and ``-Infinity``.
 
 .. container:: highlight
 
@@ -251,6 +273,8 @@ number
 operator
 ^^^^^^^^
 
+An operator can be ``<=``, ``<``, ``==``, ``!=``, ``>=`` or ``>``.
+
 .. container:: highlight
 
     .. productionlist:: json-path-grammar
@@ -267,6 +291,8 @@ operator
 
 whitespace
 ^^^^^^^^^^
+
+Whitespace can be inserted around operators.
 
 .. container:: highlight
 

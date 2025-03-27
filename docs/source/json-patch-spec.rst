@@ -35,6 +35,8 @@ Output:
 Schema
 ------
 
+.. todo:: Pin branch
+
 https://github.com/nineteendo/jsonyx/blob/main/json-patch.schema.json
 
 Operations
