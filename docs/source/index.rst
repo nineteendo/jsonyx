@@ -51,6 +51,8 @@ performance and no dependencies.
 We recommend to use :pypi:`orjson`, :pypi:`msgspec` or :pypi:`pysimdjson` for
 performance critical applications:
 
+.. tabularcolumns:: lrrrrr
+
 =========================================== ====== ====== ======= ======== ============
 encode                                        json jsonyx msgspec   orjson fastest time
 =========================================== ====== ====== ======= ======== ============
@@ -63,6 +65,8 @@ List of 256 strings                         21.28x 15.85x   1.95x     1.00     1
 Complex object                               7.14x  7.65x   1.00x DNF [1]_    213.74 μs
 Dict with 256 lists of 256 dicts with 1 int  9.03x 11.34x   1.14x     1.00   2423.70 μs
 =========================================== ====== ====== ======= ======== ============
+
+.. tabularcolumns:: lrrrrrr
 
 =========================================== ====== ====== ======= ====== ======== ============
 decode                                        json jsonyx msgspec orjson simdjson fastest time

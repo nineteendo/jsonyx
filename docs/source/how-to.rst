@@ -70,6 +70,8 @@ Encoding protocol-based objects
 
 .. versionadded:: 2.0
 
+.. tabularcolumns:: \X{1}{2}\X{1}{2}
+
 ============ ========================================================================
 Type         Required methods
 ============ ========================================================================
@@ -132,6 +134,8 @@ Decoding objects using hooks
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. versionadded:: 2.0
+
+.. tabularcolumns:: \X{1}{2}\X{1}{2}
 
 ============ =========================
 Hook         Called with

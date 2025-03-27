@@ -6,6 +6,8 @@ Command Line Interface
 
 .. versionadded:: 2.0
 
+.. tabularcolumns:: \X{1}{2}\X{1}{2}
+
 ========================= ================================================================
 :doc:`/cli/jsonyx`        A command line utility to manipulate JSON files.
 :doc:`/cli/jsonyx-diff`   Compare two JSON files and generate a diff in JSON patch format.

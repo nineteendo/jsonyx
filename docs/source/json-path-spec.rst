@@ -6,6 +6,8 @@ JSON Path is a query language for JSON documents.
 Operators
 ---------
 
+.. tabularcolumns:: \X{1}{2}\X{1}{2}
+
 ==================== ====================
 Operator             Description
 ==================== ====================
@@ -56,6 +58,8 @@ Examples
             }
         ]
     }
+
+.. tabularcolumns:: \X{1}{2}\X{1}{2}
 
 ==================================================== =======================================
 JSON Path                                            Result
