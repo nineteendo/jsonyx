@@ -210,8 +210,8 @@ Decimal('1.1')
 >>> json.dump(Decimal('1.1'), types={"float": Decimal})
 1.1
 
-Making a :doc:`patch </jsonyx-patch-spec>` from two Python objects
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Making a :doc:`patch </json-patch-spec>` from two Python objects
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. versionadded:: 2.0
 
@@ -219,8 +219,8 @@ Making a :doc:`patch </jsonyx-patch-spec>` from two Python objects
 >>> json.make_patch([1, 2, 3], [1, 3])
 [{'op': 'del', 'path': '$[1]'}]
 
-Applying a :doc:`patch </jsonyx-patch-spec>`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Applying a :doc:`patch </json-patch-spec>`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. versionadded:: 2.0
 

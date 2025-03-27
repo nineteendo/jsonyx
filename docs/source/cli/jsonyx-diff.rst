@@ -28,7 +28,7 @@ Positional arguments
 
 .. option:: output_filename
 
-    The path to the output :doc:`JSON patch </jsonyx-patch-spec>` file. If not
+    The path to the output :doc:`JSON patch </json-patch-spec>` file. If not
     specified, write to :data:`sys.stdout`.
 
 See :doc:`/cli/jsonyx-format` for the formatting options.

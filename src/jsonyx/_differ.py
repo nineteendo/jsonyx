@@ -130,7 +130,7 @@ def make_patch(old: Any, new: Any) -> list[_Operation]:
     :param old: the old Python object
     :param new: the new Python object
     :raises RecursionError: if the object is too deeply nested
-    :return: the :doc:`JSON patch </jsonyx-patch-spec>`
+    :return: the :doc:`JSON patch </json-patch-spec>`
 
     Example:
         >>> import jsonyx as json

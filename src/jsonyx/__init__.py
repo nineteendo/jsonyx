@@ -445,7 +445,7 @@ def apply_patch(
     .. versionadded:: 2.0
 
     :param obj: a Python object
-    :param patch: a :doc:`JSON patch </jsonyx-patch-spec>`
+    :param patch: a :doc:`JSON patch </json-patch-spec>`
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises AssertionError: if an assertion fails
