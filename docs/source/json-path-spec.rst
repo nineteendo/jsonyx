@@ -24,8 +24,6 @@ Operator             Description
 Examples
 --------
 
-Input:
-
 .. code-block:: json
 
     {

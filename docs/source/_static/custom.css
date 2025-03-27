@@ -4,3 +4,6 @@ button.copybtn {
 button.copybtn:focus, .tab-set > input:focus + label {
     outline-style: auto;
 }
+table.docutils {
+    width: 100%;
+}
