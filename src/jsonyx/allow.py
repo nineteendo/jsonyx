@@ -65,7 +65,7 @@ NON_STR_KEYS: frozenset[str] = frozenset({"non_str_keys"})
 {"1": 0}
 
 .. warning:: This can create duplicate keys if a non-string key is serialised
-to the same string as an existing key.
+    to the same string as an existing key.
 """
 
 SURROGATES: frozenset[str] = frozenset({"surrogates"})
