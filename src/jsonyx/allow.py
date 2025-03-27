@@ -5,7 +5,6 @@ deviations.
 
 See :doc:`the specification </jsonyx-spec>` for more information.
 """
-# TODO(Nice Zombies): add NON_STR_KEYS
 from __future__ import annotations
 
 __all__: list[str] = [
@@ -13,6 +12,7 @@ __all__: list[str] = [
     "EVERYTHING",
     "MISSING_COMMAS",
     "NAN_AND_INFINITY",
+    "NON_STR_KEYS",
     "NOTHING",
     "SURROGATES",
     "TRAILING_COMMA",

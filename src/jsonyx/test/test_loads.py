@@ -1,5 +1,4 @@
 """JSON loads tests."""
-# TODO(Nice Zombies): test invalid number
 from __future__ import annotations
 
 __all__: list[str] = []
