@@ -1,7 +1,78 @@
 JSON Path Specification
 =======================
 
-.. todo:: Explain syntax elements
+JSON Path is a query language for JSON documents.
+
+Operators
+---------
+
+==================== ====================
+Operator             Description
+==================== ====================
+``$``                The root object
+``@``                The current object
+``.<name>``          Dot-notated child
+``[<string>]``       Bracket-notated child
+``[<number>]``       Array index
+``[start:end]``      Array slice
+``[start:end:step]`` Extended array slice
+``[<expression>]``   Filter expression
+``{<expression>}``   Condition
+``?``                Optional marker 
+==================== ====================
+
+Examples
+--------
+
+Input:
+
+.. code-block:: json
+
+    {
+        "books": [
+            {
+                "category": "reference",
+                "author": "Nigel Rees",
+                "title": "Sayings of the Century",
+                "price": 8.95
+            },
+            {
+                "category": "fiction",
+                "author": "Evelyn Waugh",
+                "title": "Sword of Honour",
+                "price": 12.99
+            },
+            {
+                "category": "fiction",
+                "author": "Herman Melville",
+                "title": "Moby Dick",
+                "isbn": "0-553-21311-3",
+                "price": 8.99
+            },
+            {
+                "category": "fiction",
+                "author": "J. R. R. Tolkien",
+                "title": "The Lord of the Rings",
+                "isbn": "0-395-19395-8",
+                "price": 22.99
+            }
+        ]
+    }
+
+==================================================== =======================================
+JSON Path                                            Result
+==================================================== =======================================
+``$.books[@]``                                       All books
+``$.books[:].author``                                The authors of all books
+``$.books[2]``                                       The third book
+``$.books[-1]``                                      The last book
+``$.books[:2]``                                      The first two books
+``$.books[@.isbn]``                                  All books with an ISBN
+``$.books[:].isbn?``                                 The ISBNs of all books with an ISBN
+``$.books[@.price < 10]``                            All books cheaper than 10
+``$.books[:].price{@ < 10}``                         The prices of all books cheaper than 10
+``$.books[@.category == 'fiction' && @.price < 20]`` All fiction books cheaper than 20
+==================================================== =======================================
 
 Grammar
 -------
