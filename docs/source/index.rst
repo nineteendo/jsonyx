@@ -56,14 +56,14 @@ performance critical applications:
 =========================================== ====== ====== ======= ======== ============
 encode                                        json jsonyx msgspec   orjson fastest time
 =========================================== ====== ====== ======= ======== ============
-List of 256 booleans                         4.69x  5.64x   1.00x     1.04      1.92 μs
-List of 256 ASCII strings                   13.08x 15.03x   1.62x     1.00      3.67 μs
-List of 256 floats                          24.38x 24.69x   1.35x     1.00      7.89 μs
-List of 256 dicts with 1 int                11.34x 14.32x   1.35x     1.00      7.67 μs
-Medium complex object                       10.64x 12.05x   1.15x     1.00     13.38 μs
-List of 256 strings                         21.28x 15.85x   1.95x     1.00     15.16 μs
+List of 256 booleans                         4.69x  5.64x   1.00x    1.04x      1.92 μs
+List of 256 ASCII strings                   13.08x 15.03x   1.62x    1.00x      3.67 μs
+List of 256 floats                          24.38x 24.69x   1.35x    1.00x      7.89 μs
+List of 256 dicts with 1 int                11.34x 14.32x   1.35x    1.00x      7.67 μs
+Medium complex object                       10.64x 12.05x   1.15x    1.00x     13.38 μs
+List of 256 strings                         21.28x 15.85x   1.95x    1.00x     15.16 μs
 Complex object                               7.14x  7.65x   1.00x DNF [1]_    213.74 μs
-Dict with 256 lists of 256 dicts with 1 int  9.03x 11.34x   1.14x     1.00   2423.70 μs
+Dict with 256 lists of 256 dicts with 1 int  9.03x 11.34x   1.14x    1.00x   2423.70 μs
 =========================================== ====== ====== ======= ======== ============
 
 .. tabularcolumns:: lrrrrrr

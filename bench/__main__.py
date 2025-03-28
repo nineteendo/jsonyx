@@ -109,19 +109,17 @@ def _run_benchmark(
             except TypeError:
                 times[lib] = inf
 
-        unit: float = min(times.values())
+        fastest_time: float = min(times.values())
         row: list[Any] = [case]
-        for time in times.values():
-            normalized_time = time / unit
-            row.append(normalized_time)
-
-        row.append(1_000_000 * unit)
+        row.extend(f"{time / fastest_time:.02f}x" for time in times.values())
+        row.append(f"{1_000_000 * fastest_time:.02f} \u03bcs")
         results.append(row)
 
     headers: list[str] = [name, *funcs.keys(), "fastest\xa0time"]
+    colalign: list[str] = ["left"] + ["right"] * (len(funcs) + 1)
     print()
-    print(tabulate(results, headers, tablefmt="pipe", floatfmt=".02f"))
-    print(tabulate(results, headers, tablefmt="rst", floatfmt=".02f"))
+    print(tabulate(results, headers, "pipe", colalign=colalign))
+    print(tabulate(results, headers, "rst", colalign=colalign))
 
 
 if __name__ == "__main__":
