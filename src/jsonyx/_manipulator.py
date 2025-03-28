@@ -664,6 +664,7 @@ class Manipulator:
         :raises IndexError: if an index is out of range
         :raises JSONSyntaxError: if the select query is invalid
         :raises KeyError: if a key is not found
+        :raises TypeError: if a value has the wrong type
         :return: the selected list of nodes
 
         Example:
@@ -705,6 +706,7 @@ class Manipulator:
         :raises IndexError: if an index is out of range
         :raises JSONSyntaxError: if the filter query is invalid
         :raises KeyError: if a key is not found
+        :raises TypeError: if a value has the wrong type
         :return: the filtered list of nodes
 
         Example:

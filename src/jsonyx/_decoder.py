@@ -654,6 +654,7 @@ class Decoder:
         """Deserialize a JSON file to a Python object.
 
         :param filename: the path to the JSON file
+        :raises OSError: if the file can't be opened
         :raises TruncatedSyntaxError: when failing to decode the file
         :return: a Python object
 

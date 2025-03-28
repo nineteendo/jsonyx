@@ -374,6 +374,7 @@ class Encoder:
         :param obj: a Python object
         :param filename: the path to the JSON file
         :param encoding: the JSON encoding
+        :raises OSError: if the file can't be opened
         :raises RecursionError: if the object is too deeply nested
         :raises TypeError: for unserializable values
         :raises TruncatedSyntaxError: when failing to encode the file

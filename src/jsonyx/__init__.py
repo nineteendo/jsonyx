@@ -117,6 +117,7 @@ def read(
     :param filename: the path to the JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
+    :raises OSError: if the file can't be opened
     :raises TruncatedSyntaxError: when failing to decode the file
     :return: a Python object.
 
@@ -239,6 +240,7 @@ def write(
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
     :param types: a dictionary of :ref:`additional types <protocol_types>`
+    :raises OSError: if the file can't be opened
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
     :raises TruncatedSyntaxError: when failing to encode the file
@@ -528,6 +530,7 @@ def select_nodes(
     :raises IndexError: if an index is out of range
     :raises JSONSyntaxError: if the select query is invalid
     :raises KeyError: if a key is not found
+    :raises TypeError: if a value has the wrong type
     :return: the selected list of nodes
 
     Example:
@@ -565,6 +568,7 @@ def apply_filter(
     :raises IndexError: if an index is out of range
     :raises JSONSyntaxError: if the filter query is invalid
     :raises KeyError: if a key is not found
+    :raises TypeError: if a value has the wrong type
     :return: the filtered list of nodes
 
     Example:
