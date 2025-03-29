@@ -105,28 +105,32 @@ Example with :mod:`numpy`:
     infer serializability based on method presence.
 .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
 
+.. _encoding_hook:
+
 Encoding arbitrary objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. versionadded:: 2.1
 
 >>> import jsonyx as json
->>> def default(obj):
+>>> def complex_hook(obj):
 ...     if isinstance(obj, complex):
 ...         return {"__complex__": True, "real": obj.real, "imag": obj.imag}
 ...     return obj
 ... 
->>> json.dump(1 + 2j, default=default)
+>>> json.dump(1 + 2j, hook=complex_hook)
 {"__complex__": true, "real": 1.0, "imag": 2.0}
 
 .. tip:: You can use :func:`functools.singledispatch` to make this extensible.
+.. warning:: This function is called for **every object** during encoding, even
+  if the object is normally serializable.
 .. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
     suited for this.
 
 Decoding objects
 ----------------
 
-.. _using_hooks:
+.. _decoding_hooks:
 
 Decoding objects using hooks
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^

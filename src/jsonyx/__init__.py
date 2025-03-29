@@ -116,7 +116,7 @@ def read(
 
     :param filename: the path to the JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
+    :param hooks: the :ref:`hooks <_decoding_hooks>` used for transforming data
     :raises OSError: if the file can't be opened
     :raises TruncatedSyntaxError: when failing to decode the file
     :return: a Python object.
@@ -149,7 +149,7 @@ def load(
 
     :param fp: an open JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
+    :param hooks: the :ref:`hooks <_decoding_hooks>` used for transforming data
     :param root: the path to the archive containing this JSON file
     :raises TruncatedSyntaxError: when failing to decode the file
     :return: a Python object
@@ -179,7 +179,7 @@ def loads(
     :param s: a JSON string
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param filename: the path to the JSON file
-    :param hooks: the :ref:`hooks <using_hooks>` used for transforming data
+    :param hooks: the :ref:`hooks <_decoding_hooks>` used for transforming data
     :raises TruncatedSyntaxError: when failing to decode the string
     :return: a Python object
 
@@ -203,9 +203,9 @@ def write(
     *,
     allow: Container[str] = NOTHING,
     commas: bool = True,
-    default: _Hook | None = None,
     end: str = "\n",
     ensure_ascii: bool = False,
+    hook: _Hook | None = None,
     indent: int | str | None = None,
     indent_leaves: bool = True,
     max_indent_level: int | None = None,
@@ -226,16 +226,16 @@ def write(
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
-    .. versionchanged:: 2.1 Added ``default``
+    .. versionchanged:: 2.1 Added ``hook``
 
     :param obj: a Python object
     :param filename: the path to the JSON file
     :param encoding: the JSON encoding
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param commas: separate items by commas when indented
-    :param default: the hook used for transforming data
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
+    :param hook: the :ref:`hook <_encoding_hook>` used for transforming data
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
     :param max_indent_level: the level up to which to indent
@@ -268,9 +268,9 @@ def write(
     Encoder(
         allow=allow,
         commas=commas,
-        default=default,
         end=end,
         ensure_ascii=ensure_ascii,
+        hook=hook,
         indent=indent,
         indent_leaves=indent_leaves,
         max_indent_level=max_indent_level,
@@ -288,9 +288,9 @@ def dump(
     *,
     allow: Container[str] = NOTHING,
     commas: bool = True,
-    default: _Hook | None = None,
     end: str = "\n",
     ensure_ascii: bool = False,
+    hook: _Hook | None = None,
     indent: int | str | None = None,
     indent_leaves: bool = True,
     max_indent_level: int | None = None,
@@ -311,15 +311,15 @@ def dump(
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
-    .. versionchanged:: 2.1 Added ``default``
+    .. versionchanged:: 2.1 Added ``hook``
 
     :param obj: a Python object
     :param fp: an open JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param commas: separate items by commas when indented
-    :param default: the hook used for transforming data
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
+    :param hook: the :ref:`hook <_encoding_hook>` used for transforming data
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
     :param max_indent_level: the level up to which to indent
@@ -360,9 +360,9 @@ def dump(
     Encoder(
         allow=allow,
         commas=commas,
-        default=default,
         end=end,
         ensure_ascii=ensure_ascii,
+        hook=hook,
         indent=indent,
         indent_leaves=indent_leaves,
         max_indent_level=max_indent_level,
@@ -379,9 +379,9 @@ def dumps(
     *,
     allow: Container[str] = NOTHING,
     commas: bool = True,
-    default: _Hook | None = None,
     end: str = "\n",
     ensure_ascii: bool = False,
+    hook: _Hook | None = None,
     indent: int | str | None = None,
     indent_leaves: bool = True,
     max_indent_level: int | None = None,
@@ -402,14 +402,14 @@ def dumps(
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
-    .. versionchanged:: 2.1 Added ``default``
+    .. versionchanged:: 2.1 Added ``hook``
 
     :param obj: a Python object
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param commas: separate items by commas when indented
-    :param default: the hook used for transforming data
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
+    :param hook: the :ref:`hook <_encoding_hook>` used for transforming data
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
     :param max_indent_level: the level up to which to indent
@@ -435,9 +435,9 @@ def dumps(
     return Encoder(
         allow=allow,
         commas=commas,
-        default=default,
         end=end,
         ensure_ascii=ensure_ascii,
+        hook=hook,
         indent=indent,
         indent_leaves=indent_leaves,
         max_indent_level=max_indent_level,

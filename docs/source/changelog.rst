@@ -5,7 +5,7 @@ jsonyx 2.1.0 (unreleased)
 
 .. todo:: Add release date
 
-- Added ``default`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
+- Added ``hook`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
   :func:`jsonyx.dumps` and :func:`jsonyx.write`
 
 jsonyx 2.0.0 (Mar 27, 2025)

@@ -526,25 +526,25 @@ def test_str_types(
     (_APOLLO11, '"1969-07-20T20:17:40+00:00"'),
     ({_APOLLO11: 0}, '{"1969-07-20T20:17:40+00:00": 0}'),
 ])
-def test_default(
+def test_hook(
     json: ModuleType, obj: bytes | dict[object, object], expected: str,
 ) -> None:
-    """Test default."""
-    def default(obj: Any) -> Any:
+    """Test hook."""
+    def datetime_hook(obj: Any) -> Any:
         return obj.isoformat() if isinstance(obj, datetime) else obj
 
-    assert json.dumps(obj, end="", default=default) == expected
+    assert json.dumps(obj, end="", hook=datetime_hook) == expected
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
     ([1 + 2j], '[\n {"real": 1.0, "imag": 2.0}\n]'),
     ({"": 1 + 2j}, '{\n "": {"real": 1.0, "imag": 2.0}\n}'),
 ])
-def test_default_indent_leaves(
+def test_hook_indent_leaves(
     json: ModuleType, obj: bytes | dict[object, object], expected: str,
 ) -> None:
-    """Test default without indent_leaves."""
-    def default(obj: Any) -> Any:
+    """Test hook without indent_leaves."""
+    def complex_hook(obj: Any) -> Any:
         if isinstance(obj, complex):
             return {"real": obj.real, "imag": obj.imag}
 
@@ -553,7 +553,7 @@ def test_default_indent_leaves(
     assert json.dumps(
         obj,
         end="",
-        default=default,
+        hook=complex_hook,
         indent=1,
         indent_leaves=False,
     ) == expected
