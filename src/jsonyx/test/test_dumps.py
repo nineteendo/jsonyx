@@ -1,5 +1,4 @@
 """JSON dumps tests."""
-# TODO(Nice Zombies): test check_circular
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -230,7 +229,7 @@ def test_list_indent(
     ([1, 2, 3], "[1, 2, 3]"),
     ([[1, 2, 3]], "[\n [1, 2, 3]\n]"),
 ])
-def test_list_indent_leaves(
+def test_list_no_indent_leaves(
     json: ModuleType, obj: list[object], expected: str,
 ) -> None:
     """Test list indent without indent_leaves."""
@@ -459,7 +458,7 @@ def test_dict_indent(
     ({"a": 1, "b": 2, "c": 3}, '{"a": 1, "b": 2, "c": 3}'),
     ({"": {"a": 1, "b": 2, "c": 3}}, '{\n "": {"a": 1, "b": 2, "c": 3}\n}'),
 ])
-def test_dict_indent_leaves(
+def test_dict_no_indent_leaves(
     json: ModuleType, obj: dict[str, object], expected: str,
 ) -> None:
     """Test dict indent without indent_leaves."""
@@ -541,7 +540,7 @@ def test_hook(
     ([1 + 2j], '[\n {"real": 1.0, "imag": 2.0}\n]'),
     ({"": 1 + 2j}, '{\n "": {"real": 1.0, "imag": 2.0}\n}'),
 ])
-def test_hook_indent_leaves(
+def test_hook_no_indent_leaves(
     json: ModuleType, obj: bytes | dict[object, object], expected: str,
 ) -> None:
     """Test hook without indent_leaves."""
@@ -569,15 +568,25 @@ def test_circular_reference(
         json.dumps(obj)
 
 
+@pytest.mark.parametrize("obj", [_CIRCULAR_DICT, _CIRCULAR_LIST])
+def test_circular_reference_no_check_circular(
+    json: ModuleType, obj: dict[str, object] | list[object],
+) -> None:
+    """Test circular reference without check_circular."""
+    with pytest.raises(RecursionError):
+        json.dumps(obj, check_circular=False)
+
+
+@pytest.mark.parametrize("check_circular", [True, False])
 @pytest.mark.parametrize(("obj", "expected"), [
     ([[]] * 3, "[[], [], []]"),
     ([{}] * 3, "[{}, {}, {}]"),
 ])  # type: ignore
 def test_shadow_copy(
-    json: ModuleType, obj: list[object], expected: str,
+    json: ModuleType, obj: list[object], expected: str, check_circular: bool,
 ) -> None:
     """Test shadow copy."""
-    assert json.dumps(obj, end="") == expected
+    assert json.dumps(obj, check_circular=check_circular, end="") == expected
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
