@@ -116,7 +116,7 @@ def read(
 
     :param filename: the path to the JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param hooks: the :ref:`hooks <_decoding_hooks>` used for transforming data
+    :param hooks: the :ref:`hooks <decoding_hooks>` used for transforming data
     :raises OSError: if the file can't be opened
     :raises TruncatedSyntaxError: when failing to decode the file
     :return: a Python object.
@@ -149,7 +149,7 @@ def load(
 
     :param fp: an open JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param hooks: the :ref:`hooks <_decoding_hooks>` used for transforming data
+    :param hooks: the :ref:`hooks <decoding_hooks>` used for transforming data
     :param root: the path to the archive containing this JSON file
     :raises TruncatedSyntaxError: when failing to decode the file
     :return: a Python object
@@ -179,7 +179,7 @@ def loads(
     :param s: a JSON string
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param filename: the path to the JSON file
-    :param hooks: the :ref:`hooks <_decoding_hooks>` used for transforming data
+    :param hooks: the :ref:`hooks <decoding_hooks>` used for transforming data
     :raises TruncatedSyntaxError: when failing to decode the string
     :return: a Python object
 
@@ -235,7 +235,7 @@ def write(
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
-    :param hook: the :ref:`hook <_encoding_hook>` used for transforming data
+    :param hook: the :ref:`hook <encoding_hook>` used for transforming data
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
     :param max_indent_level: the level up to which to indent
@@ -319,7 +319,7 @@ def dump(
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
-    :param hook: the :ref:`hook <_encoding_hook>` used for transforming data
+    :param hook: the :ref:`hook <encoding_hook>` used for transforming data
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
     :param max_indent_level: the level up to which to indent
@@ -409,7 +409,7 @@ def dumps(
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
-    :param hook: the :ref:`hook <_encoding_hook>` used for transforming data
+    :param hook: the :ref:`hook <encoding_hook>` used for transforming data
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
     :param max_indent_level: the level up to which to indent

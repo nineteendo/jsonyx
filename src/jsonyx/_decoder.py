@@ -625,7 +625,7 @@ class Decoder:
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param hooks: the :ref:`hooks <_decoding_hooks>` used for transforming data
+    :param hooks: the :ref:`hooks <decoding_hooks>` used for transforming data
     """
 
     def __init__(

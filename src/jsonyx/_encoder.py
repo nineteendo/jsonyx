@@ -319,7 +319,7 @@ class Encoder:
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param commas: separate items by commas when indented
-    :param hook: the :ref:`hook <_encoding_hook>` used for transforming data
+    :param hook: the :ref:`hook <encoding_hook>` used for transforming data
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
     :param indent: the number of spaces or string to indent with

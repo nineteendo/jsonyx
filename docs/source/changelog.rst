@@ -2,6 +2,7 @@ Changelog
 =========
 
 jsonyx 2.1.0 (unreleased)
+-------------------------
 
 .. todo:: Add release date
 
