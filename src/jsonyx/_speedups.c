@@ -65,6 +65,7 @@ typedef struct _PyEncoderObject {
     int ensure_ascii;
     int indent_leaves;
     int quoted_keys;
+    int skipkeys;
     int sort_keys;
     int trailing_comma;
 } PyEncoderObject;
@@ -1335,8 +1336,8 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
                              "max_indent_level", "allow_nan_and_infinity",
                              "allow_non_str_keys", "allow_surrogates",
                              "check_circular", "ensure_ascii", "indent_leaves",
-                             "quoted_keys", "sort_keys", "trailing_comma",
-                             NULL};
+                             "quoted_keys", "skipkeys", "sort_keys",
+                             "trailing_comma", NULL};
 
     PyEncoderObject *s;
     PyObject *bool_types, *float_types, *hook, *indent, *int_types;
@@ -1344,17 +1345,17 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     PyObject *end, *item_separator, *key_separator, *long_item_separator;
     Py_ssize_t max_indent_level;
     int allow_nan_and_infinity, allow_non_str_keys, allow_surrogates;
-    int check_circular, ensure_ascii, indent_leaves, quoted_keys, sort_keys;
-    int trailing_comma;
+    int check_circular, ensure_ascii, indent_leaves, quoted_keys, skipkeys;
+    int sort_keys, trailing_comma;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOUUUUnppppppppp:make_encoder", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOUUUUnpppppppppp:make_encoder", kwlist,
         &array_types, &bool_types, &float_types, &hook, &indent,
         &int_types, &object_types, &str_types, &end, &item_separator,
         &key_separator, &long_item_separator,
         &max_indent_level,
         &allow_nan_and_infinity, &allow_non_str_keys, &allow_surrogates,
         &check_circular, &ensure_ascii, &indent_leaves, &quoted_keys,
-        &sort_keys, &trailing_comma))
+        &skipkeys, &sort_keys, &trailing_comma))
         return NULL;
 
     s = (PyEncoderObject *)type->tp_alloc(type, 0);
@@ -1381,6 +1382,7 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->ensure_ascii = ensure_ascii;
     s->indent_leaves = indent_leaves;
     s->quoted_keys = quoted_keys;
+    s->skipkeys = skipkeys;
     s->sort_keys = sort_keys;
     s->trailing_comma = trailing_comma;
     return (PyObject *)s;
@@ -1791,6 +1793,9 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
                 return -1;
             keystr = encoder_encode_number(s, key);
         }
+        else if (s->skipkeys) {
+            return 0;
+        }
         else {
             PyErr_Format(PyExc_TypeError,
                          "Keys must be str, not %.100s", Py_TYPE(key)->tp_name);
@@ -1798,6 +1803,11 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
         }
 
         if (!s->allow_non_str_keys) {
+            Py_DECREF(keystr);
+            if (s->skipkeys) {
+                return 0;
+            }
+
             PyErr_SetString(PyExc_TypeError, "Non-string keys are not allowed");
             return -1;
         }

@@ -212,6 +212,7 @@ def write(
     max_indent_level: int | None = None,
     quoted_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
+    skipkeys: bool = False,
     sort_keys: bool = False,
     trailing_comma: bool = False,
     types: dict[str, type | tuple[type, ...]] | None = None,
@@ -227,7 +228,7 @@ def write(
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
-    .. versionchanged:: 2.1 Added ``check_circular`` and ``hook``
+    .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and ``skipkeys``
 
     :param obj: a Python object
     :param filename: the path to the JSON file
@@ -243,6 +244,7 @@ def write(
     :param max_indent_level: the level up to which to indent
     :param quoted_keys: quote keys which are :ref:`identifiers <identifiers>`
     :param separators: the item and key separator
+    :param skipkeys: skip non-string keys
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
     :param types: a dictionary of :ref:`additional types <protocol_types>`
@@ -279,6 +281,7 @@ def write(
         max_indent_level=max_indent_level,
         quoted_keys=quoted_keys,
         separators=separators,
+        skipkeys=skipkeys,
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
         types=types,
@@ -300,6 +303,7 @@ def dump(
     max_indent_level: int | None = None,
     quoted_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
+    skipkeys: bool = False,
     sort_keys: bool = False,
     trailing_comma: bool = False,
     types: dict[str, type | tuple[type, ...]] | None = None,
@@ -315,7 +319,7 @@ def dump(
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
-    .. versionchanged:: 2.1 Added ``check_circular`` and ``hook``
+    .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and ``skipkeys``
 
     :param obj: a Python object
     :param fp: an open JSON file
@@ -330,6 +334,7 @@ def dump(
     :param max_indent_level: the level up to which to indent
     :param quoted_keys: quote keys which are :ref:`identifiers <identifiers>`
     :param separators: the item and key separator
+    :param skipkeys: skip non-string keys
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
     :param types: a dictionary of :ref:`additional types <protocol_types>`
@@ -374,6 +379,7 @@ def dump(
         max_indent_level=max_indent_level,
         quoted_keys=quoted_keys,
         separators=separators,
+        skipkeys=skipkeys,
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
         types=types,
@@ -394,6 +400,7 @@ def dumps(
     max_indent_level: int | None = None,
     quoted_keys: bool = True,
     separators: tuple[str, str] = (", ", ": "),
+    skipkeys: bool = False,
     sort_keys: bool = False,
     trailing_comma: bool = False,
     types: dict[str, type | tuple[type, ...]] | None = None,
@@ -409,7 +416,7 @@ def dumps(
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
-    .. versionchanged:: 2.1 Added ``check_circular`` and ``hook``
+    .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and ``skipkeys``
 
     :param obj: a Python object
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
@@ -423,6 +430,7 @@ def dumps(
     :param max_indent_level: the level up to which to indent
     :param quoted_keys: quote keys which are :ref:`identifiers <identifiers>`
     :param separators: the item and key separator
+    :param skipkeys: skip non-string keys
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
     :param types: a dictionary of :ref:`additional types <protocol_types>`
@@ -452,6 +460,7 @@ def dumps(
         max_indent_level=max_indent_level,
         quoted_keys=quoted_keys,
         separators=separators,
+        skipkeys=skipkeys,
         sort_keys=sort_keys,
         trailing_comma=trailing_comma,
         types=types,

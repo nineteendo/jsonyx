@@ -6,8 +6,9 @@ jsonyx 2.1.0 (unreleased)
 
 .. todo:: Add release date
 
-- Added ``check_circular`` and ``hook`` to :class:`jsonyx.Encoder`,
-  :func:`jsonyx.dump`, :func:`jsonyx.dumps` and :func:`jsonyx.write`
+- Added ``check_circular``, ``hook`` and ``skipkeys`` to
+  :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
+  :func:`jsonyx.write`
 
 jsonyx 2.0.0 (Mar 27, 2025)
 ---------------------------

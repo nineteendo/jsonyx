@@ -80,6 +80,7 @@ except ImportError:
         ensure_ascii: bool,
         indent_leaves: bool,
         quoted_keys: bool,
+        skipkeys: bool,
         sort_keys: bool,
         trailing_comma: bool,
     ) -> _EncodeFunc[object]:
@@ -239,11 +240,16 @@ except ImportError:
                         float, int, float_types, int_types,
                     )):
                         s = encode_float(new_key)  # type: ignore
+                    elif skipkeys:
+                        continue
                     else:
                         msg = f"Keys must be str, not {type(new_key).__name__}"
                         raise TypeError(msg)
 
                     if not allow_non_str_keys:
+                        if skipkeys:
+                            continue
+
                         msg = "Non-string keys are not allowed"
                         raise TypeError(msg)
 
@@ -325,7 +331,7 @@ class Encoder:
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
-    .. versionchanged:: 2.1 Added ``check_circular`` and ``hook``
+    .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and ``skipkeys``
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param check_circular: check for circular references
@@ -338,6 +344,7 @@ class Encoder:
     :param max_indent_level: the level up to which to indent
     :param quoted_keys: quote keys which are :ref:`identifiers <identifiers>`
     :param separators: the item and key separator
+    :param skipkeys: skip non-string keys
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
     :param types: a dictionary of :ref:`additional types <protocol_types>`
@@ -360,6 +367,7 @@ class Encoder:
         max_indent_level: int | None = None,
         quoted_keys: bool = True,
         separators: tuple[str, str] = (", ", ": "),
+        skipkeys: bool = False,
         sort_keys: bool = False,
         trailing_comma: bool = False,
         types: dict[str, type | tuple[type, ...]] | None = None,
@@ -388,7 +396,7 @@ class Encoder:
             item_separator, key_separator, long_item_separator,
             max_indent_level, "nan_and_infinity" in allow,
             "non_str_keys" in allow, allow_surrogates, check_circular,
-            ensure_ascii, indent_leaves, quoted_keys, sort_keys,
+            ensure_ascii, indent_leaves, quoted_keys, skipkeys, sort_keys,
             commas and trailing_comma,
         )
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
