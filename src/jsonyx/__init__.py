@@ -21,7 +21,7 @@ __all__: list[str] = [
     "select_nodes",
     "write",
 ]
-__version__: str = "2.0.0"
+__version__: str = "2.1.0"
 
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
@@ -203,6 +203,7 @@ def write(
     *,
     allow: Container[str] = NOTHING,
     commas: bool = True,
+    default: _Hook | None = None,
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
@@ -225,11 +226,14 @@ def write(
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
+    .. versionchanged:: 2.1 Added ``default``
+
     :param obj: a Python object
     :param filename: the path to the JSON file
     :param encoding: the JSON encoding
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param commas: separate items by commas when indented
+    :param default: the hook used for transforming data
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
     :param indent: the number of spaces or string to indent with
@@ -264,6 +268,7 @@ def write(
     Encoder(
         allow=allow,
         commas=commas,
+        default=default,
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
@@ -283,6 +288,7 @@ def dump(
     *,
     allow: Container[str] = NOTHING,
     commas: bool = True,
+    default: _Hook | None = None,
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
@@ -305,10 +311,13 @@ def dump(
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
+    .. versionchanged:: 2.1 Added ``default``
+
     :param obj: a Python object
     :param fp: an open JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param commas: separate items by commas when indented
+    :param default: the hook used for transforming data
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
     :param indent: the number of spaces or string to indent with
@@ -351,6 +360,7 @@ def dump(
     Encoder(
         allow=allow,
         commas=commas,
+        default=default,
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,
@@ -369,6 +379,7 @@ def dumps(
     *,
     allow: Container[str] = NOTHING,
     commas: bool = True,
+    default: _Hook | None = None,
     end: str = "\n",
     ensure_ascii: bool = False,
     indent: int | str | None = None,
@@ -391,9 +402,12 @@ def dumps(
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
+    .. versionchanged:: 2.1 Added ``default``
+
     :param obj: a Python object
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param commas: separate items by commas when indented
+    :param default: the hook used for transforming data
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
     :param indent: the number of spaces or string to indent with
@@ -421,6 +435,7 @@ def dumps(
     return Encoder(
         allow=allow,
         commas=commas,
+        default=default,
         end=end,
         ensure_ascii=ensure_ascii,
         indent=indent,

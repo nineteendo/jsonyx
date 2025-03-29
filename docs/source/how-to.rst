@@ -108,17 +108,15 @@ Example with :mod:`numpy`:
 Encoding arbitrary objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. versionadded:: 2.1
+
 >>> import jsonyx as json
->>> def to_json(obj):
-...     if isinstance(obj, list):
-...         return [to_json(value) for value in obj]
-...     if isinstance(obj, dict):
-...         return {key: to_json(value) for key, value in obj.items()}
+>>> def default(obj):
 ...     if isinstance(obj, complex):
 ...         return {"__complex__": True, "real": obj.real, "imag": obj.imag}
 ...     return obj
 ... 
->>> json.dump(to_json(1 + 2j))
+>>> json.dump(1 + 2j, default=default)
 {"__complex__": true, "real": 1.0, "imag": 2.0}
 
 .. tip:: You can use :func:`functools.singledispatch` to make this extensible.
@@ -166,19 +164,16 @@ Decoding arbitrary objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 >>> import jsonyx as json
->>> def from_json(obj):
-...     if isinstance(obj, list):
-...         return [from_json(value) for value in obj]
-...     if isinstance(obj, dict):
-...         if "__complex__" in obj:
-...             return complex(obj["real"], obj["imag"])
-...         return {key: from_json(value) for key, value in obj.items()}
+>>> def object_hook(obj):
+...     obj = dict(obj)
+...     if "__complex__" in obj:
+...         return complex(obj["real"], obj["imag"])
 ...     return obj
 ... 
->>> from_json(json.loads('{"__complex__": true, "real": 1.0, "imag": 2.0}'))
+>>> s = '{"__complex__": true, "real": 1.0, "imag": 2.0}'
+>>> json.loads(s, hooks={"object": object_hook})
 (1+2j)
 
-.. note:: The ``"object"`` hook is not intended for this purpose.
 .. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
     suited for this.
 

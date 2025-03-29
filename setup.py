@@ -11,7 +11,7 @@ from setuptools import Extension, setup  # type: ignore
 if __name__ == "__main__":
     setup(
         name="jsonyx",
-        version="2.0.0.post2",
+        version="2.1.0",
         description="Customizable JSON library for Python",
         long_description=Path("README.md").read_text(encoding="utf-8"),
         long_description_content_type="text/markdown",

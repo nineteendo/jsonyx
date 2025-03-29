@@ -26,6 +26,7 @@ if TYPE_CHECKING:
             """Write string."""
 
     _EncodeFunc = Callable[[_T], str]
+    _Hook = Callable[[Any], Any]
     _MatchFunc = Callable[[str], Match[str] | None]
     _StrPath = PathLike[str] | str
     _SubFunc = Callable[[str | Callable[[Match[str]], str], str], str]
@@ -61,6 +62,7 @@ except ImportError:
     def make_encoder(
         array_types: type | tuple[type, ...],
         bool_types: type | tuple[type, ...],
+        default: _Hook | None,
         float_types: type | tuple[type, ...],
         indent: str | None,
         int_types: type | tuple[type, ...],
@@ -82,6 +84,12 @@ except ImportError:
     ) -> _EncodeFunc[object]:
         """Make JSON encoder."""
         markers: dict[int, object] = {}
+
+        if default is None:
+            def new_default(obj: Any) -> Any:
+                return obj
+
+            default = new_default
 
         if not ensure_ascii:
             def replace(match: Match[str]) -> str:
@@ -147,9 +155,9 @@ except ImportError:
             write("[")
             current_indent: str = old_indent
             if indent is None or indent_level >= max_indent_level or (
-                not indent_leaves and not any(isinstance(
-                    value, (list, tuple, dict, array_types, object_types),
-                ) for value in seq)
+                not indent_leaves and not any(isinstance(default(value), (
+                    list, tuple, dict, array_types, object_types,
+                )) for value in seq)
             ):
                 indented: bool = False
                 current_item_separator: str = long_item_separator
@@ -196,9 +204,9 @@ except ImportError:
             write("{")
             current_indent: str = old_indent
             if indent is None or indent_level >= max_indent_level or (
-                not indent_leaves and not any(isinstance(
-                    value, (list, tuple, dict, array_types, object_types),
-                ) for value in mapping.values())
+                not indent_leaves and not any(isinstance(default(value), (
+                    list, tuple, dict, array_types, object_types,
+                )) for value in mapping.values())
             ):
                 indented: bool = False
                 current_item_separator: str = long_item_separator
@@ -212,17 +220,20 @@ except ImportError:
             first: bool = True
             items: ItemsView[object, object] = mapping.items()
             for key, value in sorted(items) if sort_keys else items:
-                if isinstance(key, (str, str_types)):
-                    s = str(key)
+                new_key = default(key)
+                if isinstance(new_key, (str, str_types)):
+                    s = str(new_key)
                 else:
-                    if key is None:
+                    if new_key is None:
                         s = "null"
-                    elif isinstance(key, (bool, bool_types)):
-                        s = "true" if key else "false"
-                    elif isinstance(key, (float, int, float_types, int_types)):
-                        s = encode_float(key)  # type: ignore
+                    elif isinstance(new_key, (bool, bool_types)):
+                        s = "true" if new_key else "false"
+                    elif isinstance(new_key, (
+                        float, int, float_types, int_types,
+                    )):
+                        s = encode_float(new_key)  # type: ignore
                     else:
-                        msg = f"Keys must be str, not {type(key).__name__}"
+                        msg = f"Keys must be str, not {type(new_key).__name__}"
                         raise TypeError(msg)
 
                     if not allow_non_str_keys:
@@ -259,6 +270,7 @@ except ImportError:
             indent_level: int,
             current_indent: str,
         ) -> None:
+            obj = default(obj)
             if obj is None:
                 write("null")
             elif isinstance(obj, (bool, bool_types)):
@@ -303,8 +315,11 @@ class Encoder:
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
+    .. versionchanged:: 2.1 Added ``default``
+
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param commas: separate items by commas when indented
+    :param default: the hook used for transforming data
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
     :param indent: the number of spaces or string to indent with
@@ -325,6 +340,7 @@ class Encoder:
         *,
         allow: Container[str] = NOTHING,
         commas: bool = True,
+        default: _Hook | None = None,
         end: str = "\n",
         ensure_ascii: bool = False,
         indent: int | str | None = None,
@@ -354,7 +370,7 @@ class Encoder:
             types = {}
 
         self._encoder: _EncodeFunc[object] = make_encoder(
-            types.get("array", ()), types.get("bool", ()),
+            types.get("array", ()), types.get("bool", ()), default,
             types.get("float", ()), indent, types.get("int", ()),
             types.get("object", ()), types.get("str", ()), end,
             item_separator, key_separator, long_item_separator,
