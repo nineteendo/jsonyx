@@ -178,6 +178,7 @@ Decoding arbitrary objects
 >>> json.loads(s, hooks={"object": object_hook})
 (1+2j)
 
+.. warning:: The ``"object"`` hook is called with a list of tuples, not a dict.
 .. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
     suited for this.
 
