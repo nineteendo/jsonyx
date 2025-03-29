@@ -1,4 +1,5 @@
 """JSON dumps tests."""
+# TODO(Nice Zombies): test check_circular
 from __future__ import annotations
 
 __all__: list[str] = []

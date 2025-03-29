@@ -76,6 +76,7 @@ except ImportError:
         allow_nan_and_infinity: bool,
         allow_non_str_keys: bool,
         allow_surrogates: bool,
+        check_circular: bool,
         ensure_ascii: bool,
         indent_leaves: bool,
         quoted_keys: bool,
@@ -83,7 +84,7 @@ except ImportError:
         trailing_comma: bool,
     ) -> _EncodeFunc[object]:
         """Make JSON encoder."""
-        markers: dict[int, object] = {}
+        markers: dict[int, object] | None = {} if check_circular else None
 
         if hook is None:
             def new_hook(obj: Any) -> Any:
@@ -147,11 +148,13 @@ except ImportError:
                 write("[]")
                 return
 
-            if (markerid := id(seq)) in markers:
-                msg: str = "Unexpected circular reference"
-                raise ValueError(msg)
+            if markers is not None:
+                if (markerid := id(seq)) in markers:
+                    msg: str = "Unexpected circular reference"
+                    raise ValueError(msg)
 
-            markers[markerid] = seq
+                markers[markerid] = seq
+
             write("[")
             current_indent: str = old_indent
             if indent is None or indent_level >= max_indent_level or (
@@ -177,7 +180,9 @@ except ImportError:
 
                 write_value(value, write, indent_level, current_indent)
 
-            del markers[markerid]
+            if markers is not None:
+                del markers[markerid]  # type: ignore
+
             if indented:
                 if trailing_comma:
                     write(item_separator)
@@ -196,11 +201,13 @@ except ImportError:
                 write("{}")
                 return
 
-            if (markerid := id(mapping)) in markers:
-                msg: str = "Unexpected circular reference"
-                raise ValueError(msg)
+            if markers is not None:
+                if (markerid := id(mapping)) in markers:
+                    msg: str = "Unexpected circular reference"
+                    raise ValueError(msg)
 
-            markers[markerid] = mapping
+                markers[markerid] = mapping
+
             write("{")
             current_indent: str = old_indent
             if indent is None or indent_level >= max_indent_level or (
@@ -255,7 +262,9 @@ except ImportError:
                 write(key_separator)
                 write_value(value, write, indent_level, current_indent)
 
-            del markers[markerid]
+            if markers is not None:
+                del markers[markerid]  # type: ignore
+
             if indented:
                 if trailing_comma:
                     write(item_separator)
@@ -295,7 +304,8 @@ except ImportError:
             except (ValueError, TypeError) as exc:
                 raise exc.with_traceback(None) from None
             finally:
-                markers.clear()
+                if markers is not None:
+                    markers.clear()
 
             write(end)
             return io.getvalue()
@@ -315,9 +325,10 @@ class Encoder:
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
-    .. versionchanged:: 2.1 Added ``hook``
+    .. versionchanged:: 2.1 Added ``check_circular`` and ``hook``
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
+    :param check_circular: check for circular references
     :param commas: separate items by commas when indented
     :param hook: the :ref:`hook <encoding_hook>` used for transforming data
     :param end: the string to append at the end
@@ -339,6 +350,7 @@ class Encoder:
         self,
         *,
         allow: Container[str] = NOTHING,
+        check_circular: bool = True,
         commas: bool = True,
         hook: _Hook | None = None,
         end: str = "\n",
@@ -375,8 +387,9 @@ class Encoder:
             types.get("object", ()), types.get("str", ()), end,
             item_separator, key_separator, long_item_separator,
             max_indent_level, "nan_and_infinity" in allow,
-            "non_str_keys" in allow, allow_surrogates, ensure_ascii,
-            indent_leaves, quoted_keys, sort_keys, commas and trailing_comma,
+            "non_str_keys" in allow, allow_surrogates, check_circular,
+            ensure_ascii, indent_leaves, quoted_keys, sort_keys,
+            commas and trailing_comma,
         )
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 

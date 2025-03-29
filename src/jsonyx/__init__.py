@@ -202,6 +202,7 @@ def write(
     encoding: str = "utf-8",
     *,
     allow: Container[str] = NOTHING,
+    check_circular: bool = True,
     commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
@@ -226,12 +227,13 @@ def write(
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
-    .. versionchanged:: 2.1 Added ``hook``
+    .. versionchanged:: 2.1 Added ``check_circular`` and ``hook``
 
     :param obj: a Python object
     :param filename: the path to the JSON file
     :param encoding: the JSON encoding
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
+    :param check_circular: check for circular references
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
@@ -267,6 +269,7 @@ def write(
     """
     Encoder(
         allow=allow,
+        check_circular=check_circular,
         commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,
@@ -287,6 +290,7 @@ def dump(
     fp: _SupportsWrite[str] | None = None,
     *,
     allow: Container[str] = NOTHING,
+    check_circular: bool = True,
     commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
@@ -311,11 +315,12 @@ def dump(
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
-    .. versionchanged:: 2.1 Added ``hook``
+    .. versionchanged:: 2.1 Added ``check_circular`` and ``hook``
 
     :param obj: a Python object
     :param fp: an open JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
+    :param check_circular: check for circular references
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
@@ -359,6 +364,7 @@ def dump(
     """
     Encoder(
         allow=allow,
+        check_circular=check_circular,
         commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,
@@ -378,6 +384,7 @@ def dumps(
     obj: object,
     *,
     allow: Container[str] = NOTHING,
+    check_circular: bool = True,
     commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
@@ -402,10 +409,11 @@ def dumps(
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
-    .. versionchanged:: 2.1 Added ``hook``
+    .. versionchanged:: 2.1 Added ``check_circular`` and ``hook``
 
     :param obj: a Python object
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
+    :param check_circular: check for circular references
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
@@ -434,6 +442,7 @@ def dumps(
     """
     return Encoder(
         allow=allow,
+        check_circular=check_circular,
         commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,

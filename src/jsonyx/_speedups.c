@@ -61,6 +61,7 @@ typedef struct _PyEncoderObject {
     int allow_nan_and_infinity;
     int allow_non_str_keys;
     int allow_surrogates;
+    int check_circular;
     int ensure_ascii;
     int indent_leaves;
     int quoted_keys;
@@ -1333,8 +1334,9 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
                              "key_separator", "long_item_separator",
                              "max_indent_level", "allow_nan_and_infinity",
                              "allow_non_str_keys", "allow_surrogates",
-                             "ensure_ascii", "indent_leaves", "quoted_keys",
-                             "sort_keys", "trailing_comma", NULL};
+                             "check_circular", "ensure_ascii", "indent_leaves",
+                             "quoted_keys", "sort_keys", "trailing_comma",
+                             NULL};
 
     PyEncoderObject *s;
     PyObject *bool_types, *float_types, *hook, *indent, *int_types;
@@ -1342,16 +1344,17 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     PyObject *end, *item_separator, *key_separator, *long_item_separator;
     Py_ssize_t max_indent_level;
     int allow_nan_and_infinity, allow_non_str_keys, allow_surrogates;
-    int ensure_ascii, indent_leaves, quoted_keys, sort_keys, trailing_comma;
+    int check_circular, ensure_ascii, indent_leaves, quoted_keys, sort_keys;
+    int trailing_comma;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOUUUUnpppppppp:make_encoder", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOUUUUnppppppppp:make_encoder", kwlist,
         &array_types, &bool_types, &float_types, &hook, &indent,
         &int_types, &object_types, &str_types, &end, &item_separator,
         &key_separator, &long_item_separator,
         &max_indent_level,
         &allow_nan_and_infinity, &allow_non_str_keys, &allow_surrogates,
-        &ensure_ascii, &indent_leaves, &quoted_keys, &sort_keys,
-        &trailing_comma))
+        &check_circular, &ensure_ascii, &indent_leaves, &quoted_keys,
+        &sort_keys, &trailing_comma))
         return NULL;
 
     s = (PyEncoderObject *)type->tp_alloc(type, 0);
@@ -1374,6 +1377,7 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->allow_nan_and_infinity = allow_nan_and_infinity;
     s->allow_non_str_keys = allow_non_str_keys;
     s->allow_surrogates = allow_surrogates;
+    s->check_circular = check_circular;
     s->ensure_ascii = ensure_ascii;
     s->indent_leaves = indent_leaves;
     s->quoted_keys = quoted_keys;
@@ -1487,10 +1491,16 @@ encoder_call(PyObject *op, PyObject *args, PyObject *kwds)
             goto bail;
         }
     }
-    markers = PyDict_New();
-    if (markers == NULL ||
-        encoder_listencode_obj(self, markers, &writer, obj, 0, indent_cache))
-    {
+    if (self->check_circular) {
+        markers = PyDict_New();
+        if (markers == NULL) {
+            goto bail;
+        }
+    }
+    else {
+        markers = Py_None;
+    }
+    if (encoder_listencode_obj(self, markers, &writer, obj, 0, indent_cache)) {
         goto bail;
     }
 
@@ -1847,21 +1857,23 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
     if (PyMapping_Size(mapping) == 0)  /* Fast path */
         return _PyUnicodeWriter_WriteASCIIString(writer, "{}", 2);
 
-    int has_key;
-    ident = PyLong_FromVoidPtr(mapping);
-    if (ident == NULL)
-        goto bail;
-    has_key = PyDict_Contains(markers, ident);
-    if (has_key == -1)
-    {
-        goto bail;
-    }
-    if (has_key) {
-        PyErr_SetString(PyExc_ValueError, "Unexpected circular reference");
-        goto bail;
-    }
-    if (PyDict_SetItem(markers, ident, mapping) < 0) {
-        goto bail;
+    if (markers != Py_None) {
+        int has_key;
+        ident = PyLong_FromVoidPtr(mapping);
+        if (ident == NULL)
+            goto bail;
+        has_key = PyDict_Contains(markers, ident);
+        if (has_key == -1)
+        {
+            goto bail;
+        }
+        if (has_key) {
+            PyErr_SetString(PyExc_ValueError, "Unexpected circular reference");
+            goto bail;
+        }
+        if (PyDict_SetItem(markers, ident, mapping) < 0) {
+            goto bail;
+        }
     }
 
     if (_PyUnicodeWriter_WriteChar(writer, '{') < 0)
@@ -1954,8 +1966,10 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
             goto bail;
     }
 
-    if (PyDict_DelItem(markers, ident) < 0)
-        goto bail;
+    if (markers != Py_None) {
+        if (PyDict_DelItem(markers, ident) < 0)
+            goto bail;
+    }
     Py_CLEAR(ident);
     if (indented) {
         indent_level--;
@@ -1994,20 +2008,22 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
         return _PyUnicodeWriter_WriteASCIIString(writer, "[]", 2);
     }
 
-    int has_key;
-    ident = PyLong_FromVoidPtr(seq);
-    if (ident == NULL)
-        goto bail;
-    has_key = PyDict_Contains(markers, ident);
-    if (has_key == -1)
-        goto bail;
+    if (markers != Py_None) {
+        int has_key;
+        ident = PyLong_FromVoidPtr(seq);
+        if (ident == NULL)
+            goto bail;
+        has_key = PyDict_Contains(markers, ident);
+        if (has_key == -1)
+            goto bail;
 
-    if (has_key) {
-        PyErr_SetString(PyExc_ValueError, "Unexpected circular reference");
-        goto bail;
-    }
-    if (PyDict_SetItem(markers, ident, seq) < 0) {
-        goto bail;
+        if (has_key) {
+            PyErr_SetString(PyExc_ValueError, "Unexpected circular reference");
+            goto bail;
+        }
+        if (PyDict_SetItem(markers, ident, seq) < 0) {
+            goto bail;
+        }
     }
 
     if (_PyUnicodeWriter_WriteChar(writer, '[') < 0)
@@ -2068,8 +2084,10 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
         if (encoder_listencode_obj(s, markers, writer, obj, indent_level, indent_cache) < 0)
             goto bail;
     }
-    if (PyDict_DelItem(markers, ident) < 0)
-        goto bail;
+    if (markers != Py_None) {
+        if (PyDict_DelItem(markers, ident) < 0)
+            goto bail;
+    }
     Py_CLEAR(ident);
 
     if (indented) {
