@@ -1,13 +1,13 @@
 """JSON dumps tests."""
-# TODO(Nice Zombies): test "default" argument
 from __future__ import annotations
 
 __all__: list[str] = []
 
 from collections import UserDict, UserList, UserString
+from datetime import datetime, timezone
 from decimal import Decimal
 from enum import Enum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
@@ -16,6 +16,7 @@ from jsonyx.allow import NAN_AND_INFINITY, NON_STR_KEYS, SURROGATES
 if TYPE_CHECKING:
     from types import ModuleType
 
+_APOLLO11: datetime = datetime(1969, 7, 20, 20, 17, 40, tzinfo=timezone.utc)
 _CIRCULAR_DICT: dict[str, object] = {}
 _CIRCULAR_DICT[""] = _CIRCULAR_DICT
 _CIRCULAR_LIST: list[object] = []
@@ -519,6 +520,43 @@ def test_str_types(
 ) -> None:
     """Test str_types."""
     assert json.dumps(obj, end="", types={"str": UserString}) == expected
+
+
+@pytest.mark.parametrize(("obj", "expected"), [
+    (_APOLLO11, '"1969-07-20T20:17:40+00:00"'),
+    ({_APOLLO11: 0}, '{"1969-07-20T20:17:40+00:00": 0}'),
+])
+def test_default(
+    json: ModuleType, obj: bytes | dict[object, object], expected: str,
+) -> None:
+    """Test default."""
+    def default(obj: Any) -> Any:
+        return obj.isoformat() if isinstance(obj, datetime) else obj
+
+    assert json.dumps(obj, end="", default=default) == expected
+
+
+@pytest.mark.parametrize(("obj", "expected"), [
+    ([1 + 2j], '[\n {"real": 1.0, "imag": 2.0}\n]'),
+    ({"": 1 + 2j}, '{\n "": {"real": 1.0, "imag": 2.0}\n}'),
+])
+def test_default_indent_leaves(
+    json: ModuleType, obj: bytes | dict[object, object], expected: str,
+) -> None:
+    """Test default without indent_leaves."""
+    def default(obj: Any) -> Any:
+        if isinstance(obj, complex):
+            return {"real": obj.real, "imag": obj.imag}
+
+        return obj
+
+    assert json.dumps(
+        obj,
+        end="",
+        default=default,
+        indent=1,
+        indent_leaves=False,
+    ) == expected
 
 
 @pytest.mark.parametrize("obj", [_CIRCULAR_DICT, _CIRCULAR_LIST])
