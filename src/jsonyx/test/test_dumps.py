@@ -1,5 +1,4 @@
 """JSON dumps tests."""
-# TODO(Nice Zombies): test skipkeys
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -428,6 +427,18 @@ def test_unserializable_key(json: ModuleType, key: object) -> None:
     """Test unserializable key."""
     with pytest.raises(TypeError, match="Keys must be str, not"):
         json.dumps({key: 0})
+
+
+@pytest.mark.parametrize("key", [
+    # JSON values
+    (), 0, 0.0, True, False, None,
+
+    # No JSON values
+    b"", 0j, frozenset(), memoryview(b""), object(),
+])  # type: ignore
+def test_skip_keys(json: ModuleType, key: object) -> None:
+    """Test skipkeys."""
+    assert json.dumps({key: 0}, end="", skipkeys=True) == "{}"
 
 
 def test_sort_keys(json: ModuleType) -> None:
