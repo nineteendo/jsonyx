@@ -1,5 +1,6 @@
 name: pytest
 on:
+  create:
   push:
     paths: src/**
   pull_request:
