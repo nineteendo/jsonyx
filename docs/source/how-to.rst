@@ -60,8 +60,8 @@ jsonyx.TruncatedSyntaxError: (unicode error) 'ascii' codec can't decode byte 0xe
 
 .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the exception.
 
-Encoding objects
-----------------
+Encoding custom objects
+-----------------------
 
 .. _protocol_types:
 
@@ -127,8 +127,8 @@ Encoding arbitrary objects
 .. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
     suited for this.
 
-Decoding objects
-----------------
+Decoding custom objects
+-----------------------
 
 .. _decoding_hooks:
 
