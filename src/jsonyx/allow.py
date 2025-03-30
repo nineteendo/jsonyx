@@ -1,10 +1,9 @@
 """Allow minimal and unambiguous JSON deviations for developer convenience.
 
-Combine flags (e.g. ``COMMENTS | UNQUOTED_KEYS``) to allow multiple deviations.
-
-Exclude flags (e.g. ``EVERYTHING - MISSING_COMMAS``) to disallow deviations.
-
 See :doc:`the specification </jsonyx-spec>` for more information.
+
+.. tip:: Flags can also be combined (e.g. ``COMMENTS | UNQUOTED_KEYS``) or
+    excluded (e.g. ``EVERYTHING - NON_STR_KEYS``).
 """
 from __future__ import annotations
 
