@@ -225,6 +225,11 @@ def test_list_indent(
     assert s == f"[\n{expected}1,\n{expected}2,\n{expected}3\n]"
 
 
+def test_empty_list_indent(json: ModuleType) -> None:
+    """Test empty list indent."""
+    assert json.dumps([], end="", indent=1) == "[]"
+
+
 @pytest.mark.parametrize(("obj", "expected"), [
     ([1, 2, 3], "[1, 2, 3]"),
     ([[1, 2, 3]], "[\n [1, 2, 3]\n]"),
@@ -438,7 +443,7 @@ def test_unserializable_key(json: ModuleType, key: object) -> None:
 ])  # type: ignore
 def test_skip_keys(json: ModuleType, key: object) -> None:
     """Test skipkeys."""
-    assert json.dumps({key: 0}, end="", skipkeys=True) == "{}"
+    assert json.dumps({key: 0}, end="", indent=1, skipkeys=True) == "{}"
 
 
 def test_sort_keys(json: ModuleType) -> None:
@@ -464,6 +469,11 @@ def test_dict_indent(
     assert s == (
         f'{{\n{expected}"a": 1,\n{expected}"b": 2,\n{expected}"c": 3\n}}'
     )
+
+
+def test_empty_dict_indent(json: ModuleType) -> None:
+    """Test empty dict indent."""
+    assert json.dumps({}, end="", indent=1) == "{}"
 
 
 @pytest.mark.parametrize(("obj", "expected"), [

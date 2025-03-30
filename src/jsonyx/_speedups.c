@@ -1734,7 +1734,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
 
 static int
 encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *writer, bool *first,
-                         PyObject *key, PyObject *value,
+                         bool indented, PyObject *key, PyObject *value,
                          Py_ssize_t indent_level, PyObject *indent_cache,
                          PyObject *item_separator)
 {
@@ -1819,6 +1819,12 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
 
     if (*first) {
         *first = false;
+        if (indented &&
+            write_newline_indent(writer, indent_level, indent_cache) < 0)
+        {
+            Py_DECREF(keystr);
+            return -1;
+        }
     }
     else {
         if (_PyUnicodeWriter_WriteStr(writer, item_separator) < 0) {
@@ -1863,9 +1869,6 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
     PyObject *items = NULL;
     PyObject *key, *value;
     bool first = true;
-
-    if (PyMapping_Size(mapping) == 0)  /* Fast path */
-        return _PyUnicodeWriter_WriteASCIIString(writer, "{}", 2);
 
     if (markers != Py_None) {
         int has_key;
@@ -1934,9 +1937,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
 #endif
         indent_level++;
         separator = get_item_separator(s, indent_level, indent_cache);
-        if (separator == NULL ||
-            write_newline_indent(writer, indent_level, indent_cache) < 0)
-        {
+        if (separator == NULL) {
             goto bail;
         }
     }
@@ -1956,9 +1957,9 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
 
             key = PyTuple_GET_ITEM(item, 0);
             value = PyTuple_GET_ITEM(item, 1);
-            if (encoder_encode_key_value(s, markers, writer, &first, key, value,
-                                         indent_level, indent_cache,
-                                         separator) < 0)
+            if (encoder_encode_key_value(s, markers, writer, &first, indented,
+                                         key, value, indent_level,
+                                         indent_cache, separator) < 0)
                 goto bail;
         }
         Py_CLEAR(items);
@@ -1966,9 +1967,9 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
     } else {
         Py_ssize_t pos = 0;
         while (PyDict_Next(mapping, &pos, &key, &value)) {
-            if (encoder_encode_key_value(s, markers, writer, &first, key, value,
-                                         indent_level, indent_cache,
-                                         separator) < 0)
+            if (encoder_encode_key_value(s, markers, writer, &first, indented,
+                                         key, value, indent_level,
+                                         indent_cache, separator) < 0)
                 goto bail;
         }
         // PyDict_Next could return an error, we need to handle it
@@ -1981,7 +1982,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
             goto bail;
     }
     Py_CLEAR(ident);
-    if (indented) {
+    if (!first && indented) {
         indent_level--;
         if ((s->trailing_comma && _PyUnicodeWriter_WriteStr(writer, s->item_separator) < 0) ||
             write_newline_indent(writer, indent_level, indent_cache) < 0)
@@ -2013,10 +2014,6 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
     s_fast = PySequence_Fast(seq, "_iterencode_sequence needs a sequence");
     if (s_fast == NULL)
         return -1;
-    if (PySequence_Fast_GET_SIZE(s_fast) == 0) {
-        Py_DECREF(s_fast);
-        return _PyUnicodeWriter_WriteASCIIString(writer, "[]", 2);
-    }
 
     if (markers != Py_None) {
         int has_key;
@@ -2079,15 +2076,22 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
 #endif
         indent_level++;
         separator = get_item_separator(s, indent_level, indent_cache);
-        if (separator == NULL ||
-            write_newline_indent(writer, indent_level, indent_cache) < 0)
-        {
+        if (separator == NULL) {
             goto bail;
         }
     }
+    int first = true;
     for (i = 0; i < PySequence_Fast_GET_SIZE(s_fast); i++) {
         PyObject *obj = PySequence_Fast_GET_ITEM(s_fast, i);
-        if (i) {
+        if (first) {
+            first = false;
+            if (indented &&
+                write_newline_indent(writer, indent_level, indent_cache) < 0)
+            {
+                goto bail;
+            }
+        }
+        else {
             if (_PyUnicodeWriter_WriteStr(writer, separator) < 0)
                 goto bail;
         }
@@ -2100,7 +2104,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
     }
     Py_CLEAR(ident);
 
-    if (indented) {
+    if (!first && indented) {
         indent_level--;
         if ((s->trailing_comma && _PyUnicodeWriter_WriteStr(writer, s->item_separator) < 0) ||
             write_newline_indent(writer, indent_level, indent_cache) < 0)

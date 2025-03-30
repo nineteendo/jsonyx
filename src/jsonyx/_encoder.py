@@ -145,10 +145,6 @@ except ImportError:
         def write_sequence(
             seq: Any, write: _WriteFunc, indent_level: int, old_indent: str,
         ) -> None:
-            if not seq:
-                write("[]")
-                return
-
             if markers is not None:
                 if (markerid := id(seq)) in markers:
                     msg: str = "Unexpected circular reference"
@@ -170,12 +166,13 @@ except ImportError:
                 indent_level += 1
                 current_indent += indent
                 current_item_separator = item_separator + current_indent
-                write(current_indent)
 
             first: bool = True
             for value in seq:
                 if first:
                     first = False
+                    if indented:
+                        write(current_indent)
                 else:
                     write(current_item_separator)
 
@@ -184,7 +181,7 @@ except ImportError:
             if markers is not None:
                 del markers[markerid]  # type: ignore
 
-            if indented:
+            if not first and indented:
                 if trailing_comma:
                     write(item_separator)
 
@@ -198,10 +195,6 @@ except ImportError:
             indent_level: int,
             old_indent: str,
         ) -> None:
-            if not mapping:
-                write("{}")
-                return
-
             if markers is not None:
                 if (markerid := id(mapping)) in markers:
                     msg: str = "Unexpected circular reference"
@@ -223,7 +216,6 @@ except ImportError:
                 indent_level += 1
                 current_indent += indent
                 current_item_separator = item_separator + current_indent
-                write(current_indent)
 
             first: bool = True
             items: ItemsView[object, object] = mapping.items()
@@ -255,6 +247,8 @@ except ImportError:
 
                 if first:
                     first = False
+                    if indented:
+                        write(current_indent)
                 else:
                     write(current_item_separator)
 
@@ -271,7 +265,7 @@ except ImportError:
             if markers is not None:
                 del markers[markerid]  # type: ignore
 
-            if indented:
+            if not first and indented:
                 if trailing_comma:
                     write(item_separator)
 

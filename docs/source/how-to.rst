@@ -75,11 +75,11 @@ Encoding protocol-based objects
 ============ ========================================================================
 Type         Required methods
 ============ ========================================================================
-``"array"``  :meth:`~object.__len__`, and :meth:`~object.__iter__`
+``"array"``  :meth:`~object.__iter__`
 ``"bool"``   :meth:`~object.__bool__`, :meth:`~object.__len__` or absent for ``true``
 ``"float"``  :meth:`~object.__str__` or :meth:`~object.__repr__`
 ``"int"``    :meth:`~object.__str__` or :meth:`~object.__repr__`
-``"object"`` :meth:`~object.__len__`, :meth:`!values` and :meth:`!items`
+``"object"`` :meth:`!values` and :meth:`!items`
 ``"str"``    :meth:`~object.__str__` or :meth:`~object.__repr__`
 ============ ========================================================================
 
