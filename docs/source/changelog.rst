@@ -1,10 +1,8 @@
 Changelog
 =========
 
-jsonyx 2.1.0 (unreleased)
--------------------------
-
-.. todo:: Add release date
+jsonyx 2.1.0 (Mar 30, 2025)
+---------------------------
 
 - Added ``check_circular``, ``hook`` and ``skipkeys`` to
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
