@@ -161,6 +161,8 @@ def load(
         >>> json.load(io)
         ['streaming API']
 
+    .. tip:: Specify ``root`` to display the zip filename in error messages.
+
     """
     return Decoder(allow=allow, hooks=hooks).load(fp, root=root)
 
@@ -228,7 +230,8 @@ def write(
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
-    .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and ``skipkeys``
+    .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
+        ``skipkeys``.
 
     :param obj: a Python object
     :param filename: the path to the JSON file
@@ -319,7 +322,8 @@ def dump(
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
-    .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and ``skipkeys``
+    .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
+        ``skipkeys``.
 
     :param obj: a Python object
     :param fp: an open JSON file
@@ -416,7 +420,8 @@ def dumps(
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
-    .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and ``skipkeys``
+    .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
+        ``skipkeys``.
 
     :param obj: a Python object
     :param allow: the JSON deviations from :mod:`jsonyx.allow`

@@ -325,7 +325,8 @@ class Encoder:
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
-    .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and ``skipkeys``
+    .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
+        ``skipkeys``.
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param check_circular: check for circular references

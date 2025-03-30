@@ -690,6 +690,9 @@ class Decoder:
             >>> decoder.load(io)
             ['streaming API']
 
+        .. tip:: Specify ``root`` to display the zip filename in error
+            messages.
+
         """
         name: str | None
         if name := getattr(fp, "name", None):
