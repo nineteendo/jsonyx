@@ -8,6 +8,8 @@ jsonyx 2.2.0 (unreleased)
 
 - Added ``cache_keys`` to :class:`jsonyx.Decoder`, :func:`jsonyx.load`,
   :func:`jsonyx.loads` and :func:`jsonyx.read`
+- Disabled caching keys by default for :class:`jsonyx.Decoder`,
+  :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`jsonyx.read`
 
 jsonyx 2.1.0 (Mar 30, 2025)
 ---------------------------

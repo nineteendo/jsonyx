@@ -633,7 +633,11 @@ class Decoder:
     """A configurable JSON decoder.
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.`
-    .. versionchanged:: 2.2 Added ``cache_keys``.
+
+    .. versionchanged:: 2.2
+
+        - Added ``cache_keys``.
+        - Disabled caching keys by default.
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param cache_keys: re-use the keys of objects
