@@ -1,6 +1,6 @@
 sphinx==8.2.3
 furo @ git+https://github.com/nineteendo/furo@df7fd07bcba5e56136fa7806730a2386412fe5ff
-sphinx-autodoc-typehints @ git+https://github.com/nineteendo/sphinx-autodoc-typehints@26a141696c57e22a593a8fba80eb2a77121af206
+sphinx-autodoc-typehints @ git+https://github.com/nineteendo/sphinx-autodoc-typehints@8e86073afa1d68da9d9fab4ce3b38346c5fe1388
 sphinx-copybutton==0.5.2
 sphinx_inline_tabs @ git+https://github.com/nineteendo/sphinx-inline-tabs@e9c63c44000f0a0ed69cfd6de6156e2c1ee75c2f
 sphinx-issues==5.0.0

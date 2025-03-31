@@ -46,7 +46,7 @@ performance and no dependencies.
 
 - Dedicated functions for reading and writing files and pretty printing
 
-.. rubric:: Benchmark (Mar 17, 2025)
+.. rubric:: Benchmark (Mar 31, 2025)
 
 We recommend to use :pypi:`orjson`, :pypi:`msgspec` or :pypi:`pysimdjson` for
 performance critical applications:
@@ -56,14 +56,14 @@ performance critical applications:
 =========================================== ====== ====== ======= ======== ============
 encode                                        json jsonyx msgspec   orjson fastest time
 =========================================== ====== ====== ======= ======== ============
-List of 256 booleans                         4.69x  5.64x   1.00x    1.04x      1.92 μs
-List of 256 ASCII strings                   13.08x 15.03x   1.62x    1.00x      3.67 μs
-List of 256 floats                          24.38x 24.69x   1.35x    1.00x      7.89 μs
-List of 256 dicts with 1 int                11.34x 14.32x   1.35x    1.00x      7.67 μs
-Medium complex object                       10.64x 12.05x   1.15x    1.00x     13.38 μs
-List of 256 strings                         21.28x 15.85x   1.95x    1.00x     15.16 μs
-Complex object                               7.14x  7.65x   1.00x DNF [1]_    213.74 μs
-Dict with 256 lists of 256 dicts with 1 int  9.03x 11.34x   1.14x    1.00x   2423.70 μs
+List of 256 booleans                         4.56x  5.33x   1.00x    1.06x      1.90 μs
+List of 256 ASCII strings                   12.12x 13.65x   1.50x    1.00x      3.95 μs
+List of 256 floats                          23.41x 25.95x   1.30x    1.00x      8.03 μs
+List of 256 dicts with 1 int                11.10x 13.61x   1.32x    1.00x      7.75 μs
+Medium complex object                       10.76x 11.80x   1.16x    1.00x     13.30 μs
+List of 256 strings                         23.08x 19.66x   2.04x    1.00x     14.42 μs
+Complex object                               7.36x  7.95x   1.00x DNF [1]_    209.74 μs
+Dict with 256 lists of 256 dicts with 1 int  9.23x 11.34x   1.21x    1.00x   2361.90 μs
 =========================================== ====== ====== ======= ======== ============
 
 .. tabularcolumns:: lrrrrrr
@@ -71,14 +71,14 @@ Dict with 256 lists of 256 dicts with 1 int  9.03x 11.34x   1.14x    1.00x   242
 =========================================== ====== ====== ======= ====== ======== ============
 decode                                        json jsonyx msgspec orjson simdjson fastest time
 =========================================== ====== ====== ======= ====== ======== ============
-List of 256 booleans                         4.65x  7.19x   3.02x  1.41x    1.00x      1.43 μs
-List of 256 ASCII strings                    7.35x 12.65x   4.73x  4.42x    1.00x      2.98 μs
-List of 256 floats                          10.85x 12.17x   2.16x  1.66x    1.00x      6.10 μs
-List of 256 dicts with 1 int                13.56x 16.11x   6.92x  5.24x    1.00x      6.17 μs
-Medium complex object                       12.47x 18.84x   5.25x  4.34x    1.00x      7.68 μs
-List of 256 strings                          4.01x  3.41x  14.99x  8.04x    1.00x     23.47 μs
-Complex object                               8.92x  7.75x   9.09x  9.16x    1.00x    145.17 μs
-Dict with 256 lists of 256 dicts with 1 int 17.95x 22.36x  12.42x 10.53x    1.00x   1621.17 μs
+List of 256 booleans                         4.40x  6.26x   2.60x  1.28x    1.00x      1.54 μs
+List of 256 ASCII strings                    9.08x 12.57x   5.43x  5.03x    1.00x      2.89 μs
+List of 256 floats                          10.99x 12.47x   2.32x  1.78x    1.00x      6.14 μs
+List of 256 dicts with 1 int                12.11x 15.16x   6.87x  5.08x    1.00x      6.17 μs
+Medium complex object                       12.65x 17.63x   5.26x  4.40x    1.00x      7.62 μs
+List of 256 strings                          5.68x  4.38x   9.92x  8.00x    1.00x     16.76 μs
+Complex object                               8.58x  7.54x   8.32x  7.56x    1.00x    136.79 μs
+Dict with 256 lists of 256 dicts with 1 int 17.65x 19.13x  12.07x 10.78x    1.00x   1658.37 μs
 =========================================== ====== ====== ======= ====== ======== ============
 
 .. warning:: The Python version of :mod:`jsonyx` is up to 36.25x slower, so
