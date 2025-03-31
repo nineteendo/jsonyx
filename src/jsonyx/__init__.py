@@ -108,14 +108,17 @@ def read(
     filename: _StrPath,
     *,
     allow: Container[str] = NOTHING,
+    cache_keys: bool = False,
     hooks: dict[str, _Hook] | None = None,
 ) -> Any:
     """Deserialize a JSON file to a Python object.
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
+    .. versionchanged:: 2.2 Added ``cache_keys``.
 
     :param filename: the path to the JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
+    :param cache_keys: re-use the keys of objects
     :param hooks: the :ref:`hooks <decoding_hooks>` used for transforming data
     :raises OSError: if the file can't be opened
     :raises TruncatedSyntaxError: when failing to decode the file
@@ -133,22 +136,27 @@ def read(
         ['filesystem API']
 
     """
-    return Decoder(allow=allow, hooks=hooks).read(filename)
+    return Decoder(
+        allow=allow, cache_keys=cache_keys, hooks=hooks,
+    ).read(filename)
 
 
 def load(
     fp: _SupportsRead[bytes | str],
     *,
     allow: Container[str] = NOTHING,
+    cache_keys: bool = False,
     hooks: dict[str, _Hook] | None = None,
     root: _StrPath = ".",
 ) -> Any:
     """Deserialize an open JSON file to a Python object.
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
+    .. versionchanged:: 2.2 Added ``cache_keys``.
 
     :param fp: an open JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
+    :param cache_keys: re-use the keys of objects
     :param hooks: the :ref:`hooks <decoding_hooks>` used for transforming data
     :param root: the path to the archive containing this JSON file
     :raises TruncatedSyntaxError: when failing to decode the file
@@ -164,22 +172,27 @@ def load(
     .. tip:: Specify ``root`` to display the zip filename in error messages.
 
     """
-    return Decoder(allow=allow, hooks=hooks).load(fp, root=root)
+    return Decoder(
+        allow=allow, cache_keys=cache_keys, hooks=hooks,
+    ).load(fp, root=root)
 
 
 def loads(
     s: bytes | str,
     *,
     allow: Container[str] = NOTHING,
+    cache_keys: bool = False,
     filename: _StrPath = "<string>",
     hooks: dict[str, _Hook] | None = None,
 ) -> Any:
     r"""Deserialize a JSON string to a Python object.
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
+    .. versionchanged:: 2.2 Added ``cache_keys``.
 
     :param s: a JSON string
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
+    :param cache_keys: re-use the keys of objects
     :param filename: the path to the JSON file
     :param hooks: the :ref:`hooks <decoding_hooks>` used for transforming data
     :raises TruncatedSyntaxError: when failing to decode the string
@@ -195,7 +208,9 @@ def loads(
     .. tip:: Specify ``filename`` to display the filename in error messages.
 
     """
-    return Decoder(allow=allow, hooks=hooks).loads(s, filename=filename)
+    return Decoder(
+        allow=allow, cache_keys=cache_keys, hooks=hooks,
+    ).loads(s, filename=filename)
 
 
 def write(

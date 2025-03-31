@@ -291,10 +291,17 @@ except ImportError:
         allow_surrogates: bool,
         allow_trailing_comma: bool,
         allow_unquoted_keys: bool,
+        cache_keys: bool,
     ) -> _Scanner:
         """Make JSON scanner."""
-        memo: dict[Any, Any] = {}
-        memoize: Callable[[Any, Any], Any] = memo.setdefault
+        memo: dict[Any, Any] | None
+        memoize: Callable[[Any, Any], Any] | None
+        if cache_keys:
+            memo = {}
+            memoize = memo.setdefault
+        else:
+            memo = None
+            memoize = None
 
         def skip_comments(filename: str, s: str, end: int) -> int:
             find: Callable[[str, int], int] = s.find
@@ -431,7 +438,9 @@ except ImportError:
                     raise _errmsg(msg, filename, s, end)
 
                 # Reduce memory consumption
-                key = memoize(key, key)
+                if memoize is not None:
+                    key = memoize(key, key)
+
                 colon_idx: int = end
                 end = skip_comments(filename, s, end)
                 if s[end:end + 1] != ":":
@@ -608,7 +617,8 @@ except ImportError:
             except JSONSyntaxError as exc:
                 raise exc.with_traceback(None) from None
             finally:
-                memo.clear()
+                if memo is not None:
+                    memo.clear()
 
             if (end := skip_comments(filename, s, end)) < len(s):
                 msg = "Expecting end of file"
@@ -622,9 +632,11 @@ except ImportError:
 class Decoder:
     """A configurable JSON decoder.
 
-    .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
+    .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.`
+    .. versionchanged:: 2.2 Added ``cache_keys``.
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
+    :param cache_keys: re-use the keys of objects
     :param hooks: the :ref:`hooks <decoding_hooks>` used for transforming data
     """
 
@@ -632,6 +644,7 @@ class Decoder:
         self,
         *,
         allow: Container[str] = NOTHING,
+        cache_keys: bool = False,
         hooks: dict[str, _Hook] | None = None,
     ) -> None:
         """Create a new JSON decoder."""
@@ -647,7 +660,7 @@ class Decoder:
             hooks.get("object", dict), hooks.get("str", str),
             "comments" in allow, "missing_commas" in allow,
             "nan_and_infinity" in allow, allow_surrogates,
-            "trailing_comma" in allow, "unquoted_keys" in allow,
+            "trailing_comma" in allow, "unquoted_keys" in allow, cache_keys,
         )
 
     def read(self, filename: _StrPath) -> Any:

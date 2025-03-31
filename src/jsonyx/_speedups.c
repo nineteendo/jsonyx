@@ -39,6 +39,7 @@ typedef struct _PyScannerObject {
     int allow_surrogates;
     int allow_trailing_comma;
     int allow_unquoted_keys;
+    int cache_keys;
 } PyScannerObject;
 
 #define PyScannerObject_CAST(op)    ((PyScannerObject *)(op))
@@ -700,14 +701,16 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
             }
             if (key == NULL)
                 goto bail;
-            new_key = PyDict_SetDefault(memo, key, key);
-            // This returns a borrowed reference, while new_key
-            // is a strong reference in the case of PyObject_CallOneArg
-            Py_INCREF(new_key);
-            if (new_key == NULL)
-                goto bail;
+            if (memo != Py_None) {
+                new_key = PyDict_SetDefault(memo, key, key);
+                // This returns a borrowed reference, while new_key
+                // is a strong reference in the case of PyObject_CallOneArg
+                Py_INCREF(new_key);
+                if (new_key == NULL)
+                    goto bail;
 
-            Py_SETREF(key, new_key);
+                Py_SETREF(key, new_key);
+            }
             colon_idx = idx = next_idx;
 
             /* skip comments between key and : delimiter, read :, skip comments */
@@ -1243,9 +1246,15 @@ scanner_call(PyObject *op, PyObject *args, PyObject *kwds)
     {
         return NULL;
     }
-    PyObject *memo = PyDict_New();
-    if (memo == NULL) {
-        return NULL;
+    PyObject *memo;
+    if (self->cache_keys) {
+        memo = PyDict_New();
+        if (memo == NULL) {
+            return NULL;
+        }
+    }
+    else {
+        memo = Py_None;
     }
     rval = scan_once_unicode(self, memo, pyfilename, pystr, idx, &next_idx);
     Py_DECREF(memo);
@@ -1271,19 +1280,21 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
                              "allow_comments", "allow_missing_commas",
                              "allow_nan_and_infinity", "allow_surrogates",
                              "allow_trailing_comma", "allow_unquoted_keys",
-                             NULL};
+                             "cache_keys", NULL};
 
     PyScannerObject *s;
     PyObject *bool_hook, *float_hook, *int_hook, *object_hook, *array_hook;
     PyObject *str_hook;
     int allow_comments, allow_missing_commas, allow_nan_and_infinity;
     int allow_surrogates, allow_trailing_comma, allow_unquoted_keys;
+    int cache_keys;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOpppppp:make_scanner", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOppppppp:make_scanner", kwlist,
         &array_hook, &bool_hook, &float_hook, &int_hook, &object_hook,
         &str_hook,
         &allow_comments, &allow_missing_commas, &allow_nan_and_infinity,
-        &allow_surrogates, &allow_trailing_comma, &allow_unquoted_keys))
+        &allow_surrogates, &allow_trailing_comma, &allow_unquoted_keys,
+        &cache_keys))
         return NULL;
 
     s = (PyScannerObject *)type->tp_alloc(type, 0);
@@ -1303,6 +1314,7 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->allow_surrogates = allow_surrogates;
     s->allow_trailing_comma = allow_trailing_comma;
     s->allow_unquoted_keys = allow_unquoted_keys;
+    s->cache_keys = cache_keys;
     return (PyObject *)s;
 }
 
