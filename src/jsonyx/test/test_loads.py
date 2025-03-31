@@ -1,5 +1,4 @@
 """JSON loads tests."""
-# TODO(Nice Zombies): test cache_keys=False
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -539,8 +538,16 @@ def test_invalid_object(
     check_syntax_err(exc_info, msg, colno, end_colno)
 
 
-def test_reuse_keys(json: ModuleType) -> None:
-    """Test if keys are re-used."""
+def test_repeated_keys(json: ModuleType) -> None:
+    """Test repeated keys."""
+    assert id(b"abc".decode()) != id("abc")
+    s: str = '[{"abc": 1}, {"abc": 2}, {"abc": 3}]'
+    dcts: list[dict[str, int]] = json.loads(s)
+    assert len({id(key) for dct in dcts for key in dct}) == 3
+
+
+def test_repeated_keys_cache_keys(json: ModuleType) -> None:
+    """Test repeated keys with cache_keys."""
     assert id(b"abc".decode()) != id("abc")
     s: str = '[{"abc": 1}, {"abc": 2}, {"abc": 3}]'
     dcts: list[dict[str, int]] = json.loads(s, cache_keys=True)

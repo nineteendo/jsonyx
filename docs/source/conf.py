@@ -15,7 +15,7 @@ year: int = datetime.now(tz=timezone.utc).year
 copyright: str = f"{year}, Nice Zombies"  # noqa: A001
 author: str = "Nice Zombies"
 
-release: str = "2.1"  # 2.1.0
+release: str = "2.2"  # 2.2.0
 version: str = "latest" if branch == "main" else branch
 
 # -- General configuration
