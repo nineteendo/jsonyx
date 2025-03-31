@@ -1,10 +1,8 @@
 Changelog
 =========
 
-jsonyx 2.2.0 (unreleased)
--------------------------
-
-.. todo:: Add release date
+jsonyx 2.2.0 (Mar 31, 2025)
+---------------------------
 
 - Added ``cache_keys`` to :class:`jsonyx.Decoder`, :func:`jsonyx.load`,
   :func:`jsonyx.loads` and :func:`jsonyx.read`
