@@ -97,14 +97,14 @@ Environment variables
     .. versionadded:: 2.3
 
     Colors:
-        1. Color for ``null`` (default: ``"0;90"``)
-        2. Color for ``false`` (default: ``"0;39"``)
-        3. Color for ``true`` (default: ``"0;39"``)
-        4. Color for numbers (default: ``"0;39"``)
-        5. Color for strings (default: ``"0;32"``)
-        6. Color for arrays (default: ``"1;39"``)
-        7. Color for objects (default: ``"1;39"``)
-        8. Color for object keys (default: ``"1;34"``)
+        1. **``null``** (default: ``"0;90"``)
+        2. **``false``** (default: ``"0;39"``)
+        3. **``true``** (default: ``"0;39"``)
+        4. **Numbers** (default: ``"0;39"``)
+        5. **Strings** (default: ``"0;32"``)
+        6. **Arrays** (default: ``"1;39"``)
+        7. **Objects** (default: ``"1;39"``)
+        8. **Object keys** (default: ``"1;34"``)
 
 Example
 -------
