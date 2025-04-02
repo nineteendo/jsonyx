@@ -31,6 +31,7 @@ class _Namespace:
     quoted_keys: bool
     nonstrict: bool
     output_filename: str | None
+    rgb: bool
     sort_keys: bool
     trailing_comma: bool
     use_decimal: bool
@@ -99,6 +100,12 @@ def _configure(parser: ArgumentParser) -> None:
         type=int,
         help="the level up to which to indent",
         metavar="LEVEL",
+    )
+    parent_parser.add_argument(
+        "-r",
+        "--rgb",
+        action="store_true",
+        help="use ansi colors",
     )
     parent_parser.add_argument(
         "-s",
@@ -201,6 +208,7 @@ def _run(args: _Namespace) -> None:
     )
     encoder: Encoder = Encoder(
         allow=EVERYTHING if args.nonstrict else NOTHING,
+        colored=args.rgb,
         commas=args.commas,
         ensure_ascii=args.ensure_ascii,
         indent=args.indent,

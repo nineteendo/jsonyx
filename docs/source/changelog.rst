@@ -6,6 +6,10 @@ jsonyx 2.3.0 (unreleased)
 
 - Added ``colored`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
   :func:`jsonyx.dumps` and :func:`jsonyx.write`
+- Added ``--rgb`` (alias ``-r``) to ``jsonyx diff``, ``jsonyx format`` and
+  ``jsonyx patch``
+- Added :envvar:`JSONYX_COLORS` for ``jsonyx diff``, ``jsonyx format`` and
+  ``jsonyx patch``
 
 jsonyx 2.2.0 (Mar 31, 2025)
 ---------------------------

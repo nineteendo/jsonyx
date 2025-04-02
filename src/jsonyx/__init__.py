@@ -268,7 +268,7 @@ def write(
     :param encoding: the JSON encoding
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param check_circular: check for circular references
-    :param colored: use ansi colors
+    :param colored: use ansi colors, see :envvar:`JSONYX_COLORS`
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
@@ -364,7 +364,7 @@ def dump(
     :param fp: an open JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param check_circular: check for circular references
-    :param colored: use ansi colors
+    :param colored: use ansi colors, see :envvar:`JSONYX_COLORS`
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
@@ -466,7 +466,7 @@ def dumps(
     :param obj: a Python object
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param check_circular: check for circular references
-    :param colored: use ansi colors
+    :param colored: use ansi colors, see :envvar:`JSONYX_COLORS`
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
