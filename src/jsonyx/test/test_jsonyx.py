@@ -1,4 +1,5 @@
 """JSON tests."""
+# TODO(Nice Zombies): test colored output
 from __future__ import annotations
 
 __all__: list[str] = []

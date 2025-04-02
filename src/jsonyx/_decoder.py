@@ -262,6 +262,7 @@ def detect_encoding(b: bytes) -> str:
             # XX 00 XX -- - utf-16-le
             encoding = "utf-16-le" if b[2] or b[3] else "utf-32-le"
     elif len(b) == 2:
+        # check for cut off json
         if not b[0]:
             # 00 -- - utf-16-be
             encoding = "utf-16-be"
