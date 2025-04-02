@@ -92,23 +92,19 @@ Environment variables
 
 .. envvar:: JSONYX_COLORS
 
-    A colon-delimited list of partial terminal escape sequences like
-    ``"1;31"``.
+    A colon-delimited list of partial terminal escape sequences.
 
     .. versionadded:: 2.3
 
-    Order:
-
-    - color for ``null``
-    - color for ``false``
-    - color for ``true``
-    - color for numbers
-    - color for strings
-    - color for arrays
-    - color for objects
-    - color for object keys
-
-    Default ``"0;90:0;39:0;39:0;39:0;32:1;39:1;39:1;34"``.
+    Colors:
+        1. Color for ``null`` (default: ``"0;90"``)
+        2. Color for ``false`` (default: ``"0;39"``)
+        3. Color for ``true`` (default: ``"0;39"``)
+        4. Color for numbers (default: ``"0;39"``)
+        5. Color for strings (default: ``"0;32"``)
+        6. Color for arrays (default: ``"1;39"``)
+        7. Color for objects (default: ``"1;39"``)
+        8. Color for object keys (default: ``"1;34"``)
 
 Example
 -------
