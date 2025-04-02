@@ -405,7 +405,7 @@ class Encoder:
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param check_circular: check for circular references
-    :param colored: use ansi colors
+    :param colored: use colored output, see :envvar:`JSONYX_COLORS`
     :param commas: separate items by commas when indented
     :param hook: the :ref:`hook <encoding_hook>` used for transforming data
     :param end: the string to append at the end

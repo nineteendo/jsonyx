@@ -105,7 +105,7 @@ def _configure(parser: ArgumentParser) -> None:
         "-r",
         "--rgb",
         action="store_true",
-        help="use ansi colors",
+        help="use colored output",
     )
     parent_parser.add_argument(
         "-s",
