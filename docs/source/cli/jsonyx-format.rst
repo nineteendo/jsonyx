@@ -97,9 +97,9 @@ Environment variables
     .. versionadded:: 2.3
 
     Colors:
-        1. **``null``** (default: ``"0;90"``)
-        2. **``false``** (default: ``"0;39"``)
-        3. **``true``** (default: ``"0;39"``)
+        1. ``null`` (default: ``"0;90"``)
+        2. ``false`` (default: ``"0;39"``)
+        3. ``true`` (default: ``"0;39"``)
         4. **Numbers** (default: ``"0;39"``)
         5. **Strings** (default: ``"0;32"``)
         6. **Arrays** (default: ``"1;39"``)
