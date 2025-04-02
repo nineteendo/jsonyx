@@ -67,9 +67,9 @@ Options
 
 .. option:: -r, --rgb
 
-    .. versionadded:: 2.3
-
     Use colored output, see :envvar:`JSONYX_COLORS`.
+
+    .. versionadded:: 2.3
 
 .. option:: -s, --sort-keys
 
@@ -92,10 +92,12 @@ Environment variables
 
 .. envvar:: JSONYX_COLORS
 
+    A colon-delimited list of partial terminal escape sequences like
+    ``"1;31"``.
+
     .. versionadded:: 2.3
 
-    A colon-delimited list of partial terminal escape sequences like
-    ``"1;31"``, in this order:
+    Order:
 
     - color for ``null``
     - color for ``false``

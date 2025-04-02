@@ -126,6 +126,8 @@ def _unescape_unicode(filename: str, s: str, end: int) -> int:
 class TruncatedSyntaxError(SyntaxError):
     """Truncated syntax error.
 
+    .. versionadded:: 2.0
+
     :param msg: an error message
     :param filename: the path to the file
     :param doc: a string
