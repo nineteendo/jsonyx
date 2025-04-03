@@ -10,8 +10,8 @@ Usage
 
 .. code-block:: none
 
-    jsonyx format [-h] [-a] [-c] [-C] [-d] [-i SPACES] [-l] [-L LEVEL] [-r]
-                  [-s] [-S] [-t] [-T] [-q] [input_filename] [output_filename]
+    jsonyx format [-h] [-a] [-c] [-C] [-d] [-i SPACES] [-l] [-L LEVEL] [-s]
+                  [-S] [-t] [-T] [-q] [input_filename] [output_filename]
 
 Positional arguments
 --------------------
@@ -65,12 +65,6 @@ Options
 
     Don't quote keys which are :ref:`identifiers <identifiers>`.
 
-.. option:: -r, --rgb
-
-    Use colored output, see :envvar:`JSONYX_COLORS`.
-
-    .. versionadded:: 2.3
-
 .. option:: -s, --sort-keys
 
     Sort the keys of objects.
@@ -86,25 +80,6 @@ Options
 .. option:: -T, --indent-tab
 
     Indent using tabs.
-
-Environment variables
----------------------
-
-.. envvar:: JSONYX_COLORS
-
-    A colon-delimited list of partial terminal escape sequences.
-
-    .. versionadded:: 2.3
-
-    Colors:
-        1. ``null`` (default: ``"0;90"``)
-        2. ``false`` (default: ``"0;39"``)
-        3. ``true`` (default: ``"0;39"``)
-        4. **Numbers** (default: ``"0;39"``)
-        5. **Strings** (default: ``"0;32"``)
-        6. **Arrays** (default: ``"1;39"``)
-        7. **Objects** (default: ``"1;39"``)
-        8. **Object keys** (default: ``"1;34"``)
 
 Example
 -------

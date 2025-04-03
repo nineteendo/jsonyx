@@ -33,7 +33,6 @@ typedef struct _PyScannerObject {
     PyObject *int_hook;
     PyObject *object_hook;
     PyObject *str_hook;
-
     int allow_comments;
     int allow_missing_commas;
     int allow_nan_and_infinity;
@@ -55,27 +54,15 @@ typedef struct _PyEncoderObject {
     PyObject *int_types;
     PyObject *object_types;
     PyObject *str_types;
-
-    PyObject *array_color;
     PyObject *end;
-    PyObject *false_color;
     PyObject *item_separator;
-    PyObject *key_color;
     PyObject *key_separator;
     PyObject *long_item_separator;
-    PyObject *null_color;
-    PyObject *number_color;
-    PyObject *object_color;
-    PyObject *str_color;
-    PyObject *true_color;
-
     Py_ssize_t max_indent_level;
-
     int allow_nan_and_infinity;
     int allow_non_str_keys;
     int allow_surrogates;
     int check_circular;
-    int colored;
     int ensure_ascii;
     int indent_leaves;
     int quoted_keys;
@@ -465,8 +452,10 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py
         }
 
         /* Pick up this chunk if it's not zero length */
-        if (next != end && _PyUnicodeWriter_WriteSubstring(&writer, pystr, end, next) < 0) {
-            goto bail;
+        if (next != end) {
+            if (_PyUnicodeWriter_WriteSubstring(&writer, pystr, end, next) < 0) {
+                goto bail;
+            }
         }
         if (c == '"') {
             end = next;
@@ -861,7 +850,10 @@ _parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, P
 
             /* read any JSON term  */
             val = scan_once_unicode(s, memo, pyfilename, pystr, idx, &next_idx);
-            if (val == NULL || PyList_Append(rval, val) < 0)
+            if (val == NULL)
+                goto bail;
+
+            if (PyList_Append(rval, val) < 0)
                 goto bail;
 
             Py_CLEAR(val);
@@ -1285,17 +1277,14 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     static char *kwlist[] = {"array_hook", "bool_hook", "float_hook",
                              "int_hook", "object_hook", "str_hook",
-
                              "allow_comments", "allow_missing_commas",
                              "allow_nan_and_infinity", "allow_surrogates",
                              "allow_trailing_comma", "allow_unquoted_keys",
-                             "cache_keys",
-                             NULL};
+                             "cache_keys", NULL};
 
     PyScannerObject *s;
     PyObject *bool_hook, *float_hook, *int_hook, *object_hook, *array_hook;
     PyObject *str_hook;
-
     int allow_comments, allow_missing_commas, allow_nan_and_infinity;
     int allow_surrogates, allow_trailing_comma, allow_unquoted_keys;
     int cache_keys;
@@ -1303,7 +1292,6 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOppppppp:make_scanner", kwlist,
         &array_hook, &bool_hook, &float_hook, &int_hook, &object_hook,
         &str_hook,
-
         &allow_comments, &allow_missing_commas, &allow_nan_and_infinity,
         &allow_surrogates, &allow_trailing_comma, &allow_unquoted_keys,
         &cache_keys))
@@ -1320,7 +1308,6 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->int_hook = Py_NewRef(int_hook);
     s->object_hook = Py_NewRef(object_hook);
     s->str_hook = Py_NewRef(str_hook);
-
     s->allow_comments = allow_comments;
     s->allow_missing_commas = allow_missing_commas;
     s->allow_nan_and_infinity = allow_nan_and_infinity;
@@ -1356,49 +1343,30 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     static char *kwlist[] = {"array_types", "bool_types", "float_types",
                              "hook", "indent", "int_types", "object_types",
-                             "str_types",
-
-                             "array_color", "end", "false_color",
-                             "item_separator", "key_color", "key_separator",
-                             "long_item_separator", "null_color",
-                             "number_color", "object_color", "str_color",
-                             "true_color",
-
-                             "max_indent_level",
-
-                             "allow_nan_and_infinity", "allow_non_str_keys",
-                             "allow_surrogates", "check_circular", "colored",
-                             "ensure_ascii", "indent_leaves", "quoted_keys",
-                             "skipkeys", "sort_keys", "trailing_comma",
-
-                             NULL};
+                             "str_types", "end", "item_separator",
+                             "key_separator", "long_item_separator",
+                             "max_indent_level", "allow_nan_and_infinity",
+                             "allow_non_str_keys", "allow_surrogates",
+                             "check_circular", "ensure_ascii", "indent_leaves",
+                             "quoted_keys", "skipkeys", "sort_keys",
+                             "trailing_comma", NULL};
 
     PyEncoderObject *s;
     PyObject *bool_types, *float_types, *hook, *indent, *int_types;
     PyObject *object_types, *array_types, *str_types;
-
-    PyObject *array_color, *end, *false_color, *item_separator, *key_color;
-    PyObject *key_separator, *long_item_separator, *null_color, *number_color;
-    PyObject *object_color, *str_color, *true_color;
-
+    PyObject *end, *item_separator, *key_separator, *long_item_separator;
     Py_ssize_t max_indent_level;
-
     int allow_nan_and_infinity, allow_non_str_keys, allow_surrogates;
-    int check_circular, colored, ensure_ascii, indent_leaves, quoted_keys;
-    int skipkeys, sort_keys, trailing_comma;
+    int check_circular, ensure_ascii, indent_leaves, quoted_keys, skipkeys;
+    int sort_keys, trailing_comma;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOUUUUUUUUUUUUnppppppppppp:make_encoder", kwlist,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOUUUUnpppppppppp:make_encoder", kwlist,
         &array_types, &bool_types, &float_types, &hook, &indent,
-        &int_types, &object_types, &str_types,
-
-        &array_color, &end, &false_color, &item_separator, &key_color,
-        &key_separator, &long_item_separator, &null_color, &number_color,
-        &object_color, &str_color, &true_color,
-
+        &int_types, &object_types, &str_types, &end, &item_separator,
+        &key_separator, &long_item_separator,
         &max_indent_level,
-
         &allow_nan_and_infinity, &allow_non_str_keys, &allow_surrogates,
-        &check_circular, &colored, &ensure_ascii, &indent_leaves, &quoted_keys,
+        &check_circular, &ensure_ascii, &indent_leaves, &quoted_keys,
         &skipkeys, &sort_keys, &trailing_comma))
         return NULL;
 
@@ -1414,27 +1382,15 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->int_types = Py_NewRef(int_types);
     s->object_types = Py_NewRef(object_types);
     s->str_types = Py_NewRef(str_types);
-
-    s->array_color = Py_NewRef(array_color);
     s->end = Py_NewRef(end);
-    s->false_color = Py_NewRef(false_color);
     s->item_separator = Py_NewRef(item_separator);
-    s->key_color = Py_NewRef(key_color);
     s->key_separator = Py_NewRef(key_separator);
     s->long_item_separator = Py_NewRef(long_item_separator);
-    s->null_color = Py_NewRef(null_color);
-    s->number_color = Py_NewRef(number_color);
-    s->object_color = Py_NewRef(object_color);
-    s->str_color = Py_NewRef(str_color);
-    s->true_color = Py_NewRef(true_color);
-
     s->max_indent_level = max_indent_level;
-
     s->allow_nan_and_infinity = allow_nan_and_infinity;
     s->allow_non_str_keys = allow_non_str_keys;
     s->allow_surrogates = allow_surrogates;
     s->check_circular = check_circular;
-    s->colored = colored;
     s->ensure_ascii = ensure_ascii;
     s->indent_leaves = indent_leaves;
     s->quoted_keys = quoted_keys;
@@ -1687,7 +1643,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
 {
     /* Encode Python object obj to a JSON term */
     PyObject *new_obj;
-    int rv = 0;
+    int rv;
     
     if (s->hook != Py_None) {
         obj = PyObject_CallOneArg(s->hook, obj);
@@ -1696,32 +1652,21 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         }
     }
     if (obj == Py_None) {
-        if (s->colored && _PyUnicodeWriter_WriteStr(writer, s->null_color) < 0 ||
-            _PyUnicodeWriter_WriteASCIIString(writer, "null", 4) < 0 ||
-            s->colored && _PyUnicodeWriter_WriteASCIIString(writer, "\x1b[0m", 4) < 0)
-        {
-            return -1;
-        }
+      return _PyUnicodeWriter_WriteASCIIString(writer, "null", 4);
     }
     else if (obj == Py_True || obj == Py_False || PyObject_IsInstance(obj, s->bool_types)) {
         if (PyErr_Occurred())
             return -1;
-        int is_true = PyObject_IsTrue(obj);
-        if (is_true == -1) {
+        rv = PyObject_IsTrue(obj);
+        if (rv == -1) {
             return -1;
         }
-        if (is_true) {
-            if (s->colored && _PyUnicodeWriter_WriteStr(writer, s->true_color) < 0 ||
-                _PyUnicodeWriter_WriteASCIIString(writer, "true", 4) < 0)
-                return - 1;
+        else if (rv) {
+            return _PyUnicodeWriter_WriteASCIIString(writer, "true", 4);
         }
         else {
-            if (s->colored && _PyUnicodeWriter_WriteStr(writer, s->false_color) < 0 ||
-                _PyUnicodeWriter_WriteASCIIString(writer, "false", 5) < 0)
-                return - 1;
+            return _PyUnicodeWriter_WriteASCIIString(writer, "false", 5);
         }
-        if (s->colored && _PyUnicodeWriter_WriteASCIIString(writer, "\x1b[0m", 4) < 0)
-            return -1;
     }
     else if (PyUnicode_Check(obj) || PyObject_IsInstance(obj, s->str_types)) {
         if (PyErr_Occurred())
@@ -1733,12 +1678,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         Py_DECREF(new_obj);
         if (encoded == NULL)
             return -1;
-        if (s->colored && _PyUnicodeWriter_WriteStr(writer, s->str_color) < 0 ||
-            _steal_accumulate(writer, encoded) < 0 ||
-            s->colored && _PyUnicodeWriter_WriteASCIIString(writer, "\x1b[0m", 4) < 0)
-        {
-            return -1;
-        }
+        return _steal_accumulate(writer, encoded);
     }
     else if (PyLong_Check(obj)) {
         PyObject *encoded;
@@ -1750,12 +1690,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         }
         if (encoded == NULL)
             return -1;
-        if (s->colored && _PyUnicodeWriter_WriteStr(writer, s->number_color) < 0 ||
-            _steal_accumulate(writer, encoded) < 0 ||
-            s->colored && _PyUnicodeWriter_WriteASCIIString(writer, "\x1b[0m", 4) < 0)
-        {
-            return -1;
-        }
+        return _steal_accumulate(writer, encoded);
     }
     else if (PyFloat_Check(obj)) {
         PyObject *encoded;
@@ -1767,27 +1702,30 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         }
         if (encoded == NULL)
             return -1;
-        if (s->colored && _PyUnicodeWriter_WriteStr(writer, s->number_color) < 0 ||
-            _steal_accumulate(writer, encoded) < 0 ||
-            s->colored && _PyUnicodeWriter_WriteASCIIString(writer, "\x1b[0m", 4) < 0)
-        {
-            return -1;
-        }
+        return _steal_accumulate(writer, encoded);
     }
     else if (PyList_Check(obj) || PyTuple_Check(obj) ||
              PyObject_IsInstance(obj, s->array_types))
     {
         // See https://github.com/python/cpython/issues/123593 
-        if (PyErr_Occurred() || _Py_EnterRecursiveCall(" while encoding a JSON array"))
+        if (PyErr_Occurred())
+            return -1;
+
+        if (_Py_EnterRecursiveCall(" while encoding a JSON object"))
             return -1;
         rv = encoder_listencode_sequence(s, markers, writer, obj, indent_level, indent_cache);
         _Py_LeaveRecursiveCall();
+        return rv;
     }
     else if (PyDict_Check(obj) || PyObject_IsInstance(obj, s->object_types)) {
-        if (PyErr_Occurred() || _Py_EnterRecursiveCall(" while encoding a JSON object"))
+        if (PyErr_Occurred())
+            return -1;
+
+        if (_Py_EnterRecursiveCall(" while encoding a JSON object"))
             return -1;
         rv = encoder_listencode_mapping(s, markers, writer, obj, indent_level, indent_cache);
         _Py_LeaveRecursiveCall();
+        return rv;
     }
     else if (PyObject_IsInstance(obj, s->int_types) ||
              PyObject_IsInstance(obj, s->float_types))
@@ -1797,20 +1735,13 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         PyObject *encoded = encoder_encode_number(s, obj);
         if (encoded == NULL)
             return -1;
-        if (s->colored && _PyUnicodeWriter_WriteStr(writer, s->number_color) < 0 ||
-            _steal_accumulate(writer, encoded) < 0 ||
-            s->colored && _PyUnicodeWriter_WriteASCIIString(writer, "\x1b[0m", 4) < 0)
-        {
-            return -1;
-        }
+        return _steal_accumulate(writer, encoded);
     }
     else {
         PyErr_Format(PyExc_TypeError,
                      "%.100s is not JSON serializable", Py_TYPE(obj)->tp_name);
         return -1;
     }
-
-    return rv;
 }
 
 static int
@@ -1819,7 +1750,8 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
                          Py_ssize_t indent_level, PyObject *indent_cache,
                          PyObject *item_separator)
 {
-    PyObject *encoded = NULL;
+    PyObject *keystr = NULL;
+    PyObject *encoded;
 
     if (s->hook != Py_None) {
         key = PyObject_CallOneArg(s->hook, key);
@@ -1830,11 +1762,11 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
     if (PyUnicode_Check(key) || PyObject_IsInstance(key, s->str_types)) {
         if (PyErr_Occurred())
             return -1;
-            encoded = PyObject_Str(key);
+        keystr = PyObject_Str(key);
     }
     else {
         if (key == Py_None) {
-            encoded = PyUnicode_FromString("null");
+            keystr = PyUnicode_FromString("null");
         }
         else if (key == Py_True || key == Py_False || PyObject_IsInstance(key, s->bool_types)) {
             if (PyErr_Occurred())
@@ -1844,26 +1776,26 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
                 return -1;
             }
             else if (rv) {
-                encoded = PyUnicode_FromString("true");
+                keystr = PyUnicode_FromString("true");
             }
             else {
-                encoded = PyUnicode_FromString("false");
+                keystr = PyUnicode_FromString("false");
             }
         }
         else if (PyLong_Check(key)) {
             if (PyLong_CheckExact(key)) {
-                encoded = PyObject_Str(key);
+                keystr = PyObject_Str(key);
             }
             else {
-                encoded = encoder_encode_number(s, key);
+                keystr = encoder_encode_number(s, key);
             }
         }
         else if (PyFloat_Check(key)) {
             if (PyFloat_CheckExact(key)) {
-                encoded = encoder_encode_float(s, key);
+                keystr = encoder_encode_float(s, key);
             }
             else {
-                encoded = encoder_encode_number(s, key);
+                keystr = encoder_encode_number(s, key);
             }
         }
         else if (PyObject_IsInstance(key, s->int_types) ||
@@ -1871,7 +1803,7 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
         {
             if (PyErr_Occurred())
                 return -1;
-            encoded = encoder_encode_number(s, key);
+            keystr = encoder_encode_number(s, key);
         }
         else if (s->skipkeys) {
             return 0;
@@ -1883,7 +1815,7 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
         }
 
         if (!s->allow_non_str_keys) {
-            Py_DECREF(encoded);
+            Py_DECREF(keystr);
             if (s->skipkeys) {
                 return 0;
             }
@@ -1893,7 +1825,7 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
         }
     }
 
-    if (encoded == NULL) {
+    if (keystr == NULL) {
         return -1;
     }
 
@@ -1902,36 +1834,38 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
         if (indented &&
             write_newline_indent(writer, indent_level, indent_cache) < 0)
         {
-            Py_DECREF(encoded);
+            Py_DECREF(keystr);
             return -1;
         }
     }
     else {
         if (_PyUnicodeWriter_WriteStr(writer, item_separator) < 0) {
-            Py_DECREF(encoded);
+            Py_DECREF(keystr);
             return -1;
         }
     }
 
-    if (s->quoted_keys || !PyUnicode_IsIdentifier(encoded) ||
-        (s->ensure_ascii && !PyUnicode_IS_ASCII(key)))
+    if (!s->quoted_keys && PyUnicode_IsIdentifier(keystr) &&
+        (!s->ensure_ascii || PyUnicode_IS_ASCII(key)))
     {
-        Py_SETREF(encoded, encoder_encode_string(s, encoded));
-        if (encoded == NULL) {
-            return -1;
-        }
+        encoded = keystr;
+    }
+    else {
+        encoded = encoder_encode_string(s, keystr);
+        Py_DECREF(keystr);
     }
 
-    if (s->colored && _PyUnicodeWriter_WriteASCIIString(writer, "\x1b[0m", 4) < 0 ||
-        s->colored && _PyUnicodeWriter_WriteStr(writer, s->key_color) < 0 ||
-        _steal_accumulate(writer, encoded) < 0 ||
-        s->colored && _PyUnicodeWriter_WriteASCIIString(writer, "\x1b[0m", 4) < 0 ||
-        s->colored && _PyUnicodeWriter_WriteStr(writer, s->object_color) < 0 ||
-        _PyUnicodeWriter_WriteStr(writer, s->key_separator) < 0 ||
-        s->colored && _PyUnicodeWriter_WriteASCIIString(writer, "\x1b[0m", 4) < 0 ||
-        encoder_listencode_obj(s, markers, writer, value, indent_level, indent_cache) < 0 ||
-        s->colored && _PyUnicodeWriter_WriteStr(writer, s->object_color) < 0)
-    {
+    if (encoded == NULL) {
+        return -1;
+    }
+
+    if (_steal_accumulate(writer, encoded) < 0) {
+        return -1;
+    }
+    if (_PyUnicodeWriter_WriteStr(writer, s->key_separator) < 0) {
+        return -1;
+    }
+    if (encoder_listencode_obj(s, markers, writer, value, indent_level, indent_cache) < 0) {
         return -1;
     }
     return 0;
@@ -1967,8 +1901,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
         }
     }
 
-    if (s->colored && _PyUnicodeWriter_WriteStr(writer, s->object_color) < 0 ||
-        _PyUnicodeWriter_WriteChar(writer, '{') < 0)
+    if (_PyUnicodeWriter_WriteChar(writer, '{') < 0)
         goto bail;
 
     int indented;
@@ -2061,21 +1994,16 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers, _PyUnicodeWrit
             goto bail;
     }
     Py_CLEAR(ident);
-    if (!first) {
-        if (indented) {
-            indent_level--;
-            if ((s->trailing_comma && _PyUnicodeWriter_WriteStr(writer, s->item_separator) < 0) ||
-                write_newline_indent(writer, indent_level, indent_cache) < 0)
-            {
-                goto bail;
-            }
-        }
-        if (s->colored && _PyUnicodeWriter_WriteStr(writer, s->object_color) < 0)
+    if (!first && indented) {
+        indent_level--;
+        if ((s->trailing_comma && _PyUnicodeWriter_WriteStr(writer, s->item_separator) < 0) ||
+            write_newline_indent(writer, indent_level, indent_cache) < 0)
+        {
             goto bail;
+        }
     }
 
-    if (_PyUnicodeWriter_WriteChar(writer, '}') < 0 ||
-        s->colored && _PyUnicodeWriter_WriteASCIIString(writer, "\x1b[0m", 4) < 0)
+    if (_PyUnicodeWriter_WriteChar(writer, '}') < 0)
         goto bail;
     return 0;
 
@@ -2117,8 +2045,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
         }
     }
 
-    if (s->colored && _PyUnicodeWriter_WriteStr(writer, s->array_color) < 0 ||
-        _PyUnicodeWriter_WriteChar(writer, '[') < 0)
+    if (_PyUnicodeWriter_WriteChar(writer, '[') < 0)
         goto bail;
 
     int indented;
@@ -2180,8 +2107,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
             if (_PyUnicodeWriter_WriteStr(writer, separator) < 0)
                 goto bail;
         }
-        if (encoder_listencode_obj(s, markers, writer, obj, indent_level, indent_cache) < 0 ||
-            s->colored && _PyUnicodeWriter_WriteStr(writer, s->array_color) < 0)
+        if (encoder_listencode_obj(s, markers, writer, obj, indent_level, indent_cache) < 0)
             goto bail;
     }
     if (markers != Py_None) {
@@ -2190,21 +2116,16 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers, _PyUnicodeWri
     }
     Py_CLEAR(ident);
 
-    if (!first) {
-        if (indented) {
-            indent_level--;
-            if ((s->trailing_comma && _PyUnicodeWriter_WriteStr(writer, s->item_separator) < 0) ||
-                write_newline_indent(writer, indent_level, indent_cache) < 0)
-            {
-                goto bail;
-            }
-        }
-        if (s->colored && _PyUnicodeWriter_WriteStr(writer, s->array_color) < 0)
+    if (!first && indented) {
+        indent_level--;
+        if ((s->trailing_comma && _PyUnicodeWriter_WriteStr(writer, s->item_separator) < 0) ||
+            write_newline_indent(writer, indent_level, indent_cache) < 0)
+        {
             goto bail;
+        }
     }
 
-    if (_PyUnicodeWriter_WriteChar(writer, ']') < 0 ||
-        s->colored && _PyUnicodeWriter_WriteASCIIString(writer, "\x1b[0m", 4) < 0)
+    if (_PyUnicodeWriter_WriteChar(writer, ']') < 0)
         goto bail;
     Py_DECREF(s_fast);
     return 0;
@@ -2239,19 +2160,10 @@ encoder_traverse(PyObject *op, visitproc visit, void *arg)
     Py_VISIT(self->int_types);
     Py_VISIT(self->object_types);
     Py_VISIT(self->str_types);
-
-    Py_VISIT(self->array_color);
     Py_VISIT(self->end);
-    Py_VISIT(self->false_color);
-    Py_VISIT(self->item_separator);
-    Py_VISIT(self->key_color);
     Py_VISIT(self->key_separator);
+    Py_VISIT(self->item_separator);
     Py_VISIT(self->long_item_separator);
-    Py_VISIT(self->null_color);
-    Py_VISIT(self->number_color);
-    Py_VISIT(self->object_color);
-    Py_VISIT(self->str_color);
-    Py_VISIT(self->true_color);
     return 0;
 }
 
@@ -2268,19 +2180,10 @@ encoder_clear(PyObject *op)
     Py_CLEAR(self->int_types);
     Py_CLEAR(self->object_types);
     Py_CLEAR(self->str_types);
-
-    Py_CLEAR(self->array_color);
     Py_CLEAR(self->end);
-    Py_CLEAR(self->false_color);
-    Py_CLEAR(self->item_separator);
-    Py_CLEAR(self->key_color);
     Py_CLEAR(self->key_separator);
+    Py_CLEAR(self->item_separator);
     Py_CLEAR(self->long_item_separator);
-    Py_CLEAR(self->null_color);
-    Py_CLEAR(self->number_color);
-    Py_CLEAR(self->object_color);
-    Py_CLEAR(self->str_color);
-    Py_CLEAR(self->true_color);
     return 0;
 }
 

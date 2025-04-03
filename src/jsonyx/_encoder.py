@@ -6,7 +6,6 @@ __all__: list[str] = ["Encoder"]
 import re
 import sys
 from io import StringIO
-from os import environ
 from pathlib import Path
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
@@ -33,9 +32,6 @@ if TYPE_CHECKING:
     _SubFunc = Callable[[str | Callable[[Match[str]], str], str], str]
     _WriteFunc = Callable[[str], object]
 
-
-_DEFAULT_COLORS: str = "0;90:0;39:0;39:0;39:0;32:1;39:1;39:1;34"
-_RESET_COLOR: str = "\x1b[0m"
 
 _ESCAPE_DCT: dict[str, str] = {
     **{chr(i): f"\\u{i:04x}" for i in range(0x20)},
@@ -72,27 +68,15 @@ except ImportError:
         int_types: type | tuple[type, ...],
         object_types: type | tuple[type, ...],
         str_types: type | tuple[type, ...],
-
-        array_color: str,
         end: str,
-        false_color: str,
         item_separator: str,
-        key_color: str,
         key_separator: str,
         long_item_separator: str,
-        null_color: str,
-        number_color: str,
-        object_color: str,
-        str_color: str,
-        true_color: str,
-
         max_indent_level: int,
-
         allow_nan_and_infinity: bool,
         allow_non_str_keys: bool,
         allow_surrogates: bool,
         check_circular: bool,
-        colored: bool,
         ensure_ascii: bool,
         indent_leaves: bool,
         quoted_keys: bool,
@@ -168,9 +152,6 @@ except ImportError:
 
                 markers[markerid] = seq
 
-            if colored:
-                write(array_color)
-
             write("[")
             current_indent: str = old_indent
             if indent is None or indent_level >= max_indent_level or (
@@ -196,25 +177,17 @@ except ImportError:
                     write(current_item_separator)
 
                 write_value(value, write, indent_level, current_indent)
-                if colored:
-                    write(array_color)
 
             if markers is not None:
                 del markers[markerid]  # type: ignore
 
-            if not first:
-                if indented:
-                    if trailing_comma:
-                        write(item_separator)
+            if not first and indented:
+                if trailing_comma:
+                    write(item_separator)
 
-                    write(old_indent)
-
-                if colored:
-                    write(array_color)
+                write(old_indent)
 
             write("]")
-            if colored:
-                write(_RESET_COLOR)
 
         def write_mapping(
             mapping: Any,
@@ -228,9 +201,6 @@ except ImportError:
                     raise ValueError(msg)
 
                 markers[markerid] = mapping
-
-            if colored:
-                write(object_color)
 
             write("{")
             current_indent: str = old_indent
@@ -282,42 +252,26 @@ except ImportError:
                 else:
                     write(current_item_separator)
 
-                if quoted_keys or not s.isidentifier() or (
-                    ensure_ascii and not s.isascii()
+                if not quoted_keys and s.isidentifier() and (
+                    not ensure_ascii or s.isascii()
                 ):
-                    s = encode_string(s)
-
-                if colored:
-                    write(_RESET_COLOR + key_color)
-
-                write(s)
-                if colored:
-                    write(_RESET_COLOR + object_color)
+                    write(s)
+                else:
+                    write(encode_string(s))
 
                 write(key_separator)
-                if colored:
-                    write(_RESET_COLOR)
-
                 write_value(value, write, indent_level, current_indent)
-                if colored:
-                    write(object_color)
 
             if markers is not None:
                 del markers[markerid]  # type: ignore
 
-            if not first:
-                if indented:
-                    if trailing_comma:
-                        write(item_separator)
+            if not first and indented:
+                if trailing_comma:
+                    write(item_separator)
 
-                    write(old_indent)
-
-                if colored:
-                    write(object_color)
+                write(old_indent)
 
             write("}")
-            if colored:
-                write(_RESET_COLOR)
 
         def write_value(
             obj: object,
@@ -327,40 +281,13 @@ except ImportError:
         ) -> None:
             obj = hook(obj)
             if obj is None:
-                if colored:
-                    write(null_color)
-
                 write("null")
-                if colored:
-                    write(_RESET_COLOR)
             elif isinstance(obj, (bool, bool_types)):
-                if obj:
-                    if colored:
-                        write(true_color)
-
-                    write("true")
-                else:
-                    if colored:
-                        write(false_color)
-
-                    write("false")
-
-                if colored:
-                    write(_RESET_COLOR)
+                write("true" if obj else "false")
             elif isinstance(obj, (str, str_types)):
-                if colored:
-                    write(str_color)
-
                 write(encode_string(str(obj)))
-                if colored:
-                    write(_RESET_COLOR)
             elif isinstance(obj, (float, int, float_types, int_types)):
-                if colored:
-                    write(number_color)
-
                 write(encode_float(obj))  # type: ignore
-                if colored:
-                    write(_RESET_COLOR)
             elif isinstance(obj, (list, tuple, array_types)):
                 write_sequence(obj, write, indent_level, current_indent)
             elif isinstance(obj, (dict, object_types)):
@@ -401,11 +328,8 @@ class Encoder:
     .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
         ``skipkeys``.
 
-    .. versionchanged:: 2.3 Added ``colored``.
-
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param check_circular: check for circular references
-    :param colored: use colored output, see :envvar:`JSONYX_COLORS`
     :param commas: separate items by commas when indented
     :param hook: the :ref:`hook <encoding_hook>` used for transforming data
     :param end: the string to append at the end
@@ -429,7 +353,6 @@ class Encoder:
         *,
         allow: Container[str] = NOTHING,
         check_circular: bool = True,
-        colored: bool = False,
         commas: bool = True,
         hook: _Hook | None = None,
         end: str = "\n",
@@ -446,14 +369,6 @@ class Encoder:
     ) -> None:
         """Create a new JSON encoder."""
         allow_surrogates: bool = "surrogates" in allow
-        colors_str: str = environ.get("JSONYX_COLORS", "")
-        if colors_str.count(":") != 7:
-            colors_str = _DEFAULT_COLORS
-
-        (
-            null_color, false_color, true_color, number_color, str_color,
-            array_color, object_color, key_color,
-        ) = [f"\x1b[{color}m" for color in colors_str.split(":")]
         long_item_separator, key_separator = separators
         if commas:
             item_separator: str = long_item_separator.rstrip()
@@ -472,13 +387,11 @@ class Encoder:
         self._encoder: _EncodeFunc[object] = make_encoder(
             types.get("array", ()), types.get("bool", ()),
             types.get("float", ()), hook, indent, types.get("int", ()),
-            types.get("object", ()), types.get("str", ()), array_color, end,
-            false_color, item_separator, key_color, key_separator,
-            long_item_separator, null_color, number_color, object_color,
-            str_color, true_color, max_indent_level,
-            "nan_and_infinity" in allow, "non_str_keys" in allow,
-            allow_surrogates, check_circular, colored, ensure_ascii,
-            indent_leaves, quoted_keys, skipkeys, sort_keys,
+            types.get("object", ()), types.get("str", ()), end,
+            item_separator, key_separator, long_item_separator,
+            max_indent_level, "nan_and_infinity" in allow,
+            "non_str_keys" in allow, allow_surrogates, check_circular,
+            ensure_ascii, indent_leaves, quoted_keys, skipkeys, sort_keys,
             commas and trailing_comma,
         )
         self._errors: str = "surrogatepass" if allow_surrogates else "strict"

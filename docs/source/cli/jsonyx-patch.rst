@@ -10,7 +10,7 @@ Usage
 
 .. code-block:: none
 
-    jsonyx patch [-h] [-a] [-c] [-C] [-d] [-i SPACES] [-l] [-L LEVEL] [-r] [-s]
+    jsonyx patch [-h] [-a] [-c] [-C] [-d] [-i SPACES] [-l] [-L LEVEL] [-s]
                  [-S] [-t] [-T] [-q] patch_filename [input_filename]
                  [output_filename]
 

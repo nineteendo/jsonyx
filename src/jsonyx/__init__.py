@@ -21,7 +21,7 @@ __all__: list[str] = [
     "select_nodes",
     "write",
 ]
-__version__: str = "2.3.0"
+__version__: str = "2.2.0"
 
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
@@ -232,7 +232,6 @@ def write(
     *,
     allow: Container[str] = NOTHING,
     check_circular: bool = True,
-    colored: bool = False,
     commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
@@ -261,14 +260,11 @@ def write(
     .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
         ``skipkeys``.
 
-    .. versionchanged:: 2.3 Added ``colored``.
-
     :param obj: a Python object
     :param filename: the path to the JSON file
     :param encoding: the JSON encoding
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param check_circular: check for circular references
-    :param colored: use colored output, see :envvar:`JSONYX_COLORS`
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
@@ -306,7 +302,6 @@ def write(
     Encoder(
         allow=allow,
         check_circular=check_circular,
-        colored=colored,
         commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,
@@ -329,7 +324,6 @@ def dump(
     *,
     allow: Container[str] = NOTHING,
     check_circular: bool = True,
-    colored: bool = False,
     commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
@@ -358,13 +352,10 @@ def dump(
     .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
         ``skipkeys``.
 
-    .. versionchanged:: 2.3 Added ``colored``.
-
     :param obj: a Python object
     :param fp: an open JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param check_circular: check for circular references
-    :param colored: use colored output, see :envvar:`JSONYX_COLORS`
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
@@ -410,7 +401,6 @@ def dump(
     Encoder(
         allow=allow,
         check_circular=check_circular,
-        colored=colored,
         commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,
@@ -432,7 +422,6 @@ def dumps(
     *,
     allow: Container[str] = NOTHING,
     check_circular: bool = True,
-    colored: bool = False,
     commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
@@ -461,12 +450,9 @@ def dumps(
     .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
         ``skipkeys``.
 
-    .. versionchanged:: 2.3 Added ``colored``.
-
     :param obj: a Python object
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param check_circular: check for circular references
-    :param colored: use colored output, see :envvar:`JSONYX_COLORS`
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
@@ -497,7 +483,6 @@ def dumps(
     return Encoder(
         allow=allow,
         check_circular=check_circular,
-        colored=colored,
         commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,

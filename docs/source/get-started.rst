@@ -73,7 +73,7 @@ Check if the correct version is installed
 .. code-block:: console
 
     $ jsonyx --version
-    jsonyx 2.3.0 (C extension)
+    jsonyx 2.2.0 (C extension)
 
 .. warning:: If the version number is followed by ``(Python)``, the performance
     will be up to 36.25x slower, so make sure you have a
@@ -146,7 +146,6 @@ Pretty printing
 ^^^^^^^^^^^^^^^
 
 .. versionchanged:: 2.0 Added ``indent_leaves`` and ``max_indent_level``.
-.. versionchanged:: 2.3 Added ``colored``.
 
 >>> import jsonyx as json
 >>> obj = {"foo": [1, 2, 3], "bar": {"a": 1, "b": 2, "c": 3}}
@@ -156,9 +155,9 @@ Pretty printing
     "bar": {"a": 1, "b": 2, "c": 3}
 }
 
-.. tip:: Use ``colored=True`` for colored output, ``ensure_ascii=True`` to
-    escape non-ASCII characters, ``max_indent_level=1`` to indent up to level
-    1, and ``sort_keys=True`` to sort the keys of objects.
+.. tip:: Use ``ensure_ascii=True`` to escape non-ASCII characters,
+    ``max_indent_level=1`` to indent up to level 1, and ``sort_keys=True`` to
+    sort the keys of objects.
 .. seealso:: The built-in :mod:`pprint` module for pretty-printing arbitrary
     Python data structures.
 
