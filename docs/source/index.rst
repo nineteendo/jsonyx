@@ -8,7 +8,8 @@ Welcome to jsonyx's Documentation!
 3.8+. It is written in pure Python with an optional C extension for better
 performance and no dependencies.
 
-.. rubric:: Key Features
+Key Features
+------------
 
 - JSON decoding, encoding and patching
 - Pretty-printing:
@@ -46,7 +47,8 @@ performance and no dependencies.
 
 - Dedicated functions for reading and writing files and pretty printing
 
-.. rubric:: Benchmark (Mar 31, 2025)
+Benchmark (Mar 31, 2025)
+------------------------
 
 We recommend to use :pypi:`orjson`, :pypi:`msgspec` or :pypi:`pysimdjson` for
 performance critical applications:
@@ -93,10 +95,18 @@ how to :ref:`install <installation>` the project.
 
 .. [1] failed due to recursion error
 
+.. _end_forword:
+
 .. toctree::
     :hidden:
 
     Home <self>
+
+.. _start_toctree:
+
+.. toctree::
+    :hidden:
+
     get-started
     how-to
     api/index

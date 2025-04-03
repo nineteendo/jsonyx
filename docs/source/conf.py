@@ -9,13 +9,13 @@ from typing import Any
 # -- Project information
 
 branch: str = getenv("READTHEDOCS_GIT_IDENTIFIER", "main")
-project: str = "jsonyx"
 year: int = datetime.now(tz=timezone.utc).year
+
+author: str = "Nice Zombies"
 # pylint: disable-next=W0622
 copyright: str = f"{year}, Nice Zombies"  # noqa: A001
-author: str = "Nice Zombies"
-
 release: str = "2.2"  # 2.2.0
+project: str = "jsonyx"
 version: str = "latest" if branch == "main" else branch
 
 # -- General configuration
@@ -81,10 +81,20 @@ html_theme_options: dict[str, Any] = {
 }
 
 # -- Options for EPUB output
+
 epub_show_urls: str = "no"
 
 # -- Options for PDF output
 
+latex_documents: list[tuple[str, str, str, str, str]] = [
+    (
+        "contents",
+        f"{project}.tex",
+        f"{project} Documentation",
+        author,
+        "manual",
+    ),
+]
 latex_engine: str = "xelatex"
 latex_use_xindy: bool = False
 
@@ -122,5 +132,6 @@ ogp_enable_meta_description: bool = True
 # -- Options for sphinx_sitemap
 
 sitemap_excludes: list[str] = [
-    "_modules", "genindex.html", "py-modindex.html", "search.html",
+    "_modules", "contents.html", "forword.html", "genindex.html",
+    "py-modindex.html", "search.html",
 ]
