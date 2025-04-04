@@ -35,12 +35,12 @@ A jsonyx document consists of a single value.
     .. productionlist:: jsonyx-grammar
         jsonyx_document: `value`
 
-.. image:: /_images/light/jsonyx/jsonyx_document.svg
+.. image:: /_images/light/jsonyx/jsonyx_document.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/jsonyx_document.svg
+    .. image:: /_images/dark/jsonyx/jsonyx_document.*
         :class: only-dark
 
 value
@@ -56,12 +56,12 @@ A value can be an object, array, string, number, ``true``, ``false`` or
              :  ( `object` | `array` | `string` | `number` | 'true' | 'false' | 'null' )
              :  `whitespace`
 
-.. image:: /_images/light/jsonyx/value.svg
+.. image:: /_images/light/jsonyx/value.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/value.svg
+    .. image:: /_images/dark/jsonyx/value.*
         :class: only-dark
 
 object
@@ -79,12 +79,12 @@ whitespace with an optional trailing comma.
               :     | ( ( `key` ':' `value` ) ++ ( ',' | `whitespace` - '' ) ) ( ',' `whitespace` )?
               : ) '}'
 
-.. image:: /_images/light/jsonyx/object.svg
+.. image:: /_images/light/jsonyx/object.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/object.svg
+    .. image:: /_images/dark/jsonyx/object.*
         :class: only-dark
 
 array
@@ -101,12 +101,12 @@ are separated by commas or whitespace with an optional trailing comma.
              :      | ( `value` ++ ( ',' | `whitespace` - '' ) ) ( ',' `whitespace` )?
              :  ) ']'
 
-.. image:: /_images/light/jsonyx/array.svg
+.. image:: /_images/light/jsonyx/array.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/array.svg
+    .. image:: /_images/dark/jsonyx/array.*
         :class: only-dark
 
 string
@@ -123,12 +123,12 @@ escapes.
               :     | '\' ( ["\/bfnrt] | 'u' [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] )
               : )* '"'
 
-.. image:: /_images/light/jsonyx/string.svg
+.. image:: /_images/light/jsonyx/string.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/string.svg
+    .. image:: /_images/dark/jsonyx/string.*
         :class: only-dark
 
 number
@@ -145,12 +145,12 @@ of the special values ``NaN``, ``Infinity`` and ``-Infinity``.
               :     | 'Infinity'
               : ) | 'NaN'
 
-.. image:: /_images/light/jsonyx/number.svg
+.. image:: /_images/light/jsonyx/number.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/number.svg
+    .. image:: /_images/dark/jsonyx/number.*
         :class: only-dark
 
 key
@@ -163,12 +163,12 @@ A key can be a string or an identifier.
     .. productionlist:: jsonyx-grammar
         key: `whitespace` ( `string` | `~python-grammar:identifier` ) `whitespace`
 
-.. image:: /_images/light/jsonyx/key.svg
+.. image:: /_images/light/jsonyx/key.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/key.svg
+    .. image:: /_images/dark/jsonyx/key.*
         :class: only-dark
 
 whitespace
@@ -181,10 +181,10 @@ Whitespace, including comments can be inserted between any pair of tokens.
     .. productionlist:: jsonyx-grammar
         whitespace: ( '//' [^#xA#xD]* | '/*' ( ( [^*]* '*'+ ) ++ [^*/] ) '/' | [#x9#xA#xD#x20] )*
 
-.. image:: /_images/light/jsonyx/whitespace.svg
+.. image:: /_images/light/jsonyx/whitespace.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/whitespace.svg
+    .. image:: /_images/dark/jsonyx/whitespace.*
         :class: only-dark

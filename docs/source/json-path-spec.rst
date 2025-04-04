@@ -97,12 +97,12 @@ A query can be absolute or relative.
     .. productionlist:: json-path-grammar
         query: `absolute_query` | `relative_query`
 
-.. image:: /_images/light/json-path/query.svg
+.. image:: /_images/light/json-path/query.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/query.svg
+    .. image:: /_images/dark/json-path/query.*
         :class: only-dark
 
 .. _absolute_path:
@@ -121,12 +121,12 @@ An absolute query starts with ``$`` followed by zero or more selectors.
                       :     | '[' ( `slice` | `integer` | `string` | `filter` ) ']' )
                       : )* '?'?
 
-.. image:: /_images/light/json-path/absolute_query.svg
+.. image:: /_images/light/json-path/absolute_query.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/absolute_query.svg
+    .. image:: /_images/dark/json-path/absolute_query.*
         :class: only-dark
 
 .. _relative_path:
@@ -141,12 +141,12 @@ A relative query starts with ``@`` followed by zero or more child selectors.
     .. productionlist:: json-path-grammar
         relative_query: '@' ( '.' `~python-grammar:identifier` | '[' ( `slice` | `string` | `integer` ) ']' )*
 
-.. image:: /_images/light/json-path/relative_query.svg
+.. image:: /_images/light/json-path/relative_query.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/relative_query.svg
+    .. image:: /_images/dark/json-path/relative_query.*
         :class: only-dark
 
 .. _expression:
@@ -165,12 +165,12 @@ A filter consists of one or more (non-)existence checks / comparisons.
               :     | `relative_query` `whitespace` `operator` `whitespace` `value`
               : ) ++ ( `whitespace` '&&' `whitespace` )
 
-.. image:: /_images/light/json-path/filter.svg
+.. image:: /_images/light/json-path/filter.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/filter.svg
+    .. image:: /_images/dark/json-path/filter.*
         :class: only-dark
 
 .. _query_value:
@@ -185,12 +185,12 @@ A value can be a string, number, ``true``, ``false`` or ``null``.
     .. productionlist:: json-path-grammar
         value: `string` | `number` | 'true' | 'false' | 'null'
 
-.. image:: /_images/light/json-path/value.svg
+.. image:: /_images/light/json-path/value.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/value.svg
+    .. image:: /_images/dark/json-path/value.*
         :class: only-dark
 
 slice
@@ -203,12 +203,12 @@ A slice has a start and an end index (exclusive) with an optional step.
     .. productionlist:: json-path-grammar
         slice: `integer`? ':' `integer`? ( ':' `integer`? )?
 
-.. image:: /_images/light/json-path/slice.svg
+.. image:: /_images/light/json-path/slice.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/slice.svg
+    .. image:: /_images/dark/json-path/slice.*
         :class: only-dark
 
 string
@@ -222,12 +222,12 @@ escapes.
     .. productionlist:: json-path-grammar
         string: "'" ( [^'~] | '~' ['~] )* "'"
 
-.. image:: /_images/light/json-path/string.svg
+.. image:: /_images/light/json-path/string.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/string.svg
+    .. image:: /_images/dark/json-path/string.*
         :class: only-dark
 
 integer
@@ -240,12 +240,12 @@ An integer is a signed decimal number.
     .. productionlist:: json-path-grammar
         integer: '-'? ( '0' | [1-9] [0-9]* )
 
-.. image:: /_images/light/json-path/integer.svg
+.. image:: /_images/light/json-path/integer.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/integer.svg
+    .. image:: /_images/dark/json-path/integer.*
         :class: only-dark
 
 number
@@ -262,12 +262,12 @@ of the special values ``Infinity`` and ``-Infinity``.
               :     | 'Infinity'
               : )
 
-.. image:: /_images/light/json-path/number.svg
+.. image:: /_images/light/json-path/number.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/number.svg
+    .. image:: /_images/dark/json-path/number.*
         :class: only-dark
 
 operator
@@ -280,12 +280,12 @@ An operator can be ``<=``, ``<``, ``==``, ``!=``, ``>=`` or ``>``.
     .. productionlist:: json-path-grammar
         operator: '<=' | '<' | '==' | '!=' | '>=' | '>'
 
-.. image:: /_images/light/json-path/operator.svg
+.. image:: /_images/light/json-path/operator.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/operator.svg
+    .. image:: /_images/dark/json-path/operator.*
         :class: only-dark
 
 
@@ -299,10 +299,10 @@ Whitespace can be inserted around operators.
     .. productionlist:: json-path-grammar
         whitespace: '#x20'*
 
-.. image:: /_images/light/json-path/whitespace.svg
+.. image:: /_images/light/json-path/whitespace.*
     :class: only-light
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/whitespace.svg
+    .. image:: /_images/dark/json-path/whitespace.*
         :class: only-dark

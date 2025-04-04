@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from os import environ, getenv
-from shutil import which
 from typing import Any
 
 # -- Project information
@@ -37,8 +36,6 @@ extensions: list[str] = [
     "sphinx_last_updated_by_git",
     "sphinx_sitemap",
 ]
-if which("inkscape"):
-    extensions.append("sphinxcontrib.inkscapeconverter")
 
 intersphinx_mapping: dict[str, tuple[str, None]] = {
     "numpy": ("https://numpy.org/doc/stable", None),
