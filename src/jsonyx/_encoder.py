@@ -220,22 +220,20 @@ except ImportError:
             first: bool = True
             items: ItemsView[object, object] = mapping.items()
             for key, value in sorted(items) if sort_keys else items:
-                new_key = hook(key)
-                if isinstance(new_key, (str, str_types)):
-                    s = str(new_key)
+                key = hook(key)  # noqa: PLW2901
+                if isinstance(key, (str, str_types)):
+                    s = str(key)
                 else:
-                    if new_key is None:
+                    if key is None:
                         s = "null"
-                    elif isinstance(new_key, (bool, bool_types)):
-                        s = "true" if new_key else "false"
-                    elif isinstance(new_key, (
-                        float, int, float_types, int_types,
-                    )):
-                        s = encode_float(new_key)  # type: ignore
+                    elif isinstance(key, (bool, bool_types)):
+                        s = "true" if key else "false"
+                    elif isinstance(key, (float, int, float_types, int_types)):
+                        s = encode_float(key)  # type: ignore
                     elif skipkeys:
                         continue
                     else:
-                        msg = f"Keys must be str, not {type(new_key).__name__}"
+                        msg = f"Keys must be str, not {type(key).__name__}"
                         raise TypeError(msg)
 
                     if not allow_non_str_keys:

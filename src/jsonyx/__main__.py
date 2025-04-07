@@ -242,7 +242,8 @@ def _run(args: _Namespace) -> None:
         stderr.write("".join(format_syntax_error(exc)))
         sys.exit(1)
     except (
-        AssertionError, LookupError, RecursionError, TypeError, ValueError,
+        AssertionError, LookupError, OSError, RecursionError, TypeError,
+        ValueError,
     ) as exc:
         stderr.write("".join(format_exception_only(None, exc)))
         sys.exit(1)
