@@ -682,10 +682,11 @@ class Decoder:
             >>> import jsonyx as json
             >>> from pathlib import Path
             >>> from tempfile import TemporaryDirectory
+            >>> decoder = json.Decoder()
             >>> with TemporaryDirectory() as tmpdir:
             ...     filename = Path(tmpdir) / "file.json"
             ...     _ = filename.write_text('["filesystem API"]', "utf-8")
-            ...     json.Decoder().read(filename)
+            ...     decoder.read(filename)
             ...
             ['filesystem API']
 

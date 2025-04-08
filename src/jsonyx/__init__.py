@@ -135,7 +135,7 @@ def read(
         >>> with TemporaryDirectory() as tmpdir:
         ...     filename = Path(tmpdir) / "file.json"
         ...     _ = filename.write_text('["filesystem API"]', "utf-8")
-        ...     json.Decoder().read(filename)
+        ...     json.read(filename)
         ...
         ['filesystem API']
 
