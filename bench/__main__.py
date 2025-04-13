@@ -1,4 +1,5 @@
 """JSON benchmark."""
+# TODO(Nice Zombies): re-run benchmark
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -74,9 +75,15 @@ _ENCODE_CASES: dict[str, Any] = {
         for _ in range(256)
     },
 }
+
+
+def _make_dumpb(func: _Func) -> _Func:
+    return lambda obj: func(obj).encode()
+
+
 _ENCODE_FUNCS: dict[str, _Func] = {
-    "json": lambda obj: json.JSONEncoder().encode(obj).encode(),
-    "jsonyx": lambda obj: jsonyx.Encoder().dumps(obj).encode(),
+    "json": _make_dumpb(json.JSONEncoder().encode),
+    "jsonyx": _make_dumpb(jsonyx.Encoder().dumps),
     "msgspec": msgspec.json.Encoder().encode,
     # pylint: disable-next=E1101
     "orjson": orjson.dumps,
