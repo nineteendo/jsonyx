@@ -4,8 +4,6 @@ Changelog
 jsonyx 2.3.0 (unreleased)
 -------------------------
 
-- Speed up JSON decoding
-
 jsonyx 2.2.0 (Mar 31, 2025)
 ---------------------------
 
