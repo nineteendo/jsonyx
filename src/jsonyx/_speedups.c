@@ -78,7 +78,7 @@ typedef struct _PyEncoderObject {
 static PyObject *
 ascii_escape_unicode(PyObject *pystr, int allow_surrogates);
 static PyObject *
-scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyObject *pystr, Py_ssize_t idx, Py_ssize_t *next_idx_ptr);
+scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyObject *pystr, const void *str, int kind, Py_ssize_t len, Py_ssize_t idx, Py_ssize_t *next_idx_ptr);
 static PyObject *
 scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds);
 static void
@@ -107,17 +107,11 @@ encoder_encode_float(PyEncoderObject *s, PyObject *obj);
 #define S_CHAR(c) (c >= ' ' && c <= '~' && c != '\\' && c != '"')
 
 static int
-_skip_comments(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py_ssize_t *idx_ptr)
+_skip_comments(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, const void *str, int kind, Py_ssize_t len, Py_ssize_t *idx_ptr)
 {
-    const void *str;
-    int kind;
-    Py_ssize_t len;
     Py_ssize_t idx;
     Py_ssize_t comment_idx;
 
-    str = PyUnicode_DATA(pystr);
-    kind = PyUnicode_KIND(pystr);
-    len = PyUnicode_GET_LENGTH(pystr);
     idx = *idx_ptr;
     while (idx < len) {
         Py_UCS4 c = PyUnicode_READ(kind, str, idx);
@@ -390,7 +384,7 @@ raise_errmsg(const char *msg, PyObject *filename, PyObject *s, Py_ssize_t start,
 }
 
 static PyObject *
-scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py_ssize_t end, Py_ssize_t *next_end_ptr)
+scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, const void *str, int kind, Py_ssize_t len, Py_ssize_t end, Py_ssize_t *next_end_ptr)
 {
     /* Read the JSON string from PyUnicode pystr.
     end is the index of the first character after the quote.
@@ -400,19 +394,12 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py
     Return value is a new PyUnicode
     */
     PyObject *rval = NULL;
-    Py_ssize_t len;
     Py_ssize_t begin = end - 1;
     Py_ssize_t next /* = begin */;
-    const void *buf;
-    int kind;
 
     _PyUnicodeWriter writer;
     _PyUnicodeWriter_Init(&writer);
     writer.overallocate = 1;
-
-    len = PyUnicode_GET_LENGTH(pystr);
-    buf = PyUnicode_DATA(pystr);
-    kind = PyUnicode_KIND(pystr);
 
     if (end < 0 || len < end) {
         PyErr_SetString(PyExc_ValueError, "end is out of bounds");
@@ -425,7 +412,7 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py
             // Use tight scope variable to help register allocation.
             Py_UCS4 d = 0;
             for (next = end; next < len; next++) {
-                d = PyUnicode_READ(kind, buf, next);
+                d = PyUnicode_READ(kind, str, next);
                 if (d == '"' || d == '\\') {
                     break;
                 }
@@ -472,7 +459,7 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py
             raise_errmsg("Expecting escaped character", pyfilename, pystr, next, 0);
             goto bail;
         }
-        c = PyUnicode_READ(kind, buf, next);
+        c = PyUnicode_READ(kind, str, next);
         if (c != 'u') {
             /* Non-unicode backslash escapes */
             end = next + 1;
@@ -505,7 +492,7 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py
             }
             /* Decode 4 hex digits */
             for (; next < end; next++) {
-                Py_UCS4 digit = PyUnicode_READ(kind, buf, next);
+                Py_UCS4 digit = PyUnicode_READ(kind, str, next);
                 c <<= 4;
                 switch (digit) {
                     case '0': case '1': case '2': case '3': case '4':
@@ -525,8 +512,8 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py
             /* Surrogate pair */
             if (Py_UNICODE_IS_HIGH_SURROGATE(c)) {
                 if (end + 2 < len &&
-                    PyUnicode_READ(kind, buf, next++) == '\\' &&
-                    PyUnicode_READ(kind, buf, next++) == 'u') {
+                    PyUnicode_READ(kind, str, next++) == '\\' &&
+                    PyUnicode_READ(kind, str, next++) == 'u') {
                     if (end + 6 > len) {
                         raise_errmsg("Expecting 4 hex digits", pyfilename, pystr, end + 2, -4);
                         goto bail;
@@ -534,7 +521,7 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py
                     Py_UCS4 c2 = 0;
                     /* Decode 4 hex digits */
                     for (; next < end + 6; next++) {
-                        Py_UCS4 digit = PyUnicode_READ(kind, buf, next);
+                        Py_UCS4 digit = PyUnicode_READ(kind, str, next);
                         c2 <<= 4;
                         switch (digit) {
                             case '0': case '1': case '2': case '3': case '4':
@@ -629,7 +616,7 @@ scanner_clear(PyObject *op)
 }
 
 static PyObject *
-_parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyObject *pystr, Py_ssize_t idx, Py_ssize_t *next_idx_ptr)
+_parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyObject *pystr, const void *str, int kind, Py_ssize_t len, Py_ssize_t idx, Py_ssize_t *next_idx_ptr)
 {
     /* Read a JSON object from PyUnicode pystr.
     idx is the index of the first character after the opening curly brace.
@@ -638,9 +625,6 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
 
     Returns a new dict
     */
-    const void *str;
-    int kind;
-    Py_ssize_t end_idx;
     PyObject *val = NULL;
     PyObject *rval = NULL;
     PyObject *key = NULL;
@@ -650,9 +634,6 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
     Py_ssize_t colon_idx;
     Py_ssize_t comma_idx;
 
-    str = PyUnicode_DATA(pystr);
-    kind = PyUnicode_KIND(pystr);
-    end_idx = PyUnicode_GET_LENGTH(pystr) - 1;
     if (use_pairs)
         rval = PyList_New(0);
     else
@@ -661,22 +642,22 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
         return NULL;
 
     /* skip comments after { */
-    if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
+    if (_skip_comments(s, pyfilename, pystr, str, kind, len, &idx) < 0) {
         goto bail;
     }
 
     /* only loop if the object is non-empty */
-    if (idx > end_idx || PyUnicode_READ(kind, str, idx) != '}') {
+    if (idx >= len || PyUnicode_READ(kind, str, idx) != '}') {
         while (1) {
             PyObject *new_key;
-            if (idx > end_idx) {
+            if (idx >= len) {
                 raise_errmsg("Unterminated object", pyfilename, pystr, obj_idx, idx);
                 goto bail;
             }
 
             /* read key */
             if (PyUnicode_READ(kind, str, idx) == '"') {
-                key = scanstring_unicode(s, pyfilename, pystr, idx + 1, &next_idx);
+                key = scanstring_unicode(s, pyfilename, pystr, str, kind, len, idx + 1, &next_idx);
             }
             else if (!Py_UNICODE_ISALPHA(PyUnicode_READ(kind, str, idx)) &&
                      PyUnicode_READ(kind, str, idx) != '_' &&
@@ -688,9 +669,9 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
             else {
                 next_idx = idx;
                 next_idx++;
-                while (next_idx <= end_idx && (Py_UNICODE_ISALNUM(PyUnicode_READ(kind, str, next_idx)) ||
-                                               PyUnicode_READ(kind, str, next_idx) == '_' ||
-                                               PyUnicode_READ(kind, str, next_idx) > '\x7f'))
+                while (next_idx < len && (Py_UNICODE_ISALNUM(PyUnicode_READ(kind, str, next_idx)) ||
+                                          PyUnicode_READ(kind, str, next_idx) == '_' ||
+                                          PyUnicode_READ(kind, str, next_idx) > '\x7f'))
                 {
                     next_idx++;
                 }
@@ -719,20 +700,20 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
             colon_idx = idx = next_idx;
 
             /* skip comments between key and : delimiter, read :, skip comments */
-            if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
+            if (_skip_comments(s, pyfilename, pystr, str, kind, len, &idx) < 0) {
                 goto bail;
             }
-            if (idx > end_idx || PyUnicode_READ(kind, str, idx) != ':') {
+            if (idx >= len || PyUnicode_READ(kind, str, idx) != ':') {
                 raise_errmsg("Expecting colon", pyfilename, pystr, colon_idx, 0);
                 goto bail;
             }
             idx++;
-            if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
+            if (_skip_comments(s, pyfilename, pystr, str, kind, len, &idx) < 0) {
                 goto bail;
             }
 
             /* read any JSON term */
-            val = scan_once_unicode(s, memo, pyfilename, pystr, idx, &next_idx);
+            val = scan_once_unicode(s, memo, pyfilename, pystr, str, kind, len, idx, &next_idx);
             if (val == NULL)
                 goto bail;
 
@@ -757,12 +738,12 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
             comma_idx = idx = next_idx;
 
             /* skip comments before } or , */
-            if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
+            if (_skip_comments(s, pyfilename, pystr, str, kind, len, &idx) < 0) {
                 goto bail;
             }
 
             /* bail if the object is closed or we didn't get the , delimiter */
-            if (idx > end_idx) {
+            if (idx >= len) {
                 raise_errmsg("Unterminated object", pyfilename, pystr, obj_idx, idx);
                 goto bail;
             }
@@ -771,7 +752,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
                 idx++;
 
                 /* skip comments after , delimiter */
-                if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
+                if (_skip_comments(s, pyfilename, pystr, str, kind, len, &idx) < 0) {
                     goto bail;
                 }
             }
@@ -787,7 +768,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
                 goto bail;
             }
 
-            if (idx <= end_idx && PyUnicode_READ(kind, str, idx) == '}') {
+            if (idx < len && PyUnicode_READ(kind, str, idx) == '}') {
                 if (!s->allow_trailing_comma) {
                     raise_errmsg("Trailing comma is not allowed", pyfilename, pystr, comma_idx, comma_idx + 1);
                     goto bail;
@@ -798,7 +779,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
     }
 
 #ifdef Py_DEBUG
-    assert(idx <= end_idx && PyUnicode_READ(kind, str, idx) == '}');
+    assert(idx < len && PyUnicode_READ(kind, str, idx) == '}');
 #endif
     *next_idx_ptr = idx + 1;
 
@@ -815,7 +796,7 @@ bail:
 }
 
 static PyObject *
-_parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyObject *pystr, Py_ssize_t idx, Py_ssize_t *next_idx_ptr) {
+_parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyObject *pystr, const void *str, int kind, Py_ssize_t len, Py_ssize_t idx, Py_ssize_t *next_idx_ptr) {
     /* Read a JSON array from PyUnicode pystr.
     idx is the index of the first character after the opening brace.
     *next_idx_ptr is a return-by-reference index to the first character after
@@ -823,9 +804,6 @@ _parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, P
 
     Returns a new PyList
     */
-    const void *str;
-    int kind;
-    Py_ssize_t end_idx;
     PyObject *val = NULL;
     PyObject *rval;
     Py_ssize_t next_idx;
@@ -836,25 +814,21 @@ _parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, P
     if (rval == NULL)
         return NULL;
 
-    str = PyUnicode_DATA(pystr);
-    kind = PyUnicode_KIND(pystr);
-    end_idx = PyUnicode_GET_LENGTH(pystr) - 1;
-
     /* skip comments after [ */
-    if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
+    if (_skip_comments(s, pyfilename, pystr, str, kind, len, &idx) < 0) {
         goto bail;
     }
 
     /* only loop if the array is non-empty */
-    if (idx > end_idx || PyUnicode_READ(kind, str, idx) != ']') {
+    if (idx >= len || PyUnicode_READ(kind, str, idx) != ']') {
         while (1) {
-            if (idx > end_idx) {
+            if (idx >= len) {
                 raise_errmsg("Unterminated array", pyfilename, pystr, arr_idx, idx);
                 goto bail;
             }
 
             /* read any JSON term  */
-            val = scan_once_unicode(s, memo, pyfilename, pystr, idx, &next_idx);
+            val = scan_once_unicode(s, memo, pyfilename, pystr, str, kind, len, idx, &next_idx);
             if (val == NULL)
                 goto bail;
 
@@ -865,12 +839,12 @@ _parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, P
             comma_idx = idx = next_idx;
 
             /* skip comments between term and , */
-            if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
+            if (_skip_comments(s, pyfilename, pystr, str, kind, len, &idx) < 0) {
                 goto bail;
             }
 
             /* bail if the array is closed or we didn't get the , delimiter */
-            if (idx > end_idx) {
+            if (idx >= len) {
                 raise_errmsg("Unterminated array", pyfilename, pystr, arr_idx, idx);
                 goto bail;
             }
@@ -879,7 +853,7 @@ _parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, P
                 idx++;
 
                 /* skip comments after , */
-                if (_skip_comments(s, pyfilename, pystr, &idx) < 0) {
+                if (_skip_comments(s, pyfilename, pystr, str, kind, len, &idx) < 0) {
                     goto bail;
                 }
             }
@@ -895,7 +869,7 @@ _parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, P
                 goto bail;
             }
 
-            if (idx <= end_idx && PyUnicode_READ(kind, str, idx) == ']') {
+            if (idx < len && PyUnicode_READ(kind, str, idx) == ']') {
                 if (!s->allow_trailing_comma) {
                     raise_errmsg("Trailing comma is not allowed", pyfilename, pystr, comma_idx, comma_idx + 1);
                     goto bail;
@@ -906,7 +880,7 @@ _parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, P
     }
 
 #ifdef Py_DEBUG
-    assert(idx <= end_idx && PyUnicode_READ(kind, str, idx) == ']');
+    assert(idx < len && PyUnicode_READ(kind, str, idx) == ']');
 #endif
     *next_idx_ptr = idx + 1;
     if (s->array_hook != (PyObject *)&PyList_Type) {
@@ -920,21 +894,14 @@ bail:
 }
 
 static int
-_match_number_unicode(PyObject *pystr, Py_ssize_t *idx_ptr, int *is_float)
+_match_number_unicode(const void *str, int kind, Py_ssize_t len, Py_ssize_t *idx_ptr, int *is_float)
 {
-    const void *str;
-    int kind;
-    Py_ssize_t end_idx;
     Py_ssize_t idx = *idx_ptr;
-
-    str = PyUnicode_DATA(pystr);
-    kind = PyUnicode_KIND(pystr);
-    end_idx = PyUnicode_GET_LENGTH(pystr) - 1;
 
     /* read a sign if it's there, make sure it's not the end of the string */
     if (PyUnicode_READ(kind, str, idx) == '-') {
         idx++;
-        if (idx > end_idx) {
+        if (idx >= len) {
             return -1;
         }
     }
@@ -942,7 +909,7 @@ _match_number_unicode(PyObject *pystr, Py_ssize_t *idx_ptr, int *is_float)
     /* read as many integer digits as we find as long as it doesn't start with 0 */
     if (PyUnicode_READ(kind, str, idx) >= '1' && PyUnicode_READ(kind, str, idx) <= '9') {
         idx++;
-        while (idx <= end_idx && PyUnicode_READ(kind, str, idx) >= '0' && PyUnicode_READ(kind, str, idx) <= '9') idx++;
+        while (idx < len && PyUnicode_READ(kind, str, idx) >= '0' && PyUnicode_READ(kind, str, idx) <= '9') idx++;
     }
     /* if it starts with 0 we only expect one integer digit */
     else if (PyUnicode_READ(kind, str, idx) == '0') {
@@ -954,22 +921,22 @@ _match_number_unicode(PyObject *pystr, Py_ssize_t *idx_ptr, int *is_float)
     }
 
     /* if the next char is '.' followed by a digit then read all float digits */
-    if (idx < end_idx && PyUnicode_READ(kind, str, idx) == '.' && PyUnicode_READ(kind, str, idx + 1) >= '0' && PyUnicode_READ(kind, str, idx + 1) <= '9') {
+    if (idx + 1 < len && PyUnicode_READ(kind, str, idx) == '.' && PyUnicode_READ(kind, str, idx + 1) >= '0' && PyUnicode_READ(kind, str, idx + 1) <= '9') {
         *is_float = 1;
         idx += 2;
-        while (idx <= end_idx && PyUnicode_READ(kind, str, idx) >= '0' && PyUnicode_READ(kind, str, idx) <= '9') idx++;
+        while (idx < len && PyUnicode_READ(kind, str, idx) >= '0' && PyUnicode_READ(kind, str, idx) <= '9') idx++;
     }
 
     /* if the next char is 'e' or 'E' then maybe read the exponent (or backtrack) */
-    if (idx < end_idx && (PyUnicode_READ(kind, str, idx) == 'e' || PyUnicode_READ(kind, str, idx) == 'E')) {
+    if (idx + 1 < len && (PyUnicode_READ(kind, str, idx) == 'e' || PyUnicode_READ(kind, str, idx) == 'E')) {
         Py_ssize_t e_start = idx;
         idx++;
 
         /* read an exponent sign if present */
-        if (idx < end_idx && (PyUnicode_READ(kind, str, idx) == '-' || PyUnicode_READ(kind, str, idx) == '+')) idx++;
+        if (idx + 1 < len && (PyUnicode_READ(kind, str, idx) == '-' || PyUnicode_READ(kind, str, idx) == '+')) idx++;
 
         /* read all digits */
-        while (idx <= end_idx && PyUnicode_READ(kind, str, idx) >= '0' && PyUnicode_READ(kind, str, idx) <= '9') idx++;
+        while (idx < len && PyUnicode_READ(kind, str, idx) >= '0' && PyUnicode_READ(kind, str, idx) <= '9') idx++;
 
         /* if we got a digit, then parse as float. if not, backtrack */
         if (PyUnicode_READ(kind, str, idx - 1) >= '0' && PyUnicode_READ(kind, str, idx - 1) <= '9') {
@@ -985,7 +952,7 @@ _match_number_unicode(PyObject *pystr, Py_ssize_t *idx_ptr, int *is_float)
 }
 
 static PyObject *
-_parse_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py_ssize_t start, Py_ssize_t *next_idx_ptr) {
+_parse_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, const void *str, int kind, Py_ssize_t len, Py_ssize_t start, Py_ssize_t *next_idx_ptr) {
     /* Read a JSON number from PyUnicode pystr.
     idx is the index of the first character of the number
     *next_idx_ptr is a return-by-reference index to the first character after
@@ -993,18 +960,13 @@ _parse_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr,
 
     Returns a new PyObject representation of that number: PyLong, or PyFloat.
     */
-    const void *str;
-    int kind;
     Py_ssize_t idx = start;
     int is_float = 0;
     PyObject *rval;
     PyObject *numstr = NULL;
     PyObject *custom_func;
 
-    str = PyUnicode_DATA(pystr);
-    kind = PyUnicode_KIND(pystr);
-
-    if (_match_number_unicode(pystr, &idx, &is_float) < 0) {
+    if (_match_number_unicode(str, kind, len, &idx, &is_float) < 0) {
         raise_errmsg("Expecting value", pyfilename, pystr, start, 0);
         return NULL;
     }
@@ -1064,7 +1026,7 @@ bail:
 }
 
 static PyObject *
-scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyObject *pystr, Py_ssize_t idx, Py_ssize_t *next_idx_ptr)
+scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyObject *pystr, const void *str, int kind, Py_ssize_t len, Py_ssize_t idx, Py_ssize_t *next_idx_ptr)
 {
     /* Read one JSON term (of any kind) from PyUnicode pystr.
     idx is the index of the first character of the term
@@ -1074,19 +1036,12 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
     Returns a new PyObject representation of the term.
     */
     PyObject *res;
-    const void *str;
-    int kind;
-    Py_ssize_t length;
-
-    str = PyUnicode_DATA(pystr);
-    kind = PyUnicode_KIND(pystr);
-    length = PyUnicode_GET_LENGTH(pystr);
 
     if (idx < 0) {
         PyErr_SetString(PyExc_ValueError, "idx cannot be negative");
         return NULL;
     }
-    if (idx >= length) {
+    if (idx >= len) {
         raise_errmsg("Expecting value", pyfilename, pystr, idx, 0);
         return NULL;
     }
@@ -1094,13 +1049,13 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
     switch (PyUnicode_READ(kind, str, idx)) {
         case '"':
             /* string */
-            return scanstring_unicode(s, pyfilename, pystr, idx + 1, next_idx_ptr);
+            return scanstring_unicode(s, pyfilename, pystr, str, kind, len, idx + 1, next_idx_ptr);
         case '{':
             /* object */
             if (_Py_EnterRecursiveCall(" while decoding a JSON object "
                                        "from a unicode string"))
                 return NULL;
-            res = _parse_object_unicode(s, memo, pyfilename, pystr, idx + 1, next_idx_ptr);
+            res = _parse_object_unicode(s, memo, pyfilename, pystr, str, kind, len, idx + 1, next_idx_ptr);
             _Py_LeaveRecursiveCall();
             if (PyErr_ExceptionMatches(PyExc_RecursionError)) {
                 PyErr_Clear();
@@ -1113,7 +1068,7 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
             if (_Py_EnterRecursiveCall(" while decoding a JSON array "
                                        "from a unicode string"))
                 return NULL;
-            res = _parse_array_unicode(s, memo, pyfilename, pystr, idx + 1, next_idx_ptr);
+            res = _parse_array_unicode(s, memo, pyfilename, pystr, str, kind, len, idx + 1, next_idx_ptr);
             _Py_LeaveRecursiveCall();
             if (PyErr_ExceptionMatches(PyExc_RecursionError)) {
                 PyErr_Clear();
@@ -1123,14 +1078,14 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
             return res;
         case 'n':
             /* null */
-            if ((idx + 3 < length) && PyUnicode_READ(kind, str, idx + 1) == 'u' && PyUnicode_READ(kind, str, idx + 2) == 'l' && PyUnicode_READ(kind, str, idx + 3) == 'l') {
+            if ((idx + 3 < len) && PyUnicode_READ(kind, str, idx + 1) == 'u' && PyUnicode_READ(kind, str, idx + 2) == 'l' && PyUnicode_READ(kind, str, idx + 3) == 'l') {
                 *next_idx_ptr = idx + 4;
                 Py_RETURN_NONE;
             }
             break;
         case 't':
             /* true */
-            if ((idx + 3 < length) && PyUnicode_READ(kind, str, idx + 1) == 'r' && PyUnicode_READ(kind, str, idx + 2) == 'u' && PyUnicode_READ(kind, str, idx + 3) == 'e') {
+            if ((idx + 3 < len) && PyUnicode_READ(kind, str, idx + 1) == 'r' && PyUnicode_READ(kind, str, idx + 2) == 'u' && PyUnicode_READ(kind, str, idx + 3) == 'e') {
                 *next_idx_ptr = idx + 4;
                 if (s->bool_hook != (PyObject *)&PyBool_Type) {
                     return PyObject_CallOneArg(s->bool_hook, Py_True);
@@ -1140,7 +1095,7 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
             break;
         case 'f':
             /* false */
-            if ((idx + 4 < length) && PyUnicode_READ(kind, str, idx + 1) == 'a' &&
+            if ((idx + 4 < len) && PyUnicode_READ(kind, str, idx + 1) == 'a' &&
                 PyUnicode_READ(kind, str, idx + 2) == 'l' &&
                 PyUnicode_READ(kind, str, idx + 3) == 's' &&
                 PyUnicode_READ(kind, str, idx + 4) == 'e') {
@@ -1153,7 +1108,7 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
             break;
         case 'N':
             /* NaN */
-            if ((idx + 2 < length) && PyUnicode_READ(kind, str, idx + 1) == 'a' &&
+            if ((idx + 2 < len) && PyUnicode_READ(kind, str, idx + 1) == 'a' &&
                 PyUnicode_READ(kind, str, idx + 2) == 'N') {
                 if (!s->allow_nan_and_infinity) {
                     raise_errmsg("NaN is not allowed", pyfilename, pystr, idx, idx + 3);
@@ -1173,7 +1128,7 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
             break;
         case 'I':
             /* Infinity */
-            if ((idx + 7 < length) && PyUnicode_READ(kind, str, idx + 1) == 'n' &&
+            if ((idx + 7 < len) && PyUnicode_READ(kind, str, idx + 1) == 'n' &&
                 PyUnicode_READ(kind, str, idx + 2) == 'f' &&
                 PyUnicode_READ(kind, str, idx + 3) == 'i' &&
                 PyUnicode_READ(kind, str, idx + 4) == 'n' &&
@@ -1198,7 +1153,7 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
             break;
         case '-':
             /* -Infinity */
-            if ((idx + 8 < length) && PyUnicode_READ(kind, str, idx + 1) == 'I' &&
+            if ((idx + 8 < len) && PyUnicode_READ(kind, str, idx + 1) == 'I' &&
                 PyUnicode_READ(kind, str, idx + 2) == 'n' &&
                 PyUnicode_READ(kind, str, idx + 3) == 'f' &&
                 PyUnicode_READ(kind, str, idx + 4) == 'i' &&
@@ -1224,7 +1179,7 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
             break;
     }
     /* Didn't find a string, object, array, or named constant. Look for a number. */
-    return _parse_number_unicode(s, pyfilename, pystr, idx, next_idx_ptr);
+    return _parse_number_unicode(s, pyfilename, pystr, str, kind, len, idx, next_idx_ptr);
 }
 
 static PyObject *
@@ -1235,6 +1190,8 @@ scanner_call(PyObject *op, PyObject *args, PyObject *kwds)
     PyObject *pyfilename;
     PyObject *pystr;
     PyObject *rval;
+    const void *str;
+    int kind;
     Py_ssize_t len;
     Py_ssize_t idx = 0;
     Py_ssize_t next_idx = -1;
@@ -1242,12 +1199,14 @@ scanner_call(PyObject *op, PyObject *args, PyObject *kwds)
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "UU:scanner", kwlist, &pyfilename, &pystr)) {
         return NULL;
     }
+    str = PyUnicode_DATA(pystr);
+    kind = PyUnicode_KIND(pystr);
     len = PyUnicode_GET_LENGTH(pystr);
     if (len > 0 && PyUnicode_READ_CHAR(pystr, 0) == L'\ufeff') {
         raise_errmsg("Unexpected UTF-8 BOM", pyfilename, pystr, 0, 1);
         return NULL;
     }
-    if (_skip_comments(self, pyfilename, pystr, &idx) < 0)
+    if (_skip_comments(self, pyfilename, pystr, str, kind, len, &idx) < 0)
     {
         return NULL;
     }
@@ -1261,13 +1220,13 @@ scanner_call(PyObject *op, PyObject *args, PyObject *kwds)
     else {
         memo = Py_None;
     }
-    rval = scan_once_unicode(self, memo, pyfilename, pystr, idx, &next_idx);
+    rval = scan_once_unicode(self, memo, pyfilename, pystr, str, kind, len, idx, &next_idx);
     Py_DECREF(memo);
     if (rval == NULL) {
         return NULL;
     }
     idx = next_idx;
-    if (_skip_comments(self, pyfilename, pystr, &idx) < 0) {
+    if (_skip_comments(self, pyfilename, pystr, str, kind, len, &idx) < 0) {
         return NULL;
     }
     if (idx < len) {
@@ -1567,16 +1526,22 @@ static PyObject *
 encoder_encode_number(PyEncoderObject *s, PyObject *obj)
 {
     /* Return the JSON representation of a number. */
+    const void *str;
+    int kind;
+    Py_ssize_t len;
+    
     PyObject *encoded = PyObject_Str(obj);
     if (encoded == NULL) {
         goto bail;
     }
 
-    Py_ssize_t len = PyUnicode_GET_LENGTH(encoded);
+    str = PyUnicode_DATA(encoded);
+    kind = PyUnicode_KIND(encoded);
+    len = PyUnicode_GET_LENGTH(encoded);
 
     Py_ssize_t match_len = 0;
     int _is_float = 0;
-    if (_match_number_unicode(encoded, &match_len, &_is_float) >= 0 &&
+    if (_match_number_unicode(str, kind, len, &match_len, &_is_float) >= 0 &&
         match_len == len)
     {
         return encoded;
