@@ -446,7 +446,16 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py
             c = d;
         }
 
-        if (c != '"' && c != '\\') {
+        if (c == '"') {
+            // Fast path for simple case.
+            // DO NOT REMOVE: https://github.com/nineteendo/jsonyx/issues/33
+            if (writer.buffer == NULL) {
+                rval = PyUnicode_Substring(pystr, end, next);
+                end = next;
+                break;
+            }
+        }
+        else if (c != '\\') {
             raise_errmsg("Unterminated string", pyfilename, pystr, begin, next);
             goto bail;
         }
@@ -458,6 +467,7 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py
             }
         }
         if (c == '"') {
+            rval = _PyUnicodeWriter_Finish(&writer);
             end = next;
             break;
         }
@@ -572,7 +582,6 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py
 #ifdef Py_DEBUG
     assert(end < len && PyUnicode_READ(kind, str, end) == '"');
 #endif
-    rval = _PyUnicodeWriter_Finish(&writer);
     if (s->str_hook != (PyObject *)&PyUnicode_Type) {
         Py_SETREF(rval, PyObject_CallOneArg(s->str_hook, rval));
     }
