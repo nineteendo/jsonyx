@@ -4,6 +4,8 @@ Changelog
 jsonyx 2.3.0 (unreleased)
 -------------------------
 
+- Fixed :issue:`33`: Performance regression in :func:`jsonyx.loads`
+
 jsonyx 2.2.0 (Mar 31, 2025)
 ---------------------------
 
