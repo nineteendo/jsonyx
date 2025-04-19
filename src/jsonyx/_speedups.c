@@ -105,7 +105,6 @@ static PyObject *
 encoder_encode_float(PyEncoderObject *s, PyObject *obj);
 
 #define S_CHAR(c) (c >= ' ' && c <= '~' && c != '\\' && c != '"')
-#define IS_WHITESPACE(c) (((c) == ' ') || ((c) == '\t') || ((c) == '\n') || ((c) == '\r'))
 
 static int
 _skip_comments(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py_ssize_t *idx_ptr)
@@ -120,22 +119,19 @@ _skip_comments(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, Py_ssi
     kind = PyUnicode_KIND(pystr);
     len = PyUnicode_GET_LENGTH(pystr);
     idx = *idx_ptr;
-    while (1) {
-        while (idx < len && IS_WHITESPACE(PyUnicode_READ(kind,str, idx))) {
-            idx++;
-        }
+    while (idx < len) {
+        Py_UCS4 c = PyUnicode_READ(kind, str, idx);
         comment_idx = idx;
-        if (idx + 1 < len && PyUnicode_READ(kind, str, idx) == '/' &&
-            PyUnicode_READ(kind, str, idx + 1) == '/')
-        {
+        if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+            idx++;
+            continue;
+        } else if (idx + 1 < len && c == '/' && PyUnicode_READ(kind, str, idx + 1) == '/') {
             idx += 2;
             while (idx < len && PyUnicode_READ(kind,str, idx) != '\n' && PyUnicode_READ(kind,str, idx) != '\r') {
                 idx++;
             }
         }
-        else if (idx + 1 < len && PyUnicode_READ(kind, str, idx) == '/' &&
-                 PyUnicode_READ(kind, str, idx + 1) == '*')
-        {
+        else if (idx + 1 < len && c == '/' && PyUnicode_READ(kind, str, idx + 1) == '*') {
             idx += 2;
             while (1) {
                 if (idx + 1 >= len) {
