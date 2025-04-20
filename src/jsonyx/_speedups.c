@@ -1219,6 +1219,8 @@ scanner_call(PyObject *op, PyObject *args, PyObject *kwds)
     }
     else {
         memo = Py_None;
+        // Py_None is a borrowed reference, while memo is a strong one
+        Py_INCREF(memo);
     }
     rval = scan_once_unicode(self, memo, pyfilename, pystr, str, kind, len, idx, &next_idx);
     Py_DECREF(memo);
