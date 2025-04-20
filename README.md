@@ -45,31 +45,31 @@ The documentation for `jsonyx` is available online at: https://jsonyx.readthedoc
     ```
 - Dedicated functions for reading and writing files and pretty printing
 
-## Benchmark (Mar 31, 2025)
+## Benchmark (Apr 20, 2025)
 
 We recommend to use [`orjson`](https://pypi.org/project/orjson),
 [`msgspec`](https://pypi.org/project/msgspec) or
 [`pysimdjson`](https://pypi.org/project/pysimdjson) for performance critical
 applications:
 
-| encode                                      |   json | jsonyx | msgspec |  orjson | fastest time |
-|:--------------------------------------------|-------:|-------:|--------:|--------:|-------------:|
-| List of 256 booleans                        |  4.56x |  5.33x |   1.00x |   1.06x |      1.90 μs |
-| List of 256 ASCII strings                   | 12.12x | 13.65x |   1.50x |   1.00x |      3.95 μs |
-| List of 256 floats                          | 23.41x | 25.95x |   1.30x |   1.00x |      8.03 μs |
-| List of 256 dicts with 1 int                | 11.10x | 13.61x |   1.32x |   1.00x |      7.75 μs |
-| Medium complex object                       | 10.76x | 11.80x |   1.16x |   1.00x |     13.30 μs |
-| List of 256 strings                         | 23.08x | 19.66x |   2.04x |   1.00x |     14.42 μs |
-| Complex object                              |  7.36x |  7.95x |   1.00x |     DNF |    209.74 μs |
-| Dict with 256 lists of 256 dicts with 1 int |  9.23x | 11.34x |   1.21x |   1.00x |   2361.90 μs |
+| encode                                      |   json | jsonyx | msgspec | orjson | fastest time |
+|:--------------------------------------------|-------:|-------:|--------:|-------:|-------------:|
+| List of 256 booleans                        |  4.36x |  3.91x |   1.00x |  1.03x |      1.97 μs |
+| List of 256 ASCII strings                   | 10.42x | 10.08x |   1.37x |  1.00x |      4.53 μs |
+| List of 256 floats                          | 23.27x | 23.37x |   1.33x |  1.00x |      8.06 μs |
+| List of 256 dicts with 1 int                | 10.91x | 11.43x |   1.31x |  1.00x |      8.11 μs |
+| Medium complex object                       |  9.99x | 10.46x |   1.14x |  1.00x |     13.60 μs |
+| List of 256 strings                         | 17.98x | 14.32x |   1.64x |  1.00x |     18.59 μs |
+| Complex object                              |  7.44x |  7.75x |   1.00x |    DNF |    205.09 μs |
+| Dict with 256 lists of 256 dicts with 1 int |  8.87x |  9.70x |   1.16x |  1.00x |   2453.00 μs |
 
 | decode                                      |   json | jsonyx | msgspec | orjson | simdjson | fastest time |
 |:--------------------------------------------|-------:|-------:|--------:|-------:|---------:|-------------:|
-| List of 256 booleans                        |  4.40x |  6.26x |   2.60x |  1.28x |    1.00x |      1.54 μs |
-| List of 256 ASCII strings                   |  9.08x | 12.57x |   5.43x |  5.03x |    1.00x |      2.89 μs |
-| List of 256 floats                          | 10.99x | 12.47x |   2.32x |  1.78x |    1.00x |      6.14 μs |
-| List of 256 dicts with 1 int                | 12.11x | 15.16x |   6.87x |  5.08x |    1.00x |      6.17 μs |
-| Medium complex object                       | 12.65x | 17.63x |   5.26x |  4.40x |    1.00x |      7.62 μs |
-| List of 256 strings                         |  5.68x |  4.38x |   9.92x |  8.00x |    1.00x |     16.76 μs |
-| Complex object                              |  8.58x |  7.54x |   8.32x |  7.56x |    1.00x |    136.79 μs |
-| Dict with 256 lists of 256 dicts with 1 int | 17.65x | 19.13x |  12.07x | 10.78x |    1.00x |   1658.37 μs |
+| List of 256 booleans                        |  4.86x |  5.37x |   2.97x |  1.41x |    1.00x |      1.40 μs |
+| List of 256 ASCII strings                   |  7.04x |  7.85x |   4.80x |  4.36x |    1.00x |      3.05 μs |
+| List of 256 floats                          | 10.91x | 11.18x |   2.21x |  1.67x |    1.00x |      6.12 μs |
+| List of 256 dicts with 1 int                | 12.05x | 11.64x |   6.86x |  5.00x |    1.00x |      6.24 μs |
+| Medium complex object                       | 11.85x | 11.81x |   4.88x |  4.16x |    1.00x |      8.11 μs |
+| List of 256 strings                         |  5.57x |  3.74x |   9.82x |  7.53x |    1.00x |     16.86 μs |
+| Complex object                              |  8.78x |  7.45x |   8.56x |  7.60x |    1.00x |    137.30 μs |
+| Dict with 256 lists of 256 dicts with 1 int | 17.32x | 14.97x |  11.67x | 10.68x |    1.00x |   1704.53 μs |
