@@ -1769,10 +1769,10 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
             keystr = PyUnicode_FromString("null");
         }
         else if (key == Py_True) {
-            return _PyUnicodeWriter_WriteASCIIString(writer, "true", 4);
+            keystr = PyUnicode_FromString("true");
         }
         else if (key == Py_False) {
-            return _PyUnicodeWriter_WriteASCIIString(writer, "false", 5);
+            keystr = PyUnicode_FromString("false");
         }
         else if (PyLong_Check(key)) {
             if (PyLong_CheckExact(key)) {
