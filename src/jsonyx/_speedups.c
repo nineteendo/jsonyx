@@ -1624,28 +1624,14 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
     if (obj == Py_None) {
       return _PyUnicodeWriter_WriteASCIIString(writer, "null", 4);
     }
-    else if (obj == Py_True || obj == Py_False || PyObject_IsInstance(obj, s->bool_types)) {
-        if (PyErr_Occurred())
-            return -1;
-        rv = PyObject_IsTrue(obj);
-        if (rv == -1) {
-            return -1;
-        }
-        else if (rv) {
-            return _PyUnicodeWriter_WriteASCIIString(writer, "true", 4);
-        }
-        else {
-            return _PyUnicodeWriter_WriteASCIIString(writer, "false", 5);
-        }
+    else if (obj == Py_True) {
+        return _PyUnicodeWriter_WriteASCIIString(writer, "true", 4);
     }
-    else if (PyUnicode_Check(obj) || PyObject_IsInstance(obj, s->str_types)) {
-        if (PyErr_Occurred())
-            return -1;
-        new_obj = PyObject_Str(obj);
-        if (new_obj == NULL)
-            return -1;
-        PyObject *encoded = encoder_encode_string(s, new_obj);
-        Py_DECREF(new_obj);
+    else if (obj == Py_False) {
+        return _PyUnicodeWriter_WriteASCIIString(writer, "false", 5);
+    }
+    else if (PyUnicode_Check(obj)) {
+        PyObject *encoded = encoder_encode_string(s, obj);
         if (encoded == NULL)
             return -1;
         return _steal_accumulate(writer, encoded);
@@ -1674,8 +1660,57 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
             return -1;
         return _steal_accumulate(writer, encoded);
     }
-    else if (PyList_Check(obj) || PyTuple_Check(obj) ||
-             PyObject_IsInstance(obj, s->array_types))
+    else if (PyList_Check(obj) || PyTuple_Check(obj)) {
+        if (_Py_EnterRecursiveCall(" while encoding a JSON object"))
+            return -1;
+        rv = encoder_listencode_sequence(s, markers, writer, obj, indent_level, indent_cache);
+        _Py_LeaveRecursiveCall();
+        return rv;
+    }
+    else if (PyDict_Check(obj)) {
+        if (_Py_EnterRecursiveCall(" while encoding a JSON object"))
+            return -1;
+        rv = encoder_listencode_mapping(s, markers, writer, obj, indent_level, indent_cache);
+        _Py_LeaveRecursiveCall();
+        return rv;
+    }
+    else if (PyObject_IsInstance(obj, s->bool_types)) {
+        if (PyErr_Occurred())
+            return -1;
+        rv = PyObject_IsTrue(obj);
+        if (rv == -1) {
+            return -1;
+        }
+        else if (rv) {
+            return _PyUnicodeWriter_WriteASCIIString(writer, "true", 4);
+        }
+        else {
+            return _PyUnicodeWriter_WriteASCIIString(writer, "false", 5);
+        }
+    }
+    else if (PyObject_IsInstance(obj, s->str_types)) {
+        if (PyErr_Occurred())
+            return -1;
+        new_obj = PyObject_Str(obj);
+        if (new_obj == NULL)
+            return -1;
+        PyObject *encoded = encoder_encode_string(s, new_obj);
+        Py_DECREF(new_obj);
+        if (encoded == NULL)
+            return -1;
+        return _steal_accumulate(writer, encoded);
+    }
+    else if (PyObject_IsInstance(obj, s->int_types) ||
+             PyObject_IsInstance(obj, s->float_types))
+    {
+        if (PyErr_Occurred())
+            return -1;
+        PyObject *encoded = encoder_encode_number(s, obj);
+        if (encoded == NULL)
+            return -1;
+        return _steal_accumulate(writer, encoded);
+    }
+    else if (PyObject_IsInstance(obj, s->array_types))
     {
         // See https://github.com/python/cpython/issues/123593 
         if (PyErr_Occurred())
@@ -1687,7 +1722,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         _Py_LeaveRecursiveCall();
         return rv;
     }
-    else if (PyDict_Check(obj) || PyObject_IsInstance(obj, s->object_types)) {
+    else if (PyObject_IsInstance(obj, s->object_types)) {
         if (PyErr_Occurred())
             return -1;
 
@@ -1696,16 +1731,6 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         rv = encoder_listencode_mapping(s, markers, writer, obj, indent_level, indent_cache);
         _Py_LeaveRecursiveCall();
         return rv;
-    }
-    else if (PyObject_IsInstance(obj, s->int_types) ||
-             PyObject_IsInstance(obj, s->float_types))
-    {
-        if (PyErr_Occurred())
-            return -1;
-        PyObject *encoded = encoder_encode_number(s, obj);
-        if (encoded == NULL)
-            return -1;
-        return _steal_accumulate(writer, encoded);
     }
     else {
         PyErr_Format(PyExc_TypeError,
@@ -1729,7 +1754,12 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
             return -1;
         }
     }
-    if (PyUnicode_Check(key) || PyObject_IsInstance(key, s->str_types)) {
+    if (PyUnicode_Check(key)) {
+        // key is a borrowed reference, while new_key is a strong one
+        Py_INCREF(key);
+        keystr = key;
+    }
+    else if (PyObject_IsInstance(key, s->str_types)) {
         if (PyErr_Occurred())
             return -1;
         keystr = PyObject_Str(key);
@@ -1738,19 +1768,11 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
         if (key == Py_None) {
             keystr = PyUnicode_FromString("null");
         }
-        else if (key == Py_True || key == Py_False || PyObject_IsInstance(key, s->bool_types)) {
-            if (PyErr_Occurred())
-                return -1;
-            int rv = PyObject_IsTrue(key);
-            if (rv == -1) {
-                return -1;
-            }
-            else if (rv) {
-                keystr = PyUnicode_FromString("true");
-            }
-            else {
-                keystr = PyUnicode_FromString("false");
-            }
+        else if (key == Py_True) {
+            return _PyUnicodeWriter_WriteASCIIString(writer, "true", 4);
+        }
+        else if (key == Py_False) {
+            return _PyUnicodeWriter_WriteASCIIString(writer, "false", 5);
         }
         else if (PyLong_Check(key)) {
             if (PyLong_CheckExact(key)) {
@@ -1766,6 +1788,20 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
             }
             else {
                 keystr = encoder_encode_number(s, key);
+            }
+        }
+        else if (PyObject_IsInstance(key, s->bool_types)) {
+            if (PyErr_Occurred())
+                return -1;
+            int rv = PyObject_IsTrue(key);
+            if (rv == -1) {
+                return -1;
+            }
+            else if (rv) {
+                keystr = PyUnicode_FromString("true");
+            }
+            else {
+                keystr = PyUnicode_FromString("false");
             }
         }
         else if (PyObject_IsInstance(key, s->int_types) ||
