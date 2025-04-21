@@ -54,22 +54,22 @@ applications:
 
 | encode                                      |   json | jsonyx | msgspec | orjson | fastest time |
 |:--------------------------------------------|-------:|-------:|--------:|-------:|-------------:|
-| List of 256 booleans                        |  4.34x |  3.97x |   1.00x |  1.07x |      1.93 μs |
-| List of 256 ASCII strings                   | 26.98x | 14.11x |   2.34x |  1.00x |      4.33 μs |
-| List of 256 floats                          | 19.75x | 19.73x |   1.13x |  1.00x |     10.28 μs |
-| List of 256 dicts with 1 int                | 13.76x | 13.65x |   1.34x |  1.00x |      7.85 μs |
-| Medium complex object                       | 10.37x | 10.43x |   1.13x |  1.00x |     13.97 μs |
-| List of 256 strings                         | 26.04x | 20.88x |   2.30x |  1.00x |     14.32 μs |
-| Complex object                              |  7.66x |  7.29x |   1.00x |    DNF |    221.42 μs |
-| Dict with 256 lists of 256 dicts with 1 int | 10.84x | 10.85x |   1.66x |  1.00x |   2296.56 μs |
+| List of 256 booleans                        |  4.54x |  4.06x |   1.04x |  1.00x |      1.85 μs |
+| List of 256 ASCII strings                   | 11.76x | 10.42x |   1.33x |  1.00x |      4.34 μs |
+| List of 256 floats                          | 24.82x | 25.10x |   1.30x |  1.00x |      8.09 μs |
+| List of 256 dicts with 1 int                | 11.10x | 11.50x |   1.34x |  1.00x |      7.92 μs |
+| Medium complex object                       | 10.25x | 11.05x |   1.14x |  1.00x |     13.77 μs |
+| List of 256 strings                         | 22.19x | 17.00x |   1.86x |  1.00x |     15.81 μs |
+| Complex object                              |  7.54x |  7.41x |   1.00x |    DNF |    215.37 μs |
+| Dict with 256 lists of 256 dicts with 1 int |  9.34x |  9.74x |   1.29x |  1.00x |   2394.91 μs |
 
 | decode                                      |   json | jsonyx | msgspec | orjson | simdjson | fastest time |
 |:--------------------------------------------|-------:|-------:|--------:|-------:|---------:|-------------:|
-| List of 256 booleans                        |  4.68x |  5.55x |   2.85x |  1.43x |    1.00x |      1.44 μs |
-| List of 256 ASCII strings                   |  5.86x |  4.74x |   2.96x |  2.71x |    1.00x |      5.03 μs |
-| List of 256 floats                          | 15.50x | 12.11x |   2.19x |  1.99x |    1.00x |      6.49 μs |
-| List of 256 dicts with 1 int                | 12.58x | 11.25x |   7.30x |  5.25x |    1.00x |      6.24 μs |
-| Medium complex object                       | 13.70x | 13.10x |   5.58x |  4.66x |    1.00x |      7.57 μs |
-| List of 256 strings                         |  6.87x |  3.75x |  11.21x |  7.78x |    1.00x |     16.74 μs |
-| Complex object                              |  9.57x |  7.63x |   8.86x |  7.81x |    1.00x |    132.61 μs |
-| Dict with 256 lists of 256 dicts with 1 int | 18.10x | 15.43x |  12.12x | 10.61x |    1.00x |   1652.20 μs |
+| List of 256 booleans                        |  4.36x |  5.26x |   2.76x |  1.40x |    1.00x |      1.46 μs |
+| List of 256 ASCII strings                   |  8.54x |  6.93x |   4.28x |  3.96x |    1.00x |      3.46 μs |
+| List of 256 floats                          | 10.85x | 11.25x |   2.23x |  1.74x |    1.00x |      6.05 μs |
+| List of 256 dicts with 1 int                | 12.79x | 11.43x |   7.12x |  5.19x |    1.00x |      6.12 μs |
+| Medium complex object                       | 12.70x | 12.01x |   5.16x |  4.60x |    1.00x |      7.98 μs |
+| List of 256 strings                         |  7.11x |  3.82x |   9.70x |  7.80x |    1.00x |     16.52 μs |
+| Complex object                              |  9.87x |  7.74x |   8.90x |  7.94x |    1.00x |    130.28 μs |
+| Dict with 256 lists of 256 dicts with 1 int | 17.84x | 15.18x |  12.08x | 10.32x |    1.00x |   1674.28 μs |
