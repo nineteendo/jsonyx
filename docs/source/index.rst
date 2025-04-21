@@ -168,7 +168,7 @@ performance critical applications:
     .. tabularcolumns:: lrrrrrr
 
     =========================================== ====== ====== ======= ====== ============= ============
-    decode                                        json jsonyx msgspec orjson simdjson [2]_ fastest time
+    decode                                        json jsonyx msgspec orjson simdjson [2]_ fastest time
     =========================================== ====== ====== ======= ====== ============= ============
     List of 256 booleans                         4.08x  4.86x   2.42x  1.43x         1.00x      1.51 μs
     List of 256 ASCII strings                    8.71x  7.78x   3.96x  3.83x         1.00x      3.31 μs
@@ -189,7 +189,7 @@ performance critical applications:
     .. tabularcolumns:: lrrrrrr
 
     =========================================== ====== ====== ======= ====== ============= ============
-    decode                                        json jsonyx msgspec orjson simdjson [2]_ fastest time
+    decode                                        json jsonyx msgspec orjson simdjson [2]_ fastest time
     =========================================== ====== ====== ======= ====== ============= ============
     List of 256 booleans                         4.29x  5.20x   3.13x  1.62x         1.00x      1.38 μs
     List of 256 ASCII strings                    9.49x  8.44x   5.02x  4.68x         1.00x      2.81 μs
@@ -210,7 +210,7 @@ performance critical applications:
     .. tabularcolumns:: lrrrrrr
 
     =========================================== ====== ====== ======= ====== ============= ============
-    decode                                        json jsonyx msgspec orjson simdjson [2]_ fastest time
+    decode                                        json jsonyx msgspec orjson simdjson [2]_ fastest time
     =========================================== ====== ====== ======= ====== ============= ============
     List of 256 booleans                         4.87x  5.12x   3.06x  1.57x         1.00x      1.46 μs
     List of 256 ASCII strings                    6.12x  6.55x   3.80x  3.79x         1.00x      3.54 μs
@@ -231,7 +231,7 @@ performance critical applications:
     .. tabularcolumns:: lrrrrrr
 
     =========================================== ====== ====== ======= ====== ============= ============
-    decode                                        json jsonyx msgspec orjson simdjson [2]_ fastest time
+    decode                                        json jsonyx msgspec orjson simdjson [2]_ fastest time
     =========================================== ====== ====== ======= ====== ============= ============
     List of 256 booleans                         4.86x  5.37x   2.97x  1.41x         1.00x      1.40 μs
     List of 256 ASCII strings                    7.04x  7.85x   4.80x  4.36x         1.00x      3.05 μs
@@ -252,7 +252,7 @@ performance critical applications:
     .. tabularcolumns:: lrrrrrr
 
     =========================================== ====== ====== ======= ====== ============= ============
-    decode                                        json jsonyx msgspec orjson simdjson [2]_ fastest time
+    decode                                        json jsonyx msgspec orjson simdjson [2]_ fastest time
     =========================================== ====== ====== ======= ====== ============= ============
     List of 256 booleans                         4.36x  5.26x   2.76x  1.40x         1.00x      1.46 μs
     List of 256 ASCII strings                    8.54x  6.93x   4.28x  3.96x         1.00x      3.46 μs
