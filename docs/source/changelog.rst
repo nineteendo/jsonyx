@@ -7,8 +7,13 @@ Changelog
 - The **feature** version increments for new features or enhancements, and
 - The **fix** version increments for bug or security fixes.
 
+.. warning:: Breaking changes can occur in major and feature versions, so read
+  the changelog before updating.
+
 jsonyx 2.2.1 (unreleased)
 -------------------------
+
+Bug Fixes:
 
 - Fixed :issue:`36`: Fatal Python error: none_dealloc
 - Fixed :issue:`33`: Performance regression compared to :mod:`json`
@@ -16,13 +21,20 @@ jsonyx 2.2.1 (unreleased)
 jsonyx 2.2.0 (Mar 31, 2025)
 ---------------------------
 
+New Features:
+
 - Added ``cache_keys`` to :class:`jsonyx.Decoder`, :func:`jsonyx.load`,
   :func:`jsonyx.loads` and :func:`jsonyx.read`
+
+Breaking Changes:
+
 - Disabled caching keys by default for :class:`jsonyx.Decoder`,
   :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`jsonyx.read`
 
 jsonyx 2.1.0 (Mar 30, 2025)
 ---------------------------
+
+New Features:
 
 - Added ``check_circular``, ``hook`` and ``skipkeys`` to
   :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
@@ -31,7 +43,8 @@ jsonyx 2.1.0 (Mar 30, 2025)
 jsonyx 2.0.0 (Mar 27, 2025)
 ---------------------------
 
-- Added support for Python 3.8 and Python 3.9
+New Features:
+
 - Added the ``jsonyx`` application
 - Added ``commas``, ``indent_leaves``, ``max_indent_level``, ``quoted_keys``
   and ``types`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
@@ -53,13 +66,9 @@ jsonyx 2.0.0 (Mar 27, 2025)
 - Added :func:`jsonyx.select_nodes`
 - Added :class:`jsonyx.Manipulator`
 - Added :exc:`jsonyx.TruncatedSyntaxError`
-- Fixed :issue:`32`: Line comments continue until the end of file
-- Fixed :issue:`python/cpython#125660`: Python implementation of
-  :func:`jsonyx.loads` accepts invalid unicode escapes
-- Fixed :issue:`python/cpython#125682`: Python implementation of
-  :func:`jsonyx.loads` accepts non-ascii digits
-- Improved documentation
-- Improved error messages
+
+Breaking Changes:
+
 - Made :class:`tuple` serializable by default instead of :class:`enum.Enum` and
   :class:`decimal.Decimal`
 - Removed :data:`!jsonyx.allow.DUPLICATE_KEYS`
@@ -71,16 +80,37 @@ jsonyx 2.0.0 (Mar 27, 2025)
   :func:`jsonyx.write`
 - Replaced ``use_decimal`` with ``hooks`` for :class:`jsonyx.Decoder`,
   :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`jsonyx.read`
+
+Other Changes:
+
+- Added support for Python 3.8 and Python 3.9
+- Improved documentation
+- Improved error messages
 - Use cache for indentations in the JSON encoder
+
+Bug Fixes:
+
+- Fixed :issue:`32`: Line comments continue until the end of file
+- Fixed :issue:`python/cpython#125660`: Python implementation of
+  :func:`jsonyx.loads` accepts invalid unicode escapes
+- Fixed :issue:`python/cpython#125682`: Python implementation of
+  :func:`jsonyx.loads` accepts non-ascii digits
 
 jsonyx 1.2.1 (Aug 3, 2024)
 --------------------------
 
-- First conda release
+Changes:
+
+- First conda release.
+
+Bug Fixes:
+
 - Fixed :issue:`2`: Middle of error context is truncated incorrectly
 
 jsonyx 1.2.0 (Aug 3, 2024)
 --------------------------
+
+New Features:
 
 - Added :option:`!output_filename`
 - Added :option:`!-a` as an alias to :option:`!--ensure-ascii`
@@ -92,9 +122,14 @@ jsonyx 1.2.0 (Aug 3, 2024)
 - Added :option:`!-S` as an alias to :option:`!--nonstrict`
 - Added :option:`!-t` as an alias to :option:`!--trailing-comma`
 - Added :option:`!-T` as an alias to :option:`!--indent-tab`
+
+Breaking Changes:
+
 - Renamed :option:`!filename` to :option:`!input_filename`
 
 jsonyx 1.1.0 (Aug 3, 2024)
 --------------------------
+
+Breaking Changes:
 
 - Renamed ``python -m jsonyx.tool`` to ``python -m jsonyx``
