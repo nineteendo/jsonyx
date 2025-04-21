@@ -10,8 +10,8 @@ Changelog
 .. warning:: Breaking changes can occur in major and feature versions, so read
   the changelog before updating.
 
-jsonyx 2.2.1 (unreleased)
--------------------------
+jsonyx 2.2.1 (Apr 21, 2025)
+---------------------------
 
 Bug Fixes:
     - Fixed :issue:`36`: Fatal Python error: none_dealloc
