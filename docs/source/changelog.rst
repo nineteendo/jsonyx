@@ -5,7 +5,7 @@ jsonyx 2.3.0 (unreleased)
 -------------------------
 
 - Fixed :issue:`36`: Fatal Python error: none_dealloc
-- Fixed :issue:`33`: Performance regression in :func:`jsonyx.loads`
+- Fixed :issue:`33`: Performance regression compared to :mod:`json`
 
 jsonyx 2.2.0 (Mar 31, 2025)
 ---------------------------
