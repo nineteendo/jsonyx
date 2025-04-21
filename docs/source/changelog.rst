@@ -1,6 +1,12 @@
 Changelog
 =========
 
+:mod:`jsonyx` uses a ``[major].[feature].[fix]`` versioning scheme, where:
+
+- The **major** version increments for foundational changes or major overhauls,
+- The **feature** version increments for new features or enhancements, and
+- The **fix** version increments for bug or security fixes.
+
 jsonyx 2.2.1 (unreleased)
 -------------------------
 
