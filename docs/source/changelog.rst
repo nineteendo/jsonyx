@@ -123,7 +123,7 @@ New Features:
 - Added :option:`!-t` as an alias to :option:`!--trailing-comma`
 - Added :option:`!-T` as an alias to :option:`!--indent-tab`
 
-Breaking Changes:
+Other Changes:
 
 - Renamed :option:`!filename` to :option:`!input_filename`
 
