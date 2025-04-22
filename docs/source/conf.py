@@ -54,7 +54,9 @@ templates_path = ["_templates"]
 
 # -- Options for HTML output
 
-html_baseurl: str = "http://jsonyx.readthedocs.io/"
+html_baseurl: str = environ.get(
+    "READTHEDOCS_BASEURL", "http://jsonyx.readthedocs.io/",
+)
 html_context: dict[str, Any] = {
     "breadcrumb_include_page": True,
     "conf_py_path": "/docs/source/",
