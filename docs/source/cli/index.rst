@@ -1,9 +1,6 @@
 Command Line Interface
 ======================
 
-.. meta::
-    :canonical: .
-
 .. versionadded:: 2.0
 
 .. tabularcolumns:: \X{1}{2}\X{1}{2}
