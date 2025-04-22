@@ -8,4 +8,4 @@ sphinx-issues==5.0.0
 sphinx-last-updated-by-git==0.3.8
 sphinx-notfound-page==1.1.0
 sphinx-sitemap==2.6.0
-sphinxext-opengraph==0.9.1
+sphinxext-opengraph @ git+https://github.com/nineteendo/sphinxext-opengraph@4bf0d7a0e3e5ffc4a882de6daec0beb2e6a6b292
