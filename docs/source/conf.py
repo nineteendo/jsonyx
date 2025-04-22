@@ -134,3 +134,4 @@ sitemap_excludes: list[str] = [
     "_modules", "contents.html", "forword.html", "genindex.html",
     "py-modindex.html", "search.html",
 ]
+sitemap_url_scheme: str = "{link}"
