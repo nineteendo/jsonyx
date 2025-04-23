@@ -40,7 +40,7 @@ A jsonyx document consists of a single value.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/jsonyx_document.*
+    .. image:: /_images/dark/jsonyx/jsonyx_document.svg
         :class: only-dark
 
 value
@@ -61,7 +61,7 @@ A value can be an object, array, string, number, ``true``, ``false`` or
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/value.*
+    .. image:: /_images/dark/jsonyx/value.svg
         :class: only-dark
 
 object
@@ -84,7 +84,7 @@ whitespace with an optional trailing comma.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/object.*
+    .. image:: /_images/dark/jsonyx/object.svg
         :class: only-dark
 
 array
@@ -106,7 +106,7 @@ are separated by commas or whitespace with an optional trailing comma.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/array.*
+    .. image:: /_images/dark/jsonyx/array.svg
         :class: only-dark
 
 string
@@ -128,7 +128,7 @@ escapes.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/string.*
+    .. image:: /_images/dark/jsonyx/string.svg
         :class: only-dark
 
 number
@@ -150,7 +150,7 @@ of the special values ``NaN``, ``Infinity`` and ``-Infinity``.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/number.*
+    .. image:: /_images/dark/jsonyx/number.svg
         :class: only-dark
 
 key
@@ -168,7 +168,7 @@ A key can be a string or an identifier.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/key.*
+    .. image:: /_images/dark/jsonyx/key.svg
         :class: only-dark
 
 whitespace
@@ -186,5 +186,5 @@ Whitespace, including comments can be inserted between any pair of tokens.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/jsonyx/whitespace.*
+    .. image:: /_images/dark/jsonyx/whitespace.svg
         :class: only-dark

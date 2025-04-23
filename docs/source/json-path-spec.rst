@@ -102,7 +102,7 @@ A query can be absolute or relative.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/query.*
+    .. image:: /_images/dark/json-path/query.svg
         :class: only-dark
 
 .. _absolute_path:
@@ -126,7 +126,7 @@ An absolute query starts with ``$`` followed by zero or more selectors.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/absolute_query.*
+    .. image:: /_images/dark/json-path/absolute_query.svg
         :class: only-dark
 
 .. _relative_path:
@@ -146,7 +146,7 @@ A relative query starts with ``@`` followed by zero or more child selectors.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/relative_query.*
+    .. image:: /_images/dark/json-path/relative_query.svg
         :class: only-dark
 
 .. _expression:
@@ -170,7 +170,7 @@ A filter consists of one or more (non-)existence checks / comparisons.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/filter.*
+    .. image:: /_images/dark/json-path/filter.svg
         :class: only-dark
 
 .. _query_value:
@@ -190,7 +190,7 @@ A value can be a string, number, ``true``, ``false`` or ``null``.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/value.*
+    .. image:: /_images/dark/json-path/value.svg
         :class: only-dark
 
 slice
@@ -208,7 +208,7 @@ A slice has a start and an end index (exclusive) with an optional step.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/slice.*
+    .. image:: /_images/dark/json-path/slice.svg
         :class: only-dark
 
 string
@@ -227,7 +227,7 @@ escapes.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/string.*
+    .. image:: /_images/dark/json-path/string.svg
         :class: only-dark
 
 integer
@@ -245,7 +245,7 @@ An integer is a signed decimal number.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/integer.*
+    .. image:: /_images/dark/json-path/integer.svg
         :class: only-dark
 
 number
@@ -267,7 +267,7 @@ of the special values ``Infinity`` and ``-Infinity``.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/number.*
+    .. image:: /_images/dark/json-path/number.svg
         :class: only-dark
 
 operator
@@ -285,7 +285,7 @@ An operator can be ``<=``, ``<``, ``==``, ``!=``, ``>=`` or ``>``.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/operator.*
+    .. image:: /_images/dark/json-path/operator.svg
         :class: only-dark
 
 
@@ -304,5 +304,5 @@ Whitespace can be inserted around operators.
 
 .. only:: not latex
 
-    .. image:: /_images/dark/json-path/whitespace.*
+    .. image:: /_images/dark/json-path/whitespace.svg
         :class: only-dark
