@@ -64,14 +64,14 @@ performance critical applications:
     =========================================== ====== ====== ======= ======== ============
     encode                                        json jsonyx msgspec   orjson fastest time
     =========================================== ====== ====== ======= ======== ============
-    List of 256 booleans                         9.73x  5.09x   1.11x    1.00x      1.68 μs
-    List of 256 ASCII strings                   11.37x 13.10x   1.59x    1.00x      3.81 μs
-    List of 256 floats                          22.98x 22.71x   1.41x    1.00x      8.04 μs
-    List of 256 dicts with 1 int                11.13x  9.06x   3.10x    1.00x     10.01 μs
-    Medium complex object                       18.03x 13.09x   1.08x    1.00x     16.19 μs
-    List of 256 strings                         22.89x 19.54x   2.30x    1.00x     14.23 μs
-    Complex object                               7.18x  7.01x   1.00x DNF [1]_    223.33 μs
-    Dict with 256 lists of 256 dicts with 1 int 13.27x  9.45x   1.19x    1.00x   2422.11 μs
+    List of 256 booleans                         7.61x  4.97x   1.01x    1.00x      1.67 μs
+    List of 256 ASCII strings                   11.59x 13.00x   1.65x    1.00x      3.65 μs
+    List of 256 floats                          22.74x 22.52x   1.32x    1.00x      8.13 μs
+    List of 256 dicts with 1 int                 9.69x  7.92x   1.00x    1.32x     11.34 μs
+    Medium complex object                       13.68x 20.81x   1.00x    1.06x     15.34 μs
+    List of 256 strings                         26.63x 20.14x   2.16x    1.00x     15.40 μs
+    Complex object                               7.65x  7.27x   1.00x DNF [1]_    213.92 μs
+    Dict with 256 lists of 256 dicts with 1 int 12.67x  9.51x   1.17x    1.00x   2443.96 μs
     =========================================== ====== ====== ======= ======== ============
 
 .. tab:: Python 3.10.15
@@ -85,14 +85,14 @@ performance critical applications:
     =========================================== ====== ====== ======= ======== ============
     encode                                        json jsonyx msgspec   orjson fastest time
     =========================================== ====== ====== ======= ======== ============
-    List of 256 booleans                         6.23x  3.93x   1.00x    1.00x      1.89 μs
-    List of 256 ASCII strings                   12.79x 13.04x   1.70x    1.00x      3.66 μs
-    List of 256 floats                          22.16x 22.32x   1.26x    1.00x      8.16 μs
-    List of 256 dicts with 1 int                13.16x 10.53x   1.36x    1.00x      8.21 μs
-    Medium complex object                       10.72x  9.74x   1.13x    1.00x     13.95 μs
-    List of 256 strings                         22.61x 18.54x   1.90x    1.00x     15.22 μs
-    Complex object                               7.84x  7.15x   1.00x DNF [1]_    212.84 μs
-    Dict with 256 lists of 256 dicts with 1 int 11.95x  8.72x   1.15x    1.00x   2597.61 μs
+    List of 256 booleans                         6.04x  3.92x   1.00x    1.02x      1.87 μs
+    List of 256 ASCII strings                   11.32x 11.55x   1.40x    1.00x      4.12 μs
+    List of 256 floats                          22.01x 22.09x   1.25x    1.00x      8.21 μs
+    List of 256 dicts with 1 int                13.27x 10.57x   1.32x    1.00x      8.16 μs
+    Medium complex object                       10.63x  9.73x   1.15x    1.00x     14.01 μs
+    List of 256 strings                         22.94x 17.95x   1.81x    1.00x     15.73 μs
+    Complex object                               7.76x  6.92x   1.00x DNF [1]_    215.50 μs
+    Dict with 256 lists of 256 dicts with 1 int 13.09x  9.18x   1.24x    1.00x   2441.73 μs
     =========================================== ====== ====== ======= ======== ============
 
 .. tab:: Python 3.11.10
@@ -106,14 +106,14 @@ performance critical applications:
     =========================================== ====== ====== ======= ======== ============
     encode                                        json jsonyx msgspec   orjson fastest time
     =========================================== ====== ====== ======= ======== ============
-    List of 256 booleans                         6.32x  3.89x   1.02x    1.00x      1.92 μs
-    List of 256 ASCII strings                   13.55x 10.90x   1.44x    1.00x      4.15 μs
-    List of 256 floats                          22.02x 22.32x   1.27x    1.00x      8.15 μs
-    List of 256 dicts with 1 int                13.71x 10.37x   1.28x    1.00x      8.27 μs
-    Medium complex object                       11.45x  9.97x   1.16x    1.00x     13.27 μs
-    List of 256 strings                         20.80x 13.47x   2.05x    1.00x     17.48 μs
-    Complex object                               8.08x  7.12x   1.00x DNF [1]_    211.77 μs
-    Dict with 256 lists of 256 dicts with 1 int 13.05x  9.51x   1.21x    1.00x   2371.33 μs
+    List of 256 booleans                         6.30x  3.76x   1.00x    1.01x      1.90 μs
+    List of 256 ASCII strings                   14.33x 11.61x   1.55x    1.00x      3.90 μs
+    List of 256 floats                          21.63x 21.72x   1.28x    1.00x      8.28 μs
+    List of 256 dicts with 1 int                14.29x 11.26x   1.34x    1.00x      7.88 μs
+    Medium complex object                       11.27x  9.79x   1.16x    1.00x     13.46 μs
+    List of 256 strings                         21.70x 14.95x   2.09x    1.00x     16.08 μs
+    Complex object                               8.02x  6.99x   1.00x DNF [1]_    213.72 μs
+    Dict with 256 lists of 256 dicts with 1 int 13.33x  9.36x   1.30x    1.00x   2362.18 μs
     =========================================== ====== ====== ======= ======== ============
 
 .. tab:: Python 3.12.7
@@ -127,14 +127,14 @@ performance critical applications:
     =========================================== ====== ====== ======= ======== ============
     encode                                        json jsonyx msgspec   orjson fastest time
     =========================================== ====== ====== ======= ======== ============
-    List of 256 booleans                         4.36x  3.91x   1.00x    1.03x      1.97 μs
-    List of 256 ASCII strings                   10.42x 10.08x   1.37x    1.00x      4.53 μs
-    List of 256 floats                          23.27x 23.37x   1.33x    1.00x      8.06 μs
-    List of 256 dicts with 1 int                10.91x 11.43x   1.31x    1.00x      8.11 μs
-    Medium complex object                        9.99x 10.46x   1.14x    1.00x     13.60 μs
-    List of 256 strings                         17.98x 14.32x   1.64x    1.00x     18.59 μs
-    Complex object                               7.44x  7.75x   1.00x DNF [1]_    205.09 μs
-    Dict with 256 lists of 256 dicts with 1 int  8.87x  9.70x   1.16x    1.00x   2453.00 μs
+    List of 256 booleans                         4.38x  4.04x   1.00x    1.04x      1.90 μs
+    List of 256 ASCII strings                   13.34x 12.80x   1.67x    1.00x      3.51 μs
+    List of 256 floats                          23.41x 25.06x   1.33x    1.00x      8.03 μs
+    List of 256 dicts with 1 int                10.93x 11.61x   1.28x    1.00x      7.94 μs
+    Medium complex object                       10.04x 10.49x   1.14x    1.00x     13.47 μs
+    List of 256 strings                         23.33x 18.83x   2.24x    1.00x     13.90 μs
+    Complex object                               7.27x  7.63x   1.00x DNF [1]_    208.32 μs
+    Dict with 256 lists of 256 dicts with 1 int  8.26x  9.18x   1.07x    1.00x   2618.09 μs
     =========================================== ====== ====== ======= ======== ============
 
 .. tab:: Python 3.13.0
@@ -148,14 +148,14 @@ performance critical applications:
     =========================================== ====== ====== ======= ======== ============
     encode                                        json jsonyx msgspec   orjson fastest time
     =========================================== ====== ====== ======= ======== ============
-    List of 256 booleans                         4.54x  4.06x   1.04x    1.00x      1.85 μs
-    List of 256 ASCII strings                   11.76x 10.42x   1.33x    1.00x      4.34 μs
-    List of 256 floats                          24.82x 25.10x   1.30x    1.00x      8.09 μs
-    List of 256 dicts with 1 int                11.10x 11.50x   1.34x    1.00x      7.92 μs
-    Medium complex object                       10.25x 11.05x   1.14x    1.00x     13.77 μs
-    List of 256 strings                         22.19x 17.00x   1.86x    1.00x     15.81 μs
-    Complex object                               7.54x  7.41x   1.00x DNF [1]_    215.37 μs
-    Dict with 256 lists of 256 dicts with 1 int  9.34x  9.74x   1.29x    1.00x   2394.91 μs
+    List of 256 booleans                         4.58x  4.13x   1.05x    1.00x      1.84 μs
+    List of 256 ASCII strings                   14.00x 11.60x   1.57x    1.00x      3.92 μs
+    List of 256 floats                          24.93x 25.59x   1.34x    1.00x      8.28 μs
+    List of 256 dicts with 1 int                11.58x 12.28x   1.38x    1.00x      7.84 μs
+    Medium complex object                       10.12x 10.40x   1.16x    1.00x     13.87 μs
+    List of 256 strings                         19.70x 14.69x   1.73x    1.00x     18.10 μs
+    Complex object                               7.68x  7.55x   1.00x DNF [1]_    211.43 μs
+    Dict with 256 lists of 256 dicts with 1 int  4.52x  5.43x   3.20x    1.00x   5082.41 μs
     =========================================== ====== ====== ======= ======== ============
 
 .. tab:: Python 3.9.20
@@ -170,14 +170,14 @@ performance critical applications:
     =========================================== ====== ====== ======= ====== ============= ============
     decode                                        json jsonyx msgspec orjson simdjson [2]_ fastest time
     =========================================== ====== ====== ======= ====== ============= ============
-    List of 256 booleans                         4.08x  4.86x   2.42x  1.43x         1.00x      1.51 μs
-    List of 256 ASCII strings                    8.71x  7.78x   3.96x  3.83x         1.00x      3.31 μs
-    List of 256 floats                           9.49x  9.35x   2.00x  1.40x         1.00x      6.21 μs
-    List of 256 dicts with 1 int                11.37x 10.68x   6.09x  4.30x         1.00x      6.22 μs
-    Medium complex object                       11.53x 11.95x   4.52x  3.75x         1.00x      7.94 μs
-    List of 256 strings                          5.70x  3.80x   9.51x  8.71x         1.00x     16.53 μs
-    Complex object                               7.86x  7.12x   8.51x  7.70x         1.00x    133.58 μs
-    Dict with 256 lists of 256 dicts with 1 int 17.92x 16.51x  13.48x 11.87x         1.00x   1667.46 μs
+    List of 256 booleans                         3.77x  4.65x   2.31x  1.42x         1.00x      1.52 μs
+    List of 256 ASCII strings                   10.53x  9.22x   5.16x  4.57x         1.00x      2.77 μs
+    List of 256 floats                           9.31x  8.63x   1.96x  1.37x         1.00x      6.35 μs
+    List of 256 dicts with 1 int                11.65x 10.79x   6.15x  4.38x         1.00x      6.21 μs
+    Medium complex object                       10.95x 11.22x   4.36x  3.52x         1.00x      8.33 μs
+    List of 256 strings                          5.43x  3.80x   9.01x  8.38x         1.00x     17.32 μs
+    Complex object                               7.93x  7.18x   8.58x  7.74x         1.00x    132.03 μs
+    Dict with 256 lists of 256 dicts with 1 int 17.98x 16.50x  13.52x 11.97x         1.00x   1653.69 μs
     =========================================== ====== ====== ======= ====== ============= ============
 
 .. tab:: Python 3.10.15
@@ -191,14 +191,14 @@ performance critical applications:
     =========================================== ====== ====== ======= ====== ============= ============
     decode                                        json jsonyx msgspec orjson simdjson [2]_ fastest time
     =========================================== ====== ====== ======= ====== ============= ============
-    List of 256 booleans                         4.29x  5.20x   3.13x  1.62x         1.00x      1.38 μs
-    List of 256 ASCII strings                    9.49x  8.44x   5.02x  4.68x         1.00x      2.81 μs
-    List of 256 floats                           9.64x  9.13x   2.08x  1.61x         1.00x      6.16 μs
-    List of 256 dicts with 1 int                10.73x 10.37x   6.01x  4.27x         1.00x      6.18 μs
-    Medium complex object                       11.45x 11.66x   4.68x  3.96x         1.00x      7.64 μs
-    List of 256 strings                          3.82x  2.57x   5.63x  5.09x         1.00x     24.07 μs
-    Complex object                               7.91x  7.48x   8.26x  7.68x         1.00x    134.21 μs
-    Dict with 256 lists of 256 dicts with 1 int 17.61x 15.95x  12.86x 12.42x         1.00x   1637.85 μs
+    List of 256 booleans                         4.21x  5.20x   3.00x  1.59x         1.00x      1.39 μs
+    List of 256 ASCII strings                    9.80x  8.24x   4.90x  4.62x         1.00x      2.87 μs
+    List of 256 floats                           9.75x  9.08x   2.14x  1.64x         1.00x      6.12 μs
+    List of 256 dicts with 1 int                10.96x 10.52x   6.02x  4.33x         1.00x      6.16 μs
+    Medium complex object                       11.39x 11.51x   4.63x  3.99x         1.00x      7.74 μs
+    List of 256 strings                          4.80x  3.24x   7.20x  6.38x         1.00x     19.14 μs
+    Complex object                               8.19x  7.33x   8.58x  7.73x         1.00x    130.05 μs
+    Dict with 256 lists of 256 dicts with 1 int 15.90x 14.53x  11.43x 10.09x         1.00x   1772.84 μs
     =========================================== ====== ====== ======= ====== ============= ============
 
 .. tab:: Python 3.11.10
@@ -212,14 +212,14 @@ performance critical applications:
     =========================================== ====== ====== ======= ====== ============= ============
     decode                                        json jsonyx msgspec orjson simdjson [2]_ fastest time
     =========================================== ====== ====== ======= ====== ============= ============
-    List of 256 booleans                         4.87x  5.12x   3.06x  1.57x         1.00x      1.46 μs
-    List of 256 ASCII strings                    6.12x  6.55x   3.80x  3.79x         1.00x      3.54 μs
-    List of 256 floats                           9.67x 10.88x   2.16x  1.66x         1.00x      6.17 μs
-    List of 256 dicts with 1 int                11.29x 10.90x   6.88x  4.56x         1.00x      6.13 μs
-    Medium complex object                       12.07x 11.22x   4.90x  3.86x         1.00x      7.95 μs
-    List of 256 strings                          5.90x  3.71x   9.97x  7.10x         1.00x     16.64 μs
-    Complex object                               8.85x  7.04x   8.27x  7.61x         1.00x    131.74 μs
-    Dict with 256 lists of 256 dicts with 1 int 11.32x 10.20x   9.00x  8.56x         1.00x   2437.26 μs
+    List of 256 booleans                         4.76x  5.07x   3.05x  1.58x         1.00x      1.46 μs
+    List of 256 ASCII strings                    7.53x  8.05x   4.73x  4.44x         1.00x      2.88 μs
+    List of 256 floats                          10.17x 11.10x   2.23x  1.71x         1.00x      5.89 μs
+    List of 256 dicts with 1 int                11.14x 10.56x   6.73x  4.54x         1.00x      6.14 μs
+    Medium complex object                       11.28x 10.64x   4.67x  3.67x         1.00x      8.38 μs
+    List of 256 strings                          3.77x  2.70x   7.32x  5.18x         1.00x     22.81 μs
+    Complex object                               9.12x  7.22x   8.44x  7.70x         1.00x    130.03 μs
+    Dict with 256 lists of 256 dicts with 1 int 16.47x 14.35x  12.29x  9.09x         1.00x   1682.02 μs
     =========================================== ====== ====== ======= ====== ============= ============
 
 .. tab:: Python 3.12.7
@@ -233,14 +233,14 @@ performance critical applications:
     =========================================== ====== ====== ======= ====== ============= ============
     decode                                        json jsonyx msgspec orjson simdjson [2]_ fastest time
     =========================================== ====== ====== ======= ====== ============= ============
-    List of 256 booleans                         4.86x  5.37x   2.97x  1.41x         1.00x      1.40 μs
-    List of 256 ASCII strings                    7.04x  7.85x   4.80x  4.36x         1.00x      3.05 μs
-    List of 256 floats                          10.91x 11.18x   2.21x  1.67x         1.00x      6.12 μs
-    List of 256 dicts with 1 int                12.05x 11.64x   6.86x  5.00x         1.00x      6.24 μs
-    Medium complex object                       11.85x 11.81x   4.88x  4.16x         1.00x      8.11 μs
-    List of 256 strings                          5.57x  3.74x   9.82x  7.53x         1.00x     16.86 μs
-    Complex object                               8.78x  7.45x   8.56x  7.60x         1.00x    137.30 μs
-    Dict with 256 lists of 256 dicts with 1 int 17.32x 14.97x  11.67x 10.68x         1.00x   1704.53 μs
+    List of 256 booleans                         4.17x  4.79x   2.53x  1.27x         1.00x      1.60 μs
+    List of 256 ASCII strings                    7.87x  8.34x   4.86x  4.46x         1.00x      2.97 μs
+    List of 256 floats                           9.96x 10.23x   1.99x  1.53x         1.00x      6.69 μs
+    List of 256 dicts with 1 int                12.30x 11.45x   6.94x  5.10x         1.00x      6.02 μs
+    Medium complex object                       11.36x 11.39x   4.70x  3.90x         1.00x      8.48 μs
+    List of 256 strings                          4.32x  2.90x   7.59x  5.82x         1.00x     21.81 μs
+    Complex object                               9.17x  7.63x   8.86x  7.96x         1.00x    130.83 μs
+    Dict with 256 lists of 256 dicts with 1 int 19.19x 15.57x  11.28x  9.74x         1.00x   1626.35 μs
     =========================================== ====== ====== ======= ====== ============= ============
 
 .. tab:: Python 3.13.0
@@ -254,18 +254,18 @@ performance critical applications:
     =========================================== ====== ====== ======= ====== ============= ============
     decode                                        json jsonyx msgspec orjson simdjson [2]_ fastest time
     =========================================== ====== ====== ======= ====== ============= ============
-    List of 256 booleans                         4.36x  5.26x   2.76x  1.40x         1.00x      1.46 μs
-    List of 256 ASCII strings                    8.54x  6.93x   4.28x  3.96x         1.00x      3.46 μs
-    List of 256 floats                          10.85x 11.25x   2.23x  1.74x         1.00x      6.05 μs
-    List of 256 dicts with 1 int                12.79x 11.43x   7.12x  5.19x         1.00x      6.12 μs
-    Medium complex object                       12.70x 12.01x   5.16x  4.60x         1.00x      7.98 μs
-    List of 256 strings                          7.11x  3.82x   9.70x  7.80x         1.00x     16.52 μs
-    Complex object                               9.87x  7.74x   8.90x  7.94x         1.00x    130.28 μs
-    Dict with 256 lists of 256 dicts with 1 int 17.84x 15.18x  12.08x 10.32x         1.00x   1674.28 μs
+    List of 256 booleans                         5.62x  5.07x   3.59x  1.48x         1.00x      1.50 μs
+    List of 256 ASCII strings                    7.01x  6.08x   3.69x  3.37x         1.00x      4.07 μs
+    List of 256 floats                          10.84x 11.22x   2.25x  1.73x         1.00x      6.11 μs
+    List of 256 dicts with 1 int                12.94x 11.52x   7.11x  5.16x         1.00x      6.12 μs
+    Medium complex object                       13.06x 12.24x   5.27x  4.47x         1.00x      7.83 μs
+    List of 256 strings                          6.80x  3.69x   9.48x  7.88x         1.00x     16.98 μs
+    Complex object                               9.89x  7.84x   9.01x  8.00x         1.00x    130.54 μs
+    Dict with 256 lists of 256 dicts with 1 int 18.73x 15.92x  11.58x  9.65x         1.00x   1624.49 μs
     =========================================== ====== ====== ======= ====== ============= ============
 
-.. warning:: The Python version of :mod:`jsonyx` is up to 36.25x slower, so
-    make sure you have a
+.. warning:: The Python version of :mod:`jsonyx` is up to 7.01x slower for
+    encoding and up to 52.84x slower for decoding, so make sure you have a
     `C compiler <https://wiki.python.org/moin/WindowsCompilers>`_ installed on
     Windows.
 

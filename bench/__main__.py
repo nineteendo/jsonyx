@@ -1,5 +1,4 @@
 """JSON benchmark."""
-# TODO(Nice Zombies): re-run benchmark on Python 3.13
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -141,7 +140,9 @@ def _run_benchmark(
     headers: list[str] = [name, *funcs.keys(), "fastest\xa0time"]
     colalign: list[str] = ["left"] + ["right"] * (len(funcs) + 1)
     print()
-    print(tabulate(results, headers, "pipe", colalign=colalign))
+    if sys.version_info >= (3, 13):
+        print(tabulate(results, headers, "pipe", colalign=colalign))
+
     print(tabulate(results, headers, "rst", colalign=colalign))
     print(f"{name} speedup: {max(speedups):.02f}x")
 
