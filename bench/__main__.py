@@ -1,9 +1,11 @@
 """JSON benchmark."""
+# TODO(Nice Zombies): re-run benchmark on Python 3.13
 from __future__ import annotations
 
 __all__: list[str] = []
 
 import json
+import sys
 from functools import partial
 from math import inf
 from pathlib import Path
@@ -17,7 +19,17 @@ import orjson
 import simdjson
 from tabulate import tabulate  # type: ignore[import-untyped]
 
-import jsonyx
+if sys.version_info >= (3, 10):
+    from test.support.import_helper import import_fresh_module  # type: ignore
+else:
+    from test.support import import_fresh_module
+
+
+if not (
+    (jsonyx := import_fresh_module("jsonyx", fresh=["_jsonyx"]))
+    and (pyjsonyx := import_fresh_module("jsonyx", blocked=["_jsonyx"]))
+):
+    raise ImportError
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -83,6 +95,7 @@ def _make_dumpb(func: _Func) -> _Func:
 _ENCODE_FUNCS: dict[str, _Func] = {
     "json": _make_dumpb(json.JSONEncoder().encode),
     "jsonyx": _make_dumpb(jsonyx.Encoder().dumps),
+    "pyjsonyx": _make_dumpb(pyjsonyx.Encoder().dumps),
     "msgspec": msgspec.json.Encoder().encode,
     # pylint: disable-next=E1101
     "orjson": orjson.dumps,
@@ -93,6 +106,7 @@ _DECODE_CASES: dict[str, Any] = {
 _DECODE_FUNCS: dict[str, _Func] = {
     "json": json.JSONDecoder().decode,
     "jsonyx": jsonyx.Decoder().loads,
+    "pyjsonyx": pyjsonyx.Decoder().loads,
     "msgspec": msgspec.json.Decoder().decode,
     # pylint: disable-next=E1101
     "orjson": orjson.loads,
@@ -104,6 +118,7 @@ def _run_benchmark(
     name: str, cases: dict[str, Any], funcs: dict[str, _Func],
 ) -> None:
     results: list[list[str]] = []
+    speedups: list[float] = []
     for case, obj in cases.items():
         times: dict[str, float] = {}
         for lib, func in funcs.items():
@@ -115,17 +130,20 @@ def _run_benchmark(
             except TypeError:
                 times[lib] = inf
 
+        speedups.append(times.pop("pyjsonyx") / times["jsonyx"])
         fastest_time: float = min(times.values())
         row: list[Any] = [case]
         row.extend(f"{time / fastest_time:.02f}x" for time in times.values())
         row.append(f"{1_000_000 * fastest_time:.02f} \u03bcs")
         results.append(row)
 
+    del funcs["pyjsonyx"]
     headers: list[str] = [name, *funcs.keys(), "fastest\xa0time"]
     colalign: list[str] = ["left"] + ["right"] * (len(funcs) + 1)
     print()
     print(tabulate(results, headers, "pipe", colalign=colalign))
     print(tabulate(results, headers, "rst", colalign=colalign))
+    print(f"{name} speedup: {max(speedups):.02f}x")
 
 
 if __name__ == "__main__":
