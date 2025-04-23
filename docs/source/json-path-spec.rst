@@ -161,7 +161,7 @@ A filter consists of one or more (non-)existence checks / comparisons.
 
     .. productionlist:: json-path-grammar
         filter: (
-              :     '!' `relative_query`
+              :     '!'? `relative_query`
               :     | `relative_query` `whitespace` `operator` `whitespace` `value`
               : ) ++ ( `whitespace` '&&' `whitespace` )
 
