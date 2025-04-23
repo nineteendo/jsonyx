@@ -45,7 +45,7 @@ The documentation for `jsonyx` is available online at: https://jsonyx.readthedoc
     ```
 - Dedicated functions for reading and writing files and pretty printing
 
-## Benchmark (Apr 20, 2025)
+## Benchmark (Apr 23, 2025)
 
 We recommend to use [`orjson`](https://pypi.org/project/orjson),
 [`msgspec`](https://pypi.org/project/msgspec) or

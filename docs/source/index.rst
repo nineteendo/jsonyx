@@ -47,7 +47,7 @@ Key Features
 
 - Dedicated functions for reading and writing files and pretty printing
 
-Benchmark (Apr 20, 2025)
+Benchmark (Apr 23, 2025)
 ------------------------
 
 We recommend to use :pypi:`orjson`, :pypi:`msgspec` or :pypi:`pysimdjson` for
