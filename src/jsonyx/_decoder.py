@@ -220,10 +220,7 @@ TruncatedSyntaxError.__module__ = "jsonyx"
 
 
 class JSONSyntaxError(TruncatedSyntaxError):
-    """Invalid JSON (query) syntax.
-
-    See :exc:`jsonyx.TruncatedSyntaxError` for more information.
-    """
+    """Invalid JSON (query) syntax."""
 
 
 JSONSyntaxError.__module__ = "jsonyx"
