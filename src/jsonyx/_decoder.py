@@ -136,12 +136,14 @@ class TruncatedSyntaxError(SyntaxError):
 
     Example:
         >>> import jsonyx as json
-        >>> raise json.TruncatedSyntaxError("Expecting value", "<string>", "[,]", 1)
+        >>> raise json.TruncatedSyntaxError(
+        ...     "Invalid number", "<string>", "9" * 5000, 0, 5000
+        ... )
         Traceback (most recent call last):
-          File "<string>", line 1, column 2
-            [,]
-             ^
-        jsonyx.TruncatedSyntaxError: Expecting value
+          File "<string>", line 1, column 1-5001
+            99999999999999999999999999999999999...9999999999999999999999999999999999
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        jsonyx.TruncatedSyntaxError: Invalid number
 
     .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the
         exception.
