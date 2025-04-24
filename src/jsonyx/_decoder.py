@@ -727,7 +727,7 @@ class Decoder:
         return self.loads(fp.read())
 
     def loads(
-        self, s: bytes | str, *, filename: _StrPath = "<string>",
+        self, s: bytes | bytearray | str, *, filename: _StrPath = "<string>",
     ) -> Any:
         r"""Deserialize a JSON string to a Python object.
 

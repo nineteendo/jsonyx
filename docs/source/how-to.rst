@@ -45,9 +45,9 @@ Better error messages for decoding bytes
 >>> try:
 ...     b"caf\xe9".decode("ascii")
 ... except UnicodeDecodeError as exc:
-...     doc = exc.object.decode("ascii", "replace")
-...     start = exc.object[:exc.start].decode("ascii", "replace")
-...     end = exc.object[:exc.end].decode("ascii", "replace")
+...     doc = exc.object.decode(exc.encoding, "replace")
+...     start = exc.object[:exc.start].decode(exc.encoding, "replace")
+...     end = exc.object[:exc.end].decode(exc.encoding, "replace")
 ...     raise json.TruncatedSyntaxError(
 ...         f"(unicode error) {exc}", "<string>", doc, len(start), len(end),
 ...     ) from None

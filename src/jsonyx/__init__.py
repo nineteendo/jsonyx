@@ -186,7 +186,7 @@ def load(
 
 
 def loads(
-    s: bytes | str,
+    s: bytes | bytearray | str,
     *,
     allow: Container[str] = NOTHING,
     cache_keys: bool = False,

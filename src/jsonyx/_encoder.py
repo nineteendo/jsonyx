@@ -229,7 +229,7 @@ except ImportError:
                     elif isinstance(key, (bool, bool_types)):
                         s = "true" if key else "false"
                     elif isinstance(key, (float, int, float_types, int_types)):
-                        s = encode_float(key)  # type: ignore
+                        s = encode_float(key)
                     elif skipkeys:
                         continue
                     else:
@@ -285,7 +285,7 @@ except ImportError:
             elif isinstance(obj, (str, str_types)):
                 write(encode_string(str(obj)))
             elif isinstance(obj, (float, int, float_types, int_types)):
-                write(encode_float(obj))  # type: ignore
+                write(encode_float(obj))
             elif isinstance(obj, (list, tuple, array_types)):
                 write_sequence(obj, write, indent_level, current_indent)
             elif isinstance(obj, (dict, object_types)):
