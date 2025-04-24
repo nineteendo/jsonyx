@@ -124,7 +124,7 @@ def _unescape_unicode(filename: str, s: str, end: int) -> int:
 
 
 class TruncatedSyntaxError(SyntaxError):
-    """Truncated syntax error.
+    """Syntax error trucated to fit within the terminal width.
 
     .. versionadded:: 2.0
 
@@ -144,6 +144,9 @@ class TruncatedSyntaxError(SyntaxError):
             99999999999999999999999999999999999...9999999999999999999999999999999999
             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         jsonyx.TruncatedSyntaxError: Invalid number
+
+    .. tip:: You can overwrite the width by setting the ``COLUMNS`` environment
+        variable.
 
     .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the
         exception.
