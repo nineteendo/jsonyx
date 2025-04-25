@@ -113,6 +113,7 @@ todo_include_todos: bool = True
 
 always_use_bars_union: bool = True
 typehints_defaults: str | None = "comma"
+typehints_document_rtype_none: bool = False
 typehints_use_rtype: bool = False
 
 # -- Options for sphinx_copybutton
