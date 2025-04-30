@@ -10,7 +10,7 @@ Changelog
 .. warning:: Breaking changes can occur in major and feature versions, so read
   the changelog before updating.
 
-jsonyc 2.3.0 (unreleased)
+jsonyx 2.3.0 (unreleased)
 -------------------------
 
 Changes:
