@@ -686,13 +686,12 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
                 goto bail;
             if (memo != Py_None) {
                 new_key = PyDict_SetDefault(memo, key, key);
-                // This returns a borrowed reference, while new_key
-                // is a strong reference in the case of PyObject_CallOneArg
-                Py_INCREF(new_key);
                 if (new_key == NULL)
                     goto bail;
 
-                Py_SETREF(key, new_key);
+                // This returns a borrowed reference, while new_key
+                // is a strong reference in the case of PyObject_CallOneArg
+                Py_SETREF(key, Py_NewRef(new_key));
             }
             colon_idx = idx = next_idx;
 
@@ -1215,9 +1214,8 @@ scanner_call(PyObject *op, PyObject *args, PyObject *kwds)
         }
     }
     else {
-        memo = Py_None;
         // Py_None is a borrowed reference, while memo is a strong one
-        Py_INCREF(memo);
+        memo = Py_NewRef(Py_None);
     }
     rval = scan_once_unicode(self, memo, pyfilename, pystr, str, kind, len, idx, &next_idx);
     Py_DECREF(memo);
@@ -1744,8 +1742,7 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
                          Py_ssize_t indent_level, PyObject *indent_cache,
                          PyObject *item_separator)
 {
-    PyObject *keystr = NULL;
-    PyObject *encoded;
+    PyObject *encoded = NULL;
 
     if (s->hook != Py_None) {
         key = PyObject_CallOneArg(s->hook, key);
@@ -1754,39 +1751,38 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
         }
     }
     if (PyUnicode_Check(key)) {
-        // key is a borrowed reference, while new_key is a strong one
-        Py_INCREF(key);
-        keystr = key;
+        // key is a borrowed reference, while encoded is a strong one
+        encoded = Py_NewRef(key);
     }
     else if (PyObject_IsInstance(key, s->str_types)) {
         if (PyErr_Occurred())
             return -1;
-        keystr = PyObject_Str(key);
+        encoded = PyObject_Str(key);
     }
     else {
         if (key == Py_None) {
-            keystr = PyUnicode_FromString("null");
+            encoded = PyUnicode_FromString("null");
         }
         else if (key == Py_True) {
-            keystr = PyUnicode_FromString("true");
+            encoded = PyUnicode_FromString("true");
         }
         else if (key == Py_False) {
-            keystr = PyUnicode_FromString("false");
+            encoded = PyUnicode_FromString("false");
         }
         else if (PyLong_Check(key)) {
             if (PyLong_CheckExact(key)) {
-                keystr = PyObject_Str(key);
+                encoded = PyObject_Str(key);
             }
             else {
-                keystr = encoder_encode_number(s, key);
+                encoded = encoder_encode_number(s, key);
             }
         }
         else if (PyFloat_Check(key)) {
             if (PyFloat_CheckExact(key)) {
-                keystr = encoder_encode_float(s, key);
+                encoded = encoder_encode_float(s, key);
             }
             else {
-                keystr = encoder_encode_number(s, key);
+                encoded = encoder_encode_number(s, key);
             }
         }
         else if (PyObject_IsInstance(key, s->bool_types)) {
@@ -1797,10 +1793,10 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
                 return -1;
             }
             else if (rv) {
-                keystr = PyUnicode_FromString("true");
+                encoded = PyUnicode_FromString("true");
             }
             else {
-                keystr = PyUnicode_FromString("false");
+                encoded = PyUnicode_FromString("false");
             }
         }
         else if (PyObject_IsInstance(key, s->int_types) ||
@@ -1808,7 +1804,7 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
         {
             if (PyErr_Occurred())
                 return -1;
-            keystr = encoder_encode_number(s, key);
+            encoded = encoder_encode_number(s, key);
         }
         else if (s->skipkeys) {
             return 0;
@@ -1820,7 +1816,7 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
         }
 
         if (!s->allow_non_str_keys) {
-            Py_DECREF(keystr);
+            Py_DECREF(encoded);
             if (s->skipkeys) {
                 return 0;
             }
@@ -1830,7 +1826,7 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
         }
     }
 
-    if (keystr == NULL) {
+    if (encoded == NULL) {
         return -1;
     }
 
@@ -1839,25 +1835,24 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
         if (indented &&
             write_newline_indent(writer, indent_level, indent_cache) < 0)
         {
-            Py_DECREF(keystr);
+            Py_DECREF(encoded);
             return -1;
         }
     }
     else {
         if (_PyUnicodeWriter_WriteStr(writer, item_separator) < 0) {
-            Py_DECREF(keystr);
+            Py_DECREF(encoded);
             return -1;
         }
     }
 
-    if (!s->quoted_keys && PyUnicode_IsIdentifier(keystr) &&
-        (!s->ensure_ascii || PyUnicode_IS_ASCII(key)))
+    if (s->quoted_keys || !PyUnicode_IsIdentifier(encoded) ||
+        (s->ensure_ascii && !PyUnicode_IS_ASCII(key)))
     {
-        encoded = keystr;
-    }
-    else {
-        encoded = encoder_encode_string(s, keystr);
-        Py_DECREF(keystr);
+        Py_SETREF(encoded, encoder_encode_string(s, encoded));
+        if (encoded == NULL) {
+            return -1;
+        }
     }
 
     if (encoded == NULL) {
