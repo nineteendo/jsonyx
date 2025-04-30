@@ -13,7 +13,7 @@ year: int = datetime.now(tz=timezone.utc).year
 author: str = "Nice Zombies"
 # pylint: disable-next=W0622
 copyright: str = f"{year}, Nice Zombies"  # noqa: A001
-release: str = "2.2"  # 2.2.1
+release: str = "2.3"  # 2.3.0
 project: str = "jsonyx"
 version: str = "latest" if branch == "main" else branch
 
