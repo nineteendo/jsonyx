@@ -549,7 +549,7 @@ def test_str_types(
     ({_APOLLO11: 0}, '{"1969-07-20T20:17:40+00:00": 0}'),
 ])
 def test_hook(
-    json: ModuleType, obj: bytes | dict[object, object], expected: str,
+    json: ModuleType, obj: datetime | dict[object, object], expected: str,
 ) -> None:
     """Test hook."""
     def datetime_hook(obj: Any) -> Any:
@@ -563,7 +563,7 @@ def test_hook(
     ({"": 1 + 2j}, '{\n "": {"real": 1.0, "imag": 2.0}\n}'),
 ])
 def test_hook_no_indent_leaves(
-    json: ModuleType, obj: bytes | dict[object, object], expected: str,
+    json: ModuleType, obj: complex | dict[object, object], expected: str,
 ) -> None:
     """Test hook without indent_leaves."""
     def complex_hook(obj: Any) -> Any:
