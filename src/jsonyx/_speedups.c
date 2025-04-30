@@ -213,7 +213,7 @@ encoder_write_string(PyEncoderObject *s, _PyUnicodeWriter *writer, PyObject *pys
 
     for (i = 0; i < input_chars; i++) {
         Py_UCS4 c = PyUnicode_READ(kind, input, i);
-        if (c <= 0x1f || c == '\\' || c == '"' || c >= 0x7f && s->ensure_ascii) {
+        if (c <= 0x1f || c == '\\' || c == '"' || (c >= 0x7f && s->ensure_ascii)) {
             ret = _PyUnicodeWriter_WriteSubstring(writer, pystr, i-copy_len, i);
             if (ret) return ret;
             copy_len = 0;
