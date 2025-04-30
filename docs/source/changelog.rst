@@ -10,8 +10,8 @@ Changelog
 .. warning:: Breaking changes can occur in major and feature versions, so read
   the changelog before updating.
 
-jsonyx 2.3.0 (unreleased)
--------------------------
+jsonyx 2.3.0 (Apr 30, 2025)
+---------------------------
 
 Changes:
     - Speed up string encoding
