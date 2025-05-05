@@ -568,6 +568,9 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, co
 #ifdef Py_DEBUG
     assert(end < len && PyUnicode_READ(kind, str, end) == '"');
 #endif
+    if (rval == NULL) {
+        goto bail;
+    }
     if (s->str_hook != (PyObject *)&PyUnicode_Type) {
         Py_SETREF(rval, PyObject_CallOneArg(s->str_hook, rval));
     }
