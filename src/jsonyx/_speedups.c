@@ -1652,6 +1652,10 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
     else if (PyLong_Check(obj)) {
         PyObject *encoded;
         if (PyLong_CheckExact(obj)) {
+            // Fast-path for exact integers
+#ifdef PyUnicodeWriter_WriteRepr
+            return PyUnicodeWriter_WriteRepr((PyUnicodeWriter*)writer, obj);
+#endif
             encoded = PyObject_Str(obj);
         }
         else {
