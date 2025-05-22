@@ -6,6 +6,6 @@ sphinx-copybutton==0.5.2
 sphinx_inline_tabs @ git+https://github.com/pradyunsg/sphinx-inline-tabs@5e91213e5f3d3d13d5d2114b29b53e6c0dbbf921
 sphinx-issues==5.0.1
 sphinx-last-updated-by-git==0.3.8
-sphinx-notfound-page==1.1.0
+sphinx-notfound-page @ git+https://github.com/nineteendo/sphinx-notfound-page@2a2d41f94dc9d03ccf577ad0ae6121342e0fe69b
 sphinx-sitemap==2.6.0
 sphinxext-opengraph==0.10.0
