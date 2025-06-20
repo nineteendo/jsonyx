@@ -136,14 +136,12 @@ class TruncatedSyntaxError(SyntaxError):
 
     Example:
         >>> import jsonyx as json
-        >>> raise json.TruncatedSyntaxError(
-        ...     "Invalid number", "<string>", "9" * 5000, 0, 5000
-        ... )
+        >>> raise json.TruncatedSyntaxError("msg", "<string>", "c" * 998, 0, 998)
         Traceback (most recent call last):
-          File "<string>", line 1, column 1-5001
-            99999999999999999999999999999999999...9999999999999999999999999999999999
+          File "<string>", line 1, column 1-999
+            ccccccccccccccccccccccccccccccccccc...cccccccccccccccccccccccccccccccccc
             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        jsonyx.TruncatedSyntaxError: Invalid number
+        jsonyx.TruncatedSyntaxError: msg
 
     .. tip:: You can overwrite the width by setting the ``COLUMNS`` environment
         variable.
