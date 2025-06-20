@@ -176,7 +176,13 @@ except ImportError:
                 else:
                     write(current_item_separator)
 
-                write_value(value, write, indent_level, current_indent)
+                try:
+                    write_value(value, write, indent_level, current_indent)
+                except Exception as exc:  # noqa: BLE001
+                    if (tb := exc.__traceback__) is not None:
+                        exc.__traceback__ = tb.tb_next
+
+                    raise
 
             if markers is not None:
                 del markers[markerid]  # type: ignore
@@ -258,7 +264,13 @@ except ImportError:
                     write(encode_string(s))
 
                 write(key_separator)
-                write_value(value, write, indent_level, current_indent)
+                try:
+                    write_value(value, write, indent_level, current_indent)
+                except Exception as exc:  # noqa: BLE001
+                    if (tb := exc.__traceback__) is not None:
+                        exc.__traceback__ = tb.tb_next
+
+                    raise
 
             if markers is not None:
                 del markers[markerid]  # type: ignore
@@ -287,9 +299,21 @@ except ImportError:
             elif isinstance(obj, (float, int, float_types, int_types)):
                 write(encode_float(obj))
             elif isinstance(obj, (list, tuple, array_types)):
-                write_sequence(obj, write, indent_level, current_indent)
+                try:
+                    write_sequence(obj, write, indent_level, current_indent)
+                except Exception as exc:  # noqa: BLE001
+                    if (tb := exc.__traceback__) is not None:
+                        exc.__traceback__ = tb.tb_next
+
+                    raise
             elif isinstance(obj, (dict, object_types)):
-                write_mapping(obj, write, indent_level, current_indent)
+                try:
+                    write_mapping(obj, write, indent_level, current_indent)
+                except Exception as exc:  # noqa: BLE001
+                    if (tb := exc.__traceback__) is not None:
+                        exc.__traceback__ = tb.tb_next
+
+                    raise
             else:
                 msg: str = f"{type(obj).__name__} is not JSON serializable"
                 raise TypeError(msg)
@@ -299,8 +323,6 @@ except ImportError:
             write: _WriteFunc = io.write
             try:
                 write_value(obj, write, 0, "\n")
-            except Exception as exc:  # noqa: BLE001
-                raise exc.with_traceback(None) from None
             finally:
                 if markers is not None:
                     markers.clear()

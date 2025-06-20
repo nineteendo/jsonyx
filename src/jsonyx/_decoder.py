@@ -453,7 +453,14 @@ except ImportError:
                     raise _errmsg(msg, filename, s, colon_idx)
 
                 end = skip_comments(filename, s, end + 1)
-                value, end = scan_value(filename, s, end)
+                try:
+                    value, end = scan_value(filename, s, end)
+                except Exception as exc:  # noqa: BLE001
+                    if (tb := exc.__traceback__) is not None:
+                        exc.__traceback__ = tb.tb_next
+
+                    raise
+
                 append_pair((key, value))
                 comma_idx: int = end
                 end = skip_comments(filename, s, end)
@@ -505,7 +512,14 @@ except ImportError:
             values: list[Any] = []
             append_value: Callable[[Any], None] = values.append
             while True:
-                value, end = scan_value(filename, s, end)
+                try:
+                    value, end = scan_value(filename, s, end)
+                except Exception as exc:  # noqa: BLE001
+                    if (tb := exc.__traceback__) is not None:
+                        exc.__traceback__ = tb.tb_next
+
+                    raise
+
                 append_value(value)
                 comma_idx: int = end
                 end = skip_comments(filename, s, end)
@@ -558,12 +572,22 @@ except ImportError:
                 except RecursionError:
                     msg = "Object is too deeply nested"
                     raise _errmsg(msg, filename, s, idx) from None
+                except Exception as exc:  # noqa: BLE001
+                    if (tb := exc.__traceback__) is not None:
+                        exc.__traceback__ = tb.tb_next
+
+                    raise
             elif nextchar == "[":
                 try:
                     value, end = scan_array(filename, s, idx + 1)
                 except RecursionError:
                     msg = "Array is too deeply nested"
                     raise _errmsg(msg, filename, s, idx) from None
+                except Exception as exc:  # noqa: BLE001
+                    if (tb := exc.__traceback__) is not None:
+                        exc.__traceback__ = tb.tb_next
+
+                    raise
             elif nextchar == "n" and s[idx:idx + 4] == "null":
                 value, end = None, idx + 4
             elif nextchar == "t" and s[idx:idx + 4] == "true":
@@ -619,8 +643,6 @@ except ImportError:
             end: int = skip_comments(filename, s, 0)
             try:
                 obj, end = scan_value(filename, s, end)
-            except Exception as exc:  # noqa: BLE001
-                raise exc.with_traceback(None) from None
             finally:
                 if memo is not None:
                     memo.clear()
