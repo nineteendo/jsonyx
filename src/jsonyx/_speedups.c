@@ -1015,9 +1015,6 @@ _parse_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr,
     Py_DECREF(numstr);
     *next_idx_ptr = idx;
     return rval;
-bail:
-    Py_DECREF(numstr);
-    return NULL;
 }
 
 static PyObject *
