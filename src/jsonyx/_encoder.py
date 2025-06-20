@@ -299,7 +299,7 @@ except ImportError:
             write: _WriteFunc = io.write
             try:
                 write_value(obj, write, 0, "\n")
-            except (ValueError, TypeError) as exc:
+            except Exception as exc:  # noqa: BLE001
                 raise exc.with_traceback(None) from None
             finally:
                 if markers is not None:

@@ -619,7 +619,7 @@ except ImportError:
             end: int = skip_comments(filename, s, 0)
             try:
                 obj, end = scan_value(filename, s, end)
-            except JSONSyntaxError as exc:
+            except Exception as exc:  # noqa: BLE001
                 raise exc.with_traceback(None) from None
             finally:
                 if memo is not None:
