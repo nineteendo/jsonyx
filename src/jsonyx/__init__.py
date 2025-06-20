@@ -21,7 +21,7 @@ __all__: list[str] = [
     "select_nodes",
     "write",
 ]
-__version__: str = "2.3.0"
+__version__: str = "2.4.0"
 
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 

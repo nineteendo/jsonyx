@@ -10,6 +10,12 @@ Changelog
 .. warning:: Breaking changes can occur in major and feature versions, so read
   the changelog before updating.
 
+jsonyx 2.4.0 (unreleased)
+-------------------------
+
+Changes:
+    - Improved error messages
+
 jsonyx 2.3.0 (Apr 30, 2025)
 ---------------------------
 
