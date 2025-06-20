@@ -127,6 +127,7 @@ def read(
     :raises OSError: if the file can't be opened
     :raises RecursionError: if the JSON file is too deeply nested
     :raises TruncatedSyntaxError: when failing to decode the file
+    :raises ValueError: if a number is too big
     :return: a Python object.
 
     Example:
@@ -170,6 +171,7 @@ def load(
     :param root: the path to the archive containing this JSON file
     :raises RecursionError: if the JSON file is too deeply nested
     :raises TruncatedSyntaxError: when failing to decode the file
+    :raises ValueError: if a number is too big
     :return: a Python object
 
     Example:
@@ -211,6 +213,7 @@ def loads(
     :param hooks: the :ref:`hooks <decoding_hooks>` used for transforming data
     :raises RecursionError: if the JSON string is too deeply nested
     :raises TruncatedSyntaxError: when failing to decode the string
+    :raises ValueError: if a number is too big
     :return: a Python object
 
     Example:
@@ -599,6 +602,7 @@ def select_nodes(
     :raises JSONSyntaxError: if the select query is invalid
     :raises KeyError: if a key is not found
     :raises TypeError: if a value has the wrong type
+    :raises ValueError: if a number is too big
     :return: the selected list of nodes
 
     Example:
@@ -637,6 +641,7 @@ def apply_filter(
     :raises JSONSyntaxError: if the filter query is invalid
     :raises KeyError: if a key is not found
     :raises TypeError: if a value has the wrong type
+    :raises ValueError: if a number is too big
     :return: the filtered list of nodes
 
     Example:
@@ -666,6 +671,7 @@ def load_query_value(
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the query value is invalid
+    :raises ValueError: if a number is too big
     :return: a Python object
 
     Example:

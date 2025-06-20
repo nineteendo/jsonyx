@@ -592,19 +592,9 @@ except ImportError:
                 integer, frac, exp = number.groups()
                 end = number.end()
                 if not frac and not exp:
-                    try:
-                        value = int_hook(integer)
-                    except Exception:  # noqa: BLE001
-                        msg = "Invalid number"
-                        raise _errmsg(msg, filename, s, idx, end) from None
+                    value = int_hook(integer)
                 else:
-                    try:
-                        value = float_hook(
-                            integer + (frac or "") + (exp or ""),
-                        )
-                    except Exception:  # noqa: BLE001
-                        msg = "Invalid number"
-                        raise _errmsg(msg, filename, s, idx, end) from None
+                    value = float_hook(integer + (frac or "") + (exp or ""))
             elif nextchar == "N" and s[idx:idx + 3] == "NaN":
                 if not allow_nan_and_infinity:
                     msg = "NaN is not allowed"
@@ -695,6 +685,7 @@ class Decoder:
         :raises OSError: if the file can't be opened
         :raises RecursionError: if the JSON file is too deeply nested
         :raises TruncatedSyntaxError: when failing to decode the file
+        :raises ValueError: if a number is too big
         :return: a Python object
 
         Example:
@@ -721,6 +712,7 @@ class Decoder:
         :param root: the path to the archive containing this JSON file
         :raises RecursionError: if the JSON file is too deeply nested
         :raises TruncatedSyntaxError: when failing to decode the file
+        :raises ValueError: if a number is too big
         :return: a Python object
 
         Example:
@@ -750,6 +742,7 @@ class Decoder:
         :param filename: the path to the JSON file
         :raises RecursionError: if the JSON string is too deeply nested
         :raises TruncatedSyntaxError: when failing to decode the string
+        :raises ValueError: if a number is too big
         :return: a Python object
 
         Example:

@@ -191,28 +191,6 @@ def test_invalid_slice(query: str) -> None:
         select_nodes([], query)
 
 
-@pytest.mark.parametrize(("query", "msg", "colno"), [
-    # Start
-    ("$[{big_num}:]", "Start is too big", 3),
-    ("$[{big_num}::]", "Start is too big", 3),
-
-    # Stop
-    ("$[:{big_num}]", "Stop is too big", 4),
-    ("$[:{big_num}:]", "Stop is too big", 4),
-
-    # Step
-    ("$[::{big_num}]", "Step is too big", 5),
-])
-def test_too_big_slice_idx(
-    big_num: str, query: str, msg: str, colno: int,
-) -> None:
-    """Test too big slice index."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
-        select_nodes([], query.format(big_num=big_num))
-
-    check_syntax_err(exc_info, msg, colno, colno + len(big_num))
-
-
 @pytest.mark.parametrize("query", [
     # At the end
     "@[:]",
@@ -255,14 +233,6 @@ def test_invalid_idx() -> None:
     """Test invalid idx."""
     with pytest.raises(JSONSyntaxError):
         select_nodes(([[]], 0), "$[1\uff10]")
-
-
-def test_too_big_idx(big_num: str) -> None:
-    """Test too big index."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
-        select_nodes([], f"$[{big_num}]")
-
-    check_syntax_err(exc_info, "Index is too big", 3, 3 + len(big_num))
 
 
 @pytest.mark.parametrize("query", [

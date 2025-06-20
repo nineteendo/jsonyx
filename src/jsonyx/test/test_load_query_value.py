@@ -58,14 +58,6 @@ def test_int(s: str) -> None:
     assert obj == int(s)
 
 
-def test_too_big_int(big_num: str) -> None:
-    """Test too big integer."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
-        load_query_value(big_num)
-
-    check_syntax_err(exc_info, "Invalid number", 1, len(big_num) + 1)
-
-
 @pytest.mark.parametrize("s", [
     # Sign
     "-1.0",
@@ -101,15 +93,6 @@ def test_rational_number(s: str, use_decimal: bool) -> None:
     expected_type: type[Decimal | float] = Decimal if use_decimal else float
     assert isinstance(obj, expected_type)
     assert obj == expected_type(s)
-
-
-@pytest.mark.parametrize("s", [f"1e{MAX_EMAX + 1}", f"-1e{MAX_EMAX + 1}"])
-def test_too_big_number(s: str) -> None:
-    """Test too big JSON number."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
-        load_query_value(s, use_decimal=True)
-
-    check_syntax_err(exc_info, "Invalid number", 1, len(s) + 1)
 
 
 @pytest.mark.parametrize("s", ["1\uff10", "0.\uff10", "0e\uff10"])

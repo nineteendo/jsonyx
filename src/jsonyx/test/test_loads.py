@@ -116,14 +116,6 @@ def test_int(json: ModuleType, s: str, int_type: type) -> None:
     assert obj == int_type(s)
 
 
-def test_too_big_int(json: ModuleType, big_num: str) -> None:
-    """Test too big integer."""
-    with pytest.raises(json.JSONSyntaxError) as exc_info:
-        json.loads(big_num)
-
-    check_syntax_err(exc_info, "Invalid number", 1, len(big_num) + 1)
-
-
 def test_int_type(json: ModuleType) -> None:
     """Test int_type."""
     obj: object = json.loads("0", hooks={"int": Decimal})
@@ -165,15 +157,6 @@ def test_rational_number(json: ModuleType, s: str, float_type: type) -> None:
     obj: object = json.loads(s, hooks={"float": float_type})
     assert isinstance(obj, float_type)
     assert obj == float_type(s)
-
-
-@pytest.mark.parametrize("s", [f"1e{MAX_EMAX + 1}", f"-1e{MAX_EMAX + 1}"])
-def test_too_big_number(json: ModuleType, s: str) -> None:
-    """Test too big JSON number."""
-    with pytest.raises(json.JSONSyntaxError) as exc_info:
-        json.loads(s, hooks={"float": Decimal})
-
-    check_syntax_err(exc_info, "Invalid number", 1, len(s) + 1)
 
 
 @pytest.mark.parametrize("s", ["1\uff10", "0.\uff10", "0e\uff10"])

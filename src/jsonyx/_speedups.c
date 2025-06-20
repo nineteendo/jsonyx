@@ -991,11 +991,6 @@ _parse_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr,
         if (numstr == NULL)
             return NULL;
         rval = PyObject_CallOneArg(custom_func, numstr);
-        if (PyErr_ExceptionMatches(PyExc_Exception)) {
-            PyErr_Clear();
-            raise_errmsg("Invalid number", pyfilename, pystr, start, idx);
-            goto bail;
-        }
     }
     else {
         Py_ssize_t i, n;
@@ -1015,11 +1010,6 @@ _parse_number_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr,
         }
         else {
             rval = PyLong_FromString(buf, NULL, 10);
-            if (PyErr_ExceptionMatches(PyExc_ValueError)) {
-                PyErr_Clear();
-                raise_errmsg("Invalid number", pyfilename, pystr, start, idx);
-                goto bail;
-            }
         }
     }
     Py_DECREF(numstr);

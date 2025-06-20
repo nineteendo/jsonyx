@@ -190,19 +190,9 @@ class Manipulator:
             integer, frac, exp = number.groups()
             end = number.end()
             if not frac and not exp:
-                try:
-                    value = int(integer)
-                except ValueError:
-                    msg = "Invalid number"
-                    raise _errmsg(msg, s, idx, end) from None
+                value = int(integer)
             else:
-                try:
-                    value = self._parse_float(
-                        integer + (frac or "") + (exp or ""),
-                    )
-                except InvalidOperation:
-                    msg = "Invalid number"
-                    raise _errmsg(msg, s, idx, end) from None
+                value = self._parse_float(integer + (frac or "") + (exp or ""))
         elif nextchar == "I" and s[idx:idx + 8] == "Infinity":
             if not self._allow_nan_and_infinity:
                 msg = "Infinity is not allowed"
@@ -351,43 +341,13 @@ class Manipulator:
                 ]
                 if match := _match_slice(query, end):
                     (start, stop, step), end = match.groups(), match.end()
-                    try:
-                        if start is not None:
-                            start = int(start)
-                    except ValueError:
-                        msg = "Start is too big"
-                        raise _errmsg(
-                            msg, query, match.start(1), match.end(1),
-                        ) from None
-
-                    try:
-                        if stop is not None:
-                            stop = int(stop)
-                    except ValueError:
-                        msg = "Stop is too big"
-                        raise _errmsg(
-                            msg, query, match.start(2), match.end(2),
-                        ) from None
-
-                    try:
-                        if step is not None:
-                            step = int(step)
-                    except ValueError:
-                        msg = "Step is too big"
-                        raise _errmsg(
-                            msg, query, match.start(3), match.end(3),
-                        ) from None
-
-                    key = slice(start, stop, step)
+                    key = slice(
+                        start and int(start), stop and int(stop),
+                        step and int(step),
+                    )
                     nodes = [(target, key) for target in targets]
                 elif match := _match_idx(query, end):
-                    end = match.end()
-                    try:
-                        key = int(match.group())
-                    except ValueError:
-                        msg = "Index is too big"
-                        raise _errmsg(msg, query, match.start(), end) from None
-
+                    key, end = int(match.group()), match.end()
                     nodes = [(target, key) for target in targets]
                 elif query[end:end + 1] == "'":
                     key, end = _scan_query_string(query, end + 1)
@@ -665,6 +625,7 @@ class Manipulator:
         :raises JSONSyntaxError: if the select query is invalid
         :raises KeyError: if a key is not found
         :raises TypeError: if a value has the wrong type
+        :raises ValueError: if a number is too big
         :return: the selected list of nodes
 
         Example:
@@ -707,6 +668,7 @@ class Manipulator:
         :raises JSONSyntaxError: if the filter query is invalid
         :raises KeyError: if a key is not found
         :raises TypeError: if a value has the wrong type
+        :raises ValueError: if a number is too big
         :return: the filtered list of nodes
 
         Example:
@@ -733,6 +695,7 @@ class Manipulator:
 
         :param s: a :ref:`JSON query value <query_value>`
         :raises JSONSyntaxError: if the query value is invalid
+        :raises ValueError: if a number is too big
         :return: a Python object
 
         Example:
