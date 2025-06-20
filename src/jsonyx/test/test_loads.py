@@ -5,7 +5,7 @@ __all__: list[str] = []
 
 from collections import UserString
 from dataclasses import dataclass
-from decimal import MAX_EMAX, Decimal
+from decimal import Decimal
 from math import isnan
 from typing import TYPE_CHECKING, Any
 

@@ -5,7 +5,7 @@ __all__: list[str] = ["Manipulator"]
 
 import re
 from copy import deepcopy
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 from operator import eq, ge, gt, le, lt, ne
 from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
 from typing import TYPE_CHECKING, Any

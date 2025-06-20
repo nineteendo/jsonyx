@@ -3,7 +3,7 @@ from __future__ import annotations
 
 __all__: list[str] = []
 
-from decimal import MAX_EMAX, Decimal
+from decimal import Decimal
 
 import pytest
 
