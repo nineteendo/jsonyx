@@ -569,9 +569,6 @@ except ImportError:
             elif nextchar == "{":
                 try:
                     value, end = scan_object(filename, s, idx + 1)
-                except RecursionError:
-                    msg = "Object is too deeply nested"
-                    raise _errmsg(msg, filename, s, idx) from None
                 except Exception as exc:  # noqa: BLE001
                     if (tb := exc.__traceback__) is not None:
                         exc.__traceback__ = tb.tb_next
@@ -580,9 +577,6 @@ except ImportError:
             elif nextchar == "[":
                 try:
                     value, end = scan_array(filename, s, idx + 1)
-                except RecursionError:
-                    msg = "Array is too deeply nested"
-                    raise _errmsg(msg, filename, s, idx) from None
                 except Exception as exc:  # noqa: BLE001
                     if (tb := exc.__traceback__) is not None:
                         exc.__traceback__ = tb.tb_next
@@ -699,6 +693,7 @@ class Decoder:
 
         :param filename: the path to the JSON file
         :raises OSError: if the file can't be opened
+        :raises RecursionError: if the JSON file is too deeply nested
         :raises TruncatedSyntaxError: when failing to decode the file
         :return: a Python object
 
@@ -724,6 +719,7 @@ class Decoder:
 
         :param fp: an open JSON file
         :param root: the path to the archive containing this JSON file
+        :raises RecursionError: if the JSON file is too deeply nested
         :raises TruncatedSyntaxError: when failing to decode the file
         :return: a Python object
 
@@ -752,6 +748,7 @@ class Decoder:
 
         :param s: a JSON string
         :param filename: the path to the JSON file
+        :raises RecursionError: if the JSON string is too deeply nested
         :raises TruncatedSyntaxError: when failing to decode the string
         :return: a Python object
 

@@ -1062,11 +1062,6 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
                 return NULL;
             res = _parse_object_unicode(s, memo, pyfilename, pystr, str, kind, len, idx + 1, next_idx_ptr);
             _Py_LeaveRecursiveCall();
-            if (PyErr_ExceptionMatches(PyExc_RecursionError)) {
-                PyErr_Clear();
-                raise_errmsg("Object is too deeply nested", pyfilename, pystr, idx, 0);
-                return NULL;
-            }
             return res;
         case '[':
             /* array */
@@ -1075,11 +1070,6 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
                 return NULL;
             res = _parse_array_unicode(s, memo, pyfilename, pystr, str, kind, len, idx + 1, next_idx_ptr);
             _Py_LeaveRecursiveCall();
-            if (PyErr_ExceptionMatches(PyExc_RecursionError)) {
-                PyErr_Clear();
-                raise_errmsg("Array is too deeply nested", pyfilename, pystr, idx, 0);
-                return NULL;
-            }
             return res;
         case 'n':
             /* null */

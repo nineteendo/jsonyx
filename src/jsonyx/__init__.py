@@ -125,6 +125,7 @@ def read(
     :param cache_keys: re-use the keys of objects
     :param hooks: the :ref:`hooks <decoding_hooks>` used for transforming data
     :raises OSError: if the file can't be opened
+    :raises RecursionError: if the JSON file is too deeply nested
     :raises TruncatedSyntaxError: when failing to decode the file
     :return: a Python object.
 
@@ -167,6 +168,7 @@ def load(
     :param cache_keys: re-use the keys of objects
     :param hooks: the :ref:`hooks <decoding_hooks>` used for transforming data
     :param root: the path to the archive containing this JSON file
+    :raises RecursionError: if the JSON file is too deeply nested
     :raises TruncatedSyntaxError: when failing to decode the file
     :return: a Python object
 
@@ -207,6 +209,7 @@ def loads(
     :param cache_keys: re-use the keys of objects
     :param filename: the path to the JSON file
     :param hooks: the :ref:`hooks <decoding_hooks>` used for transforming data
+    :raises RecursionError: if the JSON string is too deeply nested
     :raises TruncatedSyntaxError: when failing to decode the string
     :return: a Python object
 
