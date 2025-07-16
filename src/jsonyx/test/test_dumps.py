@@ -37,6 +37,10 @@ class _IntEnum(int, Enum):
     ZERO = 0
 
 
+class _StrEnum(str, Enum):
+    EMPTY = ""
+
+
 @pytest.mark.parametrize(("obj", "expected"), [
     (True, "true"),
     (False, "false"),
@@ -192,6 +196,20 @@ def test_surrogate_escapes_not_allowed(json: ModuleType, obj: str) -> None:
     """Test surrogate escapes when not allowed."""
     with pytest.raises(ValueError, match="Surrogates are not allowed"):
         json.dumps(obj, ensure_ascii=True)
+
+
+@pytest.mark.parametrize(("obj", "expected"), [
+    # Key
+    ({_StrEnum.EMPTY: 0}, '{"_StrEnum.EMPTY": 0}'),
+
+    # Value
+    (_StrEnum.EMPTY, '"_StrEnum.EMPTY"'),
+])
+def test_string_enum(
+    json: ModuleType, obj: str | dict[object, object], expected: str,
+) -> None:
+    """Test enum."""
+    assert json.dumps(obj, end="") == expected
 
 
 @pytest.mark.parametrize(("obj", "expected"), [

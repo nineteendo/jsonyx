@@ -1624,7 +1624,18 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         return _PyUnicodeWriter_WriteASCIIString(writer, "false", 5);
     }
     else if (PyUnicode_Check(obj)) {
-        return encoder_write_string(s, writer, obj);
+        PyObject *encoded;
+        if (PyUnicode_CheckExact(obj)) {
+            // obj is a borrowed reference, while encoded is a strong one
+            encoded = Py_NewRef(obj);
+        } else {
+            encoded = PyObject_Str(obj);
+        }
+        if (encoded == NULL)
+            return -1;
+        rv = encoder_write_string(s, writer, encoded);
+        Py_DECREF(encoded);
+        return rv;
     }
     else if (PyLong_Check(obj)) {
         PyObject *encoded;
@@ -1746,8 +1757,12 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
         }
     }
     if (PyUnicode_Check(key)) {
-        // key is a borrowed reference, while encoded is a strong one
-        encoded = Py_NewRef(key);
+        if (PyUnicode_CheckExact(key)) {
+            // key is a borrowed reference, while encoded is a strong one
+            encoded = Py_NewRef(key);
+        } else {
+            encoded = PyObject_Str(key);
+        }
     }
     else if (PyObject_IsInstance(key, s->str_types)) {
         if (PyErr_Occurred())

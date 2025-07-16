@@ -16,6 +16,9 @@ jsonyx 2.4.0 (unreleased)
 Changes:
     - Improved error messages
 
+Breaking Changes:
+    - Changed serialization of string :class:`enum.Enum`
+
 jsonyx 2.3.0 (Apr 30, 2025)
 ---------------------------
 
