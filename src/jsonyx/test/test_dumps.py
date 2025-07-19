@@ -4,7 +4,7 @@ from __future__ import annotations
 __all__: list[str] = []
 
 from collections import UserDict, UserList, UserString
-from datetime import datetime, timezone
+from datetime import datetime
 from decimal import Decimal
 from enum import Enum
 from typing import TYPE_CHECKING, Any
@@ -16,7 +16,7 @@ from jsonyx.allow import NAN_AND_INFINITY, NON_STR_KEYS, SURROGATES
 if TYPE_CHECKING:
     from types import ModuleType
 
-_APOLLO11: datetime = datetime(1969, 7, 20, 20, 17, 40, tzinfo=timezone.utc)
+_APOLLO11: str = "1969-07-20T20:17:40+00:00"
 _CIRCULAR_DICT: dict[str, object] = {}
 _CIRCULAR_DICT[""] = _CIRCULAR_DICT
 _CIRCULAR_LIST: list[object] = []
@@ -563,8 +563,8 @@ def test_str_types(
 
 
 @pytest.mark.parametrize(("obj", "expected"), [
-    (_APOLLO11, '"1969-07-20T20:17:40+00:00"'),
-    ({_APOLLO11: 0}, '{"1969-07-20T20:17:40+00:00": 0}'),
+    (datetime.fromisoformat(_APOLLO11), f'"{_APOLLO11}"'),
+    ({datetime.fromisoformat(_APOLLO11): 0}, f'{{"{_APOLLO11}": 0}}'),
 ])
 def test_hook(
     json: ModuleType, obj: datetime | dict[object, object], expected: str,
