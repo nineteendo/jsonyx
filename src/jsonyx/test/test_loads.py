@@ -33,18 +33,18 @@ class _MyBool:
 @pytest.mark.parametrize(
     "string", ["\ud800", "\ud800$", "\udf48"],  # noqa: PT014
 )
-def test_surrogate(json: ModuleType, string: str) -> None:
+def test_surrogate(json: ModuleType, s: str) -> None:
     """Test surrogate."""
-    b: bytes = f'"{string}"'.encode(errors="surrogatepass")
-    assert json.loads(b, allow=SURROGATES) == string
+    b: bytes = f'"{s}"'.encode(errors="surrogatepass")
+    assert json.loads(b, allow=SURROGATES) == s
 
 
 @pytest.mark.parametrize(
     "string", ["\ud800", "\ud800$", "\udf48"],  # noqa: PT014
 )
-def test_surrogate_not_allowed(json: ModuleType, string: str) -> None:
+def test_surrogate_not_allowed(json: ModuleType, s: str) -> None:
     """Test surrogate when not allowed."""
-    b: bytes = f'"{string}"'.encode(errors="surrogatepass")
+    b: bytes = f'"{s}"'.encode(errors="surrogatepass")
     with pytest.raises(json.TruncatedSyntaxError):
         json.loads(b)
 
