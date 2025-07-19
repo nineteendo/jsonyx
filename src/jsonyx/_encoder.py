@@ -320,14 +320,13 @@ except ImportError:
 
         def encoder(obj: object) -> str:
             io: StringIO = StringIO()
-            write: _WriteFunc = io.write
             try:
-                write_value(obj, write, 0, "\n")
+                write_value(obj, io.write, 0, "\n")
             finally:
                 if markers is not None:
                     markers.clear()
 
-            write(end)
+            io.write(end)
             return io.getvalue()
 
         return encoder

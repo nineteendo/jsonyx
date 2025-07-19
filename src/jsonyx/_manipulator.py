@@ -116,12 +116,11 @@ def _scan_query_operator(query: str, end: int) -> tuple[_Operator | None, int]:
 
 def _scan_query_string(s: str, end: int) -> tuple[str, int]:
     chunks: list[str] = []
-    append_chunk: Callable[[str], None] = chunks.append
     str_idx: int = end - 1
     while True:
         if match := _match_str_chunk(s, end):
             end = match.end()
-            append_chunk(match.group())
+            chunks.append(match.group())
 
         try:
             terminator: str = s[end]
@@ -144,7 +143,7 @@ def _scan_query_string(s: str, end: int) -> tuple[str, int]:
             raise _errmsg(msg, s, end - 1, end + 1)
 
         end += 1
-        append_chunk(esc)
+        chunks.append(esc)
 
 
 def _asc_range(r: range) -> range:

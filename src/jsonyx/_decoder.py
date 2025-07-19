@@ -246,12 +246,11 @@ def detect_encoding(b: bytearray | bytes) -> str:
     # JSON must start with ASCII character (not NULL)
     # Strings can't contain control characters (including NULL)
     encoding: str = "utf-8"
-    startswith: Callable[[bytes | tuple[bytes, ...]], bool] = b.startswith
-    if startswith((BOM_UTF32_BE, BOM_UTF32_LE)):
+    if b.startswith((BOM_UTF32_BE, BOM_UTF32_LE)):
         encoding = "utf-32"
-    elif startswith((BOM_UTF16_BE, BOM_UTF16_LE)):
+    elif b.startswith((BOM_UTF16_BE, BOM_UTF16_LE)):
         encoding = "utf-16"
-    elif startswith(BOM_UTF8):
+    elif b.startswith(BOM_UTF8):
         encoding = "utf-8-sig"
     elif len(b) >= 4:
         if not b[0]:
@@ -297,17 +296,9 @@ except ImportError:
         cache_keys: bool,
     ) -> _Scanner:
         """Make JSON scanner."""
-        memo: dict[Any, Any] | None
-        memoize: Callable[[Any, Any], Any] | None
-        if cache_keys:
-            memo = {}
-            memoize = memo.setdefault
-        else:
-            memo = None
-            memoize = None
+        memo: dict[Any, Any] | None = {} if cache_keys else None
 
         def skip_comments(filename: str, s: str, end: int) -> int:
-            find: Callable[[str, int], int] = s.find
             while True:
                 if match := _match_whitespace(s, end):
                     end = match.end()
@@ -318,7 +309,7 @@ except ImportError:
                     if match := _match_line_end(s, end):
                         end = match.end()
                 elif comment_prefix == "/*":
-                    if (end := find("*/", end + 2)) == -1:
+                    if (end := s.find("*/", end + 2)) == -1:
                         if allow_comments:
                             msg: str = "Unterminated comment"
                         else:
@@ -336,13 +327,12 @@ except ImportError:
 
         def scan_string(filename: str, s: str, end: int) -> tuple[Any, int]:
             chunks: list[str] = []
-            append_chunk: Callable[[str], None] = chunks.append
             str_idx: int = end - 1
             while True:
                 # Match one or more unescaped string characters
                 if match := _match_chunk(s, end):
                     end = match.end()
-                    append_chunk(match.group())
+                    chunks.append(match.group())
 
                 # Terminator is the end of string, a literal control character,
                 # or a backslash denoting that an escape sequence follows
@@ -407,7 +397,7 @@ except ImportError:
 
                     char = chr(uni)
 
-                append_chunk(char)
+                chunks.append(char)
 
         def scan_object(filename: str, s: str, end: int) -> tuple[Any, int]:
             obj_idx: int = end - 1
@@ -422,7 +412,6 @@ except ImportError:
                 return object_hook([]), end + 1
 
             pairs: list[tuple[Any, Any]] = []
-            append_pair: Callable[[tuple[Any, Any]], None] = pairs.append
             while True:
                 key_idx: int = end
                 if (nextchar := s[end:end + 1]) == '"':
@@ -441,8 +430,8 @@ except ImportError:
                     raise _errmsg(msg, filename, s, end)
 
                 # Reduce memory consumption
-                if memoize is not None:
-                    key = memoize(key, key)
+                if memo is not None:
+                    key = memo.setdefault(key, key)
 
                 colon_idx: int = end
                 end = skip_comments(filename, s, end)
@@ -459,7 +448,7 @@ except ImportError:
 
                     raise
 
-                append_pair((key, value))
+                pairs.append((key, value))
                 comma_idx: int = end
                 end = skip_comments(filename, s, end)
                 try:
@@ -508,7 +497,6 @@ except ImportError:
                 return array_hook([]), end + 1
 
             values: list[Any] = []
-            append_value: Callable[[Any], None] = values.append
             while True:
                 try:
                     value, end = scan_value(filename, s, end)
@@ -518,7 +506,7 @@ except ImportError:
 
                     raise
 
-                append_value(value)
+                values.append(value)
                 comma_idx: int = end
                 end = skip_comments(filename, s, end)
                 try:
