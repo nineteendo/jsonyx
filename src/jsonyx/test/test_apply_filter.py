@@ -25,8 +25,7 @@ if TYPE_CHECKING:
 ])  # type: ignore
 def test_has_key(node: _Node, keep: bool) -> None:
     """Test has key."""
-    expected: list[_Node] = [node] if keep else []
-    assert apply_filter(node, "@") == expected
+    assert apply_filter(node, "@") == [node] if keep else []
 
 
 @pytest.mark.parametrize(("node", "keep"), [
@@ -40,8 +39,7 @@ def test_has_key(node: _Node, keep: bool) -> None:
 ])  # type: ignore
 def test_has_not_key(node: _Node, keep: bool) -> None:
     """Test has not key."""
-    expected: list[_Node] = [node] if keep else []
-    assert apply_filter(node, "!@") == expected
+    assert apply_filter(node, "!@") == [node] if keep else []
 
 
 @pytest.mark.parametrize(("query", "keep"), [
@@ -75,8 +73,8 @@ def test_has_not_key(node: _Node, keep: bool) -> None:
 ])
 def test_operator(query: str, keep: bool) -> None:
     """Test operator."""
-    expected: list[_Node] = [([0], 0)] if keep else []
-    assert apply_filter(([0], 0), query) == expected
+    node: _Node = [0], 0
+    assert apply_filter(node, query) == [node] if keep else []
 
 
 @pytest.mark.parametrize("query", [
@@ -96,8 +94,9 @@ def test_operator_whitespace(query: str) -> None:
 
 def test_and() -> None:
     """Test and."""
+    node: _Node = [0], 0
     query: str = "@ != 1 && @ != 2 && @ != 3"
-    assert apply_filter(([0], 0), query) == [([0], 0)]
+    assert apply_filter(node, query) == [node]
 
 
 @pytest.mark.parametrize("query", [
@@ -112,7 +111,8 @@ def test_and() -> None:
 ])
 def test_and_whitespace(query: str) -> None:
     """Test whitespace around and."""
-    assert apply_filter(([0], 0), query) == [([0], 0)]
+    node: _Node = [0], 0
+    assert apply_filter(node, query) == [node]
 
 
 @pytest.mark.parametrize(("query", "msg", "colno", "end_colno"), [
