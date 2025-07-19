@@ -208,7 +208,7 @@ def test_surrogate_escapes_not_allowed(json: ModuleType, obj: str) -> None:
 def test_string_enum(
     json: ModuleType, obj: str | dict[object, object], expected: str,
 ) -> None:
-    """Test enum."""
+    """Test string enum."""
     assert json.dumps(obj, end="") == expected
 
 

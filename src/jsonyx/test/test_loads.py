@@ -30,18 +30,14 @@ class _MyBool:
         return bool(self.value)
 
 
-@pytest.mark.parametrize(
-    "string", ["\ud800", "\ud800$", "\udf48"],  # noqa: PT014
-)
+@pytest.mark.parametrize("s", ["\ud800", "\ud800$", "\udf48"])  # noqa: PT014
 def test_surrogate(json: ModuleType, s: str) -> None:
     """Test surrogate."""
     b: bytes = f'"{s}"'.encode(errors="surrogatepass")
     assert json.loads(b, allow=SURROGATES) == s
 
 
-@pytest.mark.parametrize(
-    "string", ["\ud800", "\ud800$", "\udf48"],  # noqa: PT014
-)
+@pytest.mark.parametrize("s", ["\ud800", "\ud800$", "\udf48"])  # noqa: PT014
 def test_surrogate_not_allowed(json: ModuleType, s: str) -> None:
     """Test surrogate when not allowed."""
     b: bytes = f'"{s}"'.encode(errors="surrogatepass")
@@ -616,7 +612,7 @@ def test_whitespace(json: ModuleType, s: str) -> None:
 
 @pytest.mark.parametrize("s", [
     # One comment
-    "//\n0", "//\r0", "//\r\n0",
+    "0//line comment",
     "//line comment\n0", "//line comment\r0", "//line comment\r\n0",
     "/*block comment*/0",
 
@@ -645,21 +641,22 @@ def test_invalid_comment(json: ModuleType) -> None:
     check_syntax_err(exc_info, "Unterminated comment", 1, 23)
 
 
-@pytest.mark.parametrize(("s", "end_colno"), [
-    ("//line comment\n0", 15),
-    ("//line comment\r0", 15),
-    ("//line comment\r\n0", 15),
-    ("/*block comment*/0", 18),
-    ("/*unterminated comment", 23),
+@pytest.mark.parametrize(("s", "colno", "end_colno"), [
+    ("0//line comment", 2, 16),
+    ("//line comment\n0", 1, 15),
+    ("//line comment\r0", 1, 15),
+    ("//line comment\r\n0", 1, 15),
+    ("/*block comment*/0", 1, 18),
+    ("/*unterminated comment", 1, 23),
 ])
 def test_comments_not_allowed(
-    json: ModuleType, s: str, end_colno: int,
+    json: ModuleType, s: str, colno: int, end_colno: int,
 ) -> None:
     """Test comments when not allowed."""
     with pytest.raises(json.JSONSyntaxError) as exc_info:
         json.loads(s)
 
-    check_syntax_err(exc_info, "Comments are not allowed", 1, end_colno)
+    check_syntax_err(exc_info, "Comments are not allowed", colno, end_colno)
 
 
 def test_end_of_file(json: ModuleType) -> None:
