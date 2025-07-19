@@ -25,7 +25,8 @@ if TYPE_CHECKING:
 ])  # type: ignore
 def test_has_key(node: _Node, keep: bool) -> None:
     """Test has key."""
-    assert apply_filter(node, "@") == [node] if keep else []
+    expected: list[_Node] = [node] if keep else []
+    assert apply_filter(node, "@") == expected
 
 
 @pytest.mark.parametrize(("node", "keep"), [
@@ -39,7 +40,8 @@ def test_has_key(node: _Node, keep: bool) -> None:
 ])  # type: ignore
 def test_has_not_key(node: _Node, keep: bool) -> None:
     """Test has not key."""
-    assert apply_filter(node, "!@") == [node] if keep else []
+    expected: list[_Node] = [node] if keep else []
+    assert apply_filter(node, "!@") == expected
 
 
 @pytest.mark.parametrize(("query", "keep"), [
@@ -74,7 +76,8 @@ def test_has_not_key(node: _Node, keep: bool) -> None:
 def test_operator(query: str, keep: bool) -> None:
     """Test operator."""
     node: _Node = [0], 0
-    assert apply_filter(node, query) == [node] if keep else []
+    expected: list[_Node] = [node] if keep else []
+    assert apply_filter(node, query) == expected
 
 
 @pytest.mark.parametrize("query", [

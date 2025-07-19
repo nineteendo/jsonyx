@@ -251,33 +251,33 @@ def test_invalid_string(
 
 @pytest.mark.parametrize(("s", "colno", "end_colno"), [
     # Single
-    (r'"\u"', 4, 5),
-    (r'"\u0xff"', 4, 8),  # Hex prefix
+    (r"\u", 4, 5),
+    (r"\u0xff", 4, 8),  # Hex prefix
     # pylint: disable-next=C0209
-    (r'"\u{}"'.format("\uff10" * 4), 4, 8),  # Unicode digits
-    (r'"\u 000"', 4, 8),  # Surrounded by whitespace
-    (r'"\u-000"', 4, 8),  # Negative number
-    (r'"\u+000"', 4, 8),  # Positive number
-    (r'"\u0_00"', 4, 8),  # Underscore between digits
-    (r'"\u????"', 4, 8),
+    (r"\u{}".format("\uff10" * 4), 4, 8),  # Unicode digits
+    (r"\u 000", 4, 8),  # Surrounded by whitespace
+    (r"\u-000", 4, 8),  # Negative number
+    (r"\u+000", 4, 8),  # Positive number
+    (r"\u0_00", 4, 8),  # Underscore between digits
+    (r"\u????", 4, 8),
 
     # After high surrogate
-    (r'"\ud800\u"', 10, 11),
-    (r'"\ud800\u0xff"', 10, 14),  # Hex prefix
+    (r"\ud800\u", 10, 11),
+    (r"\ud800\u0xff", 10, 14),  # Hex prefix
     # pylint: disable-next=C0209
-    (r'"\ud800\u{}"'.format("\uff10" * 4), 10, 14),  # Unicode digits
-    (r'"\ud800\u 000"', 10, 14),  # Surrounded by whitespace
-    (r'"\ud800\u-000"', 10, 14),  # Negative number
-    (r'"\ud800\u+000"', 10, 14),  # Positive number
-    (r'"\ud800\u0_00"', 10, 14),  # Underscore between digits
-    (r'"\ud800\u????"', 10, 14),
+    (r"\ud800\u{}".format("\uff10" * 4), 10, 14),  # Unicode digits
+    (r"\ud800\u 000", 10, 14),  # Surrounded by whitespace
+    (r"\ud800\u-000", 10, 14),  # Negative number
+    (r"\ud800\u+000", 10, 14),  # Positive number
+    (r"\ud800\u0_00", 10, 14),  # Underscore between digits
+    (r"\ud800\u????", 10, 14),
 ])
 def test_invalid_unicode_escape(
     json: ModuleType, s: str, colno: int, end_colno: int,
 ) -> None:
     """Test invalid unicode escape."""
     with pytest.raises(json.JSONSyntaxError) as exc_info:
-        json.loads(s)
+        json.loads(f'"{s}"')
 
     check_syntax_err(exc_info, "Expecting 4 hex digits", colno, end_colno)
 
