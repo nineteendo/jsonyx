@@ -114,7 +114,6 @@ def read(
     """Deserialize a JSON file to a Python object.
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
-
     .. versionchanged:: 2.2
 
         - Added ``cache_keys``.
@@ -162,7 +161,6 @@ def load(
     """Deserialize an open JSON file to a Python object.
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
-
     .. versionchanged:: 2.2
 
         - Added ``cache_keys``.
@@ -208,7 +206,6 @@ def loads(
     r"""Deserialize a JSON string to a Python object.
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
-
     .. versionchanged:: 2.2
 
         - Added ``cache_keys``.
@@ -274,7 +271,6 @@ def write(
           :class:`enum.Enum` and :class:`decimal.Decimal`.
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
-
     .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
         ``skipkeys``.
 
@@ -370,7 +366,6 @@ def dump(
           :class:`enum.Enum` and :class:`decimal.Decimal`.
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
-
     .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
         ``skipkeys``.
 
@@ -472,7 +467,6 @@ def dumps(
           :class:`enum.Enum` and :class:`decimal.Decimal`.
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
-
     .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
         ``skipkeys``.
 

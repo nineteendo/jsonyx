@@ -145,7 +145,6 @@ class TruncatedSyntaxError(SyntaxError):
 
     .. tip:: You can overwrite the width by setting the ``COLUMNS`` environment
         variable.
-
     .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the
         exception.
 
@@ -630,7 +629,6 @@ class Decoder:
     """A configurable JSON decoder.
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.`
-
     .. versionchanged:: 2.2
 
         - Added ``cache_keys``.
