@@ -637,6 +637,8 @@ class Decoder:
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param cache_keys: re-use the keys of objects
     :param hooks: the :ref:`hooks <decoding_hooks>` used for transforming data
+
+    .. seealso:: :class:`jsonyx.Encoder` for an encoder.
     """
 
     def __init__(

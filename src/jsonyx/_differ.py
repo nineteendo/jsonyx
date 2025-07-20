@@ -137,6 +137,8 @@ def make_patch(old: Any, new: Any) -> list[_Operation]:
         >>> json.make_patch([1, 2, 3], [1, 3])
         [{'op': 'del', 'path': '$[1]'}]
 
+    .. seealso:: :func:`jsonyx.apply_patch` for applying a patch.
+
     """
     patch: list[_Operation] = []
     _make_patch(old, new, patch)

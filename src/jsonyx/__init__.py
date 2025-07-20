@@ -144,6 +144,7 @@ def read(
 
         - :func:`jsonyx.load` for deserializing from an open file.
         - :func:`jsonyx.loads` for deserializing from a string.
+        - :func:`jsonyx.write` for serializing to a file.
     """
     return Decoder(
         allow=allow, cache_keys=cache_keys, hooks=hooks,
@@ -188,6 +189,7 @@ def load(
 
         - :func:`jsonyx.read` for deserializing from a file.
         - :func:`jsonyx.loads` for deserializing from a string.
+        - :func:`jsonyx.dump` for serializing to an open file.
 
     """
     return Decoder(
@@ -233,6 +235,7 @@ def loads(
 
         - :func:`jsonyx.read` for deserializing from a file.
         - :func:`jsonyx.load` for deserializing from an open file.
+        - :func:`jsonyx.dumps` for serializing to a string.
 
     """
     return Decoder(
@@ -315,6 +318,7 @@ def write(
 
         - :func:`jsonyx.dump` for serializing to an open file.
         - :func:`jsonyx.dumps` for serializing to a string.
+        - :func:`jsonyx.read` for deserializing from a file.
 
     """
     Encoder(
@@ -417,6 +421,7 @@ def dump(
 
         - :func:`jsonyx.write` for serializing to a file.
         - :func:`jsonyx.dumps` for serializing to a string.
+        - :func:`jsonyx.load` for deserializing from an open file.
 
     """
     Encoder(
@@ -502,6 +507,7 @@ def dumps(
 
         - :func:`jsonyx.write` for serializing to a file.
         - :func:`jsonyx.dump` for serializing to an open file.
+        - :func:`jsonyx.load` for deserializing from a string.
 
     """
     return Encoder(
@@ -552,6 +558,7 @@ def apply_patch(
         [1, 3]
 
     .. tip:: Using a :ref:`filter` instead of an index is more robust.
+    .. seealso:: :func:`jsonyx.make_patch` for making a patch.
 
     """
     return Manipulator(allow=allow, use_decimal=use_decimal).apply_patch(

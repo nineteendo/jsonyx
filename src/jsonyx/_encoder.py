@@ -364,6 +364,7 @@ class Encoder:
 
     .. note:: The item separator is automatically stripped when indented.
     .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
+    .. seealso:: :class:`jsonyx.Decoder` for a decoder.
     """
 
     def __init__(
