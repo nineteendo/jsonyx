@@ -13,17 +13,17 @@ Changelog
 jsonyx 2.4.0 (unreleased)
 -------------------------
 
-Changes:
-    - Improved error messages
-
 Breaking Changes:
     - Changed serialization of string :class:`enum.Enum`
+
+Other Changes:
+    - Improved error messages
 
 jsonyx 2.3.0 (Apr 30, 2025)
 ---------------------------
 
 Changes:
-    - Speed up string encoding
+    - Sped up string encoding
 
 jsonyx 2.2.1 (Apr 21, 2025)
 ---------------------------
@@ -94,10 +94,10 @@ Breaking Changes:
       :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`jsonyx.read`
 
 Other Changes:
+    - Added cache for indentations in the JSON encoder
     - Added support for Python 3.8 and Python 3.9
     - Improved documentation
     - Improved error messages
-    - Use cache for indentations in the JSON encoder
 
 Bug Fixes:
     - Fixed :issue:`32`: Line comments continue until the end of file
