@@ -141,6 +141,10 @@ def read(
         ...
         ['filesystem API']
 
+    .. seealso::
+
+        - :func:`jsonyx.load` for deserializing from an open file.
+        - :func:`jsonyx.loads` for deserializing from a string.
     """
     return Decoder(
         allow=allow, cache_keys=cache_keys, hooks=hooks,
@@ -182,6 +186,10 @@ def load(
         ['streaming API']
 
     .. tip:: Specify ``root`` to display the zip filename in error messages.
+    .. seealso::
+
+        - :func:`jsonyx.read` for deserializing from a file.
+        - :func:`jsonyx.loads` for deserializing from a string.
 
     """
     return Decoder(
@@ -224,6 +232,10 @@ def loads(
         '"foo\x08ar'
 
     .. tip:: Specify ``filename`` to display the filename in error messages.
+    .. seealso::
+
+        - :func:`jsonyx.read` for deserializing from a file.
+        - :func:`jsonyx.load` for deserializing from an open file.
 
     """
     return Decoder(
@@ -303,6 +315,10 @@ def write(
 
     .. note:: The item separator is automatically stripped when indented.
     .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
+    .. seealso::
+
+        - :func:`jsonyx.dump` for serializing to an open file.
+        - :func:`jsonyx.dumps` for serializing to a string.
 
     """
     Encoder(
@@ -402,6 +418,10 @@ def dump(
 
     .. note:: The item separator is automatically stripped when indented.
     .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
+    .. seealso::
+
+        - :func:`jsonyx.write` for serializing to a file.
+        - :func:`jsonyx.dumps` for serializing to a string.
 
     """
     Encoder(
@@ -484,6 +504,10 @@ def dumps(
 
     .. note:: The item separator is automatically stripped when indented.
     .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
+    .. seealso::
+
+        - :func:`jsonyx.write` for serializing to a file.
+        - :func:`jsonyx.dump` for serializing to an open file.
 
     """
     return Encoder(
