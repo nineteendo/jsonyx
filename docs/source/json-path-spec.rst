@@ -233,7 +233,7 @@ escapes.
 integer
 ^^^^^^^
 
-An integer is a signed decimal number.
+An integer is a signed whole number.
 
 .. container:: highlight
 
