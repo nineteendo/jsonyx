@@ -29,7 +29,6 @@ if TYPE_CHECKING:
     _MatchFunc = Callable[[str], Match[str] | None]
     _StrPath = PathLike[str] | str
     _SubFunc = Callable[[str | Callable[[Match[str]], str], str], str]
-    _WriteFunc = Callable[[str], object]
 
 
 _ESCAPE_DCT: dict[str, str] = {
@@ -142,7 +141,7 @@ except ImportError:
             return s
 
         def write_sequence(
-            seq: Any, write: _WriteFunc, indent_level: int, old_indent: str,
+            seq: Any, io: StringIO, indent_level: int, old_indent: str,
         ) -> None:
             if markers is not None:
                 if (markerid := id(seq)) in markers:
@@ -151,7 +150,7 @@ except ImportError:
 
                 markers[markerid] = seq
 
-            write("[")
+            io.write("[")
             current_indent: str = old_indent
             if indent is None or indent_level >= max_indent_level or (
                 not indent_leaves and not any(isinstance(hook(value), (
@@ -171,12 +170,12 @@ except ImportError:
                 if first:
                     first = False
                     if indented:
-                        write(current_indent)
+                        io.write(current_indent)
                 else:
-                    write(current_item_separator)
+                    io.write(current_item_separator)
 
                 try:
-                    write_value(value, write, indent_level, current_indent)
+                    write_value(value, io, indent_level, current_indent)
                 except Exception as exc:  # noqa: BLE001
                     if (tb := exc.__traceback__) is not None:
                         exc.__traceback__ = tb.tb_next
@@ -188,15 +187,15 @@ except ImportError:
 
             if not first and indented:
                 if trailing_comma:
-                    write(item_separator)
+                    io.write(item_separator)
 
-                write(old_indent)
+                io.write(old_indent)
 
-            write("]")
+            io.write("]")
 
         def write_mapping(
             mapping: Any,
-            write: _WriteFunc,
+            io: StringIO,
             indent_level: int,
             old_indent: str,
         ) -> None:
@@ -207,7 +206,7 @@ except ImportError:
 
                 markers[markerid] = mapping
 
-            write("{")
+            io.write("{")
             current_indent: str = old_indent
             if indent is None or indent_level >= max_indent_level or (
                 not indent_leaves and not any(isinstance(hook(value), (
@@ -251,20 +250,20 @@ except ImportError:
                 if first:
                     first = False
                     if indented:
-                        write(current_indent)
+                        io.write(current_indent)
                 else:
-                    write(current_item_separator)
+                    io.write(current_item_separator)
 
                 if not quoted_keys and s.isidentifier() and (
                     not ensure_ascii or s.isascii()
                 ):
-                    write(s)
+                    io.write(s)
                 else:
-                    write(encode_string(s))
+                    io.write(encode_string(s))
 
-                write(key_separator)
+                io.write(key_separator)
                 try:
-                    write_value(value, write, indent_level, current_indent)
+                    write_value(value, io, indent_level, current_indent)
                 except Exception as exc:  # noqa: BLE001
                     if (tb := exc.__traceback__) is not None:
                         exc.__traceback__ = tb.tb_next
@@ -276,30 +275,30 @@ except ImportError:
 
             if not first and indented:
                 if trailing_comma:
-                    write(item_separator)
+                    io.write(item_separator)
 
-                write(old_indent)
+                io.write(old_indent)
 
-            write("}")
+            io.write("}")
 
         def write_value(
             obj: object,
-            write: _WriteFunc,
+            io: StringIO,
             indent_level: int,
             current_indent: str,
         ) -> None:
             obj = hook(obj)
             if obj is None:
-                write("null")
+                io.write("null")
             elif isinstance(obj, (bool, bool_types)):
-                write("true" if obj else "false")
+                io.write("true" if obj else "false")
             elif isinstance(obj, (str, str_types)):
-                write(encode_string(str(obj)))
+                io.write(encode_string(str(obj)))
             elif isinstance(obj, (float, int, float_types, int_types)):
-                write(encode_float(obj))
+                io.write(encode_float(obj))
             elif isinstance(obj, (list, tuple, array_types)):
                 try:
-                    write_sequence(obj, write, indent_level, current_indent)
+                    write_sequence(obj, io, indent_level, current_indent)
                 except Exception as exc:  # noqa: BLE001
                     if (tb := exc.__traceback__) is not None:
                         exc.__traceback__ = tb.tb_next
@@ -307,7 +306,7 @@ except ImportError:
                     raise
             elif isinstance(obj, (dict, object_types)):
                 try:
-                    write_mapping(obj, write, indent_level, current_indent)
+                    write_mapping(obj, io, indent_level, current_indent)
                 except Exception as exc:  # noqa: BLE001
                     if (tb := exc.__traceback__) is not None:
                         exc.__traceback__ = tb.tb_next
@@ -320,7 +319,7 @@ except ImportError:
         def encoder(obj: object) -> str:
             io: StringIO = StringIO()
             try:
-                write_value(obj, io.write, 0, "\n")
+                write_value(obj, io, 0, "\n")
             finally:
                 if markers is not None:
                     markers.clear()
