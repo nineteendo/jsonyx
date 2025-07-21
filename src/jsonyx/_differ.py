@@ -16,13 +16,13 @@ if TYPE_CHECKING:
 
 _REPL: str = r"~\1"
 
-_escape_chars: Pattern = re.compile(r"(['~])", VERBOSE | MULTILINE | DOTALL)
+_ESCAPE_CHARS: Pattern = re.compile(r"(['~])", VERBOSE | MULTILINE | DOTALL)
 
 
 def _encode_query_key(key: str) -> str:
     if key.isidentifier():
         return f".{key}"
-    return f"['{_escape_chars.sub(_REPL, key)}']"
+    return f"['{_ESCAPE_CHARS.sub(_REPL, key)}']"
 
 
 def _eq(a: Any, b: Any) -> bool:

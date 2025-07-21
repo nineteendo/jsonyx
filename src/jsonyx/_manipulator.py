@@ -24,15 +24,15 @@ if TYPE_CHECKING:
 
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
-_idx: Pattern = re.compile(r"-?0|-?[1-9][0-9]*", _FLAGS)
-_number: Pattern = re.compile(
+_INTEGER: Pattern = re.compile(r"-?0|-?[1-9][0-9]*", _FLAGS)
+_NUMBER: Pattern = re.compile(
     r"""
     (-?0|-?[1-9][0-9]*) # integer
     (\.[0-9]+)?         # [frac]
     ([eE][-+]?[0-9]+)?  # [exp]
     """, _FLAGS,
 )
-_slice: Pattern = re.compile(
+_SLICE: Pattern = re.compile(
     r"""
     (-?0|-?[1-9][0-9]*)?       # [start]
     :                          # ":"
@@ -40,9 +40,9 @@ _slice: Pattern = re.compile(
     (?::(-?0|-?[1-9][0-9]*)?)? # [":" [step]]
     """, _FLAGS,
 )
-_str_chunk: Pattern = re.compile(r"[^'~]*", _FLAGS)
-_unquoted_key: Pattern = re.compile(r"(?:\w+|[^\x00-\x7f]+)+", _FLAGS)
-_whitespace: Pattern = re.compile(r"\ +", _FLAGS)
+_STR_CHUNK: Pattern = re.compile(r"[^'~]*", _FLAGS)
+_UNQUOTED_KEY: Pattern = re.compile(r"(?:\w+|[^\x00-\x7f]+)+", _FLAGS)
+_WHITESPACE: Pattern = re.compile(r"\ +", _FLAGS)
 
 
 def _errmsg(msg: str, query: str, start: int, end: int = 0) -> JSONSyntaxError:
@@ -115,7 +115,7 @@ def _scan_query_string(s: str, end: int) -> tuple[str, int]:
     chunks: list[str] = []
     str_idx: int = end - 1
     while True:
-        if match := _str_chunk.match(s, end):
+        if match := _STR_CHUNK.match(s, end):
             end = match.end()
             chunks.append(match.group())
 
@@ -182,7 +182,7 @@ class Manipulator:
             value, end = True, idx + 4
         elif nextchar == "f" and s[idx:idx + 5] == "false":
             value, end = False, idx + 5
-        elif match := _number.match(s, idx):
+        elif match := _NUMBER.match(s, idx):
             (integer, frac, exp), end = match.groups(), match.end()
             if not frac and not exp:
                 value = int(integer)
@@ -225,7 +225,7 @@ class Manipulator:
                 if _has_key(filter_target, filter_key) != negate_filter
             ]
             old_end: int = end
-            if match := _whitespace.match(query, end):
+            if match := _WHITESPACE.match(query, end):
                 end = match.end()
 
             operator_idx: int = end
@@ -236,7 +236,7 @@ class Manipulator:
                 msg: str = "Unexpected operator"
                 raise _errmsg(msg, query, operator_idx, end)
             else:
-                if match := _whitespace.match(query, end):
+                if match := _WHITESPACE.match(query, end):
                     end = match.end()
 
                 value, end = self._scan_query_value(query, end)
@@ -246,14 +246,14 @@ class Manipulator:
                     if operator(filter_target[filter_key], value)
                 ]
                 old_end = end
-                if match := _whitespace.match(query, end):
+                if match := _WHITESPACE.match(query, end):
                     end = match.end()
 
             if query[end:end + 2] != "&&":
                 return nodes, old_end
 
             end += 2
-            if match := _whitespace.match(query, end):
+            if match := _WHITESPACE.match(query, end):
                 end = match.end()
 
     def _select_nodes(
@@ -294,7 +294,7 @@ class Manipulator:
             if (terminator := query[end:end + 1]) == ".":
                 end += 1
                 if (
-                    match := _unquoted_key.match(query, end)
+                    match := _UNQUOTED_KEY.match(query, end)
                 ) and match.group().isidentifier():
                     key, end = match.group(), match.end()
                 else:
@@ -334,14 +334,14 @@ class Manipulator:
                     for node in nodes
                     for target in _get_query_targets(node, relative=relative)
                 ]
-                if match := _slice.match(query, end):
+                if match := _SLICE.match(query, end):
                     (start, stop, step), end = match.groups(), match.end()
                     key = slice(
                         start and int(start), stop and int(stop),
                         step and int(step),
                     )
                     nodes = [(target, key) for target in targets]
-                elif match := _idx.match(query, end):
+                elif match := _INTEGER.match(query, end):
                     key, end = int(match.group()), match.end()
                     nodes = [(target, key) for target in targets]
                 elif query[end:end + 1] == "'":

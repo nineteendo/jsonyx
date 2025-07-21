@@ -41,9 +41,9 @@ _ESCAPE_DCT: dict[str, str] = {
 }
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
-_escape_chars: Pattern = re.compile(r'["\\\x00-\x1f]', _FLAGS)
-_ascii_escape_chars: Pattern = re.compile(r'["\\]|[^\x20-\x7e]', _FLAGS)
-_number: Pattern = re.compile(
+_ESCAPE_CHARS: Pattern = re.compile(r'["\\\x00-\x1f]', _FLAGS)
+_ASCII_ESCAPE_CHARS: Pattern = re.compile(r'["\\]|[^\x20-\x7e]', _FLAGS)
+_NUMBER: Pattern = re.compile(
     r"""
     (-?0|-?[1-9][0-9]*) # integer
     (\.[0-9]+)?         # [frac]
@@ -94,7 +94,7 @@ except ImportError:
                 return _ESCAPE_DCT[match.group()]
 
             def encode_string(s: str) -> str:
-                return f'"{_escape_chars.sub(replace, s)}"'
+                return f'"{_ESCAPE_CHARS.sub(replace, s)}"'
         else:
             def replace(match: Match[str]) -> str:
                 s: str = match.group()
@@ -115,11 +115,11 @@ except ImportError:
                     return f"\\u{uni:04x}"
 
             def encode_string(s: str) -> str:
-                return f'"{_ascii_escape_chars.sub(replace, s)}"'
+                return f'"{_ASCII_ESCAPE_CHARS.sub(replace, s)}"'
 
         def encode_float(num: Any) -> str:
             s: str = str(num)
-            if _number.fullmatch(s):
+            if _NUMBER.fullmatch(s):
                 return s
 
             if s.lower() == "nan":
