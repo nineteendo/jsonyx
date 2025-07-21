@@ -210,8 +210,7 @@ class Manipulator:
         self, nodes: list[_Node], query: str, end: int,
     ) -> tuple[list[_Node], int]:
         while True:
-            negate_filter: bool = query[end:end + 1] == "!"
-            if negate_filter:
+            if negate_filter := query[end:end + 1] == "!":
                 end += 1
 
             filter_nodes, end = self._select_nodes(
