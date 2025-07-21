@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 
     _Encoder = Callable[[object], str]
     _Hook = Callable[[Any], Any]
-    _MatchFunc = Callable[[str], Match[str] | None]
+    _FullMatchFunc = Callable[[str], Match[str] | None]
     _StrPath = PathLike[str] | str
     _SubFunc = Callable[[str | Callable[[Match[str]], str], str], str]
 
@@ -45,7 +45,7 @@ _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
 _escape: _SubFunc = re.compile(r'["\\\x00-\x1f]', _FLAGS).sub
 _escape_ascii: _SubFunc = re.compile(r'["\\]|[^\x20-\x7e]', _FLAGS).sub
-_match_number: _MatchFunc = re.compile(
+_full_match_number: _FullMatchFunc = re.compile(
     r"""
     (-?0|-?[1-9][0-9]*) # integer
     (\.[0-9]+)?         # [frac]
@@ -121,7 +121,7 @@ except ImportError:
 
         def encode_float(num: Any) -> str:
             s: str = str(num)
-            if _match_number(s):
+            if _full_match_number(s):
                 return s
 
             if s.lower() == "nan":
