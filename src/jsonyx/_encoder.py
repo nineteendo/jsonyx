@@ -7,7 +7,7 @@ import re
 import sys
 from io import StringIO
 from pathlib import Path
-from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
+from re import DOTALL, MULTILINE, VERBOSE, Match, Pattern, RegexFlag
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
 from jsonyx import TruncatedSyntaxError
@@ -26,9 +26,7 @@ if TYPE_CHECKING:
 
     _Encoder = Callable[[object], str]
     _Hook = Callable[[Any], Any]
-    _FullMatchFunc = Callable[[str], Match[str] | None]
     _StrPath = PathLike[str] | str
-    _SubFunc = Callable[[str | Callable[[Match[str]], str], str], str]
 
 
 _ESCAPE_DCT: dict[str, str] = {
@@ -43,15 +41,15 @@ _ESCAPE_DCT: dict[str, str] = {
 }
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
-_escape: _SubFunc = re.compile(r'["\\\x00-\x1f]', _FLAGS).sub
-_escape_ascii: _SubFunc = re.compile(r'["\\]|[^\x20-\x7e]', _FLAGS).sub
-_full_match_number: _FullMatchFunc = re.compile(
+_escape_chars: Pattern = re.compile(r'["\\\x00-\x1f]', _FLAGS)
+_ascii_escape_chars: Pattern = re.compile(r'["\\]|[^\x20-\x7e]', _FLAGS)
+_number: Pattern = re.compile(
     r"""
     (-?0|-?[1-9][0-9]*) # integer
     (\.[0-9]+)?         # [frac]
     ([eE][-+]?[0-9]+)?  # [exp]
     """, _FLAGS,
-).fullmatch
+)
 
 try:
     if not TYPE_CHECKING:
@@ -96,7 +94,7 @@ except ImportError:
                 return _ESCAPE_DCT[match.group()]
 
             def encode_string(s: str) -> str:
-                return f'"{_escape(replace, s)}"'
+                return f'"{_escape_chars.sub(replace, s)}"'
         else:
             def replace(match: Match[str]) -> str:
                 s: str = match.group()
@@ -117,11 +115,11 @@ except ImportError:
                     return f"\\u{uni:04x}"
 
             def encode_string(s: str) -> str:
-                return f'"{_escape_ascii(replace, s)}"'
+                return f'"{_ascii_escape_chars.sub(replace, s)}"'
 
         def encode_float(num: Any) -> str:
             s: str = str(num)
-            if _full_match_number(s):
+            if _number.fullmatch(s):
                 return s
 
             if s.lower() == "nan":

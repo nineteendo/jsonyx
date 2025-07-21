@@ -13,7 +13,7 @@ from codecs import (
 from os import PathLike, fspath
 from os.path import realpath
 from pathlib import Path
-from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
+from re import DOTALL, MULTILINE, VERBOSE, Pattern, RegexFlag
 from shutil import get_terminal_size
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
@@ -29,10 +29,8 @@ if TYPE_CHECKING:
         def read(self, length: int = ..., /) -> _T_co:  # type: ignore
             """Read string."""
 
-    _MatchFunc = Callable[[str, int], Match[str] | None]
     _Scanner = Callable[[str, str], Any]
     _StrPath = PathLike[str] | str
-    _SubFunc = Callable[[str | Callable[[Match[str]], str], str], str]
     _Hook = Callable[[Any], Any]
 
 
@@ -48,39 +46,37 @@ _UNESCAPE: dict[str, str] = {
     "t": "\t",
 }
 
-_replace_unprintable: _SubFunc = re.compile(
+_unprintable_chars: Pattern = re.compile(
     r"[\x00-\x1f\x7f\ud800-\udfff]", _FLAGS,
-).sub
-_match_chunk: _MatchFunc = re.compile(r'[^"\\\x00-\x1f]+', _FLAGS).match
-_match_hex_digits: _MatchFunc = re.compile(r"[0-9A-Fa-f]{4}", _FLAGS).match
-_match_line_end: _MatchFunc = re.compile(r"[^\n\r]+", _FLAGS).match
-_match_number: _MatchFunc = re.compile(
+)
+_str_chunk: Pattern = re.compile(r'[^"\\\x00-\x1f]+', _FLAGS)
+_hex_digits: Pattern = re.compile(r"[0-9A-Fa-f]{4}", _FLAGS)
+_end_of_line: Pattern = re.compile(r"[^\n\r]+", _FLAGS)
+_number: Pattern = re.compile(
     r"""
     (-?0|-?[1-9][0-9]*) # integer
     (\.[0-9]+)?         # [frac]
     ([eE][-+]?[0-9]+)?  # [exp]
     """, _FLAGS,
-).match
-_match_unquoted_key: _MatchFunc = re.compile(
-    r"(?:\w+|[^\x00-\x7f]+)+", _FLAGS,
-).match
-_match_whitespace: _MatchFunc = re.compile(r"[ \t\n\r]+", _FLAGS).match
+)
+_unquoted_key: Pattern = re.compile(r"(?:\w+|[^\x00-\x7f]+)+", _FLAGS)
+_whitespace: Pattern = re.compile(r"[ \t\n\r]+", _FLAGS)
 
 
 def _get_err_context(doc: str, start: int, end: int) -> tuple[int, str, int]:
     line_start: int = max(
         doc.rfind("\n", 0, start), doc.rfind("\r", 0, start),
     ) + 1
-    if match := _match_whitespace(doc, line_start):
+    if match := _whitespace.match(doc, line_start):
         line_start = min(match.end(), start)
 
-    if match := _match_line_end(doc, start):
+    if match := _end_of_line.match(doc, start):
         line_end: int = match.end()
     else:
         line_end = start
 
     end = min(line_end, end)
-    if match := _match_whitespace(doc[::-1], len(doc) - line_end):
+    if match := _whitespace.match(doc[::-1], len(doc) - line_end):
         line_end = max(end, len(doc) - match.end())
 
     if end == start:
@@ -99,7 +95,7 @@ def _get_err_context(doc: str, start: int, end: int) -> tuple[int, str, int]:
         end + max_chars // 3,
     ), line_end)
     text: str = doc[text_start:text_end].expandtabs(1)
-    text = _replace_unprintable("\ufffd", text)
+    text = _unprintable_chars.sub("\ufffd", text)
     if text_start > line_start:
         text = "..." + text[3:]
 
@@ -116,7 +112,7 @@ def _get_err_context(doc: str, start: int, end: int) -> tuple[int, str, int]:
 
 
 def _unescape_unicode(filename: str, s: str, end: int) -> int:
-    if match := _match_hex_digits(s, end):
+    if match := _hex_digits.match(s, end):
         return int(match.group(), 16)
 
     msg: str = "Expecting 4 hex digits"
@@ -164,7 +160,7 @@ class TruncatedSyntaxError(SyntaxError):
             doc.rfind("\n", 0, start), doc.rfind("\r", 0, start),
         )
         if end <= 0:  # offset
-            if match := _match_line_end(doc, start):
+            if match := _end_of_line.match(doc, start):
                 end = min(match.end(), start - end)
             else:
                 end = start
@@ -299,13 +295,13 @@ except ImportError:
 
         def skip_comments(filename: str, s: str, end: int) -> int:
             while True:
-                if match := _match_whitespace(s, end):
+                if match := _whitespace.match(s, end):
                     end = match.end()
 
                 comment_idx: int = end
                 if (comment_prefix := s[end:end + 2]) == "//":
                     end += 2
-                    if match := _match_line_end(s, end):
+                    if match := _end_of_line.match(s, end):
                         end = match.end()
                 elif comment_prefix == "/*":
                     if (end := s.find("*/", end + 2)) == -1:
@@ -329,7 +325,7 @@ except ImportError:
             str_idx: int = end - 1
             while True:
                 # Match one or more unescaped string characters
-                if match := _match_chunk(s, end):
+                if match := _str_chunk.match(s, end):
                     end = match.end()
                     chunks.append(match.group())
 
@@ -416,7 +412,7 @@ except ImportError:
                 if (nextchar := s[end:end + 1]) == '"':
                     key, end = scan_string(filename, s, end + 1)
                 elif (
-                    match := _match_unquoted_key(s, end)
+                    match := _unquoted_key.match(s, end)
                 ) and match.group().isidentifier():
                     end = match.end()
                     if not allow_unquoted_keys:
@@ -573,9 +569,8 @@ except ImportError:
                 value, end = bool_hook(True), idx + 4  # noqa: FBT003
             elif nextchar == "f" and s[idx:idx + 5] == "false":
                 value, end = bool_hook(False), idx + 5  # noqa: FBT003
-            elif number := _match_number(s, idx):
-                integer, frac, exp = number.groups()
-                end = number.end()
+            elif match := _number.match(s, idx):
+                (integer, frac, exp), end = match.groups(), match.end()
                 if not frac and not exp:
                     value = int_hook(integer)
                 else:

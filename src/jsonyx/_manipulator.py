@@ -7,7 +7,7 @@ import re
 from copy import deepcopy
 from decimal import Decimal
 from operator import eq, ge, gt, le, lt, ne
-from re import DOTALL, MULTILINE, VERBOSE, Match, RegexFlag
+from re import DOTALL, MULTILINE, VERBOSE, Pattern, RegexFlag
 from typing import TYPE_CHECKING, Any
 
 from jsonyx import JSONSyntaxError
@@ -18,34 +18,31 @@ if TYPE_CHECKING:
 
     _Target = dict[Any, Any] | list[Any]
     _Node = tuple[_Target, Any]
-    _MatchFunc = Callable[[str, int], Match[str] | None]
     _Operation = dict[str, Any]
     _Operator = Callable[[Any, Any], Any]
 
 
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
-_match_idx: _MatchFunc = re.compile(r"-?0|-?[1-9][0-9]*", _FLAGS).match
-_match_number: _MatchFunc = re.compile(
+_idx: Pattern = re.compile(r"-?0|-?[1-9][0-9]*", _FLAGS)
+_number: Pattern = re.compile(
     r"""
     (-?0|-?[1-9][0-9]*) # integer
     (\.[0-9]+)?         # [frac]
     ([eE][-+]?[0-9]+)?  # [exp]
     """, _FLAGS,
-).match
-_match_slice: _MatchFunc = re.compile(
+)
+_slice: Pattern = re.compile(
     r"""
     (-?0|-?[1-9][0-9]*)?       # [start]
     :                          # ":"
     (-?0|-?[1-9][0-9]*)?       # [stop]
     (?::(-?0|-?[1-9][0-9]*)?)? # [":" [step]]
     """, _FLAGS,
-).match
-_match_str_chunk: _MatchFunc = re.compile(r"[^'~]*", _FLAGS).match
-_match_unquoted_key: _MatchFunc = re.compile(
-    r"(?:\w+|[^\x00-\x7f]+)+", _FLAGS,
-).match
-_match_whitespace: _MatchFunc = re.compile(r"\ +", _FLAGS).match
+)
+_str_chunk: Pattern = re.compile(r"[^'~]*", _FLAGS)
+_unquoted_key: Pattern = re.compile(r"(?:\w+|[^\x00-\x7f]+)+", _FLAGS)
+_whitespace: Pattern = re.compile(r"\ +", _FLAGS)
 
 
 def _errmsg(msg: str, query: str, start: int, end: int = 0) -> JSONSyntaxError:
@@ -118,7 +115,7 @@ def _scan_query_string(s: str, end: int) -> tuple[str, int]:
     chunks: list[str] = []
     str_idx: int = end - 1
     while True:
-        if match := _match_str_chunk(s, end):
+        if match := _str_chunk.match(s, end):
             end = match.end()
             chunks.append(match.group())
 
@@ -185,9 +182,8 @@ class Manipulator:
             value, end = True, idx + 4
         elif nextchar == "f" and s[idx:idx + 5] == "false":
             value, end = False, idx + 5
-        elif number := _match_number(s, idx):
-            integer, frac, exp = number.groups()
-            end = number.end()
+        elif match := _number.match(s, idx):
+            (integer, frac, exp), end = match.groups(), match.end()
             if not frac and not exp:
                 value = int(integer)
             else:
@@ -229,7 +225,7 @@ class Manipulator:
                 if _has_key(filter_target, filter_key) != negate_filter
             ]
             old_end: int = end
-            if match := _match_whitespace(query, end):
+            if match := _whitespace.match(query, end):
                 end = match.end()
 
             operator_idx: int = end
@@ -240,7 +236,7 @@ class Manipulator:
                 msg: str = "Unexpected operator"
                 raise _errmsg(msg, query, operator_idx, end)
             else:
-                if match := _match_whitespace(query, end):
+                if match := _whitespace.match(query, end):
                     end = match.end()
 
                 value, end = self._scan_query_value(query, end)
@@ -250,14 +246,14 @@ class Manipulator:
                     if operator(filter_target[filter_key], value)
                 ]
                 old_end = end
-                if match := _match_whitespace(query, end):
+                if match := _whitespace.match(query, end):
                     end = match.end()
 
             if query[end:end + 2] != "&&":
                 return nodes, old_end
 
             end += 2
-            if match := _match_whitespace(query, end):
+            if match := _whitespace.match(query, end):
                 end = match.end()
 
     def _select_nodes(
@@ -298,7 +294,7 @@ class Manipulator:
             if (terminator := query[end:end + 1]) == ".":
                 end += 1
                 if (
-                    match := _match_unquoted_key(query, end)
+                    match := _unquoted_key.match(query, end)
                 ) and match.group().isidentifier():
                     key, end = match.group(), match.end()
                 else:
@@ -338,14 +334,14 @@ class Manipulator:
                     for node in nodes
                     for target in _get_query_targets(node, relative=relative)
                 ]
-                if match := _match_slice(query, end):
+                if match := _slice.match(query, end):
                     (start, stop, step), end = match.groups(), match.end()
                     key = slice(
                         start and int(start), stop and int(stop),
                         step and int(step),
                     )
                     nodes = [(target, key) for target in targets]
-                elif match := _match_idx(query, end):
+                elif match := _idx.match(query, end):
                     key, end = int(match.group()), match.end()
                     nodes = [(target, key) for target in targets]
                 elif query[end:end + 1] == "'":

@@ -6,22 +6,23 @@ __all__: list[str] = ["make_patch"]
 import re
 from decimal import Decimal
 from math import isnan
-from re import DOTALL, MULTILINE, VERBOSE, Match
+from re import DOTALL, MULTILINE, VERBOSE, Pattern
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, KeysView
+    from collections.abc import KeysView
 
     _Operation = dict[str, Any]
-    _SubFunc = Callable[[str | Callable[[Match[str]], str], str], str]
 
 _REPL: str = r"~\1"
 
-_escape: _SubFunc = re.compile(r"(['~])", VERBOSE | MULTILINE | DOTALL).sub
+_escape_chars: Pattern = re.compile(r"(['~])", VERBOSE | MULTILINE | DOTALL)
 
 
 def _encode_query_key(key: str) -> str:
-    return f".{key}" if key.isidentifier() else f"['{_escape(_REPL, key)}']"
+    if key.isidentifier():
+        return f".{key}"
+    return f"['{_escape_chars.sub(_REPL, key)}']"
 
 
 def _eq(a: Any, b: Any) -> bool:
