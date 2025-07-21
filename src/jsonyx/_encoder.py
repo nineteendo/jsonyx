@@ -17,7 +17,6 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Container, ItemsView
     from os import PathLike
 
-    _T = TypeVar("_T")
     _T_contra = TypeVar("_T_contra", contravariant=True)
 
     # pylint: disable-next=R0903
@@ -25,7 +24,7 @@ if TYPE_CHECKING:
         def write(self, s: _T_contra, /) -> object:
             """Write string."""
 
-    _EncodeFunc = Callable[[_T], str]
+    _Encoder = Callable[[object], str]
     _Hook = Callable[[Any], Any]
     _MatchFunc = Callable[[str], Match[str] | None]
     _StrPath = PathLike[str] | str
@@ -83,7 +82,7 @@ except ImportError:
         skipkeys: bool,
         sort_keys: bool,
         trailing_comma: bool,
-    ) -> _EncodeFunc[object]:
+    ) -> _Encoder:
         """Make JSON encoder."""
         markers: dict[int, object] | None = {} if check_circular else None
 
@@ -403,7 +402,7 @@ class Encoder:
         if types is None:
             types = {}
 
-        self._encoder: _EncodeFunc[object] = make_encoder(
+        self._encoder: _Encoder = make_encoder(
             types.get("array", ()), types.get("bool", ()),
             types.get("float", ()), hook, indent, types.get("int", ()),
             types.get("object", ()), types.get("str", ()), end,
