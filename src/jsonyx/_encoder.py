@@ -14,7 +14,7 @@ from jsonyx import TruncatedSyntaxError
 from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Container, ItemsView
+    from collections.abc import Callable, Container, ItemsView, Iterable
     from os import PathLike
 
     _T_contra = TypeVar("_T_contra", contravariant=True)
@@ -139,6 +139,13 @@ except ImportError:
 
             return s
 
+        def is_unindented(values: Iterable[Any], indent_level: int) -> bool:
+            return indent_level >= max_indent_level or (
+                not indent_leaves and not any(isinstance(hook(value), (
+                    list, tuple, dict, array_types, object_types,
+                )) for value in values)
+            )
+
         def write_sequence(
             seq: Any, io: StringIO, indent_level: int, old_indent: str,
         ) -> None:
@@ -151,11 +158,7 @@ except ImportError:
 
             io.write("[")
             current_indent: str = old_indent
-            if indent is None or indent_level >= max_indent_level or (
-                not indent_leaves and not any(isinstance(hook(value), (
-                    list, tuple, dict, array_types, object_types,
-                )) for value in seq)
-            ):
+            if indent is None or is_unindented(seq, indent_level):
                 indented: bool = False
                 current_item_separator: str = long_item_separator
             else:
@@ -207,11 +210,7 @@ except ImportError:
 
             io.write("{")
             current_indent: str = old_indent
-            if indent is None or indent_level >= max_indent_level or (
-                not indent_leaves and not any(isinstance(hook(value), (
-                    list, tuple, dict, array_types, object_types,
-                )) for value in mapping.values())
-            ):
+            if indent is None or is_unindented(mapping.values(), indent_level):
                 indented: bool = False
                 current_item_separator: str = long_item_separator
             else:
