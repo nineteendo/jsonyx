@@ -41,9 +41,9 @@ _ESCAPE_DCT: dict[str, str] = {
 }
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
-_ESCAPE_CHARS: Pattern = re.compile(r'["\\\x00-\x1f]', _FLAGS)
-_ASCII_ESCAPE_CHARS: Pattern = re.compile(r'["\\]|[^\x20-\x7e]', _FLAGS)
-_NUMBER: Pattern = re.compile(
+_ESCAPE_CHARS: Pattern[str] = re.compile(r'["\\\x00-\x1f]', _FLAGS)
+_ASCII_ESCAPE_CHARS: Pattern[str] = re.compile(r'["\\]|[^\x20-\x7e]', _FLAGS)
+_NUMBER: Pattern[str] = re.compile(
     r"""
     (-?0|-?[1-9][0-9]*) # integer
     (\.[0-9]+)?         # [frac]
@@ -175,7 +175,7 @@ except ImportError:
 
                 try:
                     write_value(value, io, indent_level, current_indent)
-                except Exception as exc:  # noqa: BLE001
+                except Exception as exc:
                     if (tb := exc.__traceback__) is not None:
                         exc.__traceback__ = tb.tb_next
 
@@ -263,7 +263,7 @@ except ImportError:
                 io.write(key_separator)
                 try:
                     write_value(value, io, indent_level, current_indent)
-                except Exception as exc:  # noqa: BLE001
+                except Exception as exc:
                     if (tb := exc.__traceback__) is not None:
                         exc.__traceback__ = tb.tb_next
 
@@ -298,7 +298,7 @@ except ImportError:
             elif isinstance(obj, (list, tuple, array_types)):
                 try:
                     write_sequence(obj, io, indent_level, current_indent)
-                except Exception as exc:  # noqa: BLE001
+                except Exception as exc:
                     if (tb := exc.__traceback__) is not None:
                         exc.__traceback__ = tb.tb_next
 
@@ -306,7 +306,7 @@ except ImportError:
             elif isinstance(obj, (dict, object_types)):
                 try:
                     write_mapping(obj, io, indent_level, current_indent)
-                except Exception as exc:  # noqa: BLE001
+                except Exception as exc:
                     if (tb := exc.__traceback__) is not None:
                         exc.__traceback__ = tb.tb_next
 

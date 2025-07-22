@@ -145,6 +145,7 @@ def read(
         - :func:`jsonyx.load` for deserializing from an open file.
         - :func:`jsonyx.loads` for deserializing from a string.
         - :func:`jsonyx.write` for serializing to a file.
+
     """
     return Decoder(
         allow=allow, cache_keys=cache_keys, hooks=hooks,

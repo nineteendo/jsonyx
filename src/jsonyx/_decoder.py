@@ -46,21 +46,21 @@ _UNESCAPE: dict[str, str] = {
     "t": "\t",
 }
 
-_UNPRINTABLE_CHARS: Pattern = re.compile(
+_UNPRINTABLE_CHARS: Pattern[str] = re.compile(
     r"[\x00-\x1f\x7f\ud800-\udfff]", _FLAGS,
 )
-_STR_CHUNK: Pattern = re.compile(r'[^"\\\x00-\x1f]+', _FLAGS)
-_HEX_DIGITS: Pattern = re.compile(r"[0-9A-Fa-f]{4}", _FLAGS)
-_REST_OF_LINE: Pattern = re.compile(r"[^\n\r]+", _FLAGS)
-_NUMBER: Pattern = re.compile(
+_STR_CHUNK: Pattern[str] = re.compile(r'[^"\\\x00-\x1f]+', _FLAGS)
+_HEX_DIGITS: Pattern[str] = re.compile(r"[0-9A-Fa-f]{4}", _FLAGS)
+_REST_OF_LINE: Pattern[str] = re.compile(r"[^\n\r]+", _FLAGS)
+_NUMBER: Pattern[str] = re.compile(
     r"""
     (-?0|-?[1-9][0-9]*) # integer
     (\.[0-9]+)?         # [frac]
     ([eE][-+]?[0-9]+)?  # [exp]
     """, _FLAGS,
 )
-_UNQUOTED_KEY: Pattern = re.compile(r"(?:\w+|[^\x00-\x7f]+)+", _FLAGS)
-_WHITESPACE: Pattern = re.compile(r"[ \t\n\r]+", _FLAGS)
+_UNQUOTED_KEY: Pattern[str] = re.compile(r"(?:\w+|[^\x00-\x7f]+)+", _FLAGS)
+_WHITESPACE: Pattern[str] = re.compile(r"[ \t\n\r]+", _FLAGS)
 
 
 def _get_err_context(doc: str, start: int, end: int) -> tuple[int, str, int]:
@@ -437,7 +437,7 @@ except ImportError:
                 end = skip_comments(filename, s, end + 1)
                 try:
                     value, end = scan_value(filename, s, end)
-                except Exception as exc:  # noqa: BLE001
+                except Exception as exc:
                     if (tb := exc.__traceback__) is not None:
                         exc.__traceback__ = tb.tb_next
 
@@ -495,7 +495,7 @@ except ImportError:
             while True:
                 try:
                     value, end = scan_value(filename, s, end)
-                except Exception as exc:  # noqa: BLE001
+                except Exception as exc:
                     if (tb := exc.__traceback__) is not None:
                         exc.__traceback__ = tb.tb_next
 
@@ -550,7 +550,7 @@ except ImportError:
             elif nextchar == "{":
                 try:
                     value, end = scan_object(filename, s, idx + 1)
-                except Exception as exc:  # noqa: BLE001
+                except Exception as exc:
                     if (tb := exc.__traceback__) is not None:
                         exc.__traceback__ = tb.tb_next
 
@@ -558,7 +558,7 @@ except ImportError:
             elif nextchar == "[":
                 try:
                     value, end = scan_array(filename, s, idx + 1)
-                except Exception as exc:  # noqa: BLE001
+                except Exception as exc:
                     if (tb := exc.__traceback__) is not None:
                         exc.__traceback__ = tb.tb_next
 

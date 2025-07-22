@@ -16,7 +16,9 @@ if TYPE_CHECKING:
 
 _REPL: str = r"~\1"
 
-_ESCAPE_CHARS: Pattern = re.compile(r"(['~])", VERBOSE | MULTILINE | DOTALL)
+_ESCAPE_CHARS: Pattern[str] = re.compile(
+    r"(['~])", VERBOSE | MULTILINE | DOTALL,
+)
 
 
 def _encode_query_key(key: str) -> str:

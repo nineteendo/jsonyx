@@ -24,15 +24,15 @@ if TYPE_CHECKING:
 
 _FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
 
-_INTEGER: Pattern = re.compile(r"-?0|-?[1-9][0-9]*", _FLAGS)
-_NUMBER: Pattern = re.compile(
+_INTEGER: Pattern[str] = re.compile(r"-?0|-?[1-9][0-9]*", _FLAGS)
+_NUMBER: Pattern[str] = re.compile(
     r"""
     (-?0|-?[1-9][0-9]*) # integer
     (\.[0-9]+)?         # [frac]
     ([eE][-+]?[0-9]+)?  # [exp]
     """, _FLAGS,
 )
-_SLICE: Pattern = re.compile(
+_SLICE: Pattern[str] = re.compile(
     r"""
     (-?0|-?[1-9][0-9]*)?       # [start]
     :                          # ":"
@@ -40,9 +40,9 @@ _SLICE: Pattern = re.compile(
     (?::(-?0|-?[1-9][0-9]*)?)? # [":" [step]]
     """, _FLAGS,
 )
-_STR_CHUNK: Pattern = re.compile(r"[^'~]*", _FLAGS)
-_UNQUOTED_KEY: Pattern = re.compile(r"(?:\w+|[^\x00-\x7f]+)+", _FLAGS)
-_WHITESPACE: Pattern = re.compile(r"\ +", _FLAGS)
+_STR_CHUNK: Pattern[str] = re.compile(r"[^'~]*", _FLAGS)
+_UNQUOTED_KEY: Pattern[str] = re.compile(r"(?:\w+|[^\x00-\x7f]+)+", _FLAGS)
+_WHITESPACE: Pattern[str] = re.compile(r"\ +", _FLAGS)
 
 
 def _errmsg(msg: str, query: str, start: int, end: int = 0) -> JSONSyntaxError:
