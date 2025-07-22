@@ -563,11 +563,11 @@ except ImportError:
                         exc.__traceback__ = tb.tb_next
 
                     raise
-            elif nextchar == "n" and s[idx:idx + 4] == "null":
+            elif s[idx:idx + 4] == "null":
                 value, end = None, idx + 4
-            elif nextchar == "t" and s[idx:idx + 4] == "true":
+            elif s[idx:idx + 4] == "true":
                 value, end = bool_hook(True), idx + 4  # noqa: FBT003
-            elif nextchar == "f" and s[idx:idx + 5] == "false":
+            elif s[idx:idx + 5] == "false":
                 value, end = bool_hook(False), idx + 5  # noqa: FBT003
             elif match := _NUMBER.match(s, idx):
                 (integer, frac, exp), end = match.groups(), match.end()
@@ -575,19 +575,19 @@ except ImportError:
                     value = int_hook(integer)
                 else:
                     value = float_hook(integer + (frac or "") + (exp or ""))
-            elif nextchar == "N" and s[idx:idx + 3] == "NaN":
+            elif s[idx:idx + 3] == "NaN":
                 if not allow_nan_and_infinity:
                     msg = "NaN is not allowed"
                     raise _errmsg(msg, filename, s, idx, idx + 3)
 
                 value, end = float_hook("NaN"), idx + 3
-            elif nextchar == "I" and s[idx:idx + 8] == "Infinity":
+            elif s[idx:idx + 8] == "Infinity":
                 if not allow_nan_and_infinity:
                     msg = "Infinity is not allowed"
                     raise _errmsg(msg, filename, s, idx, idx + 8)
 
                 value, end = float_hook("Infinity"), idx + 8
-            elif nextchar == "-" and s[idx:idx + 9] == "-Infinity":
+            elif s[idx:idx + 9] == "-Infinity":
                 if not allow_nan_and_infinity:
                     msg = "-Infinity is not allowed"
                     raise _errmsg(msg, filename, s, idx, idx + 9)

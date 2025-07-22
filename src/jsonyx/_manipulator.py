@@ -176,11 +176,11 @@ class Manipulator:
         value: Any
         if nextchar == "'":
             value, end = _scan_query_string(s, idx + 1)
-        elif nextchar == "n" and s[idx:idx + 4] == "null":
+        elif s[idx:idx + 4] == "null":
             value, end = None, idx + 4
-        elif nextchar == "t" and s[idx:idx + 4] == "true":
+        elif s[idx:idx + 4] == "true":
             value, end = True, idx + 4
-        elif nextchar == "f" and s[idx:idx + 5] == "false":
+        elif s[idx:idx + 5] == "false":
             value, end = False, idx + 5
         elif match := _NUMBER.match(s, idx):
             (integer, frac, exp), end = match.groups(), match.end()
@@ -188,13 +188,13 @@ class Manipulator:
                 value = int(integer)
             else:
                 value = self._parse_float(integer + (frac or "") + (exp or ""))
-        elif nextchar == "I" and s[idx:idx + 8] == "Infinity":
+        elif s[idx:idx + 8] == "Infinity":
             if not self._allow_nan_and_infinity:
                 msg = "Infinity is not allowed"
                 raise _errmsg(msg, s, idx, idx + 8)
 
             value, end = self._parse_float("Infinity"), idx + 8
-        elif nextchar == "-" and s[idx:idx + 9] == "-Infinity":
+        elif s[idx:idx + 9] == "-Infinity":
             if not self._allow_nan_and_infinity:
                 msg = "-Infinity is not allowed"
                 raise _errmsg(msg, s, idx, idx + 9)

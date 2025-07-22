@@ -122,11 +122,12 @@ except ImportError:
             if _NUMBER.fullmatch(s):
                 return s
 
-            if s.lower() == "nan":
+            s = s.lower()
+            if s == "nan":
                 s = "NaN"
-            elif s.lower() in {"inf", "infinity"}:
+            elif s in {"inf", "infinity"}:
                 s = "Infinity"
-            elif s.lower() in {"-inf", "-infinity"}:
+            elif s in {"-inf", "-infinity"}:
                 s = "-Infinity"
             else:
                 msg: str = f"{num!r} is not JSON serializable"
