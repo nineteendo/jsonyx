@@ -275,6 +275,7 @@ def write(
           :class:`enum.Enum` and :class:`decimal.Decimal`.
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
+
     .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
         ``skipkeys``.
 
@@ -371,6 +372,7 @@ def dump(
           :class:`enum.Enum` and :class:`decimal.Decimal`.
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
+
     .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
         ``skipkeys``.
 
@@ -473,6 +475,7 @@ def dumps(
           :class:`enum.Enum` and :class:`decimal.Decimal`.
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
+
     .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
         ``skipkeys``.
 
