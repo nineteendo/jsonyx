@@ -139,8 +139,7 @@ class TruncatedSyntaxError(SyntaxError):
             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         jsonyx.TruncatedSyntaxError: msg
 
-    .. tip:: You can overwrite the width by setting the ``COLUMNS`` environment
-        variable.
+    .. tip:: Set the ``COLUMNS`` environment variable to overwrite the width.
     .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the
         exception.
 
@@ -734,8 +733,7 @@ class Decoder:
             >>> decoder.loads(r'"\"foo\bar"')
             '"foo\x08ar'
 
-        .. tip:: Specify ``filename`` to display the filename in error
-            messages.
+        .. tip:: Specify ``filename`` to display it in error messages.
 
         """
         filename = fspath(filename)

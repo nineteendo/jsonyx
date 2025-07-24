@@ -557,7 +557,7 @@ class Manipulator:
             >>> manipulator.apply_patch([1, 2, 3], {"op": "del", "path": "$[1]"})
             [1, 3]
 
-        .. tip:: Using a :ref:`filter` instead of an index is more robust.
+        .. tip:: A :ref:`filter` is more robust than an index.
 
         """
         root: list[Any] = [obj]

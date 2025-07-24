@@ -231,7 +231,7 @@ def loads(
         >>> json.loads(r'"\"foo\bar"')
         '"foo\x08ar'
 
-    .. tip:: Specify ``filename`` to display the filename in error messages.
+    .. tip:: Specify ``filename`` to display it in error messages.
     .. seealso::
 
         - :func:`jsonyx.read` for deserializing from a file.
@@ -561,7 +561,7 @@ def apply_patch(
         >>> json.apply_patch([1, 2, 3], {"op": "del", "path": "$[1]"})
         [1, 3]
 
-    .. tip:: Using a :ref:`filter` instead of an index is more robust.
+    .. tip:: A :ref:`filter` is more robust than an index.
     .. seealso:: :func:`jsonyx.make_patch` for making a patch.
 
     """

@@ -126,7 +126,7 @@ Writing to a file:
 ...
 '["filesystem API"]\n'
 
-.. tip:: Using :class:`jsonyx.Encoder` is faster.
+.. tip:: Use :class:`jsonyx.Encoder` directly for better performance.
 
 Compact encoding
 ^^^^^^^^^^^^^^^^
@@ -156,11 +156,11 @@ Pretty printing
     "bar": {"a": 1, "b": 2, "c": 3}
 }
 
-.. tip:: Use
+.. tip::
 
-    - ``ensure_ascii=True`` to escape non-ASCII characters.
-    - ``max_indent_level=1`` to indent up to level 1.
-    - ``sort_keys=True`` to sort the keys of objects.
+    - Use ``ensure_ascii=True`` to escape non-ASCII characters.
+    - Use ``max_indent_level=1`` to indent up to level 1.
+    - Use ``sort_keys=True`` to sort the keys of objects.
 
 .. seealso:: The built-in :mod:`pprint` module for pretty-printing arbitrary
     Python data structures.
@@ -196,7 +196,7 @@ Reading from a file:
 ...
 ['filesystem API']
 
-.. tip:: Using :class:`jsonyx.Decoder` is faster.
+.. tip:: Use :class:`jsonyx.Decoder` directly for better performance.
 
 Using :class:`decimal.Decimal` instead of :class:`float`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -234,8 +234,8 @@ Applying a :doc:`patch </json-patch-spec>`
 
 .. tip::
 
-    - Using a :ref:`filter` instead of an index is more robust.
-    - Using :class:`jsonyx.Manipulator` is faster.
+    - A :ref:`filter` is more robust than an index.
+    - Use :class:`jsonyx.Manipulator` directly for better performance.
 
 Using the ``jsonyx`` application
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

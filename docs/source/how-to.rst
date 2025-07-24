@@ -121,7 +121,7 @@ Encoding arbitrary objects
 >>> json.dump(1 + 2j, hook=complex_hook)
 {"__complex__": true, "real": 1.0, "imag": 2.0}
 
-.. tip:: You can use :func:`functools.singledispatch` to make this extensible.
+.. tip:: Use :func:`functools.singledispatch` to make this extensible.
 .. warning:: This function is called for **every object** during encoding, even
   if the object is normally serializable.
 .. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
