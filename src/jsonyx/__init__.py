@@ -231,7 +231,7 @@ def loads(
         >>> json.loads(r'"\"foo\bar"')
         '"foo\x08ar'
 
-    .. tip:: Specify ``filename`` to display it in error messages.
+    .. tip:: Specify ``filename`` to display the filename in error messages.
     .. seealso::
 
         - :func:`jsonyx.read` for deserializing from a file.
