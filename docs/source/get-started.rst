@@ -156,9 +156,12 @@ Pretty printing
     "bar": {"a": 1, "b": 2, "c": 3}
 }
 
-.. tip:: Use ``ensure_ascii=True`` to escape non-ASCII characters,
-    ``max_indent_level=1`` to indent up to level 1, and ``sort_keys=True`` to
-    sort the keys of objects.
+.. tip:: Use
+
+    - ``ensure_ascii=True`` to escape non-ASCII characters.
+    - ``max_indent_level=1`` to indent up to level 1.
+    - ``sort_keys=True`` to sort the keys of objects.
+
 .. seealso:: The built-in :mod:`pprint` module for pretty-printing arbitrary
     Python data structures.
 
