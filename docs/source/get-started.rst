@@ -229,7 +229,10 @@ Applying a :doc:`patch </json-patch-spec>`
 >>> json.apply_patch([1, 2, 3], {"op": "del", "path": "$[1]"})
 [1, 3]
 
-.. tip:: Using a :ref:`filter` instead of an index is more robust.
+.. tip::
+
+    - Using a :ref:`filter` instead of an index is more robust.
+    - Using :class:`jsonyx.Manipulator` is faster.
 
 Using the ``jsonyx`` application
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
