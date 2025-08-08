@@ -2,9 +2,13 @@ name: pytest
 on:
   create:
   push:
-    paths: src/**
+    paths:
+    - src/**
+    - .github/workflows/**
   pull_request:
-    paths: src/**
+    paths:
+    - src/**
+    - .github/workflows/**
   workflow_dispatch:
 jobs:
   build:
