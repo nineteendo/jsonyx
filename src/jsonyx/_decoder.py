@@ -658,31 +658,6 @@ class Decoder:
             "trailing_comma" in allow, "unquoted_keys" in allow, cache_keys,
         )
 
-    def read(self, filename: _StrPath) -> Any:
-        """Deserialize a JSON file to a Python object.
-
-        :param filename: the path to the JSON file
-        :raises OSError: if the file can't be opened
-        :raises RecursionError: if the JSON file is too deeply nested
-        :raises TruncatedSyntaxError: when failing to decode the file
-        :raises ValueError: if a number is too big
-        :return: a Python object
-
-        Example:
-            >>> import jsonyx as json
-            >>> from pathlib import Path
-            >>> from tempfile import TemporaryDirectory
-            >>> decoder = json.Decoder()
-            >>> with TemporaryDirectory() as tmpdir:
-            ...     filename = Path(tmpdir) / "file.json"
-            ...     _ = filename.write_text('["filesystem API"]', "utf-8")
-            ...     decoder.read(filename)
-            ...
-            ['filesystem API']
-
-        """
-        return self.loads(Path(filename).read_bytes(), filename=filename)
-
     def load(
         self, fp: _SupportsRead[bytes | str], *, root: _StrPath = ".",
     ) -> Any:
@@ -696,11 +671,28 @@ class Decoder:
         :return: a Python object
 
         Example:
+            Reading from an open file:
+
             >>> import jsonyx as json
             >>> from io import StringIO
             >>> decoder = json.Decoder()
             >>> io = StringIO('["streaming API"]')
             >>> decoder.load(io)
+            ['streaming API']
+
+            Reading from a file:
+
+            >>> import jsonyx as json
+            >>> from os.path import join
+            >>> from tempfile import TemporaryDirectory
+            >>> decoder = json.Decoder()
+            >>> with TemporaryDirectory() as tmpdir:
+            ...     filename = join(tmpdir, "file.json")
+            ...     with open(filename, "w", encoding="utf-8") as fp:
+            ...         _ = fp.write('["streaming API"]')
+            ...     with open(filename, "rb") as fp:
+            ...         decoder.load(fp)
+            ...
             ['streaming API']
 
         .. tip:: Specify ``root`` to display the zip filename in error

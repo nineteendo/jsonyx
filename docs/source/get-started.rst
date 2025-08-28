@@ -117,14 +117,16 @@ Writing to an open file:
 Writing to a file:
 
 >>> import jsonyx as json
->>> from pathlib import Path
+>>> from os.path import join
 >>> from tempfile import TemporaryDirectory
 >>> with TemporaryDirectory() as tmpdir:
-...     filename = Path(tmpdir) / "file.json"
-...     json.write(["filesystem API"], filename)
-...     filename.read_text("utf-8")
+...     filename = join(tmpdir, "file.json")
+...     with open(filename, "w", encoding="utf-8") as fp:
+...         json.dump(["streaming API"], fp)
+...     with open(filename, "r", encoding="utf-8") as fp:
+...         fp.read()
 ...
-'["filesystem API"]\n'
+'["streaming API"]\n'
 
 .. tip:: Use :class:`jsonyx.Encoder` directly for better performance.
 
@@ -187,14 +189,16 @@ Reading from an open file:
 Reading from a file:
 
 >>> import jsonyx as json
->>> from pathlib import Path
+>>> from os.path import join
 >>> from tempfile import TemporaryDirectory
 >>> with TemporaryDirectory() as tmpdir:
-...     filename = Path(tmpdir) / "file.json"
-...     _ = filename.write_text('["filesystem API"]', "utf-8")
-...     json.read(filename)
+...     filename = join(tmpdir, "file.json")
+...     with open(filename, "w", encoding="utf-8") as fp:
+...         _ = fp.write('["streaming API"]')
+...     with open(filename, "rb") as fp:
+...         json.load(fp)
 ...
-['filesystem API']
+['streaming API']
 
 .. tip:: Use :class:`jsonyx.Decoder` directly for better performance.
 

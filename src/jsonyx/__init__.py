@@ -17,9 +17,7 @@ __all__: list[str] = [
     "load_query_value",
     "loads",
     "make_patch",
-    "read",
     "select_nodes",
-    "write",
 ]
 __version__: str = "2.4.0"
 
@@ -104,54 +102,6 @@ def format_syntax_error(exc: TruncatedSyntaxError) -> list[str]:
     ]
 
 
-def read(
-    filename: _StrPath,
-    *,
-    allow: Container[str] = NOTHING,
-    cache_keys: bool = False,
-    hooks: dict[str, _Hook] | None = None,
-) -> Any:
-    """Deserialize a JSON file to a Python object.
-
-    .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
-    .. versionchanged:: 2.2
-
-        - Added ``cache_keys``.
-        - Disabled caching keys by default.
-
-    :param filename: the path to the JSON file
-    :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param cache_keys: re-use the keys of objects
-    :param hooks: the :ref:`hooks <decoding_hooks>` used for transforming data
-    :raises OSError: if the file can't be opened
-    :raises RecursionError: if the JSON file is too deeply nested
-    :raises TruncatedSyntaxError: when failing to decode the file
-    :raises ValueError: if a number is too big
-    :return: a Python object.
-
-    Example:
-        >>> import jsonyx as json
-        >>> from pathlib import Path
-        >>> from tempfile import TemporaryDirectory
-        >>> with TemporaryDirectory() as tmpdir:
-        ...     filename = Path(tmpdir) / "file.json"
-        ...     _ = filename.write_text('["filesystem API"]', "utf-8")
-        ...     json.read(filename)
-        ...
-        ['filesystem API']
-
-    .. seealso::
-
-        - :func:`jsonyx.load` for deserializing from an open file.
-        - :func:`jsonyx.loads` for deserializing from a string.
-        - :func:`jsonyx.write` for serializing to a file.
-
-    """
-    return Decoder(
-        allow=allow, cache_keys=cache_keys, hooks=hooks,
-    ).read(filename)
-
-
 def load(
     fp: _SupportsRead[bytes | str],
     *,
@@ -179,10 +129,26 @@ def load(
     :return: a Python object
 
     Example:
+        Reading from an open file:
+
         >>> import jsonyx as json
         >>> from io import StringIO
         >>> io = StringIO('["streaming API"]')
         >>> json.load(io)
+        ['streaming API']
+
+        Reading from a file:
+
+        >>> import jsonyx as json
+        >>> from os.path import join
+        >>> from tempfile import TemporaryDirectory
+        >>> with TemporaryDirectory() as tmpdir:
+        ...     filename = join(tmpdir, "file.json")
+        ...     with open(filename, "w", encoding="utf-8") as fp:
+        ...         _ = fp.write('["streaming API"]')
+        ...     with open(filename, "rb") as fp:
+        ...         json.load(fp)
+        ...
         ['streaming API']
 
     .. tip:: Specify ``root`` to display the zip filename in error messages.
@@ -242,104 +208,6 @@ def loads(
     return Decoder(
         allow=allow, cache_keys=cache_keys, hooks=hooks,
     ).loads(s, filename=filename)
-
-
-def write(
-    obj: object,
-    filename: _StrPath,
-    encoding: str = "utf-8",
-    *,
-    allow: Container[str] = NOTHING,
-    check_circular: bool = True,
-    commas: bool = True,
-    end: str = "\n",
-    ensure_ascii: bool = False,
-    hook: _Hook | None = None,
-    indent: int | str | None = None,
-    indent_leaves: bool = True,
-    max_indent_level: int | None = None,
-    quoted_keys: bool = True,
-    separators: tuple[str, str] = (", ", ": "),
-    skipkeys: bool = False,
-    sort_keys: bool = False,
-    trailing_comma: bool = False,
-    types: dict[str, type | tuple[type, ...]] | None = None,
-) -> None:
-    r"""Serialize a Python object to a JSON file.
-
-    .. versionchanged:: 2.0
-
-        - Added ``commas``, ``encoding``, ``indent_leaves``,
-          ``max_indent_level``, ``quoted_keys`` and ``types``.
-        - Made :class:`tuple` serializable by default instead of
-          :class:`enum.Enum` and :class:`decimal.Decimal`.
-        - Replaced ``item_separator`` and ``key_separator`` with
-          ``separators``.
-
-    .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
-        ``skipkeys``.
-
-    :param obj: a Python object
-    :param filename: the path to the JSON file
-    :param encoding: the JSON encoding
-    :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param check_circular: check for circular references
-    :param commas: separate items by commas when indented
-    :param end: the string to append at the end
-    :param ensure_ascii: escape non-ASCII characters
-    :param hook: the :ref:`hook <encoding_hook>` used for transforming data
-    :param indent: the number of spaces or string to indent with
-    :param indent_leaves: indent leaf objects and arrays
-    :param max_indent_level: the level up to which to indent
-    :param quoted_keys: quote keys which are :ref:`identifiers <identifiers>`
-    :param separators: the item and key separator
-    :param skipkeys: skip non-string keys
-    :param sort_keys: sort the keys of objects
-    :param trailing_comma: add a trailing comma when indented
-    :param types: a dictionary of :ref:`additional types <protocol_types>`
-    :raises OSError: if the file can't be opened
-    :raises RecursionError: if the object is too deeply nested
-    :raises TypeError: for unserializable values
-    :raises TruncatedSyntaxError: when failing to encode the file
-    :raises ValueError: for invalid values
-
-    Example:
-        >>> import jsonyx as json
-        >>> from pathlib import Path
-        >>> from tempfile import TemporaryDirectory
-        >>> with TemporaryDirectory() as tmpdir:
-        ...     filename = Path(tmpdir) / "file.json"
-        ...     json.write(["filesystem API"], filename)
-        ...     filename.read_text("utf-8")
-        ...
-        '["filesystem API"]\n'
-
-    .. note:: The item separator is automatically stripped when indented.
-    .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
-    .. seealso::
-
-        - :func:`jsonyx.dump` for serializing to an open file.
-        - :func:`jsonyx.dumps` for serializing to a string.
-        - :func:`jsonyx.read` for deserializing from a file.
-
-    """
-    Encoder(
-        allow=allow,
-        check_circular=check_circular,
-        commas=commas,
-        end=end,
-        ensure_ascii=ensure_ascii,
-        hook=hook,
-        indent=indent,
-        indent_leaves=indent_leaves,
-        max_indent_level=max_indent_level,
-        quoted_keys=quoted_keys,
-        separators=separators,
-        skipkeys=skipkeys,
-        sort_keys=sort_keys,
-        trailing_comma=trailing_comma,
-        types=types,
-    ).write(obj, filename, encoding)
 
 
 def dump(
@@ -416,6 +284,20 @@ def dump(
         >>> io = StringIO()
         >>> json.dump(["streaming API"], io)
         >>> io.getvalue()
+        '["streaming API"]\n'
+
+        Writing to a file:
+
+        >>> import jsonyx as json
+        >>> from os.path import join
+        >>> from tempfile import TemporaryDirectory
+        >>> with TemporaryDirectory() as tmpdir:
+        ...     filename = join(tmpdir, "file.json")
+        ...     with open(filename, "w", encoding="utf-8") as fp:
+        ...         json.dump(["streaming API"], fp)
+        ...     with open(filename, "r", encoding="utf-8") as fp:
+        ...         fp.read()
+        ...
         '["streaming API"]\n'
 
     .. note:: The item separator is automatically stripped when indented.

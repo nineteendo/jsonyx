@@ -7,6 +7,7 @@ __all__: list[str] = ["main"]
 import sys
 from argparse import ArgumentParser
 from decimal import Decimal
+from pathlib import Path
 from sys import modules, stderr, stdin
 from traceback import format_exception_only
 from typing import Any, Literal, cast
@@ -218,7 +219,8 @@ def _run(args: _Namespace) -> None:
     )
     try:
         if args.input_filename and args.input_filename != "-":
-            input_obj: object = decoder.read(args.input_filename)
+            with Path(args.input_filename).open("rb") as fp:
+                input_obj: object = decoder.load(fp)
         elif stdin.isatty():
             input_obj = decoder.loads(
                 "\n".join(iter(input, "")), filename="<stdin>",
@@ -230,11 +232,13 @@ def _run(args: _Namespace) -> None:
             output_obj: Any = input_obj
         elif args.command == "patch":
             args = cast("_PatchNameSpace", args)
-            patch: Any = decoder.read(args.patch_filename)
+            with Path(args.patch_filename).open("rb") as fp:
+                patch: Any = decoder.load(fp)
             output_obj = manipulator.apply_patch(input_obj, patch)
         else:
             args = cast("_DiffNameSpace", args)
-            old_input_obj: object = decoder.read(args.old_input_filename)
+            with Path(args.old_input_filename).open("rb") as fp:
+                old_input_obj: object = decoder.load(fp)
             output_obj = make_patch(old_input_obj, input_obj)
             if len(output_obj) == 1:
                 output_obj = output_obj[0]
@@ -249,7 +253,8 @@ def _run(args: _Namespace) -> None:
         sys.exit(1)
 
     if args.output_filename and args.output_filename != "-":
-        encoder.write(output_obj, args.output_filename)
+        with Path(args.output_filename).open("w", encoding="utf-8") as fp:
+            encoder.dump(output_obj, fp)
     else:
         encoder.dump(output_obj)
 

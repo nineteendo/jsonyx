@@ -15,6 +15,8 @@ jsonyx 2.4.0 (unreleased)
 
 Breaking Changes:
     - Changed serialization of string :class:`enum.Enum`
+    - Removed :data:`!jsonyx.Encoder.write`, :data:`!jsonyx.Decoder.read`,
+      :data:`!jsonyx.write` and :data:`!jsonyx.read`
 
 Other Changes:
     - Improved error messages

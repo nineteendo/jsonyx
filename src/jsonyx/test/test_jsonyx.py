@@ -4,8 +4,6 @@ from __future__ import annotations
 __all__: list[str] = []
 
 from io import StringIO
-from pathlib import Path
-from tempfile import TemporaryDirectory
 from typing import TYPE_CHECKING
 
 import pytest
@@ -91,11 +89,3 @@ def test_format_syntax_error(
 def test_load(json: ModuleType) -> None:
     """Test JSON load."""
     assert json.load(StringIO("0")) == 0
-
-
-def test_read(json: ModuleType) -> None:
-    """Test JSON read."""
-    with TemporaryDirectory() as tmpdir:
-        filename: Path = Path(tmpdir) / "file.json"
-        filename.write_text("0", "utf-8")
-        assert json.read(filename) == 0
