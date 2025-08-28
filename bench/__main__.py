@@ -8,7 +8,6 @@ import json
 import sys
 from functools import partial
 from math import inf
-from pathlib import Path
 from random import randint, random, seed
 from sys import maxsize
 from timeit import Timer
@@ -37,35 +36,22 @@ if TYPE_CHECKING:
     _Func = Callable[[Any], Any]
 
 seed(0)
-_USER: dict[str, Any] = {
-    "userId": 3381293,
-    "age": 213,
-    "username": "johndoe",
-    "fullname": "John Doe the Second",
-    "isAuthorized": True,
-    "liked": 31231.31231202,
-    "approval": 31.1471,
-    "jobs": [1, 2],
-    "currJob": None,
-}
-_FRIENDS: list[dict[str, Any]] = [_USER] * 8
 _ENCODE_CASES: dict[str, Any] = {
-    "List of 256 booleans": [True] * 256,
-    "List of 256 ASCII strings": [
+    "List of 65,536 booleans": [True] * 65_536,
+    "List of 65,536 ints": [
+        randint(0, 1_000_000) for _ in range(65_536)  # noqa: S311
+    ],
+    "Dict with 65,536 booleans": {
+        str(random() * 20): True for _ in range(65_536)  # noqa: S311
+    },
+    "List of 65,536 empty strings": [""] * 65_536,
+    "List of 65,536 ASCII strings": [
         "A pretty long string which is in a list",
-    ] * 256,
-    "List of 256 ints": [
-        randint(0, 1_000_000) for _ in range(256)  # noqa: S311
+    ] * 65_536,
+    "List of 65,536 floats": [
+        maxsize * random() for _ in range(65_536)  # noqa: S311
     ],
-    "List of 256 floats": [
-        maxsize * random() for _ in range(256)  # noqa: S311
-    ],
-    "List of 256 dicts with 1 int": [
-        {str(random() * 20): randint(0, 1_000_000)}  # noqa: S311
-        for _ in range(256)
-    ],
-    "Medium complex object": [[_USER, _FRIENDS]] * 6,
-    "List of 256 strings": [
+    "List of 65,536 strings": [
         "\u0646\u0638\u0627\u0645 \u0627\u0644\u062d\u0643\u0645 \u0633\u0644"
         "\u0637\u0627\u0646\u064a \u0648\u0631\u0627\u062b\u064a \u0641\u064a "
         "\u0627\u0644\u0630\u0643\u0648\u0631 \u0645\u0646 \u0630\u0631\u064a"
@@ -79,15 +65,7 @@ _ENCODE_CASES: dict[str, Any] = {
         "\u064b\u0648\u0627\u0628\u0646\u0627 \u0634\u0631\u0639\u064a\u0627 "
         "\u0644\u0627\u0628\u0648\u064a\u0646 \u0639\u0645\u0627\u0646\u064a"
         "\u064a\u0646 ",
-    ] * 256,
-    "Complex object": jsonyx.read(Path(__file__).parent / "sample.json"),
-    "Dict with 256 lists of 256 dicts with 1 int": {
-        str(random() * 20): [  # noqa: S311
-            {str(random() * 20): randint(0, 1_000_000)}  # noqa: S311
-            for _ in range(256)
-        ]
-        for _ in range(256)
-    },
+    ] * 65_536,
 }
 
 
@@ -104,7 +82,7 @@ _ENCODE_FUNCS: dict[str, _Func] = {
     "orjson": orjson.dumps,
 }
 _DECODE_CASES: dict[str, Any] = {
-    case: jsonyx.dumps(obj) for case, obj in _ENCODE_CASES.items()
+    case: json.dumps(obj) for case, obj in _ENCODE_CASES.items()
 }
 _DECODE_FUNCS: dict[str, _Func] = {
     "json": json.JSONDecoder().decode,
