@@ -154,7 +154,6 @@ def load(
     .. tip:: Specify ``root`` to display the zip filename in error messages.
     .. seealso::
 
-        - :func:`jsonyx.read` for deserializing from a file.
         - :func:`jsonyx.loads` for deserializing from a string.
         - :func:`jsonyx.dump` for serializing to an open file.
 
@@ -200,7 +199,6 @@ def loads(
     .. tip:: Specify ``filename`` to display the filename in error messages.
     .. seealso::
 
-        - :func:`jsonyx.read` for deserializing from a file.
         - :func:`jsonyx.load` for deserializing from an open file.
         - :func:`jsonyx.dumps` for serializing to a string.
 
@@ -304,7 +302,6 @@ def dump(
     .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
     .. seealso::
 
-        - :func:`jsonyx.write` for serializing to a file.
         - :func:`jsonyx.dumps` for serializing to a string.
         - :func:`jsonyx.load` for deserializing from an open file.
 
@@ -391,7 +388,6 @@ def dumps(
     .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
     .. seealso::
 
-        - :func:`jsonyx.write` for serializing to a file.
         - :func:`jsonyx.dump` for serializing to an open file.
         - :func:`jsonyx.load` for deserializing from a string.
 

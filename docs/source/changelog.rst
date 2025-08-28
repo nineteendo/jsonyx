@@ -39,11 +39,11 @@ jsonyx 2.2.0 (Mar 31, 2025)
 
 New Features:
     - Added ``cache_keys`` to :class:`jsonyx.Decoder`, :func:`jsonyx.load`,
-      :func:`jsonyx.loads` and :func:`jsonyx.read`
+      :func:`jsonyx.loads` and :func:`!jsonyx.read`
 
 Breaking Changes:
     - Disabled caching keys by default for :class:`jsonyx.Decoder`,
-      :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`jsonyx.read`
+      :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`!jsonyx.read`
 
 jsonyx 2.1.0 (Mar 30, 2025)
 ---------------------------
@@ -51,7 +51,7 @@ jsonyx 2.1.0 (Mar 30, 2025)
 New Features:
     - Added ``check_circular``, ``hook`` and ``skipkeys`` to
       :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
-      :func:`jsonyx.write`
+      :func:`!jsonyx.write`
 
 jsonyx 2.0.0 (Mar 27, 2025)
 ---------------------------
@@ -60,9 +60,9 @@ New Features:
     - Added the ``jsonyx`` application
     - Added ``commas``, ``indent_leaves``, ``max_indent_level``,
       ``quoted_keys`` and ``types`` to :class:`jsonyx.Encoder`,
-      :func:`jsonyx.dump`, :func:`jsonyx.dumps` and :func:`jsonyx.write`
-    - Added ``encoding`` to :func:`jsonyx.write` and
-      :meth:`jsonyx.Encoder.write`
+      :func:`jsonyx.dump`, :func:`jsonyx.dumps` and :func:`!jsonyx.write`
+    - Added ``encoding`` to :func:`!jsonyx.write` and
+      :meth:`!jsonyx.Encoder.write`
     - Added ``python -m jsonyx diff``
     - Added ``python -m jsonyx patch``
     - Added ``--no-indent-leaves`` (alias ``-l``) to
@@ -91,9 +91,9 @@ Breaking Changes:
     - Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
     - Replaced ``item_separator`` and ``key_separator`` with ``separators`` for
       :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
-      :func:`jsonyx.write`
+      :func:`!jsonyx.write`
     - Replaced ``use_decimal`` with ``hooks`` for :class:`jsonyx.Decoder`,
-      :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`jsonyx.read`
+      :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`!jsonyx.read`
 
 Other Changes:
     - Added cache for indentations in the JSON encoder
