@@ -45,6 +45,8 @@ Key Features
                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
       jsonyx.JSONSyntaxError: Unterminated object
 
+Check out the :doc:`/get-started` section for further information, including
+how to :ref:`install <installation>` the project.
 
 Benchmark (Apr 30, 2025)
 ------------------------
@@ -267,9 +269,6 @@ performance critical applications:
     encoding and up to 46.71x slower for decoding, so make sure you have a
     `C compiler <https://wiki.python.org/moin/WindowsCompilers>`_ installed on
     Windows.
-
-Check out the :doc:`/get-started` section for further information, including
-how to :ref:`install <installation>` the project.
 
 .. rubric:: Footnotes
 
