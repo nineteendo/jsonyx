@@ -409,7 +409,6 @@ class Encoder:
             ensure_ascii, indent_leaves, quoted_keys, skipkeys, sort_keys,
             commas and trailing_comma,
         )
-        self._errors: str = "surrogatepass" if allow_surrogates else "strict"
 
     def dump(self, obj: object, fp: _SupportsWrite[str] | None = None) -> None:
         r"""Serialize a Python object to an open JSON file.

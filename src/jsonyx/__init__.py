@@ -152,6 +152,7 @@ def load(
         ['streaming API']
 
     .. tip:: Specify ``root`` to display the zip filename in error messages.
+    .. note:: The encoding is detected using :func:`jsonyx.detect_encoding`.
     .. seealso::
 
         - :func:`jsonyx.loads` for deserializing from a string.

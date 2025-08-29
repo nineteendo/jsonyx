@@ -196,12 +196,13 @@ def _configure(parser: ArgumentParser) -> None:
 
 
 def _run(args: _Namespace) -> None:
+    allow: frozenset[str] = EVERYTHING if args.nonstrict else NOTHING
+    errors: str = "surrogatepass" if args.nonstrict else "strict"
     decoder: Decoder = Decoder(
-        allow=EVERYTHING if args.nonstrict else NOTHING,
-        hooks={"float": Decimal if args.use_decimal else float},
+        allow=allow, hooks={"float": Decimal if args.use_decimal else float},
     )
     encoder: Encoder = Encoder(
-        allow=EVERYTHING if args.nonstrict else NOTHING,
+        allow=allow,
         commas=args.commas,
         ensure_ascii=args.ensure_ascii,
         indent=args.indent,
@@ -214,8 +215,7 @@ def _run(args: _Namespace) -> None:
         types={"float": Decimal},
     )
     manipulator: Manipulator = Manipulator(
-        allow=EVERYTHING if args.nonstrict else NOTHING,
-        use_decimal=args.use_decimal,
+        allow=allow, use_decimal=args.use_decimal,
     )
     try:
         if args.input_filename and args.input_filename != "-":
@@ -253,7 +253,7 @@ def _run(args: _Namespace) -> None:
         sys.exit(1)
 
     if args.output_filename and args.output_filename != "-":
-        with Path(args.output_filename).open("w", encoding="utf-8") as fp:
+        with Path(args.output_filename).open("w", -1, "utf-8", errors) as fp:
             encoder.dump(output_obj, fp)
     else:
         encoder.dump(output_obj)

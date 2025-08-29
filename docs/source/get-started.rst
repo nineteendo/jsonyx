@@ -201,6 +201,7 @@ Reading from a file:
 ['streaming API']
 
 .. tip:: Use :class:`jsonyx.Decoder` directly for better performance.
+.. note:: The encoding is detected using :func:`jsonyx.detect_encoding`.
 
 Using :class:`decimal.Decimal` instead of :class:`float`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

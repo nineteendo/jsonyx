@@ -78,9 +78,8 @@ r"""Allow unpaired surrogates in strings.
 >>> json.dump("\ud800", allow=jsonyx.allow.SURROGATES, ensure_ascii=True)
 "\ud800"
 
-.. tip:: If you're not using ``read()`` or ``write()``, you still need to
-    use ``ensure_ascii=True`` or set the unicode error handler to
-    ``"surrogatepass"``.
+.. note:: You still need to use ``ensure_ascii=True`` or set the unicode error
+    handler to ``"surrogatepass"``.
 """
 
 TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
