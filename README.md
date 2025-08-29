@@ -43,7 +43,6 @@ The documentation for `jsonyx` is available online at: https://jsonyx.readthedoc
                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     jsonyx.JSONSyntaxError: Unterminated object
     ```
-- Dedicated functions for reading and writing files and pretty printing
 
 ## Benchmark (Apr 30, 2025)
 
