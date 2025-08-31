@@ -12,17 +12,17 @@
 is written in pure Python with an optional C extension for better performance
 and no dependencies.
 
-The documentation for `jsonyx` is available online at: https://jsonyx.readthedocs.io
-
 ## Key Features
 
-- JSON encoding and decoding:
+- JSON encoding, decoding and patching:
     ```python
     >>> import jsonyx as json
     >>> json.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
     '["foo", {"bar": ["baz", null, 1.0, 2]}]\n
     >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
     {'foo': ['bar', None, 1.0, 2]}
+    >>> json.apply_patch([1, 2, 3], {"op": "del", "path": "$[1]"})
+    [1, 3]
     ```
 - Pretty printing:
     ```json
@@ -50,3 +50,5 @@ The documentation for `jsonyx` is available online at: https://jsonyx.readthedoc
                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     jsonyx.JSONSyntaxError: Unterminated object
     ```
+
+The documentation for `jsonyx` is available online at: https://jsonyx.readthedocs.io
