@@ -11,7 +11,14 @@ performance and no dependencies.
 Key Features
 ------------
 
-- JSON decoding, encoding and patching
+- JSON encoding and decoding:
+
+    >>> import jsonyx as json
+    >>> json.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
+    '["foo", {"bar": ["baz", null, 1.0, 2]}]\n
+    >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
+    {'foo': ['bar', None, 1.0, 2]}
+
 - Pretty-printing:
 
   .. code-block:: json
