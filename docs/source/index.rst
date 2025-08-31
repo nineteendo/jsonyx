@@ -15,7 +15,7 @@ Key Features
 
     >>> import jsonyx as json
     >>> json.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
-    '["foo", {"bar": ["baz", null, 1.0, 2]}]\n
+    '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
     >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
     {'foo': ['bar', None, 1.0, 2]}
     >>> json.apply_patch([1, 2, 3], {"op": "del", "path": "$[1]"})
