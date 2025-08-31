@@ -1991,30 +1991,33 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
     }
     else {
         indented = false;
-        PyObject *values = PyMapping_Values(mapping);
-        if (values == NULL)
-            goto bail;
-
-        for (Py_ssize_t  i = 0; i < PyList_GET_SIZE(values); i++) {
-            PyObject *obj = PyList_GET_ITEM(values, i);
-            if (s->hook != Py_None) {
-                obj = PyObject_CallOneArg(s->hook, obj);
-                if (obj == NULL) {
-                    goto bail;
+        {
+            // TODO: make threadsafe
+            PyObject *values = PyMapping_Values(mapping);
+            if (values == NULL)
+                goto bail;
+    
+            for (Py_ssize_t  i = 0; i < PyList_GET_SIZE(values); i++) {
+                PyObject *obj = PyList_GET_ITEM(values, i);
+                if (s->hook != Py_None) {
+                    obj = PyObject_CallOneArg(s->hook, obj);
+                    if (obj == NULL) {
+                        goto bail;
+                    }
+                }
+                if (PyList_Check(obj) || PyTuple_Check(obj) || PyDict_Check(obj) ||
+                    PyObject_IsInstance(obj, s->array_types) ||
+                    PyObject_IsInstance(obj, s->object_types))
+                {
+                    if (PyErr_Occurred()) {
+                        goto bail;
+                    }
+                    indented = true;
+                    break;
                 }
             }
-            if (PyList_Check(obj) || PyTuple_Check(obj) || PyDict_Check(obj) ||
-                PyObject_IsInstance(obj, s->array_types) ||
-                PyObject_IsInstance(obj, s->object_types))
-            {
-                if (PyErr_Occurred()) {
-                    goto bail;
-                }
-                indented = true;
-                break;
-            }
+            Py_CLEAR(values);
         }
-        Py_CLEAR(values);
     }
 
     PyObject *separator;
@@ -2040,21 +2043,29 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
         }
 
         int result;
+#if defined Py_BEGIN_CRITICAL_SECTION
         Py_BEGIN_CRITICAL_SECTION(items);
+#endif
         result = _encoder_iterate_mapping_lock_held(s, markers, writer, &first,
                     indented, items, indent_level, indent_cache, separator);
+#if defined Py_END_CRITICAL_SECTION
         Py_END_CRITICAL_SECTION();
+#endif
         Py_DECREF(items);
         if (result < 0) {
             goto bail;
         }
     } else {
         int result;
+#if defined Py_BEGIN_CRITICAL_SECTION
         Py_BEGIN_CRITICAL_SECTION(mapping);
+#endif
         result = _encoder_iterate_dict_lock_held(s, markers, writer, &first,
                             mapping, indented, indent_level, indent_cache,
                             separator);
+#if defined Py_END_CRITICAL_SECTION
         Py_END_CRITICAL_SECTION();
+#endif
         if (result < 0) {
             goto bail;
         }
@@ -2165,23 +2176,26 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers,
     }
     else {
         indented = false;
-        for (i = 0; i < PySequence_Fast_GET_SIZE(s_fast); i++) {
-            PyObject *obj = PySequence_Fast_GET_ITEM(s_fast, i);
-            if (s->hook != Py_None) {
-                obj = PyObject_CallOneArg(s->hook, obj);
-                if (obj == NULL) {
-                    goto bail;
+        {
+            // TODO: make threadsafe
+            for (i = 0; i < PySequence_Fast_GET_SIZE(s_fast); i++) {
+                PyObject *obj = PySequence_Fast_GET_ITEM(s_fast, i);
+                if (s->hook != Py_None) {
+                    obj = PyObject_CallOneArg(s->hook, obj);
+                    if (obj == NULL) {
+                        goto bail;
+                    }
                 }
-            }
-            if (PyList_Check(obj) || PyTuple_Check(obj) || PyDict_Check(obj) ||
-                PyObject_IsInstance(obj, s->array_types) ||
-                PyObject_IsInstance(obj, s->object_types))
-            {
-                if (PyErr_Occurred()) {
-                    goto bail;
+                if (PyList_Check(obj) || PyTuple_Check(obj) || PyDict_Check(obj) ||
+                    PyObject_IsInstance(obj, s->array_types) ||
+                    PyObject_IsInstance(obj, s->object_types))
+                {
+                    if (PyErr_Occurred()) {
+                        goto bail;
+                    }
+                    indented = true;
+                    break;
                 }
-                indented = true;
-                break;
             }
         }
     }
@@ -2202,10 +2216,14 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers,
     }
     bool first = true;
     int result;
+#if defined Py_BEGIN_CRITICAL_SECTION
     Py_BEGIN_CRITICAL_SECTION(seq);
+#endif
     result = _encoder_iterate_fast_seq_lock_held(s, markers, writer, &first,
                      s_fast, indented, indent_level, indent_cache, separator);
+#if defined Py_END_CRITICAL_SECTION
     Py_END_CRITICAL_SECTION();
+#endif
     if (result < 0) {
         goto bail;
     }
