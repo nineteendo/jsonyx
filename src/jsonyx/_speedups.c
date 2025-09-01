@@ -2149,7 +2149,7 @@ _encoder_is_indented_sequence_lock_held(PyEncoderObject *s, PyObject *s_fast)
             // gh-119438: in the free-threading build the critical section on s_fast can get suspended
             Py_INCREF(obj);
         #endif
-        PyObject *new_obj
+        PyObject *new_obj;
         if (s->hook != Py_None) {
             new_obj = PyObject_CallOneArg(s->hook, obj);
             if (new_obj == NULL) {
