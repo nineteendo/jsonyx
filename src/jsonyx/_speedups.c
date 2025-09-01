@@ -1,4 +1,5 @@
 /* JSON speedups */
+// TODO(Nice Zombies): Use public unicode writer API
 
 #include <Python.h>
 #include <stdbool.h> // bool
