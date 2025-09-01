@@ -123,9 +123,6 @@ def _run_benchmark(
     headers: list[str] = [name, *funcs.keys(), "fastest\xa0time"]
     colalign: list[str] = ["left"] + ["right"] * (len(funcs) + 1)
     print()
-    if sys.version_info >= (3, 13):
-        print(tabulate(results, headers, "pipe", colalign=colalign))
-
     print(tabulate(results, headers, "rst", colalign=colalign))
     print(f"{name} speedup: {max(speedups):.02f}x")
 
