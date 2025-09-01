@@ -729,7 +729,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
                     goto bail;
                 Py_CLEAR(key);
                 Py_CLEAR(val);
-                int rv = PyList_Append(rval, item)
+                int rv = PyList_Append(rval, item);
                 Py_DECREF(item);
                 if (rv == -1) {
                     goto bail;
@@ -1386,14 +1386,17 @@ static int
 update_indent_cache(PyEncoderObject *s,
                     Py_ssize_t indent_level, PyObject *indent_cache)
 {
+    PyObject *newline_indent = NULL;
+    PyObject *separator_indent = NULL;
+
     assert(indent_level * 2 == PyList_GET_SIZE(indent_cache) + 1);
     assert(indent_level > 0);
-    PyObject *newline_indent = PyList_GET_ITEM(indent_cache, (indent_level - 1)*2);
+    newline_indent = PyList_GET_ITEM(indent_cache, (indent_level - 1)*2);
     newline_indent = PyUnicode_Concat(newline_indent, s->indent);
     if (newline_indent == NULL) {
         goto bail;
     }
-    PyObject *separator_indent = PyUnicode_Concat(s->item_separator, newline_indent);
+    separator_indent = PyUnicode_Concat(s->item_separator, newline_indent);
     if (separator_indent == NULL) {
         goto bail;
     }
@@ -1888,7 +1891,33 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
 }
 
 static inline int
-_encoder_iterate_mapping_lock_held(PyEncoderObject *s, PyObject *markers,
+_encoder_is_indented_mapping_lock_held(PyEncoderObject *s, PyObject *values)
+{
+    // TODO: make threadsafe
+    for (Py_ssize_t  i = 0; i < PyList_GET_SIZE(values); i++) {
+        PyObject *obj = PyList_GET_ITEM(values, i);
+        if (s->hook != Py_None) {
+            obj = PyObject_CallOneArg(s->hook, obj);
+            if (obj == NULL) {
+                return -1;
+            }
+        }
+        if (PyList_Check(obj) || PyTuple_Check(obj) || PyDict_Check(obj) ||
+            PyObject_IsInstance(obj, s->array_types) ||
+            PyObject_IsInstance(obj, s->object_types))
+        {
+            if (PyErr_Occurred()) {
+                return -1;
+            }
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+static inline int
+_encoder_encode_mapping_lock_held(PyEncoderObject *s, PyObject *markers,
                             _PyUnicodeWriter *writer, bool *first,
                             bool indented, PyObject *items,
                             Py_ssize_t indent_level, PyObject *indent_cache,
@@ -1930,7 +1959,7 @@ bail:
 }
 
 static inline int
-_encoder_iterate_dict_lock_held(PyEncoderObject *s, PyObject *markers,
+_encoder_encode_dict_lock_held(PyEncoderObject *s, PyObject *markers,
                          _PyUnicodeWriter *writer, bool *first, PyObject *dct,
                          bool indented, Py_ssize_t indent_level,
                          PyObject *indent_cache, PyObject *separator)
@@ -2000,35 +2029,13 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
         indented = true;
     }
     else {
-        indented = false;
-        {
-            // TODO: make threadsafe
-            PyObject *values = PyMapping_Values(mapping);
-            if (values == NULL)
-                goto bail;
-    
-            for (Py_ssize_t  i = 0; i < PyList_GET_SIZE(values); i++) {
-                PyObject *obj = PyList_GET_ITEM(values, i);
-                if (s->hook != Py_None) {
-                    obj = PyObject_CallOneArg(s->hook, obj);
-                    if (obj == NULL) {
-                        Py_DECREF(values);
-                        goto bail;
-                    }
-                }
-                if (PyList_Check(obj) || PyTuple_Check(obj) || PyDict_Check(obj) ||
-                    PyObject_IsInstance(obj, s->array_types) ||
-                    PyObject_IsInstance(obj, s->object_types))
-                {
-                    if (PyErr_Occurred()) {
-                        Py_DECREF(values);
-                        goto bail;
-                    }
-                    indented = true;
-                    break;
-                }
-            }
-            Py_DECREF(values);
+        PyObject *values = PyMapping_Values(mapping);
+        if (values == NULL)
+            goto bail;
+        indented = _encoder_is_indented_mapping_lock_held(s, values);
+        Py_DECREF(values);
+        if (indented < 0) {
+            goto bail;
         }
     }
 
@@ -2058,7 +2065,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
 #if defined Py_BEGIN_CRITICAL_SECTION
         Py_BEGIN_CRITICAL_SECTION(items);
 #endif
-        result = _encoder_iterate_mapping_lock_held(s, markers, writer, &first,
+        result = _encoder_encode_mapping_lock_held(s, markers, writer, &first,
                     indented, items, indent_level, indent_cache, separator);
 #if defined Py_END_CRITICAL_SECTION
         Py_END_CRITICAL_SECTION();
@@ -2072,7 +2079,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
 #if defined Py_BEGIN_CRITICAL_SECTION
         Py_BEGIN_CRITICAL_SECTION(mapping);
 #endif
-        result = _encoder_iterate_dict_lock_held(s, markers, writer, &first,
+        result = _encoder_encode_dict_lock_held(s, markers, writer, &first,
                             mapping, indented, indent_level, indent_cache,
                             separator);
 #if defined Py_END_CRITICAL_SECTION
@@ -2107,7 +2114,33 @@ bail:
 }
 
 static inline int
-_encoder_iterate_fast_seq_lock_held(PyEncoderObject *s, PyObject *markers,
+_encoder_is_indented_sequence_lock_held(PyEncoderObject *s, PyObject *s_fast)
+{
+    // TODO: make threadsafe
+    for (Py_ssize_t i = 0; i < PySequence_Fast_GET_SIZE(s_fast); i++) {
+        PyObject *obj = PySequence_Fast_GET_ITEM(s_fast, i);
+        if (s->hook != Py_None) {
+            obj = PyObject_CallOneArg(s->hook, obj);
+            if (obj == NULL) {
+                return -1;
+            }
+        }
+        if (PyList_Check(obj) || PyTuple_Check(obj) || PyDict_Check(obj) ||
+            PyObject_IsInstance(obj, s->array_types) ||
+            PyObject_IsInstance(obj, s->object_types))
+        {
+            if (PyErr_Occurred()) {
+                return -1;
+            }
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+static inline int
+_encoder_encode_sequence_lock_held(PyEncoderObject *s, PyObject *markers,
     _PyUnicodeWriter *writer, bool *first, PyObject *s_fast, bool indented,
     Py_ssize_t indent_level, PyObject *indent_cache, PyObject *separator)
 {
@@ -2153,7 +2186,6 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers,
 {
     PyObject *ident = NULL;
     PyObject *s_fast = NULL;
-    Py_ssize_t i;
 
     s_fast = PySequence_Fast(seq, "encoder_listencode_list needs a sequence");
     if (s_fast == NULL)
@@ -2188,29 +2220,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers,
         indented = true;
     }
     else {
-        indented = false;
-        {
-            // TODO: make threadsafe
-            for (i = 0; i < PySequence_Fast_GET_SIZE(s_fast); i++) {
-                PyObject *obj = PySequence_Fast_GET_ITEM(s_fast, i);
-                if (s->hook != Py_None) {
-                    obj = PyObject_CallOneArg(s->hook, obj);
-                    if (obj == NULL) {
-                        goto bail;
-                    }
-                }
-                if (PyList_Check(obj) || PyTuple_Check(obj) || PyDict_Check(obj) ||
-                    PyObject_IsInstance(obj, s->array_types) ||
-                    PyObject_IsInstance(obj, s->object_types))
-                {
-                    if (PyErr_Occurred()) {
-                        goto bail;
-                    }
-                    indented = true;
-                    break;
-                }
-            }
-        }
+        indented = _encoder_is_indented_sequence_lock_held(s, s_fast);
     }
 
     PyObject *separator;
@@ -2232,7 +2242,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers,
 #if defined Py_BEGIN_CRITICAL_SECTION
     Py_BEGIN_CRITICAL_SECTION(seq);
 #endif
-    result = _encoder_iterate_fast_seq_lock_held(s, markers, writer, &first,
+    result = _encoder_encode_sequence_lock_held(s, markers, writer, &first,
                      s_fast, indented, indent_level, indent_cache, separator);
 #if defined Py_END_CRITICAL_SECTION
     Py_END_CRITICAL_SECTION();
