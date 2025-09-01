@@ -516,7 +516,8 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, co
             if (Py_UNICODE_IS_HIGH_SURROGATE(c)) {
                 if (end + 2 < len &&
                     PyUnicode_READ(kind, str, next++) == '\\' &&
-                    PyUnicode_READ(kind, str, next++) == 'u') {
+                    PyUnicode_READ(kind, str, next++) == 'u')
+                {
                     if (end + 6 > len) {
                         raise_errmsg("Expecting 4 hex digits", pyfilename, pystr, end + 2, -4);
                         goto bail;
@@ -728,11 +729,11 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
                     goto bail;
                 Py_CLEAR(key);
                 Py_CLEAR(val);
-                if (PyList_Append(rval, item) == -1) {
-                    Py_DECREF(item);
+                int rv = PyList_Append(rval, item)
+                Py_DECREF(item);
+                if (rv == -1) {
                     goto bail;
                 }
-                Py_DECREF(item);
             }
             else {
                 if (PyDict_SetItem(rval, key, val) < 0)
@@ -1080,7 +1081,8 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
             if ((idx + 4 < len) && PyUnicode_READ(kind, str, idx + 1) == 'a' &&
                 PyUnicode_READ(kind, str, idx + 2) == 'l' &&
                 PyUnicode_READ(kind, str, idx + 3) == 's' &&
-                PyUnicode_READ(kind, str, idx + 4) == 'e') {
+                PyUnicode_READ(kind, str, idx + 4) == 'e')
+            {
                 *next_idx_ptr = idx + 5;
                 if (s->bool_hook != (PyObject *)&PyBool_Type) {
                     return PyObject_CallOneArg(s->bool_hook, Py_False);
@@ -1091,7 +1093,8 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
         case 'N':
             /* NaN */
             if ((idx + 2 < len) && PyUnicode_READ(kind, str, idx + 1) == 'a' &&
-                PyUnicode_READ(kind, str, idx + 2) == 'N') {
+                PyUnicode_READ(kind, str, idx + 2) == 'N')
+            {
                 if (!s->allow_nan_and_infinity) {
                     raise_errmsg("NaN is not allowed", pyfilename, pystr, idx, idx + 3);
                     return NULL;
@@ -1116,7 +1119,8 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
                 PyUnicode_READ(kind, str, idx + 4) == 'n' &&
                 PyUnicode_READ(kind, str, idx + 5) == 'i' &&
                 PyUnicode_READ(kind, str, idx + 6) == 't' &&
-                PyUnicode_READ(kind, str, idx + 7) == 'y') {
+                PyUnicode_READ(kind, str, idx + 7) == 'y')
+            {
                 if (!s->allow_nan_and_infinity) {
                     raise_errmsg("Infinity is not allowed", pyfilename, pystr, idx, idx + 8);
                     return NULL;
@@ -1142,7 +1146,8 @@ scan_once_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, PyOb
                 PyUnicode_READ(kind, str, idx + 5) == 'n' &&
                 PyUnicode_READ(kind, str, idx + 6) == 'i' &&
                 PyUnicode_READ(kind, str, idx + 7) == 't' &&
-                PyUnicode_READ(kind, str, idx + 8) == 'y') {
+                PyUnicode_READ(kind, str, idx + 8) == 'y')
+            {
                 *next_idx_ptr = idx + 9;
                 if (!s->allow_nan_and_infinity) {
                     raise_errmsg("-Infinity is not allowed", pyfilename, pystr, idx, idx + 9);
@@ -1386,23 +1391,25 @@ update_indent_cache(PyEncoderObject *s,
     PyObject *newline_indent = PyList_GET_ITEM(indent_cache, (indent_level - 1)*2);
     newline_indent = PyUnicode_Concat(newline_indent, s->indent);
     if (newline_indent == NULL) {
-        return -1;
+        goto bail;
     }
     PyObject *separator_indent = PyUnicode_Concat(s->item_separator, newline_indent);
     if (separator_indent == NULL) {
-        Py_DECREF(newline_indent);
-        return -1;
+        goto bail;
     }
     if (PyList_Append(indent_cache, separator_indent) < 0 ||
         PyList_Append(indent_cache, newline_indent) < 0)
     {
-        Py_DECREF(separator_indent);
-        Py_DECREF(newline_indent);
-        return -1;
+        goto bail;
     }
     Py_DECREF(separator_indent);
     Py_DECREF(newline_indent);
     return 0;
+
+bail:
+    Py_XDECREF(separator_indent);
+    Py_XDECREF(newline_indent);
+    return -1;
 }
 
 static PyObject *
@@ -1465,10 +1472,10 @@ encoder_call(PyObject *op, PyObject *args, PyObject *kwds)
         goto bail;
     }
 
-    Py_DECREF(markers);
     if (_PyUnicodeWriter_WriteStr(&writer, self->end) < 0) {
         goto bail;
     }
+    Py_DECREF(markers);
     return _PyUnicodeWriter_Finish(&writer);
 
 bail:
@@ -1887,30 +1894,26 @@ _encoder_iterate_mapping_lock_held(PyEncoderObject *s, PyObject *markers,
                             Py_ssize_t indent_level, PyObject *indent_cache,
                             PyObject *separator)
 {
+    PyObject *item = NULL;
     PyObject *key, *value;
     for (Py_ssize_t  i = 0; i < PyList_GET_SIZE(items); i++) {
-        PyObject *item = PyList_GET_ITEM(items, i);
+        item = PyList_GET_ITEM(items, i);
 #ifdef Py_GIL_DISABLED
         // gh-119438: in the free-threading build the critical section on items can get suspended
         Py_INCREF(item);
 #endif
         if (!PyTuple_Check(item) || PyTuple_GET_SIZE(item) != 2) {
             PyErr_SetString(PyExc_ValueError, "items must return 2-tuples");
-#ifdef Py_GIL_DISABLED
-            Py_DECREF(item);
-#endif
-            return -1;
+            goto bail;
         }
 
         key = PyTuple_GET_ITEM(item, 0);
         value = PyTuple_GET_ITEM(item, 1);
         if (encoder_encode_key_value(s, markers, writer, first, indented,
                                      key, value, indent_level, indent_cache,
-                                     separator) < 0) {
-#ifdef Py_GIL_DISABLED
-            Py_DECREF(item);
-#endif
-            return -1;
+                                     separator) < 0)
+        {
+            goto bail;
         }
 #ifdef Py_GIL_DISABLED
         Py_DECREF(item);
@@ -1918,6 +1921,12 @@ _encoder_iterate_mapping_lock_held(PyEncoderObject *s, PyObject *markers,
     }
 
     return 0;
+
+bail:
+#ifdef Py_GIL_DISABLED
+    Py_DECREF(item);
+#endif
+    return -1;
 }
 
 static inline int
@@ -1936,7 +1945,8 @@ _encoder_iterate_dict_lock_held(PyEncoderObject *s, PyObject *markers,
 #endif
         if (encoder_encode_key_value(s, markers, writer, first, indented, key,
                                     value, indent_level, indent_cache,
-                                    separator) < 0) {
+                                    separator) < 0)
+        {
 #ifdef Py_GIL_DISABLED
             Py_DECREF(key);
             Py_DECREF(value);
@@ -2002,6 +2012,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
                 if (s->hook != Py_None) {
                     obj = PyObject_CallOneArg(s->hook, obj);
                     if (obj == NULL) {
+                        Py_DECREF(values);
                         goto bail;
                     }
                 }
@@ -2010,13 +2021,14 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
                     PyObject_IsInstance(obj, s->object_types))
                 {
                     if (PyErr_Occurred()) {
+                        Py_DECREF(values);
                         goto bail;
                     }
                     indented = true;
                     break;
                 }
             }
-            Py_CLEAR(values);
+            Py_DECREF(values);
         }
     }
 
@@ -2099,8 +2111,9 @@ _encoder_iterate_fast_seq_lock_held(PyEncoderObject *s, PyObject *markers,
     _PyUnicodeWriter *writer, bool *first, PyObject *s_fast, bool indented,
     Py_ssize_t indent_level, PyObject *indent_cache, PyObject *separator)
 {
+    PyObject *obj = NULL;
     for (Py_ssize_t i = 0; i < PySequence_Fast_GET_SIZE(s_fast); i++) {
-        PyObject *obj = PySequence_Fast_GET_ITEM(s_fast, i);
+        obj = PySequence_Fast_GET_ITEM(s_fast, i);
 #ifdef Py_GIL_DISABLED
         // gh-119438: in the free-threading build the critical section on s_fast can get suspended
         Py_INCREF(obj);
@@ -2110,27 +2123,27 @@ _encoder_iterate_fast_seq_lock_held(PyEncoderObject *s, PyObject *markers,
             if (indented &&
                 write_newline_indent(writer, indent_level, indent_cache) < 0)
             {
-                return -1;
+                goto bail;
             }
         } else {
             if (_PyUnicodeWriter_WriteStr(writer, separator) < 0) {
-#ifdef Py_GIL_DISABLED
-                Py_DECREF(obj);
-#endif
-                return -1;
+                goto bail;
             }
         }
         if (encoder_listencode_obj(s, markers, writer, obj, indent_level, indent_cache)) {
-#ifdef Py_GIL_DISABLED
-            Py_DECREF(obj);
-#endif
-            return -1;
+            goto bail;
         }
 #ifdef Py_GIL_DISABLED
         Py_DECREF(obj);
 #endif
     }
     return 0;
+
+bail:
+#ifdef Py_GIL_DISABLED
+    Py_DECREF(obj);
+#endif
+    return -1;
 }
 
 static int
