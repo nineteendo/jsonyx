@@ -1892,11 +1892,15 @@ encoder_encode_key_value(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter
 }
 
 static inline int
-_encoder_is_indented_mapping(PyEncoderObject *s, PyObject *values)
+_encoder_is_indented_mapping_lock_held(PyEncoderObject *s, PyObject *values)
 {
     PyObject *obj = NULL;
     for (Py_ssize_t  i = 0; i < PyList_GET_SIZE(values); i++) {
         obj = PyList_GET_ITEM(values, i);
+        #ifdef Py_GIL_DISABLED
+            // gh-119438: in the free-threading build the critical section on values can get suspended
+            Py_INCREF(obj);
+        #endif
         PyObject *new_obj;
         if (s->hook != Py_None) {
             new_obj = PyObject_CallOneArg(s->hook, obj);
@@ -1914,18 +1918,27 @@ _encoder_is_indented_mapping(PyEncoderObject *s, PyObject *values)
             if (PyErr_Occurred()) {
                 goto bail;
             }
+#ifdef Py_GIL_DISABLED
+            Py_DECREF(obj);
+#endif
             return 1;
         }
+#ifdef Py_GIL_DISABLED
+        Py_DECREF(obj);
+#endif
     }
 
     return 0;
 
 bail:
+#ifdef Py_GIL_DISABLED
+    Py_DECREF(obj);
+#endif
     return -1;
 }
 
 static inline int
-_encoder_encode_mapping(PyEncoderObject *s, PyObject *markers,
+_encoder_encode_mapping_lock_held(PyEncoderObject *s, PyObject *markers,
                             _PyUnicodeWriter *writer, bool *first,
                             bool indented, PyObject *items,
                             Py_ssize_t indent_level, PyObject *indent_cache,
@@ -1935,6 +1948,10 @@ _encoder_encode_mapping(PyEncoderObject *s, PyObject *markers,
     PyObject *key, *value;
     for (Py_ssize_t  i = 0; i < PyList_GET_SIZE(items); i++) {
         item = PyList_GET_ITEM(items, i);
+#ifdef Py_GIL_DISABLED
+        // gh-119438: in the free-threading build the critical section on items can get suspended
+        Py_INCREF(item);
+#endif
         if (!PyTuple_Check(item) || PyTuple_GET_SIZE(item) != 2) {
             PyErr_SetString(PyExc_ValueError, "items must return 2-tuples");
             goto bail;
@@ -1948,16 +1965,22 @@ _encoder_encode_mapping(PyEncoderObject *s, PyObject *markers,
         {
             goto bail;
         }
+#ifdef Py_GIL_DISABLED
+        Py_DECREF(item);
+#endif
     }
 
     return 0;
 
 bail:
+#ifdef Py_GIL_DISABLED
+    Py_DECREF(item);
+#endif
     return -1;
 }
 
 static inline int
-_encoder_encode_dict(PyEncoderObject *s, PyObject *markers,
+_encoder_encode_dict_lock_held(PyEncoderObject *s, PyObject *markers,
                          _PyUnicodeWriter *writer, bool *first, PyObject *dct,
                          bool indented, Py_ssize_t indent_level,
                          PyObject *indent_cache, PyObject *separator)
@@ -1965,12 +1988,25 @@ _encoder_encode_dict(PyEncoderObject *s, PyObject *markers,
     PyObject *key, *value;
     Py_ssize_t pos = 0;
     while (PyDict_Next(dct, &pos, &key, &value)) {
+#ifdef Py_GIL_DISABLED
+        // gh-119438: in the free-threading build the critical section on mapping can get suspended
+        Py_INCREF(key);
+        Py_INCREF(value);
+#endif
         if (encoder_encode_key_value(s, markers, writer, first, indented, key,
                                      value, indent_level, indent_cache,
                                      separator) < 0)
         {
+#ifdef Py_GIL_DISABLED
+            Py_DECREF(key);
+            Py_DECREF(value);
+#endif
             return -1;
         }
+#ifdef Py_GIL_DISABLED
+        Py_DECREF(key);
+        Py_DECREF(value);
+#endif
     }
     // PyDict_Next could return an error, we need to handle it
     if (PyErr_Occurred())
@@ -2020,7 +2056,13 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
         PyObject *values = PyMapping_Values(mapping);
         if (values == NULL)
             goto bail;
-        indented = _encoder_is_indented_mapping(s, values);
+#if defined Py_BEGIN_CRITICAL_SECTION
+        Py_BEGIN_CRITICAL_SECTION(values);
+#endif
+        indented = _encoder_is_indented_mapping_lock_held(s, values);
+#if defined Py_END_CRITICAL_SECTION
+        Py_END_CRITICAL_SECTION();
+#endif
         Py_DECREF(values);
         if (indented < 0) {
             goto bail;
@@ -2050,17 +2092,29 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
         }
 
         int result;
-        result = _encoder_encode_mapping(s, markers, writer, &first,
+#if defined Py_BEGIN_CRITICAL_SECTION
+        Py_BEGIN_CRITICAL_SECTION(items);
+#endif
+        result = _encoder_encode_mapping_lock_held(s, markers, writer, &first,
                     indented, items, indent_level, indent_cache, separator);
+#if defined Py_END_CRITICAL_SECTION
+        Py_END_CRITICAL_SECTION();
+#endif
         Py_DECREF(items);
         if (result < 0) {
             goto bail;
         }
     } else {
         int result;
-        result = _encoder_encode_dict(s, markers, writer, &first,
+#if defined Py_BEGIN_CRITICAL_SECTION
+        Py_BEGIN_CRITICAL_SECTION(mapping);
+#endif
+        result = _encoder_encode_dict_lock_held(s, markers, writer, &first,
                             mapping, indented, indent_level, indent_cache,
                             separator);
+#if defined Py_END_CRITICAL_SECTION
+        Py_END_CRITICAL_SECTION();
+#endif
         if (result < 0) {
             goto bail;
         }
@@ -2090,11 +2144,15 @@ bail:
 }
 
 static inline int
-_encoder_is_indented_sequence(PyEncoderObject *s, PyObject *s_fast)
+_encoder_is_indented_sequence_lock_held(PyEncoderObject *s, PyObject *s_fast)
 {
     PyObject *obj = NULL;
     for (Py_ssize_t i = 0; i < PySequence_Fast_GET_SIZE(s_fast); i++) {
         obj = PySequence_Fast_GET_ITEM(s_fast, i);
+        #ifdef Py_GIL_DISABLED
+            // gh-119438: in the free-threading build the critical section on s_fast can get suspended
+            Py_INCREF(obj);
+        #endif
         PyObject *new_obj;
         if (s->hook != Py_None) {
             new_obj = PyObject_CallOneArg(s->hook, obj);
@@ -2112,25 +2170,38 @@ _encoder_is_indented_sequence(PyEncoderObject *s, PyObject *s_fast)
             if (PyErr_Occurred()) {
                 goto bail;
             }
+#ifdef Py_GIL_DISABLED
+            Py_DECREF(obj);
+#endif
             return 1;
         }
 
+#ifdef Py_GIL_DISABLED
+        Py_DECREF(obj);
+#endif
     }
 
     return 0;
 
 bail:
+#ifdef Py_GIL_DISABLED
+    Py_DECREF(obj);
+#endif
     return -1;
 }
 
 static inline int
-_encoder_encode_sequence(PyEncoderObject *s, PyObject *markers,
+_encoder_encode_sequence_lock_held(PyEncoderObject *s, PyObject *markers,
     _PyUnicodeWriter *writer, bool *first, PyObject *s_fast, bool indented,
     Py_ssize_t indent_level, PyObject *indent_cache, PyObject *separator)
 {
     PyObject *obj = NULL;
     for (Py_ssize_t i = 0; i < PySequence_Fast_GET_SIZE(s_fast); i++) {
         obj = PySequence_Fast_GET_ITEM(s_fast, i);
+#ifdef Py_GIL_DISABLED
+        // gh-119438: in the free-threading build the critical section on s_fast can get suspended
+        Py_INCREF(obj);
+#endif
         if (*first) {
             *first = false;
             if (indented &&
@@ -2146,10 +2217,16 @@ _encoder_encode_sequence(PyEncoderObject *s, PyObject *markers,
         if (encoder_listencode_obj(s, markers, writer, obj, indent_level, indent_cache)) {
             goto bail;
         }
+#ifdef Py_GIL_DISABLED
+        Py_DECREF(obj);
+#endif
     }
     return 0;
 
 bail:
+#ifdef Py_GIL_DISABLED
+    Py_DECREF(obj);
+#endif
     return -1;
 }
 
@@ -2194,7 +2271,13 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers,
         indented = true;
     }
     else {
-        indented = _encoder_is_indented_sequence(s, s_fast);
+#if defined Py_BEGIN_CRITICAL_SECTION
+        Py_BEGIN_CRITICAL_SECTION(s_fast);
+#endif
+        indented = _encoder_is_indented_sequence_lock_held(s, s_fast);
+#if defined Py_END_CRITICAL_SECTION
+    Py_END_CRITICAL_SECTION();
+#endif
     }
 
     PyObject *separator;
@@ -2213,8 +2296,14 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers,
     }
     bool first = true;
     int result;
-    result = _encoder_encode_sequence(s, markers, writer, &first,
+#if defined Py_BEGIN_CRITICAL_SECTION
+    Py_BEGIN_CRITICAL_SECTION(s_fast);
+#endif
+    result = _encoder_encode_sequence_lock_held(s, markers, writer, &first,
                      s_fast, indented, indent_level, indent_cache, separator);
+#if defined Py_END_CRITICAL_SECTION
+    Py_END_CRITICAL_SECTION();
+#endif
     if (result < 0) {
         goto bail;
     }

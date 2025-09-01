@@ -13,6 +13,9 @@ Changelog
 jsonyx 2.4.0 (unreleased)
 -------------------------
 
+Changes:
+    - Added free threading support
+
 Breaking Changes:
     - Changed serialization of string :class:`enum.Enum`
     - Removed :data:`!jsonyx.Encoder.write`, :data:`!jsonyx.Decoder.read`,

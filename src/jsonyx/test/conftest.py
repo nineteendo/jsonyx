@@ -1,7 +1,7 @@
 """pytest fixtures."""
 from __future__ import annotations
 
-__all__: list[str] = ["get_big_num", "get_json"]
+__all__: list[str] = ["get_big_num", "get_cjson", "get_json"]
 
 import sys
 from typing import TYPE_CHECKING
@@ -32,6 +32,17 @@ def get_big_num() -> str:
         pytest.skip("requires integer string conversion length limit")
 
     return "1" + "0" * sys.get_int_max_str_digits()
+
+
+@pytest.fixture(name="cjson")
+def get_cjson() -> ModuleType:
+    """Get cjson."""
+    if cjson is None:
+        pytest.xfail("module unavailable")
+        # pylint: disable-next=W0101
+        pytest.fail("module unavailable")
+
+    return cjson  # type: ignore[no-any-return]
 
 
 @pytest.fixture(params=[cjson, pyjson], ids=["cjson", "pyjson"], name="json")
