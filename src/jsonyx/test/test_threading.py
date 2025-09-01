@@ -27,16 +27,18 @@ def _encode_json_helper(
     worker_threads: list[Thread] = [Thread(
         target=worker, args=[barrier, data, index],
     ) for index in range(number_of_threads)]
-    for t in worker_threads:
-        t.start()
+    try:
+        for t in worker_threads:
+            t.start()
 
-    for _ in range(number_of_json_encodings):
-        types: dict[str, type] = {"object": UserDict}
-        json.dumps(data, allow=jsonyx.allow.NON_STR_KEYS, types=types)
+        for _ in range(number_of_json_encodings):
+            types: dict[str, type] = {"object": UserDict}
+            json.dumps(data, allow=jsonyx.allow.NON_STR_KEYS, types=types)
 
-    data.clear()
-    for t in worker_threads:
-        t.join()
+    finally:
+        data.clear()
+        for t in worker_threads:
+            t.join()
 
 
 def test_mutating_list(cjson: ModuleType) -> None:
