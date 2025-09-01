@@ -1993,8 +1993,8 @@ _encoder_encode_dict_lock_held(PyEncoderObject *s, PyObject *markers,
         Py_INCREF(value);
 #endif
         if (encoder_encode_key_value(s, markers, writer, first, indented, key,
-                                    value, indent_level, indent_cache,
-                                    separator) < 0)
+                                     value, indent_level, indent_cache,
+                                     separator) < 0)
         {
 #ifdef Py_GIL_DISABLED
             Py_DECREF(key);
@@ -2007,6 +2007,9 @@ _encoder_encode_dict_lock_held(PyEncoderObject *s, PyObject *markers,
         Py_DECREF(value);
 #endif
     }
+    // PyDict_Next could return an error, we need to handle it
+    if (PyErr_Occurred())
+        return -1;
     return 0;
 }
 
