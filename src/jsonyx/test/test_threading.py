@@ -49,8 +49,11 @@ def _encode_json_helper(
             t.start()
 
         for _ in range(number_of_json_encodings):
+            allow: frozenset[str] = jsonyx.allow.NON_STR_KEYS
             types: dict[str, type] = {"object": _MyMapping}
-            json.dumps(data, allow=jsonyx.allow.NON_STR_KEYS, types=types)
+            json.dumps(
+                data, allow=allow, indent=1, indent_leaves=False, types=types,
+            )
 
     finally:
         data.clear()
@@ -98,7 +101,11 @@ def test_mutating_mapping(cjson: ModuleType) -> None:
             for d in data:
                 if len(d.items()) > 5:
                     d.items().clear()
+                    d.keys().clear()
+                    d.values().clear()
                 else:
                     d.items().append((index, index))
+                    d.keys().append(index)
+                    d.values().append(index)
     data: list[_MyMapping] = [_MyMapping(), _MyMapping()]
     _encode_json_helper(cjson, worker, data)
