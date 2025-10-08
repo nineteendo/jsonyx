@@ -1,5 +1,6 @@
 /* JSON speedups */
 // TODO(Nice Zombies): Use public unicode writer API
+// TODO(Nice Zombies): Request float writer
 
 #include <Python.h>
 #include <stdbool.h> // bool

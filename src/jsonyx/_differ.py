@@ -6,7 +6,7 @@ __all__: list[str] = ["make_patch"]
 import re
 from decimal import Decimal
 from math import isnan
-from re import DOTALL, MULTILINE, VERBOSE, Pattern
+from re import DOTALL, MULTILINE, VERBOSE, Pattern, RegexFlag
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -16,9 +16,8 @@ if TYPE_CHECKING:
 
 _REPL: str = r"~\1"
 
-_ESCAPE_CHARS: Pattern[str] = re.compile(
-    r"(['~])", VERBOSE | MULTILINE | DOTALL,
-)
+_FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
+_ESCAPE_CHARS: Pattern[str] = re.compile(r"(['~])", _FLAGS)
 
 
 def _encode_query_key(key: str) -> str:
