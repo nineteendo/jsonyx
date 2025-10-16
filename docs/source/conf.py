@@ -59,6 +59,7 @@ html_baseurl: str = environ.get(
 )
 html_context: dict[str, Any] = {
     "breadcrumb_include_page": True,
+    "breadcrumb_top_level": False,
     "conf_py_path": "/docs/source/",
     "display_github": True,
     "github_user": "nineteendo",

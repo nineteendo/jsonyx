@@ -1,5 +1,5 @@
 sphinx==8.2.3
-furo @ git+https://github.com/nineteendo/furo@df7fd07bcba5e56136fa7806730a2386412fe5ff
+furo @ git+https://github.com/nineteendo/furo@8fddca6415525753e8086b0289106dc34d7368eb
 matplotlib==3.10.1
 sphinx-autodoc-typehints==3.2.0
 sphinx-copybutton==0.5.2
