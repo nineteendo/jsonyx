@@ -7,5 +7,5 @@ sphinx_inline_tabs @ git+https://github.com/pradyunsg/sphinx-inline-tabs@5e91213
 sphinx-issues==5.0.1
 sphinx-last-updated-by-git==0.3.8
 sphinx-notfound-page==1.1.0
-sphinx-sitemap==2.8.0
+sphinx-sitemap==2.9.0
 sphinxext-opengraph==0.13.0
