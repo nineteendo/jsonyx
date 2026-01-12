@@ -1,7 +1,7 @@
 sphinx==9.1.0
 furo @ git+https://github.com/nineteendo/furo@9d23caa4b785d29067a1782735a42a75fb5755a6
 matplotlib==3.10.8
-sphinx-autodoc-typehints==3.5.2
+sphinx-autodoc-typehints==3.6.0
 sphinx-copybutton==0.5.2
 sphinx_inline_tabs==2025.12.21.14
 sphinx-issues==5.0.1
