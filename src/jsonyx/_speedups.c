@@ -381,11 +381,11 @@ raise_errmsg(const char *msg, PyObject *filename, PyObject *s, Py_ssize_t start,
 
     PyObject *exc;
     exc = PyObject_CallFunction(JSONSyntaxError, "zOOnn", msg, filename, s, start, end);
-    Py_DECREF(JSONSyntaxError);
     if (exc) {
         PyErr_SetObject(JSONSyntaxError, exc);
         Py_DECREF(exc);
     }
+    Py_DECREF(JSONSyntaxError);
 }
 
 static PyObject *
