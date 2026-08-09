@@ -221,7 +221,7 @@ except ImportError:
             first: bool = True
             items: ItemsView[object, object] = mapping.items()
             for key, value in sorted(items) if sort_keys else items:
-                key = hook(key)  # noqa: PLW2901
+                key = hook(key)  # ruff: ignore[PLW2901]
                 if isinstance(key, (str, str_types)):
                     s = str(key)
                 else:
@@ -399,6 +399,7 @@ class Encoder:
         if types is None:
             types = {}
 
+        # pylint: disable-next=E0606
         self._encoder: _Encoder = make_encoder(
             types.get("array", ()), types.get("bool", ()),
             types.get("float", ()), hook, indent, types.get("int", ()),

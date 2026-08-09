@@ -565,9 +565,9 @@ except ImportError:
             elif s[idx:idx + 4] == "null":
                 value, end = None, idx + 4
             elif s[idx:idx + 4] == "true":
-                value, end = bool_hook(True), idx + 4  # noqa: FBT003
+                value, end = bool_hook(True), idx + 4  # ruff: ignore[FBT003]
             elif s[idx:idx + 5] == "false":
-                value, end = bool_hook(False), idx + 5  # noqa: FBT003
+                value, end = bool_hook(False), idx + 5  # ruff: ignore[FBT003]
             elif match := _NUMBER.match(s, idx):
                 (integer, frac, exp), end = match.groups(), match.end()
                 if not frac and not exp:
@@ -649,6 +649,7 @@ class Decoder:
         if hooks is None:
             hooks = {}
 
+        # pylint: disable-next=E0606
         self._scanner: _Scanner = make_scanner(
             hooks.get("array", list), hooks.get("bool", bool),
             hooks.get("float", float), hooks.get("int", int),
@@ -738,7 +739,7 @@ class Decoder:
         if not isinstance(s, str):
             encoding = detect_encoding(s)
             try:
-                s = s.decode(encoding, self._errors)  # type: ignore
+                s = s.decode(encoding, self._errors)
             except UnicodeDecodeError as exc:
                 msg: str = f"(unicode error) {exc}"
                 doc: str = exc.object.decode(encoding, "replace")
@@ -750,7 +751,7 @@ class Decoder:
                     msg, filename, doc, len(start), len(end),
                 ) from None
 
-        return self._scanner(filename, s)  # type: ignore
+        return self._scanner(filename, s)
 
 
 Decoder.__module__ = "jsonyx"

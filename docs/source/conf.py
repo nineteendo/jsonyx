@@ -1,4 +1,5 @@
 """Configuration file for the Sphinx documentation builder."""
+# pylint: disable=C0103
 from __future__ import annotations
 
 from datetime import datetime, timezone
@@ -12,7 +13,7 @@ year: int = datetime.now(tz=timezone.utc).year
 
 author: str = "Nice Zombies"
 # pylint: disable-next=W0622
-copyright: str = f"{year}, Nice Zombies"  # noqa: A001
+copyright: str = f"{year}, Nice Zombies"  # ruff: ignore[A001]
 release: str = "2.4"  # 2.4.0
 project: str = "jsonyx"
 version: str = "latest" if branch == "main" else branch

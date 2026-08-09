@@ -38,20 +38,19 @@ if TYPE_CHECKING:
 seed(0)
 _ENCODE_CASES: dict[str, Any] = {
     "List of 65,536 booleans": [True] * 65_536,
-    "List of 65,536 ints": [
-        randint(0, 1_000_000) for _ in range(65_536)  # noqa: S311
-    ],
+    # ruff: ignore[S311]
+    "List of 65,536 ints": [randint(0, 1_000_000) for _ in range(65_536)],
     "Dict with 65,536 booleans": {
-        str(random() * 20): True for _ in range(65_536)  # noqa: S311
+        str(random() * 20): True for _ in range(65_536)  # ruff: ignore[S311]
     },
     "List of 65,536 empty strings": [""] * 65_536,
     "List of 65,536 ASCII strings": [
         "A pretty long string which is in a list",
     ] * 65_536,
-    "List of 65,536 floats": [
-        maxsize * random() for _ in range(65_536)  # noqa: S311
-    ],
+    # ruff: ignore[S311]
+    "List of 65,536 floats": [maxsize * random() for _ in range(65_536)],
     "List of 65,536 strings": [
+        # ruff: ignore[ISC004]
         "\u0646\u0638\u0627\u0645 \u0627\u0644\u062d\u0643\u0645 \u0633\u0644"
         "\u0637\u0627\u0646\u064a \u0648\u0631\u0627\u062b\u064a \u0641\u064a "
         "\u0627\u0644\u0630\u0643\u0648\u0631 \u0645\u0646 \u0630\u0631\u064a"

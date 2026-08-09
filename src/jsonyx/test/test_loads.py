@@ -30,14 +30,16 @@ class _MyBool:
         return bool(self.value)
 
 
-@pytest.mark.parametrize("s", ["\ud800", "\ud800$", "\udf48"])  # noqa: PT014
+# ruff: ignore[PT014]
+@pytest.mark.parametrize("s", ["\ud800", "\ud800$", "\udf48"])
 def test_surrogate(json: ModuleType, s: str) -> None:
     """Test surrogate."""
     b: bytes = f'"{s}"'.encode(errors="surrogatepass")
     assert json.loads(b, allow=SURROGATES) == s
 
 
-@pytest.mark.parametrize("s", ["\ud800", "\ud800$", "\udf48"])  # noqa: PT014
+# ruff: ignore[PT014]
+@pytest.mark.parametrize("s", ["\ud800", "\ud800$", "\udf48"])
 def test_surrogate_not_allowed(json: ModuleType, s: str) -> None:
     """Test surrogate when not allowed."""
     b: bytes = f'"{s}"'.encode(errors="surrogatepass")
@@ -171,7 +173,7 @@ def test_invalid_number(json: ModuleType, s: str) -> None:
     "\U001096b3",
 
     # Surrogates
-    "\ud800", "\ud800$", "\udf48",  # noqa: PT014
+    "\ud800", "\ud800$", "\udf48",  # ruff: ignore[PT014]
 
     # Multiple characters
     "foo",

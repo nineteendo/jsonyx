@@ -144,7 +144,8 @@ def test_start_and_end_position(
         #         ^^^^                     ^^^^^^
         (9, "start\ud800end", 5, 6, 6, "start\ufffdend", 7),
         #         ^^^^^^                     ^^^^^^
-        (9, "start\udfffend", 5, 6, 6, "start\ufffdend", 7),  # noqa: PT014
+        # ruff: ignore[PT014]
+        (9, "start\udfffend", 5, 6, 6, "start\ufffdend", 7),
         #         ^^^^^^                     ^^^^^^
 
         # Truncate start

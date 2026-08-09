@@ -119,7 +119,7 @@ def test_enum(json: ModuleType, obj: float | dict[object, object]) -> None:
     "\xa3", "\u0418", "\u0939", "\u20ac", "\ud55c", "\U00010348", "\U001096b3",
 
     # Surrogates
-    "\ud800", "\udf48",  # noqa: PT014
+    "\ud800", "\udf48",  # ruff: ignore[PT014]
 ])
 def test_string(json: ModuleType, obj: str) -> None:
     """Test string."""
@@ -191,7 +191,7 @@ def test_surrogate_escapes(json: ModuleType, obj: str, expected: str) -> None:
     assert s == f'"{expected}"'
 
 
-@pytest.mark.parametrize("obj", ["\ud800", "\udf48"])  # noqa: PT014
+@pytest.mark.parametrize("obj", ["\ud800", "\udf48"])  # ruff: ignore[PT014]
 def test_surrogate_escapes_not_allowed(json: ModuleType, obj: str) -> None:
     """Test surrogate escapes when not allowed."""
     with pytest.raises(ValueError, match="Surrogates are not allowed"):
