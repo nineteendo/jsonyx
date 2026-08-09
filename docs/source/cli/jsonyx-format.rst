@@ -29,6 +29,8 @@ Positional arguments
 Options
 -------
 
+.. versionchanged:: 2.4 Removed ``--use-decimal`` (alias ``-d``)
+
 .. option:: -h, --help
 
     Show the help message and exit.
