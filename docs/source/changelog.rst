@@ -18,6 +18,13 @@ Changes:
 
 Breaking Changes:
     - Changed serialization of string :class:`enum.Enum`
+    - Removed ``--use-decimal`` (alias ``-d``) from ``jsonyx diff``,
+      ``jsonyx format`` and ``jsonyx patch``
+    - Removed ``use_decimal`` from :func:`jsonyx.apply_filter`,
+      :func:`jsonyx.apply_patch`, :func:`jsonyx.load_query_value`,
+      :func:`jsonyx.paste_values`, :func:`jsonyx.select_nodes`, and
+      :class:`jsonyx.Manipulator`
+    - Removed :class:`decimal.Decimal` support from :func:`jsonyx.make_patch`
     - Removed :data:`!jsonyx.Encoder.write`, :data:`!jsonyx.Decoder.read`,
       :data:`!jsonyx.write` and :data:`!jsonyx.read`
 

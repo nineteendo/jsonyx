@@ -5,7 +5,6 @@ __all__: list[str] = ["Manipulator"]
 
 import re
 from copy import deepcopy
-from decimal import Decimal
 from operator import eq, ge, gt, le, lt, ne
 from re import DOTALL, MULTILINE, VERBOSE, Pattern, RegexFlag
 from typing import TYPE_CHECKING, Any
@@ -151,20 +150,14 @@ class Manipulator:
     """A configurable JSON manipulator.
 
     .. versionadded:: 2.0
+    .. versionchanged:: 2.4 Removed ``use_decimal``.
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     """
 
-    def __init__(
-        self, *, allow: Container[str] = NOTHING, use_decimal: bool = False,
-    ) -> None:
+    def __init__(self, *, allow: Container[str] = NOTHING) -> None:
         """Create a new JSON manipulator."""
         self._allow_nan_and_infinity: bool = "nan_and_infinity" in allow
-        self._parse_float: Callable[
-            [str], Decimal | float,
-        ] = Decimal if use_decimal else float
-        self._use_decimal: bool = use_decimal
 
     def _scan_query_value(self, s: str, idx: int = 0) -> tuple[Any, int]:
         try:
@@ -187,19 +180,19 @@ class Manipulator:
             if not frac and not exp:
                 value = int(integer)
             else:
-                value = self._parse_float(integer + (frac or "") + (exp or ""))
+                value = float(integer + (frac or "") + (exp or ""))
         elif s[idx:idx + 8] == "Infinity":
             if not self._allow_nan_and_infinity:
                 msg = "Infinity is not allowed"
                 raise _errmsg(msg, s, idx, idx + 8)
 
-            value, end = self._parse_float("Infinity"), idx + 8
+            value, end = float("Infinity"), idx + 8
         elif s[idx:idx + 9] == "-Infinity":
             if not self._allow_nan_and_infinity:
                 msg = "-Infinity is not allowed"
                 raise _errmsg(msg, s, idx, idx + 9)
 
-            value, end = self._parse_float("-Infinity"), idx + 9
+            value, end = float("-Infinity"), idx + 9
         else:
             msg = "Expecting value"
             raise _errmsg(msg, s, idx)

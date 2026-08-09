@@ -3,7 +3,6 @@ from __future__ import annotations
 
 __all__: list[str] = []
 
-from decimal import Decimal
 from math import nan
 from typing import TYPE_CHECKING, Any
 
@@ -65,10 +64,10 @@ def test_property(key: str) -> None:
     [], [0],
 
     # NaN
-    nan, Decimal("nan"),
+    nan,
 
     # Basic
-    "", 0, Decimal(0), 0.0, Decimal("0.0"), True, False, None,
+    "", 0, 0.0, True, False, None,
 ])
 def test_equal(obj: object) -> None:
     """Test equal."""

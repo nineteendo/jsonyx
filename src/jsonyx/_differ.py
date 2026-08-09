@@ -4,7 +4,6 @@ from __future__ import annotations
 __all__: list[str] = ["make_patch"]
 
 import re
-from decimal import Decimal
 from math import isnan
 from re import DOTALL, MULTILINE, VERBOSE, Pattern, RegexFlag
 from typing import TYPE_CHECKING, Any
@@ -39,7 +38,7 @@ def _eq(a: Any, b: Any) -> bool:
             result = False
         else:
             result = all(map(_eq, a, b))  # type: ignore
-    elif isinstance(a, (Decimal, float)) and isnan(a):
+    elif isinstance(a, float) and isnan(a):
         result = isnan(b)
     else:
         result = a == b
@@ -128,6 +127,7 @@ def make_patch(old: Any, new: Any) -> list[_Operation]:
     """Make a JSON patch from two Python objects.
 
     .. versionadded:: 2.0
+    .. versionchanged:: 2.4 Removed :class:`decimal.Decimal` support
 
     :param old: the old Python object
     :param new: the new Python object

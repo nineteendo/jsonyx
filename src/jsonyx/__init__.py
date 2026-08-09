@@ -417,16 +417,15 @@ def apply_patch(
     patch: _Operation | list[_Operation],
     *,
     allow: Container[str] = NOTHING,
-    use_decimal: bool = False,
 ) -> Any:
     """Apply a JSON patch to a Python object.
 
     .. versionadded:: 2.0
+    .. versionchanged:: 2.4 Removed ``use_decimal``.
 
     :param obj: a Python object
     :param patch: a :doc:`JSON patch </json-patch-spec>`
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises AssertionError: if an assertion fails
     :raises IndexError: if an index is out of range
     :raises JSONSyntaxError: if a query is invalid
@@ -444,9 +443,7 @@ def apply_patch(
     .. seealso:: :func:`jsonyx.make_patch` for making a patch.
 
     """
-    return Manipulator(allow=allow, use_decimal=use_decimal).apply_patch(
-        obj, patch,
-    )
+    return Manipulator(allow=allow).apply_patch(obj, patch)
 
 
 def paste_values(
@@ -455,17 +452,16 @@ def paste_values(
     operation: _Operation,
     *,
     allow: Container[str] = NOTHING,
-    use_decimal: bool = False,
 ) -> None:
     """Paste value to a node or values to a list of nodes.
 
     .. versionadded:: 2.0
+    .. versionchanged:: 2.4 Removed ``use_decimal``.
 
     :param current_nodes: a node or a list of nodes
     :param values: a value or a list of values
     :param operation: a JSON :ref:`copy` or :ref:`move` operation
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises IndexError: if an index is out of range
     :raises JSONSyntaxError: if a query is invalid
     :raises KeyError: if a key is not found
@@ -482,9 +478,7 @@ def paste_values(
         [1, 2, 3, 4]
 
     """
-    Manipulator(allow=allow, use_decimal=use_decimal).paste_values(
-        current_nodes, values, operation,
-    )
+    Manipulator(allow=allow).paste_values(current_nodes, values, operation)
 
 
 def select_nodes(
@@ -494,18 +488,17 @@ def select_nodes(
     allow: Container[str] = NOTHING,
     allow_slice: bool = False,
     relative: bool = False,
-    use_decimal: bool = False,
 ) -> list[_Node]:
     """Select nodes from a node or a list of nodes.
 
     .. versionadded:: 2.0
+    .. versionchanged:: 2.4 Removed ``use_decimal``.
 
     :param nodes: a node or a list of nodes
     :param query: an :ref:`JSON select query <query>`
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param allow_slice: allow slice
     :param relative: query must start with ``"@"`` instead of ``"$"``
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises IndexError: if an index is out of range
     :raises JSONSyntaxError: if the select query is invalid
     :raises KeyError: if a key is not found
@@ -525,26 +518,22 @@ def select_nodes(
         [1, 2, 3, None, None, None]
 
     """
-    return Manipulator(allow=allow, use_decimal=use_decimal).select_nodes(
+    return Manipulator(allow=allow).select_nodes(
         nodes, query, allow_slice=allow_slice, relative=relative,
     )
 
 
 def apply_filter(
-    nodes: _Node | list[_Node],
-    query: str,
-    *,
-    allow: Container[str] = NOTHING,
-    use_decimal: bool = False,
+    nodes: _Node | list[_Node], query: str, *, allow: Container[str] = NOTHING,
 ) -> list[_Node]:
     """Apply a JSON filter query to a node or a list of nodes.
 
     .. versionadded:: 2.0
+    .. versionchanged:: 2.4 Removed ``use_decimal``.
 
     :param nodes: a node or a list of nodes
     :param query: a :ref:`JSON filter query <filter>`
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises IndexError: if an index is out of range
     :raises JSONSyntaxError: if the filter query is invalid
     :raises KeyError: if a key is not found
@@ -560,24 +549,17 @@ def apply_filter(
         >>> assert json.apply_filter(node, "@ == null")
 
     """
-    return Manipulator(allow=allow, use_decimal=use_decimal).apply_filter(
-        nodes, query,
-    )
+    return Manipulator(allow=allow).apply_filter(nodes, query)
 
 
-def load_query_value(
-    s: str,
-    *,
-    allow: Container[str] = NOTHING,
-    use_decimal: bool = False,
-) -> Any:
+def load_query_value(s: str, *, allow: Container[str] = NOTHING) -> Any:
     """Deserialize a JSON query value to a Python object.
 
     .. versionadded:: 2.0
+    .. versionchanged:: 2.4 Removed ``use_decimal``.
 
     :param s: a :ref:`JSON query value <query_value>`
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
-    :param use_decimal: use :class:`decimal.Decimal` instead of :class:`float`
     :raises JSONSyntaxError: if the query value is invalid
     :raises ValueError: if a number is too big
     :return: a Python object
@@ -588,6 +570,4 @@ def load_query_value(
         "'foo"
 
     """
-    return Manipulator(allow=allow, use_decimal=use_decimal).load_query_value(
-        s,
-    )
+    return Manipulator(allow=allow).load_query_value(s)

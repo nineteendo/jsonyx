@@ -3,8 +3,6 @@ from __future__ import annotations
 
 __all__: list[str] = []
 
-from decimal import Decimal
-
 import pytest
 
 from jsonyx import JSONSyntaxError, load_query_value
@@ -23,23 +21,18 @@ def test_literal_names(s: str, expected: bool | None) -> None:
 
 
 @pytest.mark.parametrize("s", ["Infinity", "-Infinity"])
-@pytest.mark.parametrize("use_decimal", [True, False])
-def test_infinity(s: str, use_decimal: bool) -> None:
+def test_infinity(s: str) -> None:
     """Test infinity."""
-    obj: object = load_query_value(
-        s, allow=NAN_AND_INFINITY, use_decimal=use_decimal,
-    )
-    expected_type: type[Decimal | float] = Decimal if use_decimal else float
-    assert isinstance(obj, expected_type)
-    assert obj == expected_type(s)
+    obj: object = load_query_value(s, allow=NAN_AND_INFINITY)
+    assert isinstance(obj, float)
+    assert obj == float(s)  # ruff: ignore[RUF069]
 
 
 @pytest.mark.parametrize("s", ["Infinity", "-Infinity"])
-@pytest.mark.parametrize("use_decimal", [True, False])
-def test_infinity_not_allowed(s: str, use_decimal: bool) -> None:
+def test_infinity_not_allowed(s: str) -> None:
     """Test infinity when not allowed."""
     with pytest.raises(JSONSyntaxError) as exc_info:
-        load_query_value(s, use_decimal=use_decimal)
+        load_query_value(s)
 
     check_syntax_err(exc_info, f"{s} is not allowed", 1, len(s) + 1)
 
@@ -86,13 +79,11 @@ def test_int(s: str) -> None:
     # Big exponent
     "1e400", "-1e400",
 ])
-@pytest.mark.parametrize("use_decimal", [True, False])
-def test_rational_number(s: str, use_decimal: bool) -> None:
+def test_rational_number(s: str) -> None:
     """Test rational number."""
-    obj: object = load_query_value(s, use_decimal=use_decimal)
-    expected_type: type[Decimal | float] = Decimal if use_decimal else float
-    assert isinstance(obj, expected_type)
-    assert obj == expected_type(s)
+    obj: object = load_query_value(s)
+    assert isinstance(obj, float)
+    assert obj == float(s)  # ruff: ignore[float-equality-comparison]
 
 
 @pytest.mark.parametrize("s", ["1\uff10", "0.\uff10", "0e\uff10"])

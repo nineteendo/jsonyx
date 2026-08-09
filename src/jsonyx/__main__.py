@@ -6,7 +6,6 @@ __all__: list[str] = ["main"]
 
 import sys
 from argparse import ArgumentParser
-from decimal import Decimal
 from pathlib import Path
 from sys import modules, stderr, stdin
 from traceback import format_exception_only
@@ -34,7 +33,6 @@ class _Namespace:
     output_filename: str | None
     sort_keys: bool
     trailing_comma: bool
-    use_decimal: bool
 
 
 # pylint: disable-next=R0903
@@ -72,12 +70,6 @@ def _configure(parser: ArgumentParser) -> None:
         action="store_false",
         dest="commas",
         help="don't separate items by commas when indented",
-    )
-    parent_parser.add_argument(
-        "-d",
-        "--use-decimal",
-        action="store_true",
-        help="use decimal instead of float",
     )
     indent_group = parent_parser.add_mutually_exclusive_group()
     indent_group.add_argument(
@@ -198,9 +190,7 @@ def _configure(parser: ArgumentParser) -> None:
 def _run(args: _Namespace) -> None:
     allow: frozenset[str] = EVERYTHING if args.nonstrict else NOTHING
     errors: str = "surrogatepass" if args.nonstrict else "strict"
-    decoder: Decoder = Decoder(
-        allow=allow, hooks={"float": Decimal if args.use_decimal else float},
-    )
+    decoder: Decoder = Decoder(allow=allow)
     encoder: Encoder = Encoder(
         allow=allow,
         commas=args.commas,
@@ -212,11 +202,8 @@ def _run(args: _Namespace) -> None:
         separators=(",", ":") if args.compact else (", ", ": "),
         sort_keys=args.sort_keys,
         trailing_comma=args.trailing_comma,
-        types={"float": Decimal},
     )
-    manipulator: Manipulator = Manipulator(
-        allow=allow, use_decimal=args.use_decimal,
-    )
+    manipulator: Manipulator = Manipulator(allow=allow)
     try:
         if args.input_filename and args.input_filename != "-":
             with Path(args.input_filename).open("rb") as fp:
