@@ -1,0 +1,73 @@
+{
+    "[python]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "always",
+            "source.organizeImports": "always"
+        },
+        "editor.defaultFormatter": "ms-python.autopep8",
+        "editor.formatOnSave": true,
+    },
+    "autoDocstring.docstringFormat": "sphinx",
+    "flake8.args": [
+        "--ignore=W503" // line break before binary operator
+    ],
+    "isort.args": [
+        "--add-import=from __future__ import annotations",
+        "--multi-line=VERTICAL_GRID_GROUPED",
+        "--trailing-comma"
+    ],
+    "json.schemas": [
+        {
+            "fileMatch": ["*.patch.json"],
+            "url": "https://raw.githubusercontent.com/nineteendo/jsonyx/main/json-patch.schema.json"
+        }
+    ],
+    "mypy-type-checker.args": [
+        "--no-warn-unused-ignores",
+        "--strict",
+    ],
+    "pylint.args": [
+        "--disable=R0912", // too-many-branches"
+        "--disable=R0913", // too-many-arguments"
+        "--disable=R0914", // too-many-locals"
+        "--disable=R0915", // too-many-statements"
+        "--disable=R0917" // too-many-positional-arguments"
+    ],
+    "pylint.severity": {
+        "refactor": "Information",
+    },
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "strict",
+    "ruff.lineLength": 79,
+    "ruff.organizeImports": false,
+    "ruff.lint.ignore": [
+        "ANN401", // any-type
+        "B905", // zip-without-explicit-strict
+        "C901", // complex-structure
+        "CPY001", // missing-copyright-notice
+        "DOC201", // docstring-missing-returns
+        "DOC501", // docstring-missing-exception
+        "FBT001", // boolean-type-hint-positional-argument
+        "I001", // unsorted-imports
+        "INP001", // implicit-namespace-package
+        "PGH003", // blanket-type-ignore
+        "PLR0912", // too-many-branches
+        "PLR0913", // too-many-arguments
+        "PLR0914", // too-many-locals
+        "PLR0915", // too-many-statements
+        "PLR0917", // too-many-positional-arguments
+        "PLR1702", // too-many-nested-blocks
+        "PLR2004", // magic-value-comparison
+        "RUF067", // non-empty-init-module
+        "PLW0717", // too-many-statements-in-try-clause
+        "RUF106", // rule-codes-in-suppression-comments
+        "S101", // assert
+        "SIM108", // if-else-block-instead-of-if-exp
+        "T201", // print
+        "TD003", // missing-todo-link
+        "UP036", // outdated-version-block
+    ],
+    "ruff.lint.preview": true,
+    "ruff.lint.select": ["ALL"],
+    "python-envs.defaultEnvManager": "ms-python.python:system"
+}
