@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import os
 import re
-import subprocess
+import subprocess  # ruff: ignore[S404]
 from pathlib import Path
 
 
@@ -16,7 +16,10 @@ def _invert_color(match: re.Match[str]) -> str:
 
 
 def _invert_svg(src_path: Path, dst_path: Path) -> None:
-    if dst_path.exists() and dst_path.stat().st_mtime > src_path.stat().st_mtime:
+    if (
+        dst_path.exists()
+        and dst_path.stat().st_mtime > src_path.stat().st_mtime
+    ):
         return
 
     content: str = Path(src_path).read_text(encoding="utf-8")
@@ -39,10 +42,13 @@ def _invert_svgs(src_dir: Path, dst_dir: Path) -> None:
 
 def _svg2pdf(src_path: Path) -> None:
     dst_path: Path = src_path.with_suffix(".pdf")
-    if dst_path.exists() and dst_path.stat().st_mtime > src_path.stat().st_mtime:
+    if (
+        dst_path.exists()
+        and dst_path.stat().st_mtime > src_path.stat().st_mtime
+    ):
         return
 
-    subprocess.run([
+    subprocess.run([  # ruff: ignore[S603, S607]
         "inkscape",
         "--export-area-drawing",
         f"--export-filename={dst_path}",
