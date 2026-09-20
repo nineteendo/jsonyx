@@ -70,18 +70,22 @@ Encoding protocol-based objects
 
 .. versionadded:: 2.0
 
-.. tabularcolumns:: \X{1}{2}\X{1}{2}
+By default, protocol types are encoded from instances of the corresponding
+Python types shown below. Additional types can be registered with ``types``.
 
-============ ========================================================================
-Type         Required methods
-============ ========================================================================
-``"array"``  :meth:`~object.__iter__`
-``"bool"``   :meth:`~object.__bool__`, :meth:`~object.__len__` or absent for ``true``
-``"float"``  :meth:`~object.__str__` or :meth:`~object.__repr__`
-``"int"``    :meth:`~object.__str__` or :meth:`~object.__repr__`
-``"object"`` :meth:`!values` and :meth:`!items`
-``"str"``    :meth:`~object.__str__` or :meth:`~object.__repr__`
-============ ========================================================================
+.. tabularcolumns:: \X{1}{3}\X{1}{3}\X{1}{3}
+
+============ ================================ ===================================================================================
+Type         Default                          Required methods
+============ ================================ ===================================================================================
+``"array"``  :class:`list` and :class:`tuple` :meth:`~object.__iter__` or :meth:`~object.__len__` and :meth:`~object.__getitem__`
+``"bool"``   ``True`` and ``False``           :meth:`~object.__bool__`, :meth:`~object.__len__` or neither (``true``)
+``"float"``  :class:`float`                   :meth:`~object.__str__` or :meth:`~object.__repr__`
+``"int"``    :class:`int`                     :meth:`~object.__str__` or :meth:`~object.__repr__`
+``"null"``   ``None``                         none (not extensible)
+``"object"`` :class:`dict`                    :meth:`!values` and :meth:`!items`
+``"str"``    :class:`str`                     :meth:`~object.__str__` or :meth:`~object.__repr__`
+============ ================================ ===================================================================================
 
 Example with :mod:`numpy`:
 
@@ -137,18 +141,22 @@ Decoding objects using hooks
 
 .. versionadded:: 2.0
 
-.. tabularcolumns:: \X{1}{2}\X{1}{2}
+By default, decoded protocol types are converted to the corresponding Python
+types shown below. The conversion can be customized with ``hooks``.
 
-============ =========================
-Hook         Called with
-============ =========================
-``"array"``  :class:`list`
-``"bool"``   :class:`bool`
-``"float"``  :class:`str`
-``"int"``    :class:`str`
-``"object"`` ``list[tuple[Any, Any]]``
-``"str"``    :class:`str`
-============ =========================
+.. tabularcolumns:: \X{1}{3}\X{1}{3}\X{1}{3}
+
+============ ======================= ===============================
+Hook         Default                 Called with
+============ ======================= ===============================
+``"array"``  :class:`list`           :class:`list`
+``"bool"``   :class:`bool`           ``True`` or ``False``
+``"float"``  :class:`float`          :class:`str`
+``"int"``    :class:`int`            :class:`str`
+``"null"``   :class:`types.NoneType` nothing (not customizable)
+``"object"`` :class:`dict`           ``list[tuple[Any, Any]]``
+``"str"``    :class:`str`            :class:`str`
+============ ======================= ===============================
 
 Example with :mod:`numpy`:
 
