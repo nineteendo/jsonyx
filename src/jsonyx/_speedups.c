@@ -8,10 +8,21 @@
 #define _Py_EnterRecursiveCall Py_EnterRecursiveCall
 #define _Py_LeaveRecursiveCall Py_LeaveRecursiveCall
 
+#ifdef Py_DEBUG
+#define Py_ASSERT(cond) assert(cond)
+#else
+#define Py_ASSERT(cond) do {} while(0)
+#endif
+
 #if PY_VERSION_HEX < 0x030F0000
 #define PyAnyDict_Check PyDict_Check
 #define PyAnyDict_CheckExact PyDict_CheckExact
 #endif /* PY_VERSION_HEX < 0x030F0000 */
+
+#if PY_VERSION_HEX < 0x030D0000
+#define Py_BEGIN_CRITICAL_SECTION(op) {
+#define Py_END_CRITICAL_SECTION() }
+#endif /* PY_VERSION_HEX < 0x030D0000 */
 
 #if PY_VERSION_HEX < 0x030A0000
 static inline
@@ -24,7 +35,7 @@ PyObject* Py_NewRef(PyObject *obj)
 
 #if PY_VERSION_HEX < 0x03090000
 #define PyObject_CallOneArg(callable, arg) PyObject_CallFunctionObjArgs(callable, arg, NULL)
-#endif /* PY_VERSION_HEX < 0x030A0000 */
+#endif /* PY_VERSION_HEX < 0x03090000 */
 
 typedef struct _PyScannerObject {
     PyObject_HEAD
@@ -262,9 +273,7 @@ ascii_escape_unicode(PyObject *pystr, int allow_surrogates)
             }
         }
     }
-#ifdef Py_DEBUG
-    assert(_PyUnicode_CheckConsistency(rval, 1));
-#endif
+    Py_ASSERT(_PyUnicode_CheckConsistency(rval, 1));
     return rval;
 }
 
@@ -354,16 +363,12 @@ escape_unicode(PyObject *pystr)
         ENCODE_OUTPUT;
     } else {
         Py_UCS4 *output = PyUnicode_4BYTE_DATA(rval);
-#ifdef Py_DEBUG
-        assert(kind == PyUnicode_4BYTE_KIND);
-#endif
+        Py_ASSERT(kind == PyUnicode_4BYTE_KIND);
         ENCODE_OUTPUT;
     }
 #undef ENCODE_OUTPUT
 
-#ifdef Py_DEBUG
-    assert(_PyUnicode_CheckConsistency(rval, 1));
-#endif
+    Py_ASSERT(_PyUnicode_CheckConsistency(rval, 1));
     return rval;
 }
 
@@ -570,9 +575,7 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, co
         }
     }
 
-#ifdef Py_DEBUG
-    assert(end < len && PyUnicode_READ(kind, str, end) == '"');
-#endif
+    Py_ASSERT(end < len && PyUnicode_READ(kind, str, end) == '"');
     if (rval == NULL) {
         goto bail;
     }
@@ -788,9 +791,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, 
         }
     }
 
-#ifdef Py_DEBUG
-    assert(idx < len && PyUnicode_READ(kind, str, idx) == '}');
-#endif
+    Py_ASSERT(idx < len && PyUnicode_READ(kind, str, idx) == '}');
     *next_idx_ptr = idx + 1;
 
     if (use_pairs) {
@@ -889,9 +890,7 @@ _parse_array_unicode(PyScannerObject *s, PyObject *memo, PyObject *pyfilename, P
         }
     }
 
-#ifdef Py_DEBUG
-    assert(idx < len && PyUnicode_READ(kind, str, idx) == ']');
-#endif
+    Py_ASSERT(idx < len && PyUnicode_READ(kind, str, idx) == ']');
     *next_idx_ptr = idx + 1;
     if (s->array_hook != (PyObject *)&PyList_Type) {
         Py_SETREF(rval, PyObject_CallOneArg(s->array_hook, rval));
@@ -1393,8 +1392,8 @@ update_indent_cache(PyEncoderObject *s,
     PyObject *newline_indent = NULL;
     PyObject *separator_indent = NULL;
 
-    assert(indent_level * 2 == PyList_GET_SIZE(indent_cache) + 1);
-    assert(indent_level > 0);
+    Py_ASSERT(indent_level * 2 == PyList_GET_SIZE(indent_cache) + 1);
+    Py_ASSERT(indent_level > 0);
     newline_indent = PyList_GET_ITEM(indent_cache, (indent_level - 1)*2);
     newline_indent = PyUnicode_Concat(newline_indent, s->indent);
     if (newline_indent == NULL) {
@@ -1423,13 +1422,13 @@ static PyObject *
 get_item_separator(PyEncoderObject *s,
                    Py_ssize_t indent_level, PyObject *indent_cache)
 {
-    assert(indent_level > 0);
+    Py_ASSERT(indent_level > 0);
     if (indent_level * 2 > PyList_GET_SIZE(indent_cache)) {
         if (update_indent_cache(s, indent_level, indent_cache) < 0) {
             return NULL;
         }
     }
-    assert(indent_level * 2 < PyList_GET_SIZE(indent_cache));
+    Py_ASSERT(indent_level * 2 < PyList_GET_SIZE(indent_cache));
     return PyList_GET_ITEM(indent_cache, indent_level * 2 - 1);
 }
 
@@ -1901,10 +1900,9 @@ _encoder_is_indented_mapping_lock_held(PyEncoderObject *s, PyObject *values)
     PyObject *obj = NULL;
     for (Py_ssize_t  i = 0; i < PyList_GET_SIZE(values); i++) {
         obj = PyList_GET_ITEM(values, i);
-#ifdef Py_GIL_DISABLED
-            // gh-119438: in the free-threading build the critical section on values can get suspended
-            Py_INCREF(obj);
-#endif
+        // gh-142831: s->hook() can invoke user code hat mutates the values
+        // list, invalidating this borrowed ref.
+        Py_INCREF(obj);
         PyObject *new_obj;
         if (s->hook != Py_None) {
             new_obj = PyObject_CallOneArg(s->hook, obj);
@@ -1922,22 +1920,16 @@ _encoder_is_indented_mapping_lock_held(PyEncoderObject *s, PyObject *values)
             if (PyErr_Occurred()) {
                 goto bail;
             }
-#ifdef Py_GIL_DISABLED
             Py_DECREF(obj);
-#endif
             return 1;
         }
-#ifdef Py_GIL_DISABLED
         Py_DECREF(obj);
-#endif
     }
 
     return 0;
 
 bail:
-#ifdef Py_GIL_DISABLED
     Py_DECREF(obj);
-#endif
     return -1;
 }
 
@@ -1952,10 +1944,9 @@ _encoder_encode_mapping_lock_held(PyEncoderObject *s, PyObject *markers,
     PyObject *key, *value;
     for (Py_ssize_t  i = 0; i < PyList_GET_SIZE(items); i++) {
         item = PyList_GET_ITEM(items, i);
-#ifdef Py_GIL_DISABLED
-        // gh-119438: in the free-threading build the critical section on items can get suspended
+        // gh-142831: encoder_encode_key_value() can invoke user code that
+        // mutates the items list, invalidating this borrowed ref.
         Py_INCREF(item);
-#endif
         if (!PyTuple_Check(item) || PyTuple_GET_SIZE(item) != 2) {
             PyErr_SetString(PyExc_ValueError, "items must return 2-tuples");
             goto bail;
@@ -1969,17 +1960,13 @@ _encoder_encode_mapping_lock_held(PyEncoderObject *s, PyObject *markers,
         {
             goto bail;
         }
-#ifdef Py_GIL_DISABLED
         Py_DECREF(item);
-#endif
     }
 
     return 0;
 
 bail:
-#ifdef Py_GIL_DISABLED
     Py_DECREF(item);
-#endif
     return -1;
 }
 
@@ -1992,25 +1979,20 @@ _encoder_encode_dict_lock_held(PyEncoderObject *s, PyObject *markers,
     PyObject *key, *value;
     Py_ssize_t pos = 0;
     while (PyDict_Next(dct, &pos, &key, &value)) {
-#ifdef Py_GIL_DISABLED
-        // gh-119438: in the free-threading build the critical section on mapping can get suspended
+        // gh-145244: encoder_encode_key_value() can invoke user code that
+        // mutates the dict, invalidating these borrowed refs.
         Py_INCREF(key);
         Py_INCREF(value);
-#endif
         if (encoder_encode_key_value(s, markers, writer, first, indented, key,
                                      value, indent_level, indent_cache,
                                      separator) < 0)
         {
-#ifdef Py_GIL_DISABLED
             Py_DECREF(key);
             Py_DECREF(value);
-#endif
             return -1;
         }
-#ifdef Py_GIL_DISABLED
         Py_DECREF(key);
         Py_DECREF(value);
-#endif
     }
     // PyDict_Next could return an error, we need to handle it
     if (PyErr_Occurred())
@@ -2060,13 +2042,9 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
         PyObject *values = PyMapping_Values(mapping);
         if (values == NULL)
             goto bail;
-#if defined Py_BEGIN_CRITICAL_SECTION
         Py_BEGIN_CRITICAL_SECTION(values);
-#endif
         indented = _encoder_is_indented_mapping_lock_held(s, values);
-#if defined Py_END_CRITICAL_SECTION
         Py_END_CRITICAL_SECTION();
-#endif
         Py_DECREF(values);
         if (indented < 0) {
             goto bail;
@@ -2078,9 +2056,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
         separator = s->long_item_separator; // borrowed reference
     }
     else {
-#ifdef Py_DEBUG
-        assert(s->indent != Py_None);
-#endif
+        Py_ASSERT(s->indent != Py_None);
         indent_level++;
         separator = get_item_separator(s, indent_level, indent_cache);
         if (separator == NULL) {
@@ -2096,29 +2072,21 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
         }
 
         int result;
-#if defined Py_BEGIN_CRITICAL_SECTION
         Py_BEGIN_CRITICAL_SECTION(items);
-#endif
         result = _encoder_encode_mapping_lock_held(s, markers, writer, &first,
                     indented, items, indent_level, indent_cache, separator);
-#if defined Py_END_CRITICAL_SECTION
         Py_END_CRITICAL_SECTION();
-#endif
         Py_DECREF(items);
         if (result < 0) {
             goto bail;
         }
     } else {
         int result;
-#if defined Py_BEGIN_CRITICAL_SECTION
         Py_BEGIN_CRITICAL_SECTION(mapping);
-#endif
         result = _encoder_encode_dict_lock_held(s, markers, writer, &first,
                             mapping, indented, indent_level, indent_cache,
                             separator);
-#if defined Py_END_CRITICAL_SECTION
         Py_END_CRITICAL_SECTION();
-#endif
         if (result < 0) {
             goto bail;
         }
@@ -2153,10 +2121,9 @@ _encoder_is_indented_sequence_lock_held(PyEncoderObject *s, PyObject *s_fast)
     PyObject *obj = NULL;
     for (Py_ssize_t i = 0; i < PySequence_Fast_GET_SIZE(s_fast); i++) {
         obj = PySequence_Fast_GET_ITEM(s_fast, i);
-#ifdef Py_GIL_DISABLED
-            // gh-119438: in the free-threading build the critical section on s_fast can get suspended
-            Py_INCREF(obj);
-#endif
+        // gh-142831: s->hook() can invoke user code hat mutates the sequence,
+        // invalidating this borrowed ref.
+        Py_INCREF(obj);
         PyObject *new_obj;
         if (s->hook != Py_None) {
             new_obj = PyObject_CallOneArg(s->hook, obj);
@@ -2174,23 +2141,17 @@ _encoder_is_indented_sequence_lock_held(PyEncoderObject *s, PyObject *s_fast)
             if (PyErr_Occurred()) {
                 goto bail;
             }
-#ifdef Py_GIL_DISABLED
             Py_DECREF(obj);
-#endif
             return 1;
         }
 
-#ifdef Py_GIL_DISABLED
         Py_DECREF(obj);
-#endif
     }
 
     return 0;
 
 bail:
-#ifdef Py_GIL_DISABLED
     Py_DECREF(obj);
-#endif
     return -1;
 }
 
@@ -2202,10 +2163,9 @@ _encoder_encode_sequence_lock_held(PyEncoderObject *s, PyObject *markers,
     PyObject *obj = NULL;
     for (Py_ssize_t i = 0; i < PySequence_Fast_GET_SIZE(s_fast); i++) {
         obj = PySequence_Fast_GET_ITEM(s_fast, i);
-#ifdef Py_GIL_DISABLED
-        // gh-119438: in the free-threading build the critical section on s_fast can get suspended
+        // gh-142831: encoder_listencode_obj() can invoke user code hat mutates
+        // the sequence, invalidating this borrowed ref.
         Py_INCREF(obj);
-#endif
         if (*first) {
             *first = false;
             if (indented &&
@@ -2221,16 +2181,12 @@ _encoder_encode_sequence_lock_held(PyEncoderObject *s, PyObject *markers,
         if (encoder_listencode_obj(s, markers, writer, obj, indent_level, indent_cache)) {
             goto bail;
         }
-#ifdef Py_GIL_DISABLED
         Py_DECREF(obj);
-#endif
     }
     return 0;
 
 bail:
-#ifdef Py_GIL_DISABLED
     Py_DECREF(obj);
-#endif
     return -1;
 }
 
@@ -2275,13 +2231,9 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers,
         indented = true;
     }
     else {
-#if defined Py_BEGIN_CRITICAL_SECTION
         Py_BEGIN_CRITICAL_SECTION(s_fast);
-#endif
         indented = _encoder_is_indented_sequence_lock_held(s, s_fast);
-#if defined Py_END_CRITICAL_SECTION
-    Py_END_CRITICAL_SECTION();
-#endif
+        Py_END_CRITICAL_SECTION();
     }
 
     PyObject *separator;
@@ -2289,9 +2241,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers,
         separator = s->long_item_separator; // borrowed reference
     }
     else {
-#ifdef Py_DEBUG
-        assert(s->indent != Py_None);
-#endif
+        Py_ASSERT(s->indent != Py_None);
         indent_level++;
         separator = get_item_separator(s, indent_level, indent_cache);
         if (separator == NULL) {
@@ -2300,14 +2250,10 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers,
     }
     bool first = true;
     int result;
-#if defined Py_BEGIN_CRITICAL_SECTION
     Py_BEGIN_CRITICAL_SECTION(s_fast);
-#endif
     result = _encoder_encode_sequence_lock_held(s, markers, writer, &first,
                      s_fast, indented, indent_level, indent_cache, separator);
-#if defined Py_END_CRITICAL_SECTION
     Py_END_CRITICAL_SECTION();
-#endif
     if (result < 0) {
         goto bail;
     }

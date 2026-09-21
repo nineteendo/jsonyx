@@ -32,6 +32,10 @@ Breaking Changes:
 Other Changes:
     - Improved error messages
 
+Bug Fixes:
+    - Fixed :issue:`python/cpython#142831`: Use-after-free in
+      :func:`jsonyx.dumps` mapping iteration via re-entrant key encoder
+
 jsonyx 2.3.0 (Apr 30, 2025)
 ---------------------------
 
