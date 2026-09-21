@@ -596,6 +596,27 @@ def test_hook(
     assert json.dumps(obj, end="", hook=datetime_hook) == expected
 
 
+def test_evil_hook(json: ModuleType) -> None:
+    """Test hook."""
+    items: list[tuple[str, object]] = [("boom", object())]
+
+    # pylint: disable-next=R0903
+    class _BadDict:
+        @staticmethod
+        def items() -> list[tuple[str, object]]:
+            """Get items."""
+            return items
+
+    def hook(obj: Any) -> Any:
+        if isinstance(obj, str):
+            items.clear()
+
+        return obj
+
+    with pytest.raises(TypeError):
+        assert json.dumps(_BadDict(), hook=hook, types={"object": _BadDict})
+
+
 @pytest.mark.parametrize(("obj", "expected"), [
     ([1 + 2j], '[\n {"real": 1.0, "imag": 2.0}\n]'),
     ({"": 1 + 2j}, '{\n "": {"real": 1.0, "imag": 2.0}\n}'),

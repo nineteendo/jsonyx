@@ -71,6 +71,7 @@ def test_mutating_list(cjson: ModuleType) -> None:
                     d.clear()
                 else:
                     d.append(index)
+
     data: list[list[int]] = [[], []]
     _encode_json_helper(cjson, worker, data)
 
@@ -87,6 +88,7 @@ def test_mutating_dict(cjson: ModuleType) -> None:
                     d.clear()
                 else:
                     d[index] = index
+
     data: list[dict[int, int]] = [{}, {}]
     _encode_json_helper(cjson, worker, data)
 
@@ -107,5 +109,6 @@ def test_mutating_mapping(cjson: ModuleType) -> None:
                     d.items().append((index, index))
                     d.keys().append(index)
                     d.values().append(index)
+
     data: list[_MyMapping] = [_MyMapping(), _MyMapping()]
     _encode_json_helper(cjson, worker, data)
