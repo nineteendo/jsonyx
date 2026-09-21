@@ -15,6 +15,7 @@ jsonyx 2.4.0 (unreleased)
 
 Changes:
     - Added free threading support
+    - Made :class:`frozendict` serializable by default.
 
 Breaking Changes:
     - Changed serialization of string :class:`enum.Enum`

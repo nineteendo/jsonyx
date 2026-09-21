@@ -69,23 +69,24 @@ Encoding protocol-based objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. versionadded:: 2.0
+.. versionchanged:: 2.4 Made :class:`frozendict` serializable by default.
 
 By default, protocol types are encoded from instances of the corresponding
 Python types shown below. Additional types can be registered with ``types``.
 
-.. tabularcolumns:: \X{1}{3}\X{1}{3}\X{1}{3}
+.. tabularcolumns:: \X{1}{4}\X{1}{4}\X{1}{2}
 
-============ ================================ ===================================================================================
-Type         Default                          Required methods
-============ ================================ ===================================================================================
-``"array"``  :class:`list` and :class:`tuple` :meth:`~object.__iter__` or :meth:`~object.__len__` and :meth:`~object.__getitem__`
-``"bool"``   ``True`` and ``False``           :meth:`~object.__bool__`, :meth:`~object.__len__` or neither (``true``)
-``"float"``  :class:`float`                   :meth:`~object.__str__` or :meth:`~object.__repr__`
-``"int"``    :class:`int`                     :meth:`~object.__str__` or :meth:`~object.__repr__`
-``"null"``   ``None``                         none (not extensible)
-``"object"`` :class:`dict`                    :meth:`!values` and :meth:`!items`
-``"str"``    :class:`str`                     :meth:`~object.__str__` or :meth:`~object.__repr__`
-============ ================================ ===================================================================================
+============ ===================================== ===================================================================================
+Type         Default                               Required methods
+============ ===================================== ===================================================================================
+``"array"``  :class:`list` and :class:`tuple`      :meth:`~object.__iter__` or :meth:`~object.__len__` and :meth:`~object.__getitem__`
+``"bool"``   ``True`` and ``False``                :meth:`~object.__bool__`, :meth:`~object.__len__` or neither (``true``)
+``"float"``  :class:`float`                        :meth:`~object.__str__` or :meth:`~object.__repr__`
+``"int"``    :class:`int`                          :meth:`~object.__str__` or :meth:`~object.__repr__`
+``"null"``   ``None``                              none (not extensible)
+``"object"`` :class:`dict` and :class:`frozendict` :meth:`!values` and :meth:`!items`
+``"str"``    :class:`str`                          :meth:`~object.__str__` or :meth:`~object.__repr__`
+============ ===================================== ===================================================================================
 
 Example with :mod:`numpy`:
 
@@ -144,7 +145,7 @@ Decoding objects using hooks
 By default, decoded protocol types are converted to the corresponding Python
 types shown below. The conversion can be customized with ``hooks``.
 
-.. tabularcolumns:: \X{1}{3}\X{1}{3}\X{1}{3}
+.. tabularcolumns:: \X{1}{4}\X{1}{4}\X{1}{2}
 
 ============ ======================= ===============================
 Hook         Default                 Called with

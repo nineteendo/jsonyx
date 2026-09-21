@@ -3,6 +3,7 @@ from __future__ import annotations
 
 __all__: list[str] = []
 
+import sys
 from collections import UserDict, UserList, UserString
 from datetime import datetime
 from decimal import Decimal
@@ -15,6 +16,17 @@ from jsonyx.allow import NAN_AND_INFINITY, NON_STR_KEYS, SURROGATES
 
 if TYPE_CHECKING:
     from types import ModuleType
+
+if sys.version_info >= (3, 15):
+    empty_frozendict: Any = frozendict()  # ruff: ignore[F821]
+else:
+    empty_frozendict: Any = pytest.param({}, marks=pytest.mark.skip(
+        reason="requires Python 3.15",
+    ))
+    # pylint: disable-next=W0622
+    frozendict: Any = pytest.param(dict, marks=pytest.mark.skip(
+        reason="requires Python 3.15",
+    ))
 
 _APOLLO11: str = "1969-07-20T20:17:40+00:00"
 _CIRCULAR_DICT: dict[str, object] = {}
@@ -212,7 +224,7 @@ def test_string_enum(
     assert json.dumps(obj, end="") == expected
 
 
-@pytest.mark.parametrize(("obj", "expected"), [
+@pytest.mark.parametrize(("lst", "expected"), [
     # Empty list
     ([], "[]"),
 
@@ -222,9 +234,12 @@ def test_string_enum(
     # Multiple values
     ([1, 2, 3], "[1, 2, 3]"),
 ])  # type: ignore
-def test_list(json: ModuleType, obj: list[object], expected: str) -> None:
+@pytest.mark.parametrize("array_type", [list, tuple])
+def test_list(
+    json: ModuleType, lst: list[object], array_type: type, expected: str,
+) -> None:
     """Test list."""
-    assert json.dumps(obj, end="") == expected
+    assert json.dumps(array_type(lst), end="") == expected
 
 
 @pytest.mark.parametrize(("indent", "expected"), [
@@ -248,14 +263,16 @@ def test_empty_list_indent(json: ModuleType) -> None:
     assert json.dumps([], end="", indent=1) == "[]"
 
 
-@pytest.mark.parametrize(("obj", "expected"), [
+@pytest.mark.parametrize(("lst", "expected"), [
     ([1, 2, 3], "[1, 2, 3]"),
     ([[1, 2, 3]], "[\n [1, 2, 3]\n]"),
 ])
+@pytest.mark.parametrize("array_type", [list, tuple])
 def test_list_no_indent_leaves(
-    json: ModuleType, obj: list[object], expected: str,
+    json: ModuleType, lst: list[object], array_type: type, expected: str,
 ) -> None:
     """Test list indent without indent_leaves."""
+    obj: object = array_type(lst)
     assert json.dumps(obj, end="", indent=1, indent_leaves=False) == expected
 
 
@@ -281,7 +298,7 @@ def test_array_types(json: ModuleType) -> None:
     assert json.dumps(obj, end="", types={"array": UserList}) == "[1, 2, 3]"
 
 
-@pytest.mark.parametrize(("obj", "expected"), [
+@pytest.mark.parametrize(("dct", "expected"), [
     # Empty dict
     ({}, "{}"),
 
@@ -291,11 +308,12 @@ def test_array_types(json: ModuleType) -> None:
     # Multiple values
     ({"a": 1, "b": 2, "c": 3}, '{"a": 1, "b": 2, "c": 3}'),
 ])
+@pytest.mark.parametrize("object_type", [dict, frozendict])
 def test_dict(
-    json: ModuleType, obj: dict[str, object], expected: str,
+    json: ModuleType, dct: dict[str, object], object_type: type, expected: str,
 ) -> None:
     """Test dict."""
-    assert json.dumps(obj, end="") == expected
+    assert json.dumps(object_type(dct), end="") == expected
 
 
 @pytest.mark.parametrize("key", [
@@ -441,7 +459,7 @@ def test_non_str_keys_not_allowed(json: ModuleType, key: object) -> None:
 
 @pytest.mark.parametrize("key", [
     # JSON values
-    (),
+    (), empty_frozendict,
 
     # No JSON values
     b"", 0j, frozenset(), memoryview(b""), object(),
@@ -454,7 +472,7 @@ def test_unserializable_key(json: ModuleType, key: object) -> None:
 
 @pytest.mark.parametrize("key", [
     # JSON values
-    (), 0, 0.0, True, False, None,
+    (), empty_frozendict, 0, 0.0, True, False, None,
 
     # No JSON values
     b"", 0j, frozenset(), memoryview(b""), object(),
@@ -494,14 +512,16 @@ def test_empty_dict_indent(json: ModuleType) -> None:
     assert json.dumps({}, end="", indent=1) == "{}"
 
 
-@pytest.mark.parametrize(("obj", "expected"), [
+@pytest.mark.parametrize(("dct", "expected"), [
     ({"a": 1, "b": 2, "c": 3}, '{"a": 1, "b": 2, "c": 3}'),
     ({"": {"a": 1, "b": 2, "c": 3}}, '{\n "": {"a": 1, "b": 2, "c": 3}\n}'),
 ])
+@pytest.mark.parametrize("object_type", [dict, frozendict])
 def test_dict_no_indent_leaves(
-    json: ModuleType, obj: dict[str, object], expected: str,
+    json: ModuleType, dct: dict[str, object], object_type: type, expected: str,
 ) -> None:
     """Test dict indent without indent_leaves."""
+    obj: object = object_type(dct)
     assert json.dumps(obj, end="", indent=1, indent_leaves=False) == expected
 
 
