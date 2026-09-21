@@ -41,6 +41,7 @@ extensions: list[str] = [
 intersphinx_mapping: dict[str, tuple[str, None]] = {
     "numpy": ("https://numpy.org/doc/stable", None),
     "python": ("https://docs.python.org/3", None),
+    "python-dev": ("https://docs.python.org/dev", None),
     "sphinx": ("https://www.sphinx-doc.org/en/master", None),
 }
 intersphinx_disabled_domains: list[str] = ["std"]
