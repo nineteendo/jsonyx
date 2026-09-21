@@ -48,6 +48,7 @@ if TYPE_CHECKING:
         def write(self, s: _T_contra, /) -> object:
             """Write string."""
 
+    _ClassInfo = type | tuple["_ClassInfo", ...]
     _Node = tuple[dict[Any, Any] | list[Any], Any]
     _Operation = dict[str, Any]
     _StrPath = PathLike[str] | str
@@ -227,7 +228,7 @@ def dump(
     skipkeys: bool = False,
     sort_keys: bool = False,
     trailing_comma: bool = False,
-    types: dict[str, type | tuple[type, ...]] | None = None,
+    types: dict[str, _ClassInfo] | None = None,
 ) -> None:
     r"""Serialize a Python object to an open JSON file.
 
@@ -242,6 +243,7 @@ def dump(
 
     .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
         ``skipkeys``.
+    .. versionchanged:: 2.4 Made :class:`frozendict` serializable by default.
 
     :param obj: a Python object
     :param fp: an open JSON file
@@ -343,7 +345,7 @@ def dumps(
     skipkeys: bool = False,
     sort_keys: bool = False,
     trailing_comma: bool = False,
-    types: dict[str, type | tuple[type, ...]] | None = None,
+    types: dict[str, _ClassInfo] | None = None,
 ) -> str:
     r"""Serialize a Python object to a JSON string.
 
@@ -358,6 +360,7 @@ def dumps(
 
     .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
         ``skipkeys``.
+    .. versionchanged:: 2.4 Made :class:`frozendict` serializable by default.
 
     :param obj: a Python object
     :param allow: the JSON deviations from :mod:`jsonyx.allow`

@@ -8,21 +8,23 @@
 #define _Py_EnterRecursiveCall Py_EnterRecursiveCall
 #define _Py_LeaveRecursiveCall Py_LeaveRecursiveCall
 
-#if PY_VERSION_HEX < 0x03100000
-#if !defined(Py_NewRef)
-static inline PyObject* Py_NewRef(PyObject *obj)
+#if PY_VERSION_HEX < 0x030F0000
+#define PyAnyDict_Check PyDict_Check
+#define PyAnyDict_CheckExact PyDict_CheckExact
+#endif /* PY_VERSION_HEX < 0x030F0000 */
+
+#if PY_VERSION_HEX < 0x030A0000
+static inline
+PyObject* Py_NewRef(PyObject *obj)
 {
     Py_INCREF(obj);
     return obj;
 }
-#endif
-#endif /* PY_VERSION_HEX < 0x03100000 */
+#endif /* PY_VERSION_HEX < 0x030A0000 */
 
 #if PY_VERSION_HEX < 0x03090000
-#if !defined(PyObject_CallOneArg)
 #define PyObject_CallOneArg(callable, arg) PyObject_CallFunctionObjArgs(callable, arg, NULL)
-#endif
-#endif /* PY_VERSION_HEX < 0x03090000 */
+#endif /* PY_VERSION_HEX < 0x030A0000 */
 
 typedef struct _PyScannerObject {
     PyObject_HEAD
@@ -1655,8 +1657,9 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
             // Fast-path for exact integers
 #ifdef PyUnicodeWriter_WriteRepr
             return PyUnicodeWriter_WriteRepr((PyUnicodeWriter*)writer, obj);
-#endif
+#else
             encoded = PyObject_Str(obj);
+#endif
         }
         else {
             encoded = encoder_encode_number(s, obj);
@@ -1684,7 +1687,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         _Py_LeaveRecursiveCall();
         return rv;
     }
-    else if (PyDict_Check(obj)) {
+    else if (PyAnyDict_Check(obj)) {
         if (_Py_EnterRecursiveCall(" while encoding a JSON object"))
             return -1;
         rv = encoder_listencode_mapping(s, markers, writer, obj, indent_level, indent_cache);
@@ -1898,10 +1901,10 @@ _encoder_is_indented_mapping_lock_held(PyEncoderObject *s, PyObject *values)
     PyObject *obj = NULL;
     for (Py_ssize_t  i = 0; i < PyList_GET_SIZE(values); i++) {
         obj = PyList_GET_ITEM(values, i);
-        #ifdef Py_GIL_DISABLED
+#ifdef Py_GIL_DISABLED
             // gh-119438: in the free-threading build the critical section on values can get suspended
             Py_INCREF(obj);
-        #endif
+#endif
         PyObject *new_obj;
         if (s->hook != Py_None) {
             new_obj = PyObject_CallOneArg(s->hook, obj);
@@ -1912,7 +1915,7 @@ _encoder_is_indented_mapping_lock_held(PyEncoderObject *s, PyObject *values)
             new_obj = obj;
         }
         if (PyList_Check(new_obj) || PyTuple_Check(new_obj) ||
-            PyDict_Check(new_obj) ||
+            PyAnyDict_Check(new_obj) ||
             PyObject_IsInstance(new_obj, s->array_types) ||
             PyObject_IsInstance(new_obj, s->object_types))
         {
@@ -2085,7 +2088,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
         }
     }
 
-    if (s->sort_keys || !PyDict_CheckExact(mapping)) {
+    if (s->sort_keys || !PyAnyDict_CheckExact(mapping)) {
         PyObject *items = PyMapping_Items(mapping);
         if (items == NULL || (s->sort_keys && PyList_Sort(items) < 0)) {
             Py_XDECREF(items);
@@ -2150,10 +2153,10 @@ _encoder_is_indented_sequence_lock_held(PyEncoderObject *s, PyObject *s_fast)
     PyObject *obj = NULL;
     for (Py_ssize_t i = 0; i < PySequence_Fast_GET_SIZE(s_fast); i++) {
         obj = PySequence_Fast_GET_ITEM(s_fast, i);
-        #ifdef Py_GIL_DISABLED
+#ifdef Py_GIL_DISABLED
             // gh-119438: in the free-threading build the critical section on s_fast can get suspended
             Py_INCREF(obj);
-        #endif
+#endif
         PyObject *new_obj;
         if (s->hook != Py_None) {
             new_obj = PyObject_CallOneArg(s->hook, obj);
@@ -2164,7 +2167,7 @@ _encoder_is_indented_sequence_lock_held(PyEncoderObject *s, PyObject *s_fast)
             new_obj = obj;
         }
         if (PyList_Check(new_obj) || PyTuple_Check(new_obj) ||
-            PyDict_Check(new_obj) ||
+            PyAnyDict_Check(new_obj) ||
             PyObject_IsInstance(new_obj, s->array_types) ||
             PyObject_IsInstance(new_obj, s->object_types))
         {

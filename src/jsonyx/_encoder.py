@@ -14,7 +14,6 @@ from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Container, ItemsView, Iterable
-    from os import PathLike
 
     _T_contra = TypeVar("_T_contra", contravariant=True)
 
@@ -23,10 +22,13 @@ if TYPE_CHECKING:
         def write(self, s: _T_contra, /) -> object:
             """Write string."""
 
+    _ClassInfo = type | tuple["_ClassInfo", ...]
     _Encoder = Callable[[object], str]
     _Hook = Callable[[Any], Any]
-    _StrPath = PathLike[str] | str
 
+if sys.version_info < (3, 15):
+    # pylint: disable-next=W0622
+    frozendict: _ClassInfo = ()
 
 _ESCAPE_DCT: dict[str, str] = {
     **{chr(i): f"\\u{i:04x}" for i in range(0x20)},
@@ -55,14 +57,14 @@ try:
         from _jsonyx import make_encoder
 except ImportError:
     def make_encoder(
-        array_types: type | tuple[type, ...],
-        bool_types: type | tuple[type, ...],
-        float_types: type | tuple[type, ...],
+        array_types: _ClassInfo,
+        bool_types: _ClassInfo,
+        float_types: _ClassInfo,
         hook: _Hook | None,
         indent: str | None,
-        int_types: type | tuple[type, ...],
-        object_types: type | tuple[type, ...],
-        str_types: type | tuple[type, ...],
+        int_types: _ClassInfo,
+        object_types: _ClassInfo,
+        str_types: _ClassInfo,
         end: str,
         item_separator: str,
         key_separator: str,
@@ -141,7 +143,7 @@ except ImportError:
         def is_unindented(values: Iterable[Any], indent_level: int) -> bool:
             return indent_level >= max_indent_level or (
                 not indent_leaves and not any(isinstance(hook(value), (
-                    list, tuple, dict, array_types, object_types,
+                    list, tuple, dict, frozendict, array_types, object_types,
                 )) for value in values)
             )
 
@@ -301,7 +303,7 @@ except ImportError:
                         exc.__traceback__ = tb.tb_next
 
                     raise
-            elif isinstance(obj, (dict, object_types)):
+            elif isinstance(obj, (dict, frozendict, object_types)):
                 try:
                     write_mapping(obj, io, indent_level, current_indent)
                 except Exception as exc:
@@ -341,6 +343,7 @@ class Encoder:
 
     .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
         ``skipkeys``.
+    .. versionchanged:: 2.4 Made :class:`frozendict` serializable by default.
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param check_circular: check for circular references
@@ -380,7 +383,7 @@ class Encoder:
         skipkeys: bool = False,
         sort_keys: bool = False,
         trailing_comma: bool = False,
-        types: dict[str, type | tuple[type, ...]] | None = None,
+        types: dict[str, _ClassInfo] | None = None,
     ) -> None:
         """Create a new JSON encoder."""
         allow_surrogates: bool = "surrogates" in allow

@@ -102,9 +102,9 @@ latex_use_xindy: bool = False
 # -- Options for sphinx.ext.autodoc
 
 autodoc_preserve_defaults: bool = True
-autodoc_type_aliases: dict[str, str] = {
-    name: name for name in ["_Hook", "_Node", "_Operation", "_StrPath"]
-}
+autodoc_type_aliases: dict[str, str] = {name: name for name in [
+    "_ClassInfo", "_Hook", "_Node", "_Operation", "_StrPath",
+]}
 autodoc_typehints: str = "none"
 
 # -- Options for sphinx.ext.todo
