@@ -91,6 +91,8 @@ def test_equal(obj: object) -> None:
         {"op": "set", "path": "$[1]", "value": 4},
         {"op": "insert", "path": "$[2]", "value": 5},
     ]),
+    ([0, 0], [0, 1], [{"op": "set", "path": "$[1]", "value": 1}]),
+    ([0, 0], [1, 0], [{"op": "set", "path": "$[0]", "value": 1}]),
 
     # Replacing NaN
     (nan, 0.0, [{"op": "set", "path": "$", "value": 0.0}]),

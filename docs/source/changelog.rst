@@ -13,12 +13,12 @@ Changelog
 jsonyx 2.4.0 (unreleased)
 -------------------------
 
-Changes:
-    - Added free threading support
-    - Made :class:`frozendict` serializable by default.
+New features:
+    - Made :class:`frozendict` serializable by default
 
 Breaking Changes:
-    - Changed serialization of string :class:`enum.Enum`
+    - Allowed overriding serialization in subclasses of :class:`str` (e.g.
+      :class:`enum.Enum`)
     - Removed ``--use-decimal`` (alias ``-d``) from ``jsonyx diff``,
       ``jsonyx format`` and ``jsonyx patch``
     - Removed ``use_decimal`` from :func:`jsonyx.apply_filter`,
@@ -30,6 +30,8 @@ Breaking Changes:
       :data:`!jsonyx.write` and :data:`!jsonyx.read`
 
 Other Changes:
+    - Added free threading support
+    - Improved diffing algorithm of :func:`jsonyx.make_patch`
     - Improved error messages
 
 Bug Fixes:
@@ -98,8 +100,10 @@ New Features:
     - Added :exc:`jsonyx.TruncatedSyntaxError`
 
 Breaking Changes:
-    - Made :class:`tuple` serializable by default instead of :class:`enum.Enum`
-      and :class:`decimal.Decimal`
+    - Allowed overriding serialization in subclasses of :class:`float` and
+      :class:`int` (e.g. :class:`enum.Enum`)
+    - Made :class:`tuple` serializable by default instead of
+      :class:`decimal.Decimal`
     - Removed :data:`!jsonyx.allow.DUPLICATE_KEYS`
     - Removed :data:`!jsonyx.DuplicateKey`
     - Removed :mod:`!jsonyx.tool`

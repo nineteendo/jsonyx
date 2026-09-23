@@ -46,36 +46,31 @@ def _eq(a: Any, b: Any) -> bool:
     return result
 
 
-def _get_lcs(old: list[Any], new: list[Any]) -> list[Any]:
-    dp: list[list[int]] = [[0] * (len(new) + 1) for _ in range(len(old) + 1)]
-    for i, old_value in enumerate(old):
-        for j, new_value in enumerate(new):
-            if _eq(old_value, new_value):
-                dp[i + 1][j + 1] = dp[i][j] + 1
+def _get_dp(old: list[Any], new: list[Any]) -> list[list[int]]:
+    n: int = len(old)
+    m: int = len(new)
+    dp: list[list[int]] = [[0] * (m + 1) for _ in range(n + 1)]
+    for i in range(n):
+        dp[i][m] = 2 * (n - i)
+
+    for j in range(m):
+        dp[n][j] = 2 * (m - j)
+
+    for i in range(n)[::-1]:
+        for j in range(m)[::-1]:
+            if _eq(old[i], new[j]):
+                dp[i][j] = dp[i + 1][j + 1]
             else:
-                dp[i + 1][j + 1] = max(dp[i + 1][j], dp[i][j + 1])
+                dp[i][j] = min(
+                    3 + dp[i + 1][j + 1], 2 + dp[i + 1][j], 2 + dp[i][j + 1],
+                )
 
-    lcs: list[Any] = []
-    i, j = len(old), len(new)
-    while i > 0 and j > 0:
-        if _eq(old[i - 1], new[j - 1]):
-            lcs.append(old[i - 1])
-            i -= 1
-            j -= 1
-        elif dp[i - 1][j] >= dp[i][j - 1]:
-            i -= 1
-        else:
-            j -= 1
-
-    return lcs[::-1]
+    return dp
 
 
 def _make_patch(
     old: Any, new: Any, patch: list[_Operation], path: str = "$",
 ) -> None:
-    if _eq(old, new):
-        return
-
     if isinstance(old, dict) and isinstance(new, dict):
         old_keys: KeysView[Any] = old.keys()  # type: ignore
         new_keys: KeysView[Any] = new.keys()  # type: ignore
@@ -93,24 +88,24 @@ def _make_patch(
                     {"op": "set", "path": new_path, "value": new[key]},
                 )
     elif isinstance(old, list) and isinstance(new, list):
-        lcs: list[Any] = _get_lcs(old, new)  # type: ignore
-        old_idx = new_idx = lcs_idx = 0
-        while old_idx < len(old) or new_idx < len(new):  # type: ignore
+        n: int = len(old)  # type: ignore
+        m: int = len(new)  # type: ignore
+        dp: list[list[int]] = _get_dp(old, new)  # type: ignore
+        old_idx = new_idx = 0
+        while old_idx < n or new_idx < m:
             new_path = f"{path}[{new_idx}]"
-            removed: bool = old_idx < len(old) and (  # type: ignore
-                lcs_idx >= len(lcs) or not _eq(old[old_idx], lcs[lcs_idx])
-            )
-            inserted: bool = new_idx < len(new) and (  # type: ignore
-                lcs_idx >= len(lcs) or not _eq(new[new_idx], lcs[lcs_idx])
-            )
-            if removed and inserted:
+            best_cost: int = dp[old_idx][new_idx]
+            if (
+                old_idx < n and new_idx < m
+                and best_cost == 3 + dp[old_idx + 1][new_idx + 1]
+            ):
                 _make_patch(old[old_idx], new[new_idx], patch, new_path)
                 old_idx += 1
                 new_idx += 1
-            elif removed:
+            elif old_idx < n and best_cost == 2 + dp[old_idx + 1][new_idx]:
                 patch.append({"op": "del", "path": new_path})
                 old_idx += 1
-            elif inserted:
+            elif new_idx < m and best_cost == 2 + dp[old_idx][new_idx + 1]:
                 patch.append(
                     {"op": "insert", "path": new_path, "value": new[new_idx]},
                 )
@@ -118,8 +113,7 @@ def _make_patch(
             else:
                 old_idx += 1
                 new_idx += 1
-                lcs_idx += 1
-    else:
+    elif not _eq(old, new):
         patch.append({"op": "set", "path": path, "value": new})
 
 
@@ -127,7 +121,10 @@ def make_patch(old: Any, new: Any) -> list[_Operation]:
     """Make a JSON patch from two Python objects.
 
     .. versionadded:: 2.0
-    .. versionchanged:: 2.4 Removed :class:`decimal.Decimal` support
+    .. versionchanged:: 2.4
+
+        - Improved diffing algorithm.
+        - Removed :class:`decimal.Decimal` support.
 
     :param old: the old Python object
     :param new: the new Python object
