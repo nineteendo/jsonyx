@@ -191,6 +191,22 @@ Decoding arbitrary objects
 .. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
     suited for this.
 
+Using :class:`decimal.Decimal` instead of :class:`float`
+--------------------------------------------------------
+
+.. versionchanged:: 2.0
+
+    - Added ``types``.
+    - Made :class:`decimal.Decimal` not serializable by default.
+    - Replaced ``use_decimal`` with ``hooks``.
+
+>>> import jsonyx as json
+>>> from decimal import Decimal
+>>> json.loads("1.1", hooks={"float": Decimal})
+Decimal('1.1')
+>>> json.dump(Decimal('1.1'), types={"float": Decimal})
+1.1
+
 Encoding and decoding big integers
 ----------------------------------
 
