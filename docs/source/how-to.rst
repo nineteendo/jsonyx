@@ -60,15 +60,16 @@ jsonyx.TruncatedSyntaxError: (unicode error) 'ascii' codec can't decode byte 0xe
 
 .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the exception.
 
-Encoding custom objects
------------------------
+Encoding and decoding protocol-based objects
+--------------------------------------------
+
+.. versionadded:: 2.0
 
 .. _protocol_types:
 
 Encoding protocol-based objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. versionadded:: 2.0
 .. versionchanged:: 2.4 Made :class:`frozendict` serializable by default.
 
 By default, protocol types are encoded from instances of the corresponding
@@ -110,37 +111,10 @@ Example with :mod:`numpy`:
     infer serializability based on method presence.
 .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
 
-.. _encoding_hook:
-
-Encoding arbitrary objects
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. versionadded:: 2.1
-
->>> import jsonyx as json
->>> def complex_hook(obj):
-...     if isinstance(obj, complex):
-...         return {"__complex__": True, "real": obj.real, "imag": obj.imag}
-...     return obj
-... 
->>> json.dump(1 + 2j, hook=complex_hook)
-{"__complex__": true, "real": 1.0, "imag": 2.0}
-
-.. tip:: Use :func:`functools.singledispatch` to make this extensible.
-.. warning:: This function is called for **every object** during encoding, even
-  if the object is normally serializable.
-.. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
-    suited for this.
-
-Decoding custom objects
------------------------
-
 .. _decoding_hooks:
 
-Decoding objects using hooks
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. versionadded:: 2.0
+Decoding protocol-based objects
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default, decoded protocol types are converted to the corresponding Python
 types shown below. The conversion can be customized with ``hooks``.
@@ -173,8 +147,45 @@ Example with :mod:`numpy`:
 >>> json.loads("[false, 0.0, 0]", hooks=hooks)
 array([np.False_, np.float64(0.0), np.int64(0)], dtype=object)
 
+Using :class:`decimal.Decimal` instead of :class:`float`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+>>> import jsonyx as json
+>>> from decimal import Decimal
+>>> json.loads("1.1", hooks={"float": Decimal})
+Decimal('1.1')
+>>> json.dump(Decimal('1.1'), types={"float": Decimal})
+1.1
+
+Encoding and decoding arbitrary objects
+---------------------------------------
+
+.. _encoding_hook:
+
+Encoding arbitrary objects
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. versionadded:: 2.1
+
+>>> import jsonyx as json
+>>> def complex_hook(obj):
+...     if isinstance(obj, complex):
+...         return {"__complex__": True, "real": obj.real, "imag": obj.imag}
+...     return obj
+... 
+>>> json.dump(1 + 2j, hook=complex_hook)
+{"__complex__": true, "real": 1.0, "imag": 2.0}
+
+.. tip:: Use :func:`functools.singledispatch` to make this extensible.
+.. warning:: This function is called for **every object** during encoding, even
+  if the object is normally serializable.
+.. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
+    suited for this.
+
 Decoding arbitrary objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. versionadded:: 2.0
 
 >>> import jsonyx as json
 >>> def object_hook(obj):
@@ -191,24 +202,12 @@ Decoding arbitrary objects
 .. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
     suited for this.
 
-Using :class:`decimal.Decimal` instead of :class:`float`
---------------------------------------------------------
-
-.. versionchanged:: 2.0
-
-    - Added ``types``.
-    - Made :class:`decimal.Decimal` not serializable by default.
-    - Replaced ``use_decimal`` with ``hooks``.
-
->>> import jsonyx as json
->>> from decimal import Decimal
->>> json.loads("1.1", hooks={"float": Decimal})
-Decimal('1.1')
->>> json.dump(Decimal('1.1'), types={"float": Decimal})
-1.1
-
 Encoding and decoding big integers
 ----------------------------------
+
+Python has a global limit for converting between :class:`int` and :class:`str`.
+If you need to process integers exceeding this limit, use
+:func:`sys.set_int_max_str_digits` to increase it:
 
 >>> import jsonyx as json
 >>> from sys import set_int_max_str_digits
