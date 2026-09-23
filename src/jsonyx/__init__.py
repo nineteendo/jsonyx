@@ -39,15 +39,22 @@ if TYPE_CHECKING:
     _T_contra = TypeVar("_T_contra", contravariant=True)
 
     # pylint: disable-next=R0903
-    class _SupportsRead(Protocol[_T_co]):
+    class Reader(Protocol[_T_co]):
+        """Reader."""
+
         def read(self, length: int = ..., /) -> _T_co:  # type: ignore
             """Read string."""
 
+    Reader.__module__ = "io"
+
     # pylint: disable-next=R0903
-    class _SupportsWrite(Protocol[_T_contra]):
+    class Writer(Protocol[_T_contra]):
+        """Writer."""
+
         def write(self, s: _T_contra, /) -> object:
             """Write string."""
 
+    Writer.__module__ = "io"
     _ClassInfo = type | tuple["_ClassInfo", ...]
     _Node = tuple[dict[Any, Any] | list[Any], Any]
     _Operation = dict[str, Any]
@@ -104,7 +111,7 @@ def format_syntax_error(exc: TruncatedSyntaxError) -> list[str]:
 
 
 def load(
-    fp: _SupportsRead[bytes | str],
+    fp: Reader[bytes | str],
     *,
     allow: Container[str] = NOTHING,
     cache_keys: bool = False,
@@ -134,9 +141,9 @@ def load(
 
         >>> import jsonyx as json
         >>> from io import StringIO
-        >>> io = StringIO('["streaming API"]')
+        >>> io = StringIO('["reader protocol"]')
         >>> json.load(io)
-        ['streaming API']
+        ['reader protocol']
 
         Reading from a file:
 
@@ -146,11 +153,11 @@ def load(
         >>> with TemporaryDirectory() as tmpdir:
         ...     filename = join(tmpdir, "file.json")
         ...     with open(filename, "w", encoding="utf-8") as fp:
-        ...         _ = fp.write('["streaming API"]')
+        ...         _ = fp.write('["reader protocol"]')
         ...     with open(filename, "rb") as fp:
         ...         json.load(fp)
         ...
-        ['streaming API']
+        ['reader protocol']
 
     .. tip:: Specify ``root`` to display the zip filename in error messages.
     .. note:: The encoding is detected using :func:`jsonyx.detect_encoding`.
@@ -212,7 +219,7 @@ def loads(
 
 def dump(
     obj: object,
-    fp: _SupportsWrite[str] | None = None,
+    fp: Writer[str] | None = None,
     *,
     allow: Container[str] = NOTHING,
     check_circular: bool = True,
@@ -289,9 +296,9 @@ def dump(
         >>> import jsonyx as json
         >>> from io import StringIO
         >>> io = StringIO()
-        >>> json.dump(["streaming API"], io)
+        >>> json.json.dump(["writer protocol"], io)
         >>> io.getvalue()
-        '["streaming API"]\n'
+        '["writer protocol"]\n'
 
         Writing to a file:
 
@@ -301,11 +308,11 @@ def dump(
         >>> with TemporaryDirectory() as tmpdir:
         ...     filename = join(tmpdir, "file.json")
         ...     with open(filename, "w", encoding="utf-8") as fp:
-        ...         json.dump(["streaming API"], fp)
+        ...         json.json.dump(["writer protocol"], fp)
         ...     with open(filename, "r", encoding="utf-8") as fp:
         ...         fp.read()
         ...
-        '["streaming API"]\n'
+        '["writer protocol"]\n'
 
     .. note:: The item separator is automatically stripped when indented.
     .. warning:: Avoid specifying ABCs for ``types``, that is very slow.

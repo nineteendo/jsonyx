@@ -18,10 +18,13 @@ if TYPE_CHECKING:
     _T_contra = TypeVar("_T_contra", contravariant=True)
 
     # pylint: disable-next=R0903
-    class _SupportsWrite(Protocol[_T_contra]):
+    class Writer(Protocol[_T_contra]):
+        """Writer."""
+
         def write(self, s: _T_contra, /) -> object:
             """Write string."""
 
+    Writer.__module__ = "io"
     _ClassInfo = type | tuple["_ClassInfo", ...]
     _Encoder = Callable[[object], str]
     _Hook = Callable[[Any], Any]
@@ -420,7 +423,7 @@ class Encoder:
             commas and trailing_comma,
         )
 
-    def dump(self, obj: object, fp: _SupportsWrite[str] | None = None) -> None:
+    def dump(self, obj: object, fp: Writer[str] | None = None) -> None:
         r"""Serialize a Python object to an open JSON file.
 
         :param obj: a Python object
@@ -449,9 +452,9 @@ class Encoder:
             >>> from io import StringIO
             >>> encoder = json.Encoder()
             >>> io = StringIO()
-            >>> encoder.dump(["streaming API"], io)
+            >>> encoder.json.dump(["writer protocol"], io)
             >>> io.getvalue()
-            '["streaming API"]\n'
+            '["writer protocol"]\n'
 
             Writing to a file:
 
@@ -462,11 +465,11 @@ class Encoder:
             >>> with TemporaryDirectory() as tmpdir:
             ...     filename = join(tmpdir, "file.json")
             ...     with open(filename, "w", encoding="utf-8") as fp:
-            ...         encoder.dump(["streaming API"], fp)
+            ...         encoder.json.dump(["writer protocol"], fp)
             ...     with open(filename, "r", encoding="utf-8") as fp:
             ...         fp.read()
             ...
-            '["streaming API"]\n'
+            '["writer protocol"]\n'
 
         """
         s: str = self._encoder(obj)

@@ -25,10 +25,13 @@ if TYPE_CHECKING:
     _T_co = TypeVar("_T_co", covariant=True)
 
     # pylint: disable-next=R0903
-    class _SupportsRead(Protocol[_T_co]):
+    class Reader(Protocol[_T_co]):
+        """Reader."""
+
         def read(self, length: int = ..., /) -> _T_co:  # type: ignore
             """Read string."""
 
+    Reader.__module__ = "io"
     _Scanner = Callable[[str, str], Any]
     _StrPath = PathLike[str] | str
     _Hook = Callable[[Any], Any]
@@ -660,7 +663,7 @@ class Decoder:
         )
 
     def load(
-        self, fp: _SupportsRead[bytes | str], *, root: _StrPath = ".",
+        self, fp: Reader[bytes | str], *, root: _StrPath = ".",
     ) -> Any:
         """Deserialize an open JSON file to a Python object.
 
@@ -677,9 +680,9 @@ class Decoder:
             >>> import jsonyx as json
             >>> from io import StringIO
             >>> decoder = json.Decoder()
-            >>> io = StringIO('["streaming API"]')
+            >>> io = StringIO('["reader protocol"]')
             >>> decoder.load(io)
-            ['streaming API']
+            ['reader protocol']
 
             Reading from a file:
 
@@ -690,11 +693,11 @@ class Decoder:
             >>> with TemporaryDirectory() as tmpdir:
             ...     filename = join(tmpdir, "file.json")
             ...     with open(filename, "w", encoding="utf-8") as fp:
-            ...         _ = fp.write('["streaming API"]')
+            ...         _ = fp.write('["reader protocol"]')
             ...     with open(filename, "rb") as fp:
             ...         decoder.load(fp)
             ...
-            ['streaming API']
+            ['reader protocol']
 
         .. tip:: Specify ``root`` to display the zip filename in error
             messages.

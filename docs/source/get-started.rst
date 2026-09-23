@@ -110,9 +110,9 @@ Writing to an open file:
 >>> import jsonyx as json
 >>> from io import StringIO
 >>> io = StringIO()
->>> json.dump(["streaming API"], io)
+>>> json.dump(["writer protocol"], io)
 >>> io.getvalue()
-'["streaming API"]\n'
+'["writer protocol"]\n'
 
 Writing to a file:
 
@@ -122,11 +122,11 @@ Writing to a file:
 >>> with TemporaryDirectory() as tmpdir:
 ...     filename = join(tmpdir, "file.json")
 ...     with open(filename, "w", encoding="utf-8") as fp:
-...         json.dump(["streaming API"], fp)
+...         json.dump(["writer protocol"], fp)
 ...     with open(filename, "r", encoding="utf-8") as fp:
 ...         fp.read()
 ...
-'["streaming API"]\n'
+'["writer protocol"]\n'
 
 .. tip:: Use :class:`jsonyx.Encoder` directly for better performance.
 
@@ -182,9 +182,9 @@ Reading from an open file:
 
 >>> import jsonyx as json
 >>> from io import StringIO
->>> io = StringIO('["streaming API"]')
+>>> io = StringIO('["reader protocol"]')
 >>> json.load(io)
-['streaming API']
+['reader protocol']
 
 Reading from a file:
 
@@ -194,11 +194,11 @@ Reading from a file:
 >>> with TemporaryDirectory() as tmpdir:
 ...     filename = join(tmpdir, "file.json")
 ...     with open(filename, "w", encoding="utf-8") as fp:
-...         _ = fp.write('["streaming API"]')
+...         _ = fp.write('["reader protocol"]')
 ...     with open(filename, "rb") as fp:
 ...         json.load(fp)
 ...
-['streaming API']
+['reader protocol']
 
 .. tip:: Use :class:`jsonyx.Decoder` directly for better performance.
 .. note:: The encoding is detected using :func:`jsonyx.detect_encoding`.
