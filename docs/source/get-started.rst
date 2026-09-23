@@ -221,6 +221,23 @@ Decimal('1.1')
 >>> json.dump(Decimal('1.1'), types={"float": Decimal})
 1.1
 
+Allow non-standard numeric values
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By default, :mod:`jsonyx` does not allow ``NaN``, ``Infinity`` or
+``-Infinity``. To enable them, pass
+:data:`jsonyx.allow.NAN_AND_INFINITY` to ``allow``:
+
+>>> import jsonyx as json
+>>> import jsonyx.allow
+>>> json.loads("[NaN, Infinity, -Infinity]", allow=jsonyx.allow.NAN_AND_INFINITY)
+[nan, inf, -inf]
+>>> from math import inf, nan
+>>> json.dump([nan, inf, -inf], allow=jsonyx.allow.NAN_AND_INFINITY)
+[NaN, Infinity, -Infinity]
+
+.. note:: ``Decimal("sNan")`` can't be (de)serialised this way.
+
 Making a :doc:`patch </json-patch-spec>` from two Python objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
