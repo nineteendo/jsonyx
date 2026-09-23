@@ -129,6 +129,7 @@ Writing to a file:
 '["writer protocol"]\n'
 
 .. tip:: Use :class:`jsonyx.Encoder` directly for better performance.
+.. warning:: The output is not written incrementally, but in one-shot.
 
 Compact encoding
 ^^^^^^^^^^^^^^^^
@@ -201,6 +202,7 @@ Reading from a file:
 ['reader protocol']
 
 .. tip:: Use :class:`jsonyx.Decoder` directly for better performance.
+.. warning:: The input is not read incrementally, but in one-shot.
 .. note:: The encoding is detected using :func:`jsonyx.detect_encoding`.
 
 Using :class:`decimal.Decimal` instead of :class:`float`

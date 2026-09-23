@@ -160,6 +160,7 @@ def load(
         ['reader protocol']
 
     .. tip:: Specify ``root`` to display the zip filename in error messages.
+    .. warning:: The input is not read incrementally, but in one-shot.
     .. note:: The encoding is detected using :func:`jsonyx.detect_encoding`.
     .. seealso::
 
@@ -315,7 +316,11 @@ def dump(
         '["writer protocol"]\n'
 
     .. note:: The item separator is automatically stripped when indented.
-    .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
+    .. warning::
+
+        - The output is not written incrementally, but in one-shot.
+        - Avoid specifying ABCs for ``types``, that is very slow.
+
     .. seealso::
 
         - :func:`jsonyx.dumps` for serializing to a string.
