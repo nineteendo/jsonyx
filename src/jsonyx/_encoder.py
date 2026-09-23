@@ -336,14 +336,20 @@ class Encoder:
 
         - Added ``commas``, ``indent_leaves``, ``max_indent_level``,
           ``quoted_keys`` and ``types``.
+        - Allowed overriding serialization in subclasses of :class:`float` and
+          :class:`int` (e.g. :class:`enum.Enum`).
         - Made :class:`tuple` serializable by default instead of
-          :class:`enum.Enum` and :class:`decimal.Decimal`.
+          :class:`decimal.Decimal`.
         - Replaced ``item_separator`` and ``key_separator`` with
           ``separators``.
 
     .. versionchanged:: 2.1 Added ``check_circular``, ``hook`` and
         ``skipkeys``.
-    .. versionchanged:: 2.4 Made :class:`frozendict` serializable by default.
+    .. versionchanged:: 2.4
+
+        - Allowed overriding serialization in subclasses of :class:`str` (e.g.
+          :class:`enum.Enum`).
+        - Made :class:`frozendict` serializable by default.
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param check_circular: check for circular references

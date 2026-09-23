@@ -27,7 +27,7 @@ Breaking Changes:
       :class:`jsonyx.Manipulator`
     - Removed :class:`decimal.Decimal` support from :func:`jsonyx.make_patch`
     - Removed :data:`!jsonyx.Encoder.write`, :data:`!jsonyx.Decoder.read`,
-      :data:`!jsonyx.write` and :data:`!jsonyx.read`
+      :func:`!jsonyx.write` and :func:`!jsonyx.read`
 
 Other Changes:
     - Added free threading support
@@ -105,7 +105,7 @@ Breaking Changes:
     - Made :class:`tuple` serializable by default instead of
       :class:`decimal.Decimal`
     - Removed :data:`!jsonyx.allow.DUPLICATE_KEYS`
-    - Removed :data:`!jsonyx.DuplicateKey`
+    - Removed :class:`!jsonyx.DuplicateKey`
     - Removed :mod:`!jsonyx.tool`
     - Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
     - Replaced ``item_separator`` and ``key_separator`` with ``separators`` for
