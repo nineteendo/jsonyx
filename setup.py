@@ -38,7 +38,7 @@ if __name__ == "__main__":
             "Programming Language :: Python :: 3.15",
             "Programming Language :: Python :: Free Threading",
         ],
-        license="GPL-3.0",
+        license="LGPL-3.0",
         keywords=["python", "json", "json-parser"],
         package_dir={"": "src"},
         # setuptools arguments

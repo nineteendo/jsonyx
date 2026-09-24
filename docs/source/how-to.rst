@@ -160,12 +160,12 @@ Decimal('1.1')
 Encoding and decoding arbitrary objects
 ---------------------------------------
 
+.. versionadded:: 2.1
+
 .. _encoding_hook:
 
 Encoding arbitrary objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. versionadded:: 2.1
 
 >>> import jsonyx as json
 >>> def complex_hook(obj):
@@ -184,8 +184,6 @@ Encoding arbitrary objects
 
 Decoding arbitrary objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. versionadded:: 2.0
 
 >>> import jsonyx as json
 >>> def object_hook(obj):

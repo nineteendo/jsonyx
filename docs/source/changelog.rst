@@ -33,6 +33,7 @@ Other Changes:
     - Added free threading support
     - Improved diffing algorithm of :func:`jsonyx.make_patch`
     - Improved error messages
+    - Replaced GPL-3.0 license with LGPL-3.0
 
 Bug Fixes:
     - Fixed :issue:`python/cpython#142831`: Use-after-free in
