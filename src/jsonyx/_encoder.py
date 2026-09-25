@@ -27,6 +27,7 @@ if TYPE_CHECKING:
     Writer.__module__ = "io"
     _ClassInfo = type | tuple["_ClassInfo", ...]
     _Encoder = Callable[[object], str]
+    _Formatter = Callable[[object], str]
     _Hook = Callable[[Any], Any]
 
 if sys.version_info < (3, 15):
@@ -62,9 +63,11 @@ except ImportError:
     def make_encoder(
         array_types: _ClassInfo,
         bool_types: _ClassInfo,
+        float_formatter: _Formatter,
         float_types: _ClassInfo,
         hook: _Hook | None,
         indent: str | None,
+        int_formatter: _Formatter,
         int_types: _ClassInfo,
         object_types: _ClassInfo,
         str_types: _ClassInfo,
@@ -86,7 +89,6 @@ except ImportError:
     ) -> _Encoder:
         """Make JSON encoder."""
         markers: dict[int, object] | None = {} if check_circular else None
-
         if hook is None:
             def new_hook(obj: Any) -> Any:
                 return obj
@@ -121,24 +123,23 @@ except ImportError:
             def encode_string(s: str) -> str:
                 return f'"{_ASCII_ESCAPE_CHARS.sub(replace, s)}"'
 
-        def encode_float(num: Any) -> str:
-            s: str = str(num)
+        def encode_number(s: str) -> str:
             if _NUMBER.fullmatch(s):
                 return s
 
-            s = s.lower()
-            if s == "nan":
+            s_lower: str = s.lower()
+            if s_lower == "nan":
                 s = "NaN"
-            elif s in {"inf", "infinity"}:
+            elif s_lower in {"inf", "infinity"}:
                 s = "Infinity"
-            elif s in {"-inf", "-infinity"}:
+            elif s_lower in {"-inf", "-infinity"}:
                 s = "-Infinity"
             else:
-                msg: str = f"{num!r} is not JSON serializable"
+                msg: str = f"{s} is not a valid JSON number"
                 raise ValueError(msg)
 
             if not allow_nan_and_infinity:
-                msg = f"{num!r} is not allowed"
+                msg = f"{s} is not allowed"
                 raise ValueError(msg)
 
             return s
@@ -234,8 +235,10 @@ except ImportError:
                         s = "null"
                     elif isinstance(key, (bool, bool_types)):
                         s = "true" if key else "false"
-                    elif isinstance(key, (float, int, float_types, int_types)):
-                        s = encode_float(key)
+                    elif isinstance(key, (float, float_types)):
+                        s = encode_number(float_formatter(key))
+                    elif isinstance(key, (int, int_types)):
+                        s = encode_number(int_formatter(key))
                     elif skipkeys:
                         continue
                     else:
@@ -296,8 +299,10 @@ except ImportError:
                 io.write("true" if obj else "false")
             elif isinstance(obj, (str, str_types)):
                 io.write(encode_string(str(obj)))
-            elif isinstance(obj, (float, int, float_types, int_types)):
-                io.write(encode_float(obj))
+            elif isinstance(obj, (float, float_types)):
+                io.write(encode_number(float_formatter(obj)))
+            elif isinstance(obj, (int, int_types)):
+                io.write(encode_number(int_formatter(obj)))
             elif isinstance(obj, (list, tuple, array_types)):
                 try:
                     write_sequence(obj, io, indent_level, current_indent)
@@ -350,6 +355,7 @@ class Encoder:
         ``skipkeys``.
     .. versionchanged:: 2.4
 
+        - Added ``formatters``.
         - Allowed overriding serialization in subclasses of :class:`str` (e.g.
           :class:`enum.Enum`).
         - Made :class:`frozendict` serializable by default.
@@ -360,6 +366,7 @@ class Encoder:
     :param hook: the :ref:`hook <encoding_hook>` used for transforming data
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
+    :param formatters: a dictionary of formatters
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
     :param max_indent_level: the level up to which to indent
@@ -384,6 +391,7 @@ class Encoder:
         hook: _Hook | None = None,
         end: str = "\n",
         ensure_ascii: bool = False,
+        formatters: dict[str, _Formatter] | None = None,
         indent: int | str | None = None,
         indent_leaves: bool = True,
         max_indent_level: int | None = None,
@@ -408,13 +416,17 @@ class Encoder:
         if max_indent_level is None:
             max_indent_level = sys.maxsize
 
+        if formatters is None:
+            formatters = {}
+
         if types is None:
             types = {}
 
         # pylint: disable-next=E0606
         self._encoder: _Encoder = make_encoder(
             types.get("array", ()), types.get("bool", ()),
-            types.get("float", ()), hook, indent, types.get("int", ()),
+            formatters.get("float", str), types.get("float", ()), hook, indent,
+            formatters.get("int", str), types.get("int", ()),
             types.get("object", ()), types.get("str", ()), end,
             item_separator, key_separator, long_item_separator,
             max_indent_level, "nan_and_infinity" in allow,

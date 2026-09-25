@@ -109,7 +109,7 @@ def test_nan_and_infinity_not_allowed(
 def test_nan_payload(json: ModuleType, num: str) -> None:
     """Test NaN payload."""
     types: dict[str, type] = {"float": Decimal}
-    with pytest.raises(ValueError, match="is not JSON serializable"):
+    with pytest.raises(ValueError, match="is not a valid JSON number"):
         json.dumps(Decimal(num), allow=NAN_AND_INFINITY, types=types)
 
 
@@ -122,7 +122,7 @@ def test_nan_payload(json: ModuleType, num: str) -> None:
 ])
 def test_enum(json: ModuleType, obj: float | dict[object, object]) -> None:
     """Test enum."""
-    with pytest.raises(ValueError, match="is not JSON serializable"):
+    with pytest.raises(ValueError, match="is not a valid JSON number"):
         json.dumps(obj, allow=NON_STR_KEYS)
 
 

@@ -14,6 +14,8 @@ jsonyx 2.4.0 (unreleased)
 -------------------------
 
 New features:
+    - Added ``formatters`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump` and
+      :func:`jsonyx.dumps`
     - Made :class:`frozendict` serializable by default
 
 Breaking Changes:

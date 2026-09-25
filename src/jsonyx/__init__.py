@@ -56,6 +56,7 @@ if TYPE_CHECKING:
 
     Writer.__module__ = "io"
     _ClassInfo = type | tuple["_ClassInfo", ...]
+    _Formatter = Callable[[object], str]
     _Node = tuple[dict[Any, Any] | list[Any], Any]
     _Operation = dict[str, Any]
     _StrPath = PathLike[str] | str
@@ -227,6 +228,7 @@ def dump(
     commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
+    formatters: dict[str, _Formatter] | None = None,
     hook: _Hook | None = None,
     indent: int | str | None = None,
     indent_leaves: bool = True,
@@ -255,6 +257,7 @@ def dump(
         ``skipkeys``.
     .. versionchanged:: 2.4
 
+        - Added ``formatters``.
         - Allowed overriding serialization in subclasses of :class:`str` (e.g.
           :class:`enum.Enum`).
         - Made :class:`frozendict` serializable by default.
@@ -266,6 +269,7 @@ def dump(
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
+    :param formatters: a dictionary of formatters
     :param hook: the :ref:`hook <encoding_hook>` used for transforming data
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
@@ -333,6 +337,7 @@ def dump(
         commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,
+        formatters=formatters,
         hook=hook,
         indent=indent,
         indent_leaves=indent_leaves,
@@ -354,6 +359,7 @@ def dumps(
     commas: bool = True,
     end: str = "\n",
     ensure_ascii: bool = False,
+    formatters: dict[str, _Formatter] | None = None,
     hook: _Hook | None = None,
     indent: int | str | None = None,
     indent_leaves: bool = True,
@@ -382,6 +388,7 @@ def dumps(
         ``skipkeys``.
     .. versionchanged:: 2.4
 
+        - Added ``formatters``.
         - Allowed overriding serialization in subclasses of :class:`str` (e.g.
           :class:`enum.Enum`).
         - Made :class:`frozendict` serializable by default.
@@ -392,6 +399,7 @@ def dumps(
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
+    :param formatters: a dictionary of formatters
     :param hook: the :ref:`hook <encoding_hook>` used for transforming data
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
@@ -426,6 +434,7 @@ def dumps(
         commas=commas,
         end=end,
         ensure_ascii=ensure_ascii,
+        formatters=formatters,
         hook=hook,
         indent=indent,
         indent_leaves=indent_leaves,
