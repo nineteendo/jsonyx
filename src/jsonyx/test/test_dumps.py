@@ -15,7 +15,10 @@ import pytest
 from jsonyx.allow import NAN_AND_INFINITY, NON_STR_KEYS, SURROGATES
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from types import ModuleType
+
+    _Formatter = Callable[[object], str]
 
 if sys.version_info >= (3, 15):
     empty_frozendict: Any = frozendict()  # ruff: ignore[F821]
@@ -71,6 +74,12 @@ def test_int(json: ModuleType, num: int, int_type: type) -> None:
     assert json.dumps(int_type(num), end="", types=types) == str(num)
 
 
+def test_int_formatter(json: ModuleType) -> None:
+    """Test int formatter."""
+    formatters: dict[str, _Formatter] = {"int": "{:g}".format}
+    assert json.dumps(10 ** 6, end="", formatters=formatters) == "1e+06"
+
+
 @pytest.mark.parametrize("float_type", [Decimal, float])
 def test_rational_number(json: ModuleType, float_type: type) -> None:
     """Test rational number."""
@@ -111,6 +120,12 @@ def test_nan_payload(json: ModuleType, num: str) -> None:
     types: dict[str, type] = {"float": Decimal}
     with pytest.raises(ValueError, match="is not a valid JSON number"):
         json.dumps(Decimal(num), allow=NAN_AND_INFINITY, types=types)
+
+
+def test_float_formatter(json: ModuleType) -> None:
+    """Test float formatter."""
+    formatters: dict[str, _Formatter] = {"float": "{:.2f}".format}
+    assert json.dumps(1.234, end="", formatters=formatters) == "1.23"
 
 
 @pytest.mark.parametrize("obj", [
