@@ -200,6 +200,30 @@ Decoding arbitrary objects
 .. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
     suited for this.
 
+.. _formatters:
+
+Formatting numbers
+------------------
+
+.. versionadded:: 2.4
+
+By default, numbers are formatted using :class:`str`. Custom formatters can
+be registered with ``formatters``. Formatters must return a string containing
+a valid JSON number.
+
+============ ============= ====================================
+Formatter    Default       Called with
+============ ============= ====================================
+``"float"``  :class:`str`  :class:`float` or a ``"float"`` type
+``"int"``    :class:`str`  :class:`int` or an ``"int"`` type
+============ ============= ====================================
+
+Example:
+
+>>> import jsonyx as json
+>>> json.dump([1.234, 5.678], formatters={"float": "{:.2f}".format})
+[1.23, 5.68]
+
 Encoding and decoding big integers
 ----------------------------------
 

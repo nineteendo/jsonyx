@@ -38,6 +38,8 @@ MISSING_COMMAS: frozenset[str] = frozenset({"missing_commas"})
 >>> import jsonyx.allow
 >>> json.loads("[1 2 3]", allow=jsonyx.allow.MISSING_COMMAS)
 [1, 2, 3]
+
+.. seealso:: :data:`jsonyx.allow.TRAILING_COMMA` for allowing a trailing comma.
 """
 
 NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
@@ -89,6 +91,8 @@ TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
 >>> import jsonyx.allow
 >>> json.loads("[0,]", allow=jsonyx.allow.TRAILING_COMMA)
 [0]
+
+.. seealso:: :data:`jsonyx.allow.MISSING_COMMAS` for allowing missing commas.
 """
 
 UNQUOTED_KEYS: frozenset[str] = frozenset({"unquoted_keys"})
