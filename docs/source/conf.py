@@ -99,7 +99,7 @@ latex_use_xindy: bool = False
 
 autodoc_preserve_defaults: bool = True
 autodoc_type_aliases: dict[str, str] = {name: name for name in [
-    "_ClassInfo", "_Hook", "_Node", "_Operation", "_StrPath",
+    "_ClassInfo", "_Formatter", "_Hook", "_Node", "_Operation", "_StrPath",
 ]}
 autodoc_typehints: str = "none"
 
