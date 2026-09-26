@@ -134,17 +134,12 @@ Writing to a file:
 Compact encoding
 ^^^^^^^^^^^^^^^^
 
-.. versionchanged:: 2.0
-
-    - Added ``quoted_keys``.
-    - Replaced ``item_separator`` and ``key_separator`` with ``separators``.
+.. versionchanged:: 2.0 Replaced ``item_separator`` and ``key_separator`` with
+    ``separators``.
 
 >>> import jsonyx as json
 >>> json.dumps({"a": 1, "b": 2, "c": 3}, end="", separators=(",", ":"))
 '{"a":1,"b":2,"c":3}'
-
-.. tip:: Use ``quoted_keys=False`` for even more compact encoding, but this
-    isn't widely supported.
 
 Pretty printing
 ^^^^^^^^^^^^^^^
