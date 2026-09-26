@@ -407,10 +407,13 @@ class Encoder:
         long_item_separator, key_separator = separators
         if commas:
             item_separator: str = long_item_separator.rstrip()
+        elif trailing_comma:
+            msg: str = "not commas and trailing_comma are mutually exclusive"
+            raise ValueError(msg)
         else:
             item_separator = ""
 
-        if indent is not None and isinstance(indent, int):
+        if isinstance(indent, int):
             indent *= " "
 
         if max_indent_level is None:
@@ -432,7 +435,7 @@ class Encoder:
             max_indent_level, "nan_and_infinity" in allow,
             "non_str_keys" in allow, allow_surrogates, check_circular,
             ensure_ascii, indent_leaves, quoted_keys, skipkeys, sort_keys,
-            commas and trailing_comma,
+            trailing_comma,
         )
 
     def dump(self, obj: object, fp: Writer[str] | None = None) -> None:

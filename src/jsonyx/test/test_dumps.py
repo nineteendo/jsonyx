@@ -700,17 +700,11 @@ def test_no_commas(
     ([1, 2, 3], "[\n 1\n 2\n 3\n]"),
     ({"a": 1, "b": 2, "c": 3}, '{\n "a": 1\n "b": 2\n "c": 3\n}'),
 ])
-@pytest.mark.parametrize("trailing_comma", [True, False])
 def test_no_commas_indent(
-    json: ModuleType,
-    obj: dict[str, object] | list[object],
-    expected: str,
-    trailing_comma: bool,
+    json: ModuleType, obj: dict[str, object] | list[object], expected: str,
 ) -> None:
     """Test no commas with indent."""
-    assert json.dumps(
-        obj, commas=False, end="", indent=1, trailing_comma=trailing_comma,
-    ) == expected
+    assert json.dumps(obj, commas=False, end="", indent=1) == expected
 
 
 def test_default_end(json: ModuleType) -> None:
@@ -754,3 +748,9 @@ def test_trailing_comma_indent(
 ) -> None:
     """Test trailing_comma with indent."""
     assert json.dumps(obj, end="", indent=1, trailing_comma=True) == expected
+
+
+def test_no_commas_trailing_comma(json: ModuleType) -> None:
+    """Test no commas and trailing_comma."""
+    with pytest.raises(ValueError, match="are mutually exclusive"):
+        assert json.dumps(None, commas=False, trailing_comma=True)
