@@ -129,7 +129,7 @@ Writing to a file:
 '["writer protocol"]\n'
 
 .. tip:: Use :class:`jsonyx.Encoder` directly for better performance.
-.. warning:: The output is not written incrementally, but in one-shot.
+.. note:: The output is not written incrementally, but in one-shot.
 
 Compact encoding
 ^^^^^^^^^^^^^^^^
@@ -200,8 +200,10 @@ Reading from a file:
 ['reader protocol']
 
 .. tip:: Use :class:`jsonyx.Decoder` directly for better performance.
-.. warning:: The input is not read incrementally, but in one-shot.
-.. note:: The encoding is detected using :func:`jsonyx.detect_encoding`.
+.. note::
+
+    - The input is not read incrementally, but in one-shot.
+    - The encoding is detected using :func:`jsonyx.detect_encoding`.
 
 Allow non-standard numeric values
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -217,8 +219,6 @@ By default, :mod:`jsonyx` does not allow ``NaN``, ``Infinity`` or
 >>> from math import inf, nan
 >>> json.dump([nan, inf, -inf], allow=jsonyx.allow.NAN_AND_INFINITY)
 [NaN, Infinity, -Infinity]
-
-.. note:: ``Decimal("sNan")`` can't be (de)serialised this way.
 
 Making a :doc:`patch </json-patch-spec>` from two Python objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

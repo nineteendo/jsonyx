@@ -486,7 +486,7 @@ class Encoder:
             ...
             '["writer protocol"]\n'
 
-        .. warning:: The output is not written incrementally, but in one-shot.
+        .. note:: The output is not written incrementally, but in one-shot.
 
         """
         s: str = self._encoder(obj)

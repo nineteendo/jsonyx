@@ -701,9 +701,10 @@ class Decoder:
 
         .. tip:: Specify ``root`` to display the zip filename in error
             messages.
-        .. warning:: The input is not read incrementally, but in one-shot.
-        .. note:: The encoding is detected using
-            :func:`jsonyx.detect_encoding`.
+        .. note::
+
+            - The input is not read incrementally, but in one-shot.
+            - The encoding is detected using :func:`jsonyx.detect_encoding`.
 
         """
         name: str | None
