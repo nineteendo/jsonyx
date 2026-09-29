@@ -705,6 +705,7 @@ class Decoder:
 
             - The input is not read incrementally, but in one-shot.
             - The encoding is detected using :func:`jsonyx.detect_encoding`.
+            - Keys are never re-used across calls.
 
         """
         name: str | None
@@ -735,6 +736,7 @@ class Decoder:
 
         .. tip:: Specify ``filename`` to display the filename in error
             messages.
+        .. note:: Keys are never re-used across calls.
 
         """
         filename = fspath(filename)
