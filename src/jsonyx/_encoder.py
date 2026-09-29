@@ -127,8 +127,7 @@ except ImportError:
             if _NUMBER.fullmatch(s):
                 return s
 
-            s_lower: str = s.lower()
-            if s_lower == "nan":
+            if (s_lower := s.lower()) == "nan":
                 s = "NaN"
             elif s_lower in {"inf", "infinity"}:
                 s = "Infinity"
