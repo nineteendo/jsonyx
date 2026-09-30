@@ -211,6 +211,8 @@ By default, numbers are formatted using :class:`str`. Custom formatters can
 be registered with ``formatters``. Formatters must return a string containing
 a valid JSON number.
 
+.. tabularcolumns:: \X{1}{4}\X{1}{4}\X{1}{2}
+
 ============ ============= ====================================
 Formatter    Default       Called with
 ============ ============= ====================================

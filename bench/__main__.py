@@ -1,5 +1,4 @@
 """JSON benchmark."""
-# TODO(Nice Zombies): re-run benchmark
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -8,14 +7,12 @@ import json
 import sys
 from functools import partial
 from math import inf
-from random import randint, random, seed
-from sys import maxsize
 from timeit import Timer
 from typing import TYPE_CHECKING, Any
 
 import msgspec
 import orjson
-import simdjson
+import yyjson
 from tabulate import tabulate  # type: ignore[import-untyped]
 
 if sys.version_info >= (3, 10):
@@ -35,36 +32,39 @@ if TYPE_CHECKING:
 
     _Func = Callable[[Any], Any]
 
-seed(0)
 _ENCODE_CASES: dict[str, Any] = {
-    "List of 65,536 booleans": [True] * 65_536,
-    # ruff: ignore[S311]
-    "List of 65,536 ints": [randint(0, 1_000_000) for _ in range(65_536)],
-    "Dict with 65,536 booleans": {
-        str(random() * 20): True for _ in range(65_536)  # ruff: ignore[S311]
-    },
-    "List of 65,536 empty strings": [""] * 65_536,
-    "List of 65,536 ASCII strings": [
-        "A pretty long string which is in a list",
-    ] * 65_536,
-    # ruff: ignore[S311]
-    "List of 65,536 floats": [maxsize * random() for _ in range(65_536)],
-    "List of 65,536 strings": [
-        # ruff: ignore[ISC004]
-        "\u0646\u0638\u0627\u0645 \u0627\u0644\u062d\u0643\u0645 \u0633\u0644"
-        "\u0637\u0627\u0646\u064a \u0648\u0631\u0627\u062b\u064a \u0641\u064a "
-        "\u0627\u0644\u0630\u0643\u0648\u0631 \u0645\u0646 \u0630\u0631\u064a"
-        "\u0629 \u0627\u0644\u0633\u064a\u062f \u062a\u0631\u0643\u064a \u0628"
-        "\u0646 \u0633\u0639\u064a\u062f \u0628\u0646 \u0633\u0644\u0637\u0627"
-        "\u0646 \u0648\u064a\u0634\u062a\u0631\u0637 \u0641\u064a\u0645\u0646 "
-        "\u064a\u062e\u062a\u0627\u0631 \u0644\u0648\u0644\u0627\u064a\u0629 "
-        "\u0627\u0644\u062d\u0643\u0645 \u0645\u0646 \u0628\u064a\u0646\u0647"
-        "\u0645 \u0627\u0646 \u064a\u0643\u0648\u0646 \u0645\u0633\u0644\u0645"
-        "\u0627 \u0631\u0634\u064a\u062f\u0627 \u0639\u0627\u0642\u0644\u0627 "
-        "\u064b\u0648\u0627\u0628\u0646\u0627 \u0634\u0631\u0639\u064a\u0627 "
-        "\u0644\u0627\u0628\u0648\u064a\u0646 \u0639\u0645\u0627\u0646\u064a"
-        "\u064a\u0646 ",
-    ] * 65_536,
+    # characters
+    "65,536 control characters": "\x00" * 65_536,
+    "65,536 ASCII characters": "\x20" * 65_536,
+    "65,536 Unicode characters": "\x80" * 65_536,
+    "65,536 non-BMP characters": "\U00010000" * 65_536,
+
+    # constants
+    "65,536 nulls": [None] * 65_536,
+    "65,536 booleans": [False] * 65_536,
+
+    # strings and keys
+    "65,536 empty strings": [""] * 65_536,
+    "65,536 ASCII keys": {f"{i}": None for i in range(65_536)},
+
+    # floats
+    "65,536 fixed-point floats": [0.0] * 65_536,
+    "65,536 scientific floats": [1e-05] * 65_536,
+    "65,536 subnormal floats": [5e-324] * 65_536,
+
+    # integers
+    "65,536 31-bit integers": [0] * 65_536,
+    "65,536 32-bit integers": [2 ** 31] * 65_536,
+    "65,536 63-bit integers": [2 ** 32] * 65_536,
+    "65,536 64-bit integers": [2 ** 63] * 65_536,
+    "65,536 >64-bit integers": [2 ** 64] * 65_536,
+
+    # lists and dictionaries
+    "65,536 empty lists": [[]] * 65_536,
+    "65,536 empty dictionaries": [{}] * 65_536,
+}
+_DECODE_CASES: dict[str, bytes] = {
+    case: json.dumps(obj).encode() for case, obj in _ENCODE_CASES.items()
 }
 
 
@@ -79,25 +79,23 @@ _ENCODE_FUNCS: dict[str, _Func] = {
     "msgspec": msgspec.json.Encoder().encode,
     # pylint: disable-next=E1101
     "orjson": orjson.dumps,
-}
-_DECODE_CASES: dict[str, Any] = {
-    case: json.dumps(obj) for case, obj in _ENCODE_CASES.items()
+    "yyjson": _make_dumpb(yyjson.dumps),  # type: ignore
 }
 _DECODE_FUNCS: dict[str, _Func] = {
-    "json": json.JSONDecoder().decode,
+    "json": json.loads,
     "jsonyx": jsonyx.Decoder().loads,
     "pyjsonyx": pyjsonyx.Decoder().loads,
     "msgspec": msgspec.json.Decoder().decode,
     # pylint: disable-next=E1101
     "orjson": orjson.loads,
-    "simdjson": simdjson.Parser().parse,
+    "yyjson": yyjson.loads,  # type: ignore
 }
 
 
 def _run_benchmark(
     name: str, cases: dict[str, Any], funcs: dict[str, _Func],
 ) -> None:
-    results: list[list[str]] = []
+    rows: list[list[str]] = []
     speedups: list[float] = []
     for case, obj in cases.items():
         times: dict[str, float] = {}
@@ -107,23 +105,23 @@ def _run_benchmark(
                 timer: Timer = Timer(partial(func, obj))
                 number, time_taken = timer.autorange()
                 times[lib] = time_taken / number
-            except TypeError:
+            except (ValueError, TypeError):
                 times[lib] = inf
 
         speedups.append(times["pyjsonyx"] / times["jsonyx"])
         del times["pyjsonyx"]
         fastest_time: float = min(times.values())
-        row: list[Any] = [case]
+        row: list[str] = [case]
         row.extend(f"{time / fastest_time:.02f}x" for time in times.values())
         row.append(f"{1_000_000 * fastest_time:.02f} \u03bcs")
-        results.append(row)
+        rows.append(row)
 
     del funcs["pyjsonyx"]
-    headers: list[str] = [name, *funcs.keys(), "fastest\xa0time"]
+    headers: list[str] = [name, *funcs.keys(), "fastest time"]
     colalign: list[str] = ["left"] + ["right"] * (len(funcs) + 1)
     print()
-    print(tabulate(results, headers, "rst", colalign=colalign))
-    print(f"{name} speedup: {max(speedups):.02f}x")
+    print(tabulate(rows, headers, "rst", colalign=colalign))
+    print(f"max {name} speedup: {max(speedups):.02f}x")
 
 
 if __name__ == "__main__":

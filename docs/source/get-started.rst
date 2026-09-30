@@ -76,8 +76,8 @@ Check if the correct version is installed
     jsonyx 2.4.0 (C extension)
 
 .. warning:: If the version number is followed by ``(Python)``, the performance
-    will be up to 8.03x slower for encoding and up to 46.71x slower for
-    decoding, so make sure you have a
+    will be up to 82.11x slower for encoding and up to 92.54x slower decoding,
+    so make sure you have a
     `C compiler <https://wiki.python.org/moin/WindowsCompilers>`_ installed on
     Windows.
 
