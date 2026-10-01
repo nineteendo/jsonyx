@@ -20,7 +20,20 @@ New Features:
 
 Breaking Changes:
     - Allowed overriding serialization in subclasses of :class:`str` (e.g.
-      :class:`enum.Enum`)
+      :class:`enum.Enum`):
+
+      .. code-block:: diff
+
+           >>> import jsonyx as json
+          ->>> from enum import Enum
+          ->>> class MyEnum(str, Enum):
+          +>>> from enum import ReprEnum
+          +>>> class MyEnum(str, ReprEnum):
+           ...     EMPTY = ""
+           ... 
+           >>> json.dump(MyEnum.EMPTY)
+           ""
+
     - Removed ``--use-decimal`` (alias ``-d``) from ``jsonyx diff``,
       ``jsonyx format`` and ``jsonyx patch``
     - Removed ``use_decimal`` from :func:`jsonyx.apply_filter`,
@@ -28,8 +41,39 @@ Breaking Changes:
       :func:`jsonyx.paste_values`, :func:`jsonyx.select_nodes`, and
       :class:`jsonyx.Manipulator`
     - Removed :class:`decimal.Decimal` support from :func:`jsonyx.make_patch`
-    - Removed :data:`!jsonyx.Encoder.write`, :data:`!jsonyx.Decoder.read`,
-      :func:`!jsonyx.write` and :func:`!jsonyx.read`
+    - Removed :data:`!jsonyx.Decoder.read` and :func:`!jsonyx.read`:
+
+      .. code-block:: diff
+
+           >>> import jsonyx as json
+           >>> from os.path import join
+           >>> from tempfile import TemporaryDirectory
+           >>> with TemporaryDirectory() as tmpdir:
+           ...     filename = join(tmpdir, "file.json")
+           ...     with open(filename, "w", encoding="utf-8") as fp:
+           ...         _ = fp.write('["reader protocol"]')
+          -...     json.read(filename)
+          +...     with open(filename, "rb") as fp:
+          +...         json.load(fp)
+           ...
+           ['reader protocol']
+
+    - Removed :data:`!jsonyx.Encoder.write` and :func:`!jsonyx.write`:
+
+      .. code-block:: diff
+
+           >>> import jsonyx as json
+           >>> from os.path import join
+           >>> from tempfile import TemporaryDirectory
+           >>> with TemporaryDirectory() as tmpdir:
+           ...     filename = join(tmpdir, "file.json")
+          -...     json.write(["writer protocol"], filename)
+          +...     with open(filename, "w", encoding="utf-8") as fp:
+          +...         json.dump(["writer protocol"], fp)
+           ...     with open(filename, "r", encoding="utf-8") as fp:
+           ...         fp.read()
+           ...
+           '["writer protocol"]\n'
 
 Other Changes:
     - Added free threading support
@@ -57,13 +101,10 @@ Bug Fixes:
 jsonyx 2.2.0 (Mar 31, 2025)
 ---------------------------
 
-New Features:
-    - Added ``cache_keys`` to :class:`jsonyx.Decoder`, :func:`jsonyx.load`,
-      :func:`jsonyx.loads` and :func:`!jsonyx.read`
-
 Breaking Changes:
-    - Disabled caching keys by default for :class:`jsonyx.Decoder`,
-      :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`!jsonyx.read`
+    - Added ``cache_keys`` (default ``False`` instead of ``True``) to
+      :class:`jsonyx.Decoder`, :func:`jsonyx.load`, :func:`jsonyx.loads` and
+      :func:`!jsonyx.read`
 
 jsonyx 2.1.0 (Mar 30, 2025)
 ---------------------------
@@ -101,21 +142,70 @@ New Features:
     - Added :func:`jsonyx.select_nodes`
     - Added :class:`jsonyx.Manipulator`
     - Added :exc:`jsonyx.TruncatedSyntaxError`
+    - Made :class:`tuple` serializable by default
 
 Breaking Changes:
     - Allowed overriding serialization in subclasses of :class:`float` and
-      :class:`int` (e.g. :class:`enum.Enum`)
-    - Made :class:`tuple` serializable by default instead of
-      :class:`decimal.Decimal`
-    - Removed :data:`!jsonyx.allow.DUPLICATE_KEYS`
+      :class:`int` (e.g. :class:`enum.Enum`):
+
+      .. code-block:: diff
+
+           >>> import jsonyx as json
+          ->>> from enum import Enum
+          ->>> class MyEnum(float, Enum): # or int
+          +>>> from enum import ReprEnum
+          +>>> class MyEnum(float, ReprEnum): # or int
+           ...     ZERO = 0
+           ... 
+           >>> json.dump(MyEnum.ZERO)
+           0.0
+
+    - Made :class:`decimal.Decimal` not serializable by default:
+
+      .. code-block:: diff
+
+           >>> import jsonyx as json
+           >>> from decimal import Decimal
+          ->>> json.dump(Decimal('1.1'))
+          +>>> json.dump(Decimal('1.1'), types={"float": Decimal})
+           1.1
+
+    - Removed :data:`!jsonyx.allow.DUPLICATE_KEYS`:
+
+      .. code-block:: diff
+
+           >>> import jsonyx as json
+          ->>> import jsonyx.allow
+          ->>> json.loads('{"a": 1, "a": 2}', allow=jsonyx.allow.DUPLICATE_KEYS)
+          -{'a': 1, 'a': 2}
+          +>>> from multidict import MultiDict
+          +>>> json.loads('{"a": 1, "a": 2}', hooks={"object": MultiDict})
+          +<MultiDict('a': 1, 'a': 2)>
+
     - Removed :class:`!jsonyx.DuplicateKey`
     - Removed :mod:`!jsonyx.tool`
     - Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
     - Replaced ``item_separator`` and ``key_separator`` with ``separators`` for
       :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
-      :func:`!jsonyx.write`
+      :func:`!jsonyx.write`:
+
+      .. code-block:: diff
+
+           >>> import jsonyx as json
+          ->>> json.dumps({"a": 1, "b": 2, "c": 3}, end="", item_separator=",", key_separator=":")
+          +>>> json.dumps({"a": 1, "b": 2, "c": 3}, end="", separators=(",", ":"))
+           '{"a":1,"b":2,"c":3}'
+
     - Replaced ``use_decimal`` with ``hooks`` for :class:`jsonyx.Decoder`,
-      :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`!jsonyx.read`
+      :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`!jsonyx.read`:
+
+      .. code-block:: diff
+
+           >>> import jsonyx as json
+           >>> from decimal import Decimal
+          ->>> json.loads("1.1", use_decimal=True)
+          +json.loads("1.1", hooks={"float": Decimal})
+           Decimal('1.1')
 
 Other Changes:
     - Added cache for indentations in the JSON encoder
@@ -162,3 +252,8 @@ jsonyx 1.1.0 (Aug 3, 2024)
 
 Breaking Changes:
     - Renamed ``python -m jsonyx.tool`` to ``python -m jsonyx``
+
+jsonyx 1.0.0 (Aug 3, 2024)
+--------------------------
+
+Initial release

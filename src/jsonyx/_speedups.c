@@ -1650,7 +1650,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
     /* Encode Python object obj to a JSON term */
     PyObject *new_obj;
     int rv;
-    
+
     if (s->hook != Py_None) {
         obj = PyObject_CallOneArg(s->hook, obj);
         if (obj == NULL) {
