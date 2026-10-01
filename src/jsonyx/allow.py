@@ -57,7 +57,7 @@ NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
 """
 
 NON_STR_KEYS: frozenset[str] = frozenset({"non_str_keys"})
-"""Allow non-string keys in ``"object"`` types.
+"""Allow non-string keys in objects.
 
 .. versionadded:: 2.0
 

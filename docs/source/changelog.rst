@@ -152,13 +152,13 @@ Breaking Changes:
 
            >>> import jsonyx as json
           ->>> from enum import Enum
-          ->>> class MyEnum(float, Enum):
+          ->>> class MyEnum(int, Enum):
           +>>> from enum import ReprEnum
-          +>>> class MyEnum(float, ReprEnum):
-           ...     ZERO = 0.0
+          +>>> class MyEnum(int, ReprEnum):
+           ...     ZERO = 0
            ... 
            >>> json.dump(MyEnum.ZERO)
-           0.0
+           0
 
     - Made :class:`decimal.Decimal` not serializable by default:
 

@@ -196,7 +196,7 @@ Decoding arbitrary objects
 >>> json.loads(s, hooks={"object": object_hook})
 (1+2j)
 
-.. note:: The ``"object"`` hook is called with a list of tuples, not a dict.
+.. note:: ``hooks["object"]`` is called with a list of tuples, not a dict.
 .. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
     suited for this.
 
@@ -216,8 +216,8 @@ a valid JSON number.
 ============ ============= ====================================
 Formatter    Default       Called with
 ============ ============= ====================================
-``"float"``  :class:`str`  :class:`float` or a ``"float"`` type
-``"int"``    :class:`str`  :class:`int` or an ``"int"`` type
+``"float"``  :class:`str`  :class:`float` or ``types["float"]``
+``"int"``    :class:`str`  :class:`int` or ``types["int"]``
 ============ ============= ====================================
 
 Example:
@@ -225,6 +225,20 @@ Example:
 >>> import jsonyx as json
 >>> json.dump([1.234, 5.678], formatters={"float": "{:.2f}".format})
 [1.23, 5.68]
+
+Encoding :class:`enum.ReprEnum`
+-------------------------------
+
+>>> import jsonyx as json
+>>> from enum import ReprEnum
+>>> class MyEnum(int, ReprEnum):
+...     ZERO = 0
+... 
+>>> json.dump(MyEnum.ZERO)
+0
+
+.. warning:: Don't use :class:`enum.Enum`, because it overrides the string
+  representation.
 
 Encoding and decoding big integers
 ----------------------------------
