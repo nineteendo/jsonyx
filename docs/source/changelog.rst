@@ -152,10 +152,10 @@ Breaking Changes:
 
            >>> import jsonyx as json
           ->>> from enum import Enum
-          ->>> class MyEnum(float, Enum): # or int
+          ->>> class MyEnum(float, Enum):
           +>>> from enum import ReprEnum
-          +>>> class MyEnum(float, ReprEnum): # or int
-           ...     ZERO = 0
+          +>>> class MyEnum(float, ReprEnum):
+           ...     ZERO = 0.0
            ... 
            >>> json.dump(MyEnum.ZERO)
            0.0
@@ -176,13 +176,24 @@ Breaking Changes:
 
            >>> import jsonyx as json
           ->>> import jsonyx.allow
-          ->>> json.loads('{"a": 1, "a": 2}', allow=jsonyx.allow.DUPLICATE_KEYS)
-          -{'a': 1, 'a': 2}
+          ->>> json.loads('{"a": 1, "a": 2, "a": 3}', allow=jsonyx.allow.DUPLICATE_KEYS)
+          -{'a': 1, 'a': 2, 'a': 3}
           +>>> from multidict import MultiDict
-          +>>> json.loads('{"a": 1, "a": 2}', hooks={"object": MultiDict})
-          +<MultiDict('a': 1, 'a': 2)>
+          +>>> json.loads('{"a": 1, "a": 2, "a": 3}', hooks={"object": MultiDict})
+          +<MultiDict('a': 1, 'a': 2, 'a': 3)>
 
     - Removed :class:`!jsonyx.DuplicateKey`
+
+      .. code-block:: diff
+
+          ->>> from jsonyx import DuplicateKey
+          +>>> class DuplicateKey(str):
+          +...   def __hash__(self):
+          +...     return id(self)
+          +...
+           >>> {"a": 1, DuplicateKey("a"): 2, DuplicateKey("a"): 3}
+           {'a': 1, 'a': 2, 'a': 3}
+
     - Removed :mod:`!jsonyx.tool`
     - Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
     - Replaced ``item_separator`` and ``key_separator`` with ``separators`` for
@@ -192,8 +203,9 @@ Breaking Changes:
       .. code-block:: diff
 
            >>> import jsonyx as json
-          ->>> json.dumps({"a": 1, "b": 2, "c": 3}, end="", item_separator=",", key_separator=":")
-          +>>> json.dumps({"a": 1, "b": 2, "c": 3}, end="", separators=(",", ":"))
+           >>> obj = {"a": 1, "b": 2, "c": 3}
+          ->>> json.dumps(obj, end="", item_separator=",", key_separator=":")
+          +>>> json.dumps(obj, end="", separators=(",", ":"))
            '{"a":1,"b":2,"c":3}'
 
     - Replaced ``use_decimal`` with ``hooks`` for :class:`jsonyx.Decoder`,
@@ -204,7 +216,7 @@ Breaking Changes:
            >>> import jsonyx as json
            >>> from decimal import Decimal
           ->>> json.loads("1.1", use_decimal=True)
-          +json.loads("1.1", hooks={"float": Decimal})
+          +>>> json.loads("1.1", hooks={"float": Decimal})
            Decimal('1.1')
 
 Other Changes:
