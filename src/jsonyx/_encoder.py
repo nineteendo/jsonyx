@@ -466,7 +466,7 @@ class Encoder:
             >>> from io import StringIO
             >>> encoder = json.Encoder()
             >>> io = StringIO()
-            >>> encoder.json.dump(["writer protocol"], io)
+            >>> encoder.dump(["writer protocol"], io)
             >>> io.getvalue()
             '["writer protocol"]\n'
 
@@ -479,7 +479,7 @@ class Encoder:
             >>> with TemporaryDirectory() as tmpdir:
             ...     filename = join(tmpdir, "file.json")
             ...     with open(filename, "w", encoding="utf-8") as fp:
-            ...         encoder.json.dump(["writer protocol"], fp)
+            ...         encoder.dump(["writer protocol"], fp)
             ...     with open(filename, "r", encoding="utf-8") as fp:
             ...         fp.read()
             ...

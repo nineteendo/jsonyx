@@ -74,10 +74,17 @@ def test_int(json: ModuleType, num: int, int_type: type) -> None:
     assert json.dumps(int_type(num), end="", types=types) == str(num)
 
 
-def test_int_formatter(json: ModuleType) -> None:
+@pytest.mark.parametrize(("obj", "expected"), [
+    (10 ** 6, "1e+06"),
+    ({10 ** 6: 0}, '{"1e+06": 0}'),
+])
+def test_int_formatter(
+    json: ModuleType, obj: int | dict[object, object], expected: str,
+) -> None:
     """Test int formatter."""
-    formatters: dict[str, _Formatter] = {"int": "{:g}".format}
-    assert json.dumps(10 ** 6, end="", formatters=formatters) == "1e+06"
+    assert json.dumps(
+        obj, allow=NON_STR_KEYS, end="", formatters={"int": "{:g}".format},
+    ) == expected
 
 
 @pytest.mark.parametrize("float_type", [Decimal, float])
@@ -122,10 +129,17 @@ def test_nan_payload(json: ModuleType, num: str) -> None:
         json.dumps(Decimal(num), allow=NAN_AND_INFINITY, types=types)
 
 
-def test_float_formatter(json: ModuleType) -> None:
+@pytest.mark.parametrize(("obj", "expected"), [
+    (1.234, "1.23"),
+    ({1.234: 0}, '{"1.23": 0}'),
+])
+def test_float_formatter(
+    json: ModuleType, obj: float | dict[object, object], expected: str,
+) -> None:
     """Test float formatter."""
-    formatters: dict[str, _Formatter] = {"float": "{:.2f}".format}
-    assert json.dumps(1.234, end="", formatters=formatters) == "1.23"
+    assert json.dumps(
+        obj, allow=NON_STR_KEYS, end="", formatters={"float": "{:.2f}".format},
+    ) == expected
 
 
 @pytest.mark.parametrize("obj", [
@@ -450,10 +464,9 @@ def test_singleton_keys(
 @pytest.mark.parametrize("int_type", [Decimal, int])
 def test_int_key(json: ModuleType, int_type: type) -> None:
     """Test int key."""
-    obj: dict[object, object] = {int_type(0): 0}
-    types: dict[str, type] = {"int": int_type}
-    s: str = json.dumps(obj, allow=NON_STR_KEYS, end="", types=types)
-    assert s == '{"0": 0}'
+    assert json.dumps(
+        {int_type(0): 0}, allow=NON_STR_KEYS, end="", types={"int": int_type},
+    ) == '{"0": 0}'
 
 
 @pytest.mark.parametrize("float_type", [Decimal, float])
@@ -515,8 +528,7 @@ def test_dict_indent(
     json: ModuleType, indent: int | str, expected: str,
 ) -> None:
     """Test dict indent."""
-    obj: dict[str, object] = {"a": 1, "b": 2, "c": 3}
-    s: str = json.dumps(obj, end="", indent=indent)
+    s: str = json.dumps({"a": 1, "b": 2, "c": 3}, end="", indent=indent)
     assert s == (
         f'{{\n{expected}"a": 1,\n{expected}"b": 2,\n{expected}"c": 3\n}}'
     )
@@ -647,11 +659,7 @@ def test_hook_no_indent_leaves(
         return obj
 
     assert json.dumps(
-        obj,
-        end="",
-        hook=complex_hook,
-        indent=1,
-        indent_leaves=False,
+        obj, end="", hook=complex_hook, indent=1, indent_leaves=False,
     ) == expected
 
 

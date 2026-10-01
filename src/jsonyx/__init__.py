@@ -304,7 +304,7 @@ def dump(
         >>> import jsonyx as json
         >>> from io import StringIO
         >>> io = StringIO()
-        >>> json.json.dump(["writer protocol"], io)
+        >>> json.dump(["writer protocol"], io)
         >>> io.getvalue()
         '["writer protocol"]\n'
 
@@ -316,7 +316,7 @@ def dump(
         >>> with TemporaryDirectory() as tmpdir:
         ...     filename = join(tmpdir, "file.json")
         ...     with open(filename, "w", encoding="utf-8") as fp:
-        ...         json.json.dump(["writer protocol"], fp)
+        ...         json.dump(["writer protocol"], fp)
         ...     with open(filename, "r", encoding="utf-8") as fp:
         ...         fp.read()
         ...
