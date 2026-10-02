@@ -112,6 +112,11 @@ EVERYTHING: frozenset[str] = (
 )
 """Allow all JSON deviations.
 
+.. versionchanged:: 2.0
+
+    - Added ``NON_STR_KEYS | UNQUOTED_KEYS``.
+    - Removed ``DUPLICATE_KEYS``.
+
 This is equivalent to ``COMMENTS | MISSING_COMMAS | NAN_AND_INFINITY
 | NON_STR_KEYS | SURROGATES | TRAILING_COMMA | UNQUOTED_KEYS``.
 """

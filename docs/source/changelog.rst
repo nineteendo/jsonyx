@@ -132,8 +132,6 @@ New Features:
       ``python -m jsonyx format``
     - Added ``--unquoted-keys`` (alias ``-q``) to ``python -m jsonyx format``
     - Added ``--version`` (alias ``-v``) to ``python -m jsonyx``
-    - Added :data:`jsonyx.allow.NON_STR_KEYS`
-    - Added :data:`jsonyx.allow.UNQUOTED_KEYS`
     - Added :func:`jsonyx.apply_filter`
     - Added :func:`jsonyx.apply_patch`
     - Added :func:`jsonyx.load_query_value`
@@ -145,6 +143,34 @@ New Features:
     - Made :class:`tuple` serializable by default
 
 Breaking Changes:
+    - Added :data:`jsonyx.allow.NON_STR_KEYS` (included in
+      :data:`jsonyx.allow.EVERYTHING`):
+
+      .. code-block:: diff
+
+           >>> import jsonyx as json
+           >>> import jsonyx.allow
+          ->>> allow = jsonyx.allow.EVERYTHING
+          +>>> allow = jsonyx.allow.EVERYTHING - jsonyx.allow.NON_STR_KEYS
+           >>> json.dump({1: 0}, allow=allow)
+           TypeError: Non-string keys are not allowed
+
+    - Added :data:`jsonyx.allow.UNQUOTED_KEYS` (included in
+      :data:`jsonyx.allow.EVERYTHING`):
+
+      .. code-block:: diff
+
+           >>> import jsonyx as json
+           >>> import jsonyx.allow
+          ->>> allow = jsonyx.allow.EVERYTHING
+          +>>> allow = jsonyx.allow.EVERYTHING - jsonyx.allow.UNQUOTED_KEYS
+           >>> json.loads('{key: "value"}', allow=allow)
+           Traceback (most recent call last):
+             File "<string>", line 1
+               {key: "value"}
+                ^^^
+           jsonyx.JSONSyntaxError: Unquoted keys are not allowed
+
     - Allowed overriding serialization in subclasses of :class:`float` and
       :class:`int` (e.g. :class:`enum.Enum`):
 
@@ -170,7 +196,8 @@ Breaking Changes:
           +>>> json.dump(Decimal('1.1'), types={"float": Decimal})
            1.1
 
-    - Removed :data:`!jsonyx.allow.DUPLICATE_KEYS`:
+    - Removed :data:`!jsonyx.allow.DUPLICATE_KEYS` (included in
+      :data:`jsonyx.allow.EVERYTHING`):
 
       .. code-block:: diff
 
