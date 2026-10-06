@@ -315,6 +315,7 @@ def write(
     :param commas: separate items by commas when indented
     :param end: the string to append at the end
     :param ensure_ascii: escape non-ASCII characters
+    :param formatters: a dictionary of :ref:`formatters <formatters>`
     :param hook: the :ref:`hook <encoding_hook>` used for transforming data
     :param indent: the number of spaces or string to indent with
     :param indent_leaves: indent leaf objects and arrays
