@@ -1,65 +1,6 @@
 How-to Guide
 ============
 
-Better error messages
----------------------
-
-Better error messages for other JSON libraries
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
->>> import json, jsonyx
->>> try:
-...     json.loads("[,]")
-... except json.JSONDecodeError as exc:
-...     raise jsonyx.JSONSyntaxError(exc.msg, "<string>", exc.doc, exc.pos) from None
-...
-Traceback (most recent call last):
-  File "<string>", line 1, column 2
-    [,]
-     ^
-jsonyx.JSONSyntaxError: Expecting value
-
-Better error messages for encoding strings
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
->>> import jsonyx as json
->>> try:
-...     "café".encode("ascii")
-... except UnicodeEncodeError as exc:
-...     raise json.TruncatedSyntaxError(
-...         f"(unicode error) {exc}", "<string>", exc.object, exc.start, exc.end,
-...     ) from None
-...
-Traceback (most recent call last):
-  File "<string>", line 1, column 4-5
-    café
-       ^
-jsonyx.TruncatedSyntaxError: (unicode error) 'ascii' codec can't encode character '\xe9' in position 3: ordinal not in range(128)
-
-.. _better_decoding_error:
-
-Better error messages for decoding bytes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
->>> import jsonyx as json
->>> try:
-...     b"caf\xe9".decode("ascii")
-... except UnicodeDecodeError as exc:
-...     doc = exc.object.decode(exc.encoding, "replace")
-...     start = exc.object[:exc.start].decode(exc.encoding, "replace")
-...     end = exc.object[:exc.end].decode(exc.encoding, "replace")
-...     raise json.TruncatedSyntaxError(
-...         f"(unicode error) {exc}", "<string>", doc, len(start), len(end),
-...     ) from None
-...
-Traceback (most recent call last):
-  File "<string>", line 1, column 4-5
-    caf�
-       ^
-jsonyx.TruncatedSyntaxError: (unicode error) 'ascii' codec can't decode byte 0xe9 in position 3: ordinal not in range(128)
-
-.. seealso:: :func:`jsonyx.format_syntax_error` for formatting the exception.
-
 Encoding and decoding protocol-based objects
 --------------------------------------------
 
@@ -267,3 +208,62 @@ True
 5002
 
 See :ref:`int_max_str_digits` for more information.
+
+Better error messages
+---------------------
+
+Better error messages for other JSON libraries
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+>>> import json, jsonyx
+>>> try:
+...     json.loads("[,]")
+... except json.JSONDecodeError as exc:
+...     raise jsonyx.JSONSyntaxError(exc.msg, "<string>", exc.doc, exc.pos) from None
+...
+Traceback (most recent call last):
+  File "<string>", line 1, column 2
+    [,]
+     ^
+jsonyx.JSONSyntaxError: Expecting value
+
+Better error messages for encoding strings
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+>>> import jsonyx as json
+>>> try:
+...     "café".encode("ascii")
+... except UnicodeEncodeError as exc:
+...     raise json.TruncatedSyntaxError(
+...         f"(unicode error) {exc}", "<string>", exc.object, exc.start, exc.end,
+...     ) from None
+...
+Traceback (most recent call last):
+  File "<string>", line 1, column 4-5
+    café
+       ^
+jsonyx.TruncatedSyntaxError: (unicode error) 'ascii' codec can't encode character '\xe9' in position 3: ordinal not in range(128)
+
+.. _better_decoding_error:
+
+Better error messages for decoding bytes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+>>> import jsonyx as json
+>>> try:
+...     b"caf\xe9".decode("ascii")
+... except UnicodeDecodeError as exc:
+...     doc = exc.object.decode(exc.encoding, "replace")
+...     start = exc.object[:exc.start].decode(exc.encoding, "replace")
+...     end = exc.object[:exc.end].decode(exc.encoding, "replace")
+...     raise json.TruncatedSyntaxError(
+...         f"(unicode error) {exc}", "<string>", doc, len(start), len(end),
+...     ) from None
+...
+Traceback (most recent call last):
+  File "<string>", line 1, column 4-5
+    caf�
+       ^
+jsonyx.TruncatedSyntaxError: (unicode error) 'ascii' codec can't decode byte 0xe9 in position 3: ordinal not in range(128)
+
+.. seealso:: :func:`jsonyx.format_syntax_error` for formatting the exception.
