@@ -21,7 +21,7 @@ Key Features
     >>> json.apply_patch([1, 2, 3], {"op": "del", "path": "$[1]"})
     [1, 3]
 
-- Pretty-printing:
+- Compact formatting of arrays and objects:
 
   .. code-block:: json
 
