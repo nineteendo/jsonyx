@@ -213,28 +213,28 @@ performance critical applications:
         :widths: grid
         :class: longtable
 
-        ========================= ====== ====== ========= ========== ========== ============
-        decode                      json jsonyx   msgspec     orjson     yyjson fastest time
-        ========================= ====== ====== ========= ========== ========== ============
-        65,536 control characters  5.58x  3.73x     3.39x      1.01x      1.00x    252.06 μs
-        65,536 ASCII characters    4.54x  3.69x     1.05x      1.00x      1.02x     22.21 μs
-        65,536 Unicode characters  3.52x  3.27x     3.80x      1.19x      1.00x    247.51 μs
-        65,536 non-BMP characters  2.95x  2.99x     2.82x      1.36x      1.00x    497.04 μs
-        65,536 nulls               2.17x  2.96x     1.32x      1.00x      1.13x    534.66 μs
-        65,536 booleans            2.32x  3.13x     1.43x      1.00x      1.24x    544.46 μs
-        65,536 empty strings       2.92x  3.75x     1.80x      1.00x      1.61x    627.41 μs
-        65,536 ASCII keys          1.71x  1.37x     1.14x      1.05x      1.00x   6179.19 μs
-        65,536 fixed-point floats  3.25x  3.66x     1.34x      1.00x      1.13x   1677.02 μs
-        65,536 scientific floats   3.15x  3.53x     1.20x      1.00x      1.04x   1977.94 μs
-        65,536 subnormal floats   11.27x 11.63x   150.63x      1.00x      1.12x   2508.46 μs
-        65,536 31-bit integers     5.61x  6.33x     1.74x      1.00x      1.45x    705.62 μs
-        65,536 32-bit integers     3.42x  3.34x     1.28x      1.00x      1.09x   2026.58 μs
-        65,536 63-bit integers     3.43x  3.34x     1.28x      1.00x      1.09x   2023.00 μs
-        65,536 64-bit integers     3.54x  3.37x     1.26x      1.00x      1.00x   2553.79 μs
-        65,536 >64-bit integers    2.96x  2.80x     2.67x 1.01x [3]_ 1.00x [3]_   3156.81 μs
-        65,536 empty lists         1.38x  1.69x     1.17x      1.00x      1.05x   2336.05 μs
-        65,536 empty dictionaries  1.41x  1.68x     1.22x      1.00x      1.04x   2407.44 μs
-        ========================= ====== ====== ========= ========== ========== ============
+        ========================= ====== ====== ============ ========== ========== ============
+        decode                      json jsonyx      msgspec     orjson     yyjson fastest time
+        ========================= ====== ====== ============ ========== ========== ============
+        65,536 control characters  5.58x  3.73x        3.39x      1.01x      1.00x    252.06 μs
+        65,536 ASCII characters    4.54x  3.69x        1.05x      1.00x      1.02x     22.21 μs
+        65,536 Unicode characters  3.52x  3.27x        3.80x      1.19x      1.00x    247.51 μs
+        65,536 non-BMP characters  2.95x  2.99x        2.82x      1.36x      1.00x    497.04 μs
+        65,536 nulls               2.17x  2.96x        1.32x      1.00x      1.13x    534.66 μs
+        65,536 booleans            2.32x  3.13x        1.43x      1.00x      1.24x    544.46 μs
+        65,536 empty strings       2.92x  3.75x        1.80x      1.00x      1.61x    627.41 μs
+        65,536 ASCII keys          1.71x  1.37x        1.14x      1.05x      1.00x   6179.19 μs
+        65,536 fixed-point floats  3.25x  3.66x        1.34x      1.00x      1.13x   1677.02 μs
+        65,536 scientific floats   3.15x  3.53x        1.20x      1.00x      1.04x   1977.94 μs
+        65,536 subnormal floats   11.27x 11.63x 150.63x [3]_      1.00x      1.12x   2508.46 μs
+        65,536 31-bit integers     5.61x  6.33x        1.74x      1.00x      1.45x    705.62 μs
+        65,536 32-bit integers     3.42x  3.34x        1.28x      1.00x      1.09x   2026.58 μs
+        65,536 63-bit integers     3.43x  3.34x        1.28x      1.00x      1.09x   2023.00 μs
+        65,536 64-bit integers     3.54x  3.37x        1.26x      1.00x      1.00x   2553.79 μs
+        65,536 >64-bit integers    2.96x  2.80x        2.67x 1.01x [4]_ 1.00x [4]_   3156.81 μs
+        65,536 empty lists         1.38x  1.69x        1.17x      1.00x      1.05x   2336.05 μs
+        65,536 empty dictionaries  1.41x  1.68x        1.22x      1.00x      1.04x   2407.44 μs
+        ========================= ====== ====== ============ ========== ========== ============
 
 .. tab:: Python 3.14.7
 
@@ -246,28 +246,28 @@ performance critical applications:
         :widths: grid
         :class: longtable
 
-        ========================= ====== ====== ========= ========== ========== ============
-        decode                      json jsonyx   msgspec     orjson     yyjson fastest time
-        ========================= ====== ====== ========= ========== ========== ============
-        65,536 control characters  4.46x  3.66x     3.38x      1.00x      1.02x    226.74 μs
-        65,536 ASCII characters    4.86x  1.96x     1.00x      1.03x      1.03x     22.11 μs
-        65,536 Unicode characters  3.91x  3.14x     3.48x      1.19x      1.00x    264.08 μs
-        65,536 non-BMP characters  9.85x  4.67x     3.37x      1.49x      1.00x    533.10 μs
-        65,536 nulls               2.41x  2.85x     1.27x      1.00x      1.12x    557.17 μs
-        65,536 booleans            2.20x  2.79x     1.21x      1.00x      1.20x    564.83 μs
-        65,536 empty strings       3.53x  3.29x     1.59x      1.00x      1.66x    684.02 μs
-        65,536 ASCII keys          1.64x  1.19x     1.07x      1.05x      1.00x   7474.38 μs
-        65,536 fixed-point floats  3.25x  3.50x     1.12x      1.00x      1.16x   1864.39 μs
-        65,536 scientific floats   3.08x  3.34x     1.09x      1.00x      1.06x   2175.37 μs
-        65,536 subnormal floats    9.79x 10.15x   135.96x      1.00x      1.10x   2803.95 μs
-        65,536 31-bit integers     5.63x  6.13x     1.34x      1.00x      1.39x    734.49 μs
-        65,536 32-bit integers     3.10x  2.99x     1.13x      1.00x      1.05x   2344.99 μs
-        65,536 63-bit integers     3.09x  2.98x     1.12x      1.00x      1.04x   2353.03 μs
-        65,536 64-bit integers     3.09x  2.97x     1.10x      1.01x      1.00x   2895.33 μs
-        65,536 >64-bit integers    2.76x  2.64x     2.57x 1.00x [3]_ 1.01x [3]_   3375.14 μs
-        65,536 empty lists         1.25x  1.49x     1.09x      1.00x      1.06x   2962.93 μs
-        65,536 empty dictionaries  1.31x  1.57x     1.16x      1.00x      1.07x   2659.40 μs
-        ========================= ====== ====== ========= ========== ========== ============
+        ========================= ====== ====== ============ ========== ========== ============
+        decode                      json jsonyx      msgspec     orjson     yyjson fastest time
+        ========================= ====== ====== ============ ========== ========== ============
+        65,536 control characters  4.46x  3.66x        3.38x      1.00x      1.02x    226.74 μs
+        65,536 ASCII characters    4.86x  1.96x        1.00x      1.03x      1.03x     22.11 μs
+        65,536 Unicode characters  3.91x  3.14x        3.48x      1.19x      1.00x    264.08 μs
+        65,536 non-BMP characters  9.85x  4.67x        3.37x      1.49x      1.00x    533.10 μs
+        65,536 nulls               2.41x  2.85x        1.27x      1.00x      1.12x    557.17 μs
+        65,536 booleans            2.20x  2.79x        1.21x      1.00x      1.20x    564.83 μs
+        65,536 empty strings       3.53x  3.29x        1.59x      1.00x      1.66x    684.02 μs
+        65,536 ASCII keys          1.64x  1.19x        1.07x      1.05x      1.00x   7474.38 μs
+        65,536 fixed-point floats  3.25x  3.50x        1.12x      1.00x      1.16x   1864.39 μs
+        65,536 scientific floats   3.08x  3.34x        1.09x      1.00x      1.06x   2175.37 μs
+        65,536 subnormal floats    9.79x 10.15x 135.96x [3]_      1.00x      1.10x   2803.95 μs
+        65,536 31-bit integers     5.63x  6.13x        1.34x      1.00x      1.39x    734.49 μs
+        65,536 32-bit integers     3.10x  2.99x        1.13x      1.00x      1.05x   2344.99 μs
+        65,536 63-bit integers     3.09x  2.98x        1.12x      1.00x      1.04x   2353.03 μs
+        65,536 64-bit integers     3.09x  2.97x        1.10x      1.01x      1.00x   2895.33 μs
+        65,536 >64-bit integers    2.76x  2.64x        2.57x 1.00x [4]_ 1.01x [4]_   3375.14 μs
+        65,536 empty lists         1.25x  1.49x        1.09x      1.00x      1.06x   2962.93 μs
+        65,536 empty dictionaries  1.31x  1.57x        1.16x      1.00x      1.07x   2659.40 μs
+        ========================= ====== ====== ============ ========== ========== ============
 
 .. tab:: Python 3.13.15
 
@@ -279,28 +279,28 @@ performance critical applications:
         :widths: grid
         :class: longtable
 
-        ========================= ====== ====== ========= ========== ========== ============
-        decode                      json jsonyx   msgspec     orjson     yyjson fastest time
-        ========================= ====== ====== ========= ========== ========== ============
-        65,536 control characters  3.72x  3.50x     3.53x      1.00x      1.01x    227.70 μs
-        65,536 ASCII characters    4.64x  3.19x     1.03x      1.10x      1.00x     22.49 μs
-        65,536 Unicode characters  3.35x  3.09x     3.65x      1.23x      1.00x    253.73 μs
-        65,536 non-BMP characters  2.97x  2.66x     2.76x      1.33x      1.00x    526.50 μs
-        65,536 nulls               4.71x  4.09x     1.25x      1.00x      1.20x    586.23 μs
-        65,536 booleans            2.59x  3.21x     1.25x      1.00x      1.21x    542.93 μs
-        65,536 empty strings       3.54x  3.56x     1.84x      1.00x      1.80x    591.24 μs
-        65,536 ASCII keys          1.60x  1.21x     1.09x      1.04x      1.00x   7301.99 μs
-        65,536 fixed-point floats  3.24x  3.60x     1.19x      1.00x      1.16x   1770.80 μs
-        65,536 scientific floats   2.98x  3.33x     1.04x      1.00x      1.03x   2169.76 μs
-        65,536 subnormal floats   10.01x 10.35x   140.41x      1.00x      1.10x   2726.46 μs
-        65,536 31-bit integers     6.58x  7.04x     1.41x      1.00x      1.39x    713.87 μs
-        65,536 32-bit integers     3.09x  2.93x     1.15x      1.00x      1.06x   2241.38 μs
-        65,536 63-bit integers     3.07x  2.91x     1.14x      1.00x      1.06x   2257.57 μs
-        65,536 64-bit integers     3.26x  2.95x     1.12x      1.01x      1.00x   2768.16 μs
-        65,536 >64-bit integers    2.81x  2.51x     2.48x 1.03x [3]_ 1.00x [3]_   3343.82 μs
-        65,536 empty lists         1.49x  1.69x     1.18x      1.00x      1.07x   2522.42 μs
-        65,536 empty dictionaries  1.51x  1.69x     1.19x      1.00x      1.08x   2585.46 μs
-        ========================= ====== ====== ========= ========== ========== ============
+        ========================= ====== ====== ============ ========== ========== ============
+        decode                      json jsonyx      msgspec     orjson     yyjson fastest time
+        ========================= ====== ====== ============ ========== ========== ============
+        65,536 control characters  3.72x  3.50x        3.53x      1.00x      1.01x    227.70 μs
+        65,536 ASCII characters    4.64x  3.19x        1.03x      1.10x      1.00x     22.49 μs
+        65,536 Unicode characters  3.35x  3.09x        3.65x      1.23x      1.00x    253.73 μs
+        65,536 non-BMP characters  2.97x  2.66x        2.76x      1.33x      1.00x    526.50 μs
+        65,536 nulls               4.71x  4.09x        1.25x      1.00x      1.20x    586.23 μs
+        65,536 booleans            2.59x  3.21x        1.25x      1.00x      1.21x    542.93 μs
+        65,536 empty strings       3.54x  3.56x        1.84x      1.00x      1.80x    591.24 μs
+        65,536 ASCII keys          1.60x  1.21x        1.09x      1.04x      1.00x   7301.99 μs
+        65,536 fixed-point floats  3.24x  3.60x        1.19x      1.00x      1.16x   1770.80 μs
+        65,536 scientific floats   2.98x  3.33x        1.04x      1.00x      1.03x   2169.76 μs
+        65,536 subnormal floats   10.01x 10.35x 140.41x [3]_      1.00x      1.10x   2726.46 μs
+        65,536 31-bit integers     6.58x  7.04x        1.41x      1.00x      1.39x    713.87 μs
+        65,536 32-bit integers     3.09x  2.93x        1.15x      1.00x      1.06x   2241.38 μs
+        65,536 63-bit integers     3.07x  2.91x        1.14x      1.00x      1.06x   2257.57 μs
+        65,536 64-bit integers     3.26x  2.95x        1.12x      1.01x      1.00x   2768.16 μs
+        65,536 >64-bit integers    2.81x  2.51x        2.48x 1.03x [4]_ 1.00x [4]_   3343.82 μs
+        65,536 empty lists         1.49x  1.69x        1.18x      1.00x      1.07x   2522.42 μs
+        65,536 empty dictionaries  1.51x  1.69x        1.19x      1.00x      1.08x   2585.46 μs
+        ========================= ====== ====== ============ ========== ========== ============
 
 .. tab:: Python 3.12.10
 
@@ -312,28 +312,28 @@ performance critical applications:
         :widths: grid
         :class: longtable
 
-        ========================= ====== ====== ========= ========== ========== ============
-        decode                      json jsonyx   msgspec     orjson     yyjson fastest time
-        ========================= ====== ====== ========= ========== ========== ============
-        65,536 control characters  2.90x  3.50x     3.22x      1.13x      1.00x    227.86 μs
-        65,536 ASCII characters    4.73x  3.27x     1.00x      1.01x      1.03x     22.04 μs
-        65,536 Unicode characters  2.66x  3.23x     4.16x      1.44x      1.00x    247.30 μs
-        65,536 non-BMP characters  2.78x  2.88x     3.10x      1.21x      1.00x    495.49 μs
-        65,536 nulls               2.36x  2.97x     1.32x      1.00x      1.35x    480.84 μs
-        65,536 booleans            2.67x  3.87x     1.41x      1.00x      1.26x    541.29 μs
-        65,536 empty strings       2.46x  2.92x     1.49x      1.00x      1.49x    756.74 μs
-        65,536 ASCII keys          1.66x  1.21x     1.09x      1.01x      1.00x   7099.67 μs
-        65,536 fixed-point floats  3.32x  3.66x     1.26x      1.00x      1.18x   1735.22 μs
-        65,536 scientific floats   3.55x  3.86x     1.26x      1.00x      1.33x   1842.00 μs
-        65,536 subnormal floats   10.44x 10.94x   144.94x      1.00x      1.16x   2637.02 μs
-        65,536 31-bit integers     6.72x  7.38x     1.54x      1.00x      1.50x    648.12 μs
-        65,536 32-bit integers     3.31x  3.10x     1.23x      1.00x      1.15x   2092.92 μs
-        65,536 63-bit integers     3.42x  3.21x     1.26x      1.00x      1.20x   2045.10 μs
-        65,536 64-bit integers     3.42x  2.98x     1.14x      1.00x      1.06x   2751.58 μs
-        65,536 >64-bit integers    3.01x  2.62x     2.85x 1.00x [3]_ 1.04x [3]_   3224.49 μs
-        65,536 empty lists         1.36x  1.81x     1.19x      1.00x      1.09x   2487.83 μs
-        65,536 empty dictionaries  1.35x  1.65x     1.21x      1.00x      1.04x   2474.14 μs
-        ========================= ====== ====== ========= ========== ========== ============
+        ========================= ====== ====== ============ ========== ========== ============
+        decode                      json jsonyx      msgspec     orjson     yyjson fastest time
+        ========================= ====== ====== ============ ========== ========== ============
+        65,536 control characters  2.90x  3.50x        3.22x      1.13x      1.00x    227.86 μs
+        65,536 ASCII characters    4.73x  3.27x        1.00x      1.01x      1.03x     22.04 μs
+        65,536 Unicode characters  2.66x  3.23x        4.16x      1.44x      1.00x    247.30 μs
+        65,536 non-BMP characters  2.78x  2.88x        3.10x      1.21x      1.00x    495.49 μs
+        65,536 nulls               2.36x  2.97x        1.32x      1.00x      1.35x    480.84 μs
+        65,536 booleans            2.67x  3.87x        1.41x      1.00x      1.26x    541.29 μs
+        65,536 empty strings       2.46x  2.92x        1.49x      1.00x      1.49x    756.74 μs
+        65,536 ASCII keys          1.66x  1.21x        1.09x      1.01x      1.00x   7099.67 μs
+        65,536 fixed-point floats  3.32x  3.66x        1.26x      1.00x      1.18x   1735.22 μs
+        65,536 scientific floats   3.55x  3.86x        1.26x      1.00x      1.33x   1842.00 μs
+        65,536 subnormal floats   10.44x 10.94x 144.94x [3]_      1.00x      1.16x   2637.02 μs
+        65,536 31-bit integers     6.72x  7.38x        1.54x      1.00x      1.50x    648.12 μs
+        65,536 32-bit integers     3.31x  3.10x        1.23x      1.00x      1.15x   2092.92 μs
+        65,536 63-bit integers     3.42x  3.21x        1.26x      1.00x      1.20x   2045.10 μs
+        65,536 64-bit integers     3.42x  2.98x        1.14x      1.00x      1.06x   2751.58 μs
+        65,536 >64-bit integers    3.01x  2.62x        2.85x 1.00x [4]_ 1.04x [4]_   3224.49 μs
+        65,536 empty lists         1.36x  1.81x        1.19x      1.00x      1.09x   2487.83 μs
+        65,536 empty dictionaries  1.35x  1.65x        1.21x      1.00x      1.04x   2474.14 μs
+        ========================= ====== ====== ============ ========== ========== ============
 
 .. tab:: Python 3.11.12
 
@@ -345,28 +345,28 @@ performance critical applications:
         :widths: grid
         :class: longtable
 
-        ========================= ====== ====== ========= ========== ========== ============
-        decode                      json jsonyx   msgspec     orjson     yyjson fastest time
-        ========================= ====== ====== ========= ========== ========== ============
-        65,536 control characters  3.72x  3.56x     3.55x      1.12x      1.00x    230.74 μs
-        65,536 ASCII characters    2.61x  1.84x     1.00x      1.02x      1.02x     21.97 μs
-        65,536 Unicode characters  3.44x  3.30x     3.59x      1.42x      1.00x    249.04 μs
-        65,536 non-BMP characters  3.16x  2.98x     2.94x      1.18x      1.00x    489.94 μs
-        65,536 nulls               2.60x  3.01x     1.39x      1.00x      1.32x    490.03 μs
-        65,536 booleans            2.70x  3.21x     1.35x      1.00x      1.26x    501.87 μs
-        65,536 empty strings       2.99x  3.20x     1.56x      1.00x      1.51x    680.03 μs
-        65,536 ASCII keys          1.62x  1.28x     1.12x      1.01x      1.00x   7196.88 μs
-        65,536 fixed-point floats  3.74x  4.03x     1.39x      1.00x      1.18x   1351.04 μs
-        65,536 scientific floats   3.28x  3.59x     1.15x      1.00x      1.05x   1762.21 μs
-        65,536 subnormal floats   11.54x 11.80x   166.11x      1.00x      1.11x   2299.86 μs
-        65,536 31-bit integers     6.45x  7.00x     1.65x      1.00x      1.51x    642.60 μs
-        65,536 32-bit integers     3.19x  3.06x     1.19x      1.00x      1.09x   1899.09 μs
-        65,536 63-bit integers     3.17x  3.07x     1.19x      1.00x      1.10x   1893.80 μs
-        65,536 64-bit integers     2.93x  2.69x     1.13x      1.00x      1.03x   2822.15 μs
-        65,536 >64-bit integers    3.13x  2.89x     2.88x 1.00x [3]_ 1.07x [3]_   2713.91 μs
-        65,536 empty lists         1.43x  1.62x     1.15x      1.00x      1.06x   2327.10 μs
-        65,536 empty dictionaries  1.38x  1.66x     1.16x      1.00x      1.03x   2057.13 μs
-        ========================= ====== ====== ========= ========== ========== ============
+        ========================= ====== ====== ============ ========== ========== ============
+        decode                      json jsonyx      msgspec     orjson     yyjson fastest time
+        ========================= ====== ====== ============ ========== ========== ============
+        65,536 control characters  3.72x  3.56x        3.55x      1.12x      1.00x    230.74 μs
+        65,536 ASCII characters    2.61x  1.84x        1.00x      1.02x      1.02x     21.97 μs
+        65,536 Unicode characters  3.44x  3.30x        3.59x      1.42x      1.00x    249.04 μs
+        65,536 non-BMP characters  3.16x  2.98x        2.94x      1.18x      1.00x    489.94 μs
+        65,536 nulls               2.60x  3.01x        1.39x      1.00x      1.32x    490.03 μs
+        65,536 booleans            2.70x  3.21x        1.35x      1.00x      1.26x    501.87 μs
+        65,536 empty strings       2.99x  3.20x        1.56x      1.00x      1.51x    680.03 μs
+        65,536 ASCII keys          1.62x  1.28x        1.12x      1.01x      1.00x   7196.88 μs
+        65,536 fixed-point floats  3.74x  4.03x        1.39x      1.00x      1.18x   1351.04 μs
+        65,536 scientific floats   3.28x  3.59x        1.15x      1.00x      1.05x   1762.21 μs
+        65,536 subnormal floats   11.54x 11.80x 166.11x [3]_      1.00x      1.11x   2299.86 μs
+        65,536 31-bit integers     6.45x  7.00x        1.65x      1.00x      1.51x    642.60 μs
+        65,536 32-bit integers     3.19x  3.06x        1.19x      1.00x      1.09x   1899.09 μs
+        65,536 63-bit integers     3.17x  3.07x        1.19x      1.00x      1.10x   1893.80 μs
+        65,536 64-bit integers     2.93x  2.69x        1.13x      1.00x      1.03x   2822.15 μs
+        65,536 >64-bit integers    3.13x  2.89x        2.88x 1.00x [4]_ 1.07x [4]_   2713.91 μs
+        65,536 empty lists         1.43x  1.62x        1.15x      1.00x      1.06x   2327.10 μs
+        65,536 empty dictionaries  1.38x  1.66x        1.16x      1.00x      1.03x   2057.13 μs
+        ========================= ====== ====== ============ ========== ========== ============
 
 .. tab:: Python 3.10.17
 
@@ -378,28 +378,28 @@ performance critical applications:
         :widths: grid
         :class: longtable
 
-        ========================= ====== ====== ========= ========== ========== ============
-        decode                      json jsonyx   msgspec     orjson     yyjson fastest time
-        ========================= ====== ====== ========= ========== ========== ============
-        65,536 control characters  2.82x  3.24x     3.04x      1.03x      1.00x    251.60 μs
-        65,536 ASCII characters    4.17x  2.94x     1.00x      1.11x      1.00x     26.14 μs
-        65,536 Unicode characters  2.95x  3.20x     3.73x      1.37x      1.00x    281.08 μs
-        65,536 non-BMP characters  2.87x  2.90x     3.17x      1.17x      1.00x    492.81 μs
-        65,536 nulls               2.33x  3.15x     1.55x      1.00x      1.58x    501.29 μs
-        65,536 booleans            2.33x  3.15x     1.60x      1.00x      1.45x    516.88 μs
-        65,536 empty strings       3.58x  4.26x     1.91x      1.00x      1.95x    601.92 μs
-        65,536 ASCII keys          1.56x  1.36x     1.09x      1.05x      1.00x   7033.64 μs
-        65,536 fixed-point floats  3.87x  4.26x     1.52x      1.00x      1.29x   1267.41 μs
-        65,536 scientific floats   4.04x  4.37x     1.46x      1.00x      1.33x   1399.34 μs
-        65,536 subnormal floats   11.72x 12.07x   181.49x      1.00x      1.22x   2100.83 μs
-        65,536 31-bit integers     6.24x  6.97x     1.78x      1.00x      1.62x    621.01 μs
-        65,536 32-bit integers     3.28x  3.48x     1.43x      1.00x      1.22x   1710.41 μs
-        65,536 63-bit integers     3.27x  3.48x     1.42x      1.00x      1.24x   1713.59 μs
-        65,536 64-bit integers     2.99x  3.07x     1.22x      1.00x      1.03x   2381.40 μs
-        65,536 >64-bit integers    2.77x  2.83x     2.83x 1.00x [3]_ 1.16x [3]_   2642.02 μs
-        65,536 empty lists         1.42x  1.77x     1.27x      1.00x      1.17x   2258.97 μs
-        65,536 empty dictionaries  1.56x  1.97x     1.33x      1.00x      1.21x   1795.75 μs
-        ========================= ====== ====== ========= ========== ========== ============
+        ========================= ====== ====== ============ ========== ========== ============
+        decode                      json jsonyx      msgspec     orjson     yyjson fastest time
+        ========================= ====== ====== ============ ========== ========== ============
+        65,536 control characters  2.82x  3.24x        3.04x      1.03x      1.00x    251.60 μs
+        65,536 ASCII characters    4.17x  2.94x        1.00x      1.11x      1.00x     26.14 μs
+        65,536 Unicode characters  2.95x  3.20x        3.73x      1.37x      1.00x    281.08 μs
+        65,536 non-BMP characters  2.87x  2.90x        3.17x      1.17x      1.00x    492.81 μs
+        65,536 nulls               2.33x  3.15x        1.55x      1.00x      1.58x    501.29 μs
+        65,536 booleans            2.33x  3.15x        1.60x      1.00x      1.45x    516.88 μs
+        65,536 empty strings       3.58x  4.26x        1.91x      1.00x      1.95x    601.92 μs
+        65,536 ASCII keys          1.56x  1.36x        1.09x      1.05x      1.00x   7033.64 μs
+        65,536 fixed-point floats  3.87x  4.26x        1.52x      1.00x      1.29x   1267.41 μs
+        65,536 scientific floats   4.04x  4.37x        1.46x      1.00x      1.33x   1399.34 μs
+        65,536 subnormal floats   11.72x 12.07x 181.49x [3]_      1.00x      1.22x   2100.83 μs
+        65,536 31-bit integers     6.24x  6.97x        1.78x      1.00x      1.62x    621.01 μs
+        65,536 32-bit integers     3.28x  3.48x        1.43x      1.00x      1.22x   1710.41 μs
+        65,536 63-bit integers     3.27x  3.48x        1.42x      1.00x      1.24x   1713.59 μs
+        65,536 64-bit integers     2.99x  3.07x        1.22x      1.00x      1.03x   2381.40 μs
+        65,536 >64-bit integers    2.77x  2.83x        2.83x 1.00x [4]_ 1.16x [4]_   2642.02 μs
+        65,536 empty lists         1.42x  1.77x        1.27x      1.00x      1.17x   2258.97 μs
+        65,536 empty dictionaries  1.56x  1.97x        1.33x      1.00x      1.21x   1795.75 μs
+        ========================= ====== ====== ============ ========== ========== ============
 
 .. warning:: The Python version of :mod:`jsonyx` is up to 82.11x slower for
     encoding and up to 92.54x slower for decoding, so make sure you have a
@@ -410,4 +410,5 @@ performance critical applications:
 
 .. [1] tried to deserialize
 .. [2] integer exceeds 64-bit range
-.. [3] converted to a float
+.. [3] see :issue:`msgspec/msgspec#1232`
+.. [4] converted to a float
