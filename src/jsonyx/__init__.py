@@ -148,6 +148,7 @@ def read(
         ...
         ['filesystem API']
 
+    .. tip:: Use :class:`jsonyx.Decoder` directly for better performance.
     .. seealso::
 
         - :func:`jsonyx.load` for deserializing from an open file.
@@ -191,7 +192,11 @@ def load(
         >>> json.load(io)
         ['reader protocol']
 
-    .. tip:: Specify ``root`` to display the zip filename in error messages.
+    .. tip::
+
+        - Use :class:`jsonyx.Decoder` directly for better performance.
+        - Specify ``root`` to display the zip filename in error messages.
+
     .. note::
 
         - The input is not read incrementally, but in one-shot.
@@ -240,7 +245,11 @@ def loads(
         >>> json.loads(r'"\"foo\bar"')
         '"foo\x08ar'
 
-    .. tip:: Specify ``filename`` to display the filename in error messages.
+    .. tip::
+
+        - Use :class:`jsonyx.Decoder` directly for better performance.
+        - Specify ``filename`` to display the filename in error messages.
+
     .. note:: The encoding is detected using :func:`jsonyx.detect_encoding`.
     .. seealso::
 
@@ -334,6 +343,7 @@ def write(
         ...
         '["filesystem API"]\n'
 
+    .. tip:: Use :class:`jsonyx.Encoder` directly for better performance.
     .. note::
 
         - The item separator is automatically stripped when indented.
@@ -453,6 +463,7 @@ def dump(
         >>> io.getvalue()
         '["writer protocol"]\n'
 
+    .. tip:: Use :class:`jsonyx.Encoder` directly for better performance.
     .. note::
 
         - The item separator is automatically stripped when indented.
@@ -555,6 +566,7 @@ def dumps(
         >>> json.dumps(["foo", {"bar": ("baz", None, 1.0, 2)}])
         '["foo", {"bar": ["baz", null, 1.0, 2]}]\n'
 
+    .. tip:: Use :class:`jsonyx.Encoder` directly for better performance.
     .. note:: The item separator is automatically stripped when indented.
     .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
     .. seealso::
@@ -611,7 +623,11 @@ def apply_patch(
         >>> json.apply_patch([1, 2, 3], {"op": "del", "path": "$[1]"})
         [1, 3]
 
-    .. tip:: A :ref:`filter` is more robust than an index.
+    .. tip::
+
+        - Use :class:`jsonyx.Manipulator` directly for better performance.
+        - A :ref:`filter` is more robust than an index.
+
     .. seealso:: :func:`jsonyx.make_patch` for making a patch.
 
     """
@@ -648,6 +664,8 @@ def paste_values(
         >>> json.paste_values(node, 4, {"mode": "append"})
         >>> root[0]
         [1, 2, 3, 4]
+
+    .. tip:: Use :class:`jsonyx.Manipulator` directly for better performance.
 
     """
     Manipulator(allow=allow).paste_values(current_nodes, values, operation)
@@ -689,6 +707,8 @@ def select_nodes(
         >>> root[0]
         [1, 2, 3, None, None, None]
 
+    .. tip:: Use :class:`jsonyx.Manipulator` directly for better performance.
+
     """
     return Manipulator(allow=allow).select_nodes(
         nodes, query, allow_slice=allow_slice, relative=relative,
@@ -720,6 +740,8 @@ def apply_filter(
         >>> node = root, 0  # pointer to obj
         >>> assert json.apply_filter(node, "@ == null")
 
+    .. tip:: Use :class:`jsonyx.Manipulator` directly for better performance.
+
     """
     return Manipulator(allow=allow).apply_filter(nodes, query)
 
@@ -740,6 +762,8 @@ def load_query_value(s: str, *, allow: Container[str] = NOTHING) -> Any:
         >>> import jsonyx as json
         >>> json.load_query_value("'~'foo'")
         "'foo"
+
+    .. tip:: Use :class:`jsonyx.Manipulator` directly for better performance.
 
     """
     return Manipulator(allow=allow).load_query_value(s)
