@@ -194,8 +194,8 @@ def load(
 
     .. tip::
 
-        - Use :class:`jsonyx.Decoder` directly for better performance.
         - Specify ``root`` to display the zip filename in error messages.
+        - Use :class:`jsonyx.Decoder` directly for better performance.
 
     .. note::
 
@@ -247,8 +247,8 @@ def loads(
 
     .. tip::
 
-        - Use :class:`jsonyx.Decoder` directly for better performance.
         - Specify ``filename`` to display the filename in error messages.
+        - Use :class:`jsonyx.Decoder` directly for better performance.
 
     .. note:: The encoding is detected using :func:`jsonyx.detect_encoding`.
     .. seealso::
@@ -625,8 +625,8 @@ def apply_patch(
 
     .. tip::
 
-        - Use :class:`jsonyx.Manipulator` directly for better performance.
         - A :ref:`filter` is more robust than an index.
+        - Use :class:`jsonyx.Manipulator` directly for better performance.
 
     .. seealso:: :func:`jsonyx.make_patch` for making a patch.
 
