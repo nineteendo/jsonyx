@@ -39,6 +39,7 @@ extensions: list[str] = [
 ]
 
 intersphinx_mapping: dict[str, tuple[str, None]] = {
+    "multidict": ("https://multidict.aio-libs.org/en/stable", None),
     "numpy": ("https://numpy.org/doc/stable", None),
     "python": ("https://docs.python.org/dev", None),
     "python-stable": ("https://docs.python.org/3", None),

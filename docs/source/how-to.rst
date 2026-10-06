@@ -157,6 +157,17 @@ Decimal('1.1')
 >>> json.dump(Decimal('1.1'), types={"float": Decimal})
 1.1
 
+Using :class:`multidict.MultiDict` instead of :class:`dict`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+>>> import jsonyx as json
+>>> from multidict import MultiDict
+>>> json.loads('{"a": 1, "a": 2, "a": 3}', hooks={"object": MultiDict})
+<MultiDict('a': 1, 'a': 2, 'a': 3)>
+>>> obj = MultiDict([('a', 1), ('a', 2), ('a', 3)])
+>>> json.dump(obj, types={"object": MultiDict})
+{"a": 1, "a": 2, "a": 3}
+
 Encoding and decoding arbitrary objects
 ---------------------------------------
 

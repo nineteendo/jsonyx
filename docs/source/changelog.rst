@@ -176,17 +176,20 @@ Breaking Changes:
           +>>> json.loads('{"a": 1, "a": 2, "a": 3}', hooks={"object": MultiDict})
           +<MultiDict('a': 1, 'a': 2, 'a': 3)>
 
-    - Removed :class:`!jsonyx.DuplicateKey`
+      See :class:`multidict.MultiDict` for more information.
+
+    - Removed :class:`!jsonyx.DuplicateKey`:
 
       .. code-block:: diff
 
           ->>> from jsonyx import DuplicateKey
-          +>>> class DuplicateKey(str):
-          +...   def __hash__(self):
-          +...     return id(self)
-          +...
-           >>> {"a": 1, DuplicateKey("a"): 2, DuplicateKey("a"): 3}
-           {'a': 1, 'a': 2, 'a': 3}
+          ->>> {"a": 1, DuplicateKey("a"): 2, DuplicateKey("a"): 3}
+          -{'a': 1, 'a': 2, 'a': 3}
+          +>>> from multidict import MultiDict
+          +>>> MultiDict([('a', 1), ('a', 2), ('a', 3)])
+          +<MultiDict('a': 1, 'a': 2, 'a': 3)>
+
+      See :class:`multidict.MultiDict` for more information.
 
     - Removed :mod:`!jsonyx.tool`
     - Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
@@ -230,7 +233,7 @@ jsonyx 1.2.1 (Aug 3, 2024)
 --------------------------
 
 Changes:
-    - First conda release.
+    - First conda release
 
 Bug Fixes:
     - Fixed :issue:`2`: Middle of error context is truncated incorrectly
@@ -262,4 +265,5 @@ Breaking Changes:
 jsonyx 1.0.0 (Aug 3, 2024)
 --------------------------
 
-Initial release
+Changes:
+   - Initial release
