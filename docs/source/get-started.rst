@@ -121,12 +121,11 @@ Writing to a file:
 >>> from tempfile import TemporaryDirectory
 >>> with TemporaryDirectory() as tmpdir:
 ...     filename = join(tmpdir, "file.json")
-...     with open(filename, "w", encoding="utf-8") as fp:
-...         json.dump(["writer protocol"], fp)
+...     json.write(["filesystem API"], filename)
 ...     with open(filename, "r", encoding="utf-8") as fp:
 ...         fp.read()
 ...
-'["writer protocol"]\n'
+'["filesystem API"]\n'
 
 .. tip:: Use :class:`jsonyx.Encoder` directly for better performance.
 .. note:: The output is not written incrementally, but in one-shot.
@@ -193,11 +192,10 @@ Reading from a file:
 >>> with TemporaryDirectory() as tmpdir:
 ...     filename = join(tmpdir, "file.json")
 ...     with open(filename, "w", encoding="utf-8") as fp:
-...         _ = fp.write('["reader protocol"]')
-...     with open(filename, "rb") as fp:
-...         json.load(fp)
+...         _ = fp.write('["filesystem API"]')
+...     json.read(filename)
 ...
-['reader protocol']
+['filesystem API']
 
 .. tip:: Use :class:`jsonyx.Decoder` directly for better performance.
 .. note::

@@ -660,6 +660,38 @@ class Decoder:
             "trailing_comma" in allow, "unquoted_keys" in allow, cache_keys,
         )
 
+    def read(self, filename: _StrPath) -> Any:
+        """Deserialize a JSON file to a Python object.
+
+        :param filename: the path to the JSON file
+        :raises OSError: if the file can't be opened
+        :raises RecursionError: if the JSON file is too deeply nested
+        :raises TruncatedSyntaxError: when failing to decode the file
+        :raises ValueError: if a number is too big
+        :return: a Python object
+
+        Example:
+            >>> import jsonyx as json
+            >>> from os.path import join
+            >>> from tempfile import TemporaryDirectory
+            >>> decoder = json.Decoder()
+            >>> with TemporaryDirectory() as tmpdir:
+            ...     filename = join(tmpdir, "file.json")
+            ...     with open(filename, "w", encoding="utf-8") as fp:
+            ...         _ = fp.write('["filesystem API"]')
+            ...     decoder.read(filename)
+            ...
+            ['filesystem API']
+
+        .. note::
+
+            - The input is not read incrementally, but in one-shot.
+            - The encoding is detected using :func:`jsonyx.detect_encoding`.
+            - Keys are never re-used across calls.
+
+        """
+        return self.loads(Path(filename).read_bytes(), filename=filename)
+
     def load(
         self, fp: Reader[bytes | str], *, root: _StrPath = ".",
     ) -> Any:
@@ -673,28 +705,11 @@ class Decoder:
         :return: a Python object
 
         Example:
-            Reading from an open file:
-
             >>> import jsonyx as json
             >>> from io import StringIO
             >>> decoder = json.Decoder()
             >>> io = StringIO('["reader protocol"]')
             >>> decoder.load(io)
-            ['reader protocol']
-
-            Reading from a file:
-
-            >>> import jsonyx as json
-            >>> from os.path import join
-            >>> from tempfile import TemporaryDirectory
-            >>> decoder = json.Decoder()
-            >>> with TemporaryDirectory() as tmpdir:
-            ...     filename = join(tmpdir, "file.json")
-            ...     with open(filename, "w", encoding="utf-8") as fp:
-            ...         _ = fp.write('["reader protocol"]')
-            ...     with open(filename, "rb") as fp:
-            ...         decoder.load(fp)
-            ...
             ['reader protocol']
 
         .. tip:: Specify ``root`` to display the zip filename in error
@@ -734,7 +749,10 @@ class Decoder:
 
         .. tip:: Specify ``filename`` to display the filename in error
             messages.
-        .. note:: Keys are never re-used across calls.
+        .. note::
+
+            - The encoding is detected using :func:`jsonyx.detect_encoding`.
+            - Keys are never re-used across calls.
 
         """
         filename = fspath(filename)
@@ -744,7 +762,7 @@ class Decoder:
         if not isinstance(s, str):
             encoding = detect_encoding(s)
             try:
-                s = s.decode(encoding, self._errors)
+                s = s.decode(encoding, self._errors)  # type: ignore
             except UnicodeDecodeError as exc:
                 msg: str = f"(unicode error) {exc}"
                 doc: str = exc.object.decode(encoding, "replace")
@@ -756,7 +774,7 @@ class Decoder:
                     msg, filename, doc, len(start), len(end),
                 ) from None
 
-        return self._scanner(filename, s)
+        return self._scanner(filename, s)  # type: ignore
 
 
 Decoder.__module__ = "jsonyx"

@@ -6,7 +6,6 @@ __all__: list[str] = ["main"]
 
 import sys
 from argparse import ArgumentParser
-from pathlib import Path
 from sys import modules, stderr, stdin
 from traceback import format_exception_only
 from typing import Any, Literal, cast
@@ -189,7 +188,6 @@ def _configure(parser: ArgumentParser) -> None:
 
 def _run(args: _Namespace) -> None:
     allow: frozenset[str] = EVERYTHING if args.nonstrict else NOTHING
-    errors: str = "surrogatepass" if args.nonstrict else "strict"
     decoder: Decoder = Decoder(allow=allow)
     encoder: Encoder = Encoder(
         allow=allow,
@@ -206,8 +204,7 @@ def _run(args: _Namespace) -> None:
     manipulator: Manipulator = Manipulator(allow=allow)
     try:
         if args.input_filename and args.input_filename != "-":
-            with Path(args.input_filename).open("rb") as fp:
-                input_obj: object = decoder.load(fp)
+            input_obj: object = decoder.read(args.input_filename)
         elif stdin.isatty():
             input_obj = decoder.loads(
                 "\n".join(iter(input, "")), filename="<stdin>",
@@ -219,13 +216,11 @@ def _run(args: _Namespace) -> None:
             output_obj: Any = input_obj
         elif args.command == "patch":
             args = cast("_PatchNameSpace", args)
-            with Path(args.patch_filename).open("rb") as fp:
-                patch: Any = decoder.load(fp)
+            patch: Any = decoder.read(args.patch_filename)
             output_obj = manipulator.apply_patch(input_obj, patch)
         else:
             args = cast("_DiffNameSpace", args)
-            with Path(args.old_input_filename).open("rb") as fp:
-                old_input_obj: object = decoder.load(fp)
+            old_input_obj: object = decoder.read(args.old_input_filename)
             output_obj = make_patch(old_input_obj, input_obj)
             if len(output_obj) == 1:
                 output_obj = output_obj[0]
@@ -240,8 +235,7 @@ def _run(args: _Namespace) -> None:
         sys.exit(1)
 
     if args.output_filename and args.output_filename != "-":
-        with Path(args.output_filename).open("w", -1, "utf-8", errors) as fp:
-            encoder.dump(output_obj, fp)
+        encoder.write(output_obj, args.output_filename)
     else:
         encoder.dump(output_obj)
 

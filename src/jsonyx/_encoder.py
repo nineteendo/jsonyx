@@ -6,6 +6,7 @@ __all__: list[str] = ["Encoder"]
 import re
 import sys
 from io import StringIO
+from pathlib import Path
 from re import DOTALL, MULTILINE, VERBOSE, Match, Pattern, RegexFlag
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
@@ -14,6 +15,7 @@ from jsonyx.allow import NOTHING
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Container, ItemsView, Iterable
+    from os import PathLike
 
     _T_contra = TypeVar("_T_contra", contravariant=True)
 
@@ -29,6 +31,7 @@ if TYPE_CHECKING:
     _Encoder = Callable[[object], str]
     _Formatter = Callable[[object], str]
     _Hook = Callable[[Any], Any]
+    _StrPath = PathLike[str] | str
 
 if sys.version_info < (3, 15):
     # pylint: disable-next=W0622
@@ -436,6 +439,42 @@ class Encoder:
             ensure_ascii, indent_leaves, quoted_keys, skipkeys, sort_keys,
             trailing_comma,
         )
+        self._errors: str = "surrogatepass" if allow_surrogates else "strict"
+
+    def write(
+        self, obj: object, filename: _StrPath, encoding: str = "utf-8",
+    ) -> None:
+        r"""Serialize a Python object to a JSON file.
+
+        .. versionchanged:: 2.0 Added ``encoding``.
+
+        :param obj: a Python object
+        :param filename: the path to the JSON file
+        :param encoding: the JSON encoding
+        :raises OSError: if the file can't be opened
+        :raises RecursionError: if the object is too deeply nested
+        :raises TypeError: for unserializable values
+        :raises TruncatedSyntaxError: when failing to encode the file
+        :raises ValueError: for invalid values
+
+        Example:
+            >>> import jsonyx as json
+            >>> from os.path import join
+            >>> from tempfile import TemporaryDirectory
+            >>> encoder = json.Encoder()
+            >>> with TemporaryDirectory() as tmpdir:
+            ...     filename = join(tmpdir, "file.json")
+            ...     encoder.write(["filesystem API"], filename)
+            ...     with open(filename, "r", encoding="utf-8") as fp:
+            ...         fp.read()
+            ...
+            '["filesystem API"]\n'
+
+        .. note:: The output is not written incrementally, but in one-shot.
+
+        """
+        with Path(filename).open("w", -1, encoding, self._errors) as fp:
+            self.dump(obj, fp)
 
     def dump(self, obj: object, fp: Writer[str] | None = None) -> None:
         r"""Serialize a Python object to an open JSON file.
@@ -468,21 +507,6 @@ class Encoder:
             >>> io = StringIO()
             >>> encoder.dump(["writer protocol"], io)
             >>> io.getvalue()
-            '["writer protocol"]\n'
-
-            Writing to a file:
-
-            >>> import jsonyx as json
-            >>> from os.path import join
-            >>> from tempfile import TemporaryDirectory
-            >>> encoder = json.Encoder()
-            >>> with TemporaryDirectory() as tmpdir:
-            ...     filename = join(tmpdir, "file.json")
-            ...     with open(filename, "w", encoding="utf-8") as fp:
-            ...         encoder.dump(["writer protocol"], fp)
-            ...     with open(filename, "r", encoding="utf-8") as fp:
-            ...         fp.read()
-            ...
             '["writer protocol"]\n'
 
         .. note:: The output is not written incrementally, but in one-shot.

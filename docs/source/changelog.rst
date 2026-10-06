@@ -14,8 +14,8 @@ jsonyx 2.4.0 (unreleased)
 -------------------------
 
 New Features:
-    - Added ``formatters`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump` and
-      :func:`jsonyx.dumps`
+    - Added ``formatters`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
+      :func:`jsonyx.dumps` and :func:`jsonyx.write`
     - Made :class:`frozendict` serializable by default
 
 Breaking Changes:
@@ -41,39 +41,6 @@ Breaking Changes:
       :func:`jsonyx.paste_values`, :func:`jsonyx.select_nodes`, and
       :class:`jsonyx.Manipulator`
     - Removed :class:`decimal.Decimal` support from :func:`jsonyx.make_patch`
-    - Removed :data:`!jsonyx.Decoder.read` and :func:`!jsonyx.read`:
-
-      .. code-block:: diff
-
-           >>> import jsonyx as json
-           >>> from os.path import join
-           >>> from tempfile import TemporaryDirectory
-           >>> with TemporaryDirectory() as tmpdir:
-           ...     filename = join(tmpdir, "file.json")
-           ...     with open(filename, "w", encoding="utf-8") as fp:
-           ...         _ = fp.write('["reader protocol"]')
-          -...     json.read(filename)
-          +...     with open(filename, "rb") as fp:
-          +...         json.load(fp)
-           ...
-           ['reader protocol']
-
-    - Removed :data:`!jsonyx.Encoder.write` and :func:`!jsonyx.write`:
-
-      .. code-block:: diff
-
-           >>> import jsonyx as json
-           >>> from os.path import join
-           >>> from tempfile import TemporaryDirectory
-           >>> with TemporaryDirectory() as tmpdir:
-           ...     filename = join(tmpdir, "file.json")
-          -...     json.write(["writer protocol"], filename)
-          +...     with open(filename, "w", encoding="utf-8") as fp:
-          +...         json.dump(["writer protocol"], fp)
-           ...     with open(filename, "r", encoding="utf-8") as fp:
-           ...         fp.read()
-           ...
-           '["writer protocol"]\n'
 
 Other Changes:
     - Added free threading support
@@ -104,7 +71,7 @@ jsonyx 2.2.0 (Mar 31, 2025)
 Breaking Changes:
     - Added ``cache_keys`` (default ``False`` instead of ``True``) to
       :class:`jsonyx.Decoder`, :func:`jsonyx.load`, :func:`jsonyx.loads` and
-      :func:`!jsonyx.read`
+      :func:`jsonyx.read`
 
 jsonyx 2.1.0 (Mar 30, 2025)
 ---------------------------
@@ -112,7 +79,7 @@ jsonyx 2.1.0 (Mar 30, 2025)
 New Features:
     - Added ``check_circular``, ``hook`` and ``skipkeys`` to
       :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
-      :func:`!jsonyx.write`
+      :func:`jsonyx.write`
 
 jsonyx 2.0.0 (Mar 27, 2025)
 ---------------------------
@@ -121,9 +88,9 @@ New Features:
     - Added the ``jsonyx`` application
     - Added ``commas``, ``indent_leaves``, ``max_indent_level``,
       ``quoted_keys`` and ``types`` to :class:`jsonyx.Encoder`,
-      :func:`jsonyx.dump`, :func:`jsonyx.dumps` and :func:`!jsonyx.write`
-    - Added ``encoding`` to :func:`!jsonyx.write` and
-      :meth:`!jsonyx.Encoder.write`
+      :func:`jsonyx.dump`, :func:`jsonyx.dumps` and :func:`jsonyx.write`
+    - Added ``encoding`` to :func:`jsonyx.write` and
+      :meth:`jsonyx.Encoder.write`
     - Added ``python -m jsonyx diff``
     - Added ``python -m jsonyx patch``
     - Added ``--no-indent-leaves`` (alias ``-l``) to
@@ -225,7 +192,7 @@ Breaking Changes:
     - Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
     - Replaced ``item_separator`` and ``key_separator`` with ``separators`` for
       :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
-      :func:`!jsonyx.write`:
+      :func:`jsonyx.write`:
 
       .. code-block:: diff
 
@@ -236,7 +203,7 @@ Breaking Changes:
            '{"a":1,"b":2,"c":3}'
 
     - Replaced ``use_decimal`` with ``hooks`` for :class:`jsonyx.Decoder`,
-      :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`!jsonyx.read`:
+      :func:`jsonyx.load`, :func:`jsonyx.loads` and :func:`jsonyx.read`:
 
       .. code-block:: diff
 
