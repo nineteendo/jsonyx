@@ -10,8 +10,8 @@ Changelog
 .. warning:: Breaking changes can occur in major and feature versions, so read
   the changelog before updating.
 
-jsonyx 2.4.0 (unreleased)
--------------------------
+jsonyx 2.4.0 (Oct 6, 2026)
+--------------------------
 
 New Features:
     - Added ``formatters`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
