@@ -71,7 +71,7 @@ def test_singletons(json: ModuleType, obj: bool | None, expected: str) -> None:
 def test_int(json: ModuleType, num: int, int_type: type) -> None:
     """Test integer."""
     types: dict[str, type] = {"int": int_type}
-    assert json.dumps(int_type(num), end="", types=types) == str(num)
+    assert json.dumps(int_type(num), end="", types=types) == f"{num}"
 
 
 @pytest.mark.parametrize(("obj", "expected"), [

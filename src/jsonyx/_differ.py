@@ -22,6 +22,7 @@ _ESCAPE_CHARS: Pattern[str] = re.compile(r"(['~])", _FLAGS)
 def _encode_query_key(key: str) -> str:
     if key.isidentifier():
         return f".{key}"
+
     return f"['{_ESCAPE_CHARS.sub(_REPL, key)}']"
 
 

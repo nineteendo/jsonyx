@@ -251,8 +251,7 @@ def test_invalid_string(
     # Single
     (r"\u", 4, 5),
     (r"\u0xff", 4, 8),  # Hex prefix
-    # pylint: disable-next=C0209
-    (r"\u{}".format("\uff10" * 4), 4, 8),  # Unicode digits
+    (rf"\u{chr(0xff10) * 4}", 4, 8),  # Unicode digits
     (r"\u 000", 4, 8),  # Surrounded by whitespace
     (r"\u-000", 4, 8),  # Negative number
     (r"\u+000", 4, 8),  # Positive number
@@ -262,8 +261,7 @@ def test_invalid_string(
     # After high surrogate
     (r"\ud800\u", 10, 11),
     (r"\ud800\u0xff", 10, 14),  # Hex prefix
-    # pylint: disable-next=C0209
-    (r"\ud800\u{}".format("\uff10" * 4), 10, 14),  # Unicode digits
+    (rf"\ud800\u{chr(0xff10) * 4}", 10, 14),  # Unicode digits
     (r"\ud800\u 000", 10, 14),  # Surrounded by whitespace
     (r"\ud800\u-000", 10, 14),  # Negative number
     (r"\ud800\u+000", 10, 14),  # Positive number

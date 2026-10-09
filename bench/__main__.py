@@ -1,4 +1,5 @@
 """JSON benchmark."""
+# TODO(Nice Zombies): re-run benchmark
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -32,12 +33,27 @@ if TYPE_CHECKING:
 
     _Func = Callable[[Any], Any]
 
+
+def _raw(obj: str | list[Any] | dict[str, Any]) -> str:
+    if isinstance(obj, str):
+        return f'"{obj}"'
+
+    if isinstance(obj, list):
+        return f'[{",".join(map(str, obj))}]'
+
+    return f"""{{{
+        ",".join([f"{_raw(key)}:{value}" for key, value in obj.items()])
+    }}}"""
+
+
 _ENCODE_CASES: dict[str, Any] = {
     # characters
-    "65,536 control characters": "\x00" * 65_536,
-    "65,536 ASCII characters": "\x20" * 65_536,
-    "65,536 Unicode characters": "\x80" * 65_536,
-    "65,536 non-BMP characters": "\U00010000" * 65_536,
+    "65,536 5-bit characters": "\x00" * 65_536,
+    "65,536 7-bit characters": "\x20" * 65_536,
+    "65,536 8-bit characters": "\x80" * 65_536,
+    "65,536 11-bit characters": "\u0100" * 65_536,
+    "65,536 16-bit characters": "\u0800" * 65_536,
+    "65,536 21-bit characters": "\U00010000" * 65_536,
 
     # constants
     "65,536 nulls": [None] * 65_536,
@@ -51,6 +67,7 @@ _ENCODE_CASES: dict[str, Any] = {
     "65,536 fixed-point floats": [0.0] * 65_536,
     "65,536 scientific floats": [1e-05] * 65_536,
     "65,536 subnormal floats": [5e-324] * 65_536,
+    "65,536 near-overflow floats": [1e308] * 65_536,
 
     # integers
     "65,536 31-bit integers": [0] * 65_536,
@@ -63,9 +80,47 @@ _ENCODE_CASES: dict[str, Any] = {
     "65,536 empty lists": [[]] * 65_536,
     "65,536 empty dictionaries": [{}] * 65_536,
 }
-_DECODE_CASES: dict[str, bytes] = {
-    case: json.dumps(obj).encode() for case, obj in _ENCODE_CASES.items()
-}
+_DECODE_CASES: dict[str, bytes] = {case: s.encode() for case, s in {
+    # characters
+    "65,536 7-bit characters": _raw("\x20" * 65_536),
+    "65,536 8-bit characters": _raw("\x80" * 65_536),
+    "65,536 11-bit characters": _raw("\u0100" * 65_536),
+    "65,536 16-bit characters": _raw("\u0800" * 65_536),
+    "65,536 21-bit characters": _raw("\U00010000" * 65_536),
+
+    # escapes
+    "65,536 7-bit escapes": _raw(r"\u0020" * 65_536),
+    "65,536 8-bit escapes": _raw(r"\u0080" * 65_536),
+    "65,536 11-bit escapes": _raw(r"\u0100" * 65_536),
+    "65,536 16-bit escapes": _raw(r"\u0800" * 65_536),
+    "65,536 21-bit escapes": _raw(r"\ud800\udc00" * 65_536),
+
+    # constants
+    "65,536 nulls": _raw(["null"] * 65_536),
+    "65,536 booleans": _raw(["false"] * 65_536),
+
+    # strings and keys
+    "65,536 empty strings": _raw([_raw("")] * 65_536),
+    "65,536 ASCII keys": _raw({f"{i}": "null" for i in range(65_536)}),
+
+    # floats
+    "65,536 fixed-point floats": _raw(["0.0"] * 65_536),
+    "65,536 scientific floats": _raw(["1e-05"] * 65_536),
+    "65,536 subnormal floats": _raw(["5e-324"] * 65_536),
+    "65,536 near-overflow floats": _raw(["1e308"] * 65_536),
+    "65,536 overflow floats": _raw(["1e309"] * 65_536),
+
+    # integers
+    "65,536 31-bit integers": _raw([0] * 65_536),
+    "65,536 32-bit integers": _raw([2 ** 31] * 65_536),
+    "65,536 63-bit integers": _raw([2 ** 32] * 65_536),
+    "65,536 64-bit integers": _raw([2 ** 63] * 65_536),
+    "65,536 >64-bit integers": _raw([2 ** 64] * 65_536),
+
+    # lists and dictionaries
+    "65,536 empty lists": _raw(["[]"] * 65_536),
+    "65,536 empty dictionaries": _raw(["{}"] * 65_536),
+}.items()}
 
 
 def _make_dumpb(func: _Func) -> _Func:
