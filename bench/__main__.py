@@ -76,9 +76,13 @@ _ENCODE_CASES: dict[str, Any] = {
     "65,536 64-bit integers": [2 ** 63] * 65_536,
     "65,536 >64-bit integers": [2 ** 64] * 65_536,
 
-    # lists and dictionaries
+    # lists
     "65,536 empty lists": [[]] * 65_536,
+    "65,536 non-empty lists": [[None]] * 65_536,
+
+    # dictionaries
     "65,536 empty dictionaries": [{}] * 65_536,
+    "65,536 non-empty dictionaries": [{"": None}] * 65_536,
 }
 _DECODE_CASES: dict[str, bytes] = {case: s.encode() for case, s in {
     # characters
@@ -100,7 +104,7 @@ _DECODE_CASES: dict[str, bytes] = {case: s.encode() for case, s in {
     "65,536 booleans": _raw(["false"] * 65_536),
 
     # strings and keys
-    "65,536 empty strings": _raw([_raw("")] * 65_536),
+    "65,536 empty strings": _raw(['""'] * 65_536),
     "65,536 ASCII keys": _raw({f"{i}": "null" for i in range(65_536)}),
 
     # floats

@@ -271,6 +271,7 @@ ascii_escape_unicode(PyObject *pystr, int allow_surrogates)
         else {
             chars = ascii_escape_unichar(c, output, chars, allow_surrogates);
             if (chars < 0) {
+                Py_DECREF(rval);
                 return NULL;
             }
         }
