@@ -11,9 +11,9 @@ from math import inf
 from timeit import Timer
 from typing import TYPE_CHECKING, Any
 
+import fastsimdjson
 import msgspec
 import orjson
-import yyjson
 from tabulate import tabulate  # type: ignore[import-untyped]
 
 if sys.version_info >= (3, 10):
@@ -135,19 +135,21 @@ _ENCODE_FUNCS: dict[str, _Func] = {
     "json": _make_dumpb(json.JSONEncoder().encode),
     "jsonyx": _make_dumpb(jsonyx.Encoder().dumps),
     "pyjsonyx": _make_dumpb(pyjsonyx.Encoder().dumps),
+    # pylint: disable-next=I1101
+    "fastsimdjson": fastsimdjson.dumpb,  # type: ignore
     "msgspec": msgspec.json.Encoder().encode,
     # pylint: disable-next=E1101
     "orjson": orjson.dumps,
-    "yyjson": _make_dumpb(yyjson.dumps),  # type: ignore
 }
 _DECODE_FUNCS: dict[str, _Func] = {
     "json": json.loads,
     "jsonyx": jsonyx.Decoder().loads,
     "pyjsonyx": pyjsonyx.Decoder().loads,
+    # pylint: disable-next=I1101
+    "fastsimdjson": fastsimdjson.loads,  # type: ignore
     "msgspec": msgspec.json.Decoder().decode,
     # pylint: disable-next=E1101
     "orjson": orjson.loads,
-    "yyjson": yyjson.loads,  # type: ignore
 }
 
 
