@@ -14,7 +14,7 @@ year: int = datetime.now(tz=timezone.utc).year
 author: str = "Nice Zombies"
 # pylint: disable-next=W0622
 copyright: str = f"{year}, Nice Zombies"  # ruff: ignore[A001]
-release: str = "2.4"  # 2.4.0
+release: str = "2.5"  # 2.5.0
 project: str = "jsonyx"
 version: str = "latest" if branch == "main" else branch
 

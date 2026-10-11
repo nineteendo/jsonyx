@@ -10,6 +10,12 @@ Changelog
 .. warning:: Breaking changes can occur in major and feature versions, so read
   the changelog before updating.
 
+jsonyx 2.5.0 (Unreleased)
+-------------------------
+
+Changes:
+    - Sped up string decoding.
+
 jsonyx 2.4.0 (Oct 6, 2026)
 --------------------------
 
