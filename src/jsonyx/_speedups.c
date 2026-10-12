@@ -398,123 +398,6 @@ raise_errmsg(const char *msg, PyObject *filename, PyObject *s, Py_ssize_t start,
     Py_DECREF(JSONSyntaxError);
 }
 
-static Py_ssize_t
-scanstring_unichar(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, const void *str, int kind, Py_ssize_t len, Py_ssize_t next, Py_UCS4 *c_ptr)
-{
-    Py_ssize_t end;
-
-    if (next == len) {
-        raise_errmsg("Expecting escaped character", pyfilename, pystr, next, 0);
-        goto bail;
-    }
-    Py_UCS4 c = PyUnicode_READ(kind, str, next);
-    if (c != 'u') {
-        /* Non-unicode backslash escapes */
-        end = next + 1;
-        switch (c) {
-            case '"': break;
-            case '\\': break;
-            case '/': break;
-            case 'b': c = '\b'; break;
-            case 'f': c = '\f'; break;
-            case 'n': c = '\n'; break;
-            case 'r': c = '\r'; break;
-            case 't': c = '\t'; break;
-            default:
-                if (c == '\n' || c == '\r') {
-                    raise_errmsg("Expecting escaped character", pyfilename, pystr, end - 1, 0);
-                }
-                else {
-                    raise_errmsg("Invalid backslash escape", pyfilename, pystr, end - 2, end);
-                }
-                goto bail;
-        }
-    }
-    else {
-        c = 0;
-        next++;
-        end = next + 4;
-        if (end > len) {
-            raise_errmsg("Expecting 4 hex digits", pyfilename, pystr, next, -4);
-            goto bail;
-        }
-        /* Decode 4 hex digits */
-        for (; next < end; next++) {
-            Py_UCS4 digit = PyUnicode_READ(kind, str, next);
-            c <<= 4;
-            switch (digit) {
-                case '0': case '1': case '2': case '3': case '4':
-                case '5': case '6': case '7': case '8': case '9':
-                    c |= (digit - '0'); break;
-                case 'a': case 'b': case 'c': case 'd': case 'e':
-                case 'f':
-                    c |= (digit - 'a' + 10); break;
-                case 'A': case 'B': case 'C': case 'D': case 'E':
-                case 'F':
-                    c |= (digit - 'A' + 10); break;
-                default:
-                    raise_errmsg("Expecting 4 hex digits", pyfilename, pystr, end - 4, -4);
-                    goto bail;
-            }
-        }
-        /* Surrogate pair */
-        if (Py_UNICODE_IS_HIGH_SURROGATE(c)) {
-            if (end + 2 < len &&
-                PyUnicode_READ(kind, str, next++) == '\\' &&
-                PyUnicode_READ(kind, str, next++) == 'u')
-            {
-                if (end + 6 > len) {
-                    raise_errmsg("Expecting 4 hex digits", pyfilename, pystr, end + 2, -4);
-                    goto bail;
-                }
-                Py_UCS4 c2 = 0;
-                /* Decode 4 hex digits */
-                for (; next < end + 6; next++) {
-                    Py_UCS4 digit = PyUnicode_READ(kind, str, next);
-                    c2 <<= 4;
-                    switch (digit) {
-                        case '0': case '1': case '2': case '3': case '4':
-                        case '5': case '6': case '7': case '8': case '9':
-                            c2 |= (digit - '0'); break;
-                        case 'a': case 'b': case 'c': case 'd': case 'e':
-                        case 'f':
-                            c2 |= (digit - 'a' + 10); break;
-                        case 'A': case 'B': case 'C': case 'D': case 'E':
-                        case 'F':
-                            c2 |= (digit - 'A' + 10); break;
-                        default:
-                            raise_errmsg("Expecting 4 hex digits", pyfilename, pystr, end + 2, -4);
-                            goto bail;
-                    }
-                }
-                if (Py_UNICODE_IS_LOW_SURROGATE(c2)) {
-                    end += 6;
-                    c = Py_UNICODE_JOIN_SURROGATES(c, c2);
-                }
-                else if (!s->allow_surrogates) {
-                    raise_errmsg("Surrogates are not allowed", pyfilename, pystr, end - 6, end);
-                    goto bail;
-                }
-            }
-            else if (!s->allow_surrogates) {
-                raise_errmsg("Surrogates are not allowed", pyfilename, pystr, end - 6, end);
-                goto bail;
-            }
-        }
-        else if (Py_UNICODE_IS_LOW_SURROGATE(c) && !s->allow_surrogates) {
-            raise_errmsg("Surrogates are not allowed", pyfilename, pystr, end - 6, end);
-            goto bail;
-        }
-    }
-
-    *c_ptr = c;
-    return end;
-
-bail:
-    *c_ptr = 0;
-    return -1;
-}
-
 static PyObject *
 scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, const void *str, int kind, Py_ssize_t len, Py_ssize_t end, Py_ssize_t *next_end_ptr)
 {
@@ -526,87 +409,179 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, co
     Return value is a new PyUnicode
     */
     PyObject *rval = NULL;
-    int output_kind;
-    Py_ssize_t i;
     Py_ssize_t begin = end - 1;
-    Py_ssize_t output_size;
-    Py_ssize_t chars;
-    Py_UCS4 maxchar;
+    Py_ssize_t next /* = begin */;
 
-    if (end < 0) {
+    _PyUnicodeWriter writer;
+    _PyUnicodeWriter_Init(&writer);
+    writer.overallocate = 1;
+
+    if (end < 0 || len < end) {
         PyErr_SetString(PyExc_ValueError, "end is out of bounds");
         goto bail;
     }
-
-    output_size = 0;
-    maxchar = 0;
-    for (; end < len;) {
-        Py_UCS4 c = PyUnicode_READ(kind, str, end);
-        if (c == '"') {
-            break;
+    while (1) {
+        /* Find the end of the string or the next escape */
+        Py_UCS4 c;
+        {
+            // Use tight scope variable to help register allocation.
+            Py_UCS4 d = 0;
+            for (next = end; next < len; next++) {
+                d = PyUnicode_READ(kind, str, next);
+                if (d == '"' || d == '\\') {
+                    break;
+                }
+                if (d <= 0x1f) {
+                    if (d == '\n' || d == '\r') {
+                        raise_errmsg("Unterminated string", pyfilename, pystr, begin, next);
+                    }
+                    else {
+                        raise_errmsg("Unescaped control character", pyfilename, pystr, next, next + 1);
+                    }
+                    goto bail;
+                }
+            }
+            c = d;
         }
-        if (c <= 0x1f) {
-            if (c == '\n' || c == '\r') {
-                raise_errmsg("Unterminated string", pyfilename, pystr, begin, end);
+
+        if (c == '"') {
+            // Fast path for simple case.
+            // DO NOT REMOVE: https://github.com/nineteendo/jsonyx/issues/33
+            if (writer.buffer == NULL) {
+                rval = PyUnicode_Substring(pystr, end, next);
+                end = next;
+                break;
             }
-            else {
-                raise_errmsg("Unescaped control character", pyfilename, pystr, end, end + 1);
-            }
+        }
+        else if (c != '\\') {
+            raise_errmsg("Unterminated string", pyfilename, pystr, begin, next);
             goto bail;
         }
-        if (c != '\\') {
-            end++;
-        } else {
-            end = scanstring_unichar(s, pyfilename, pystr, str, kind, len, end + 1, &c);
-            if (end < 0) {
+
+        /* Pick up this chunk if it's not zero length */
+        if (next != end) {
+            if (_PyUnicodeWriter_WriteSubstring(&writer, pystr, end, next) < 0) {
                 goto bail;
             }
         }
-        if (c > maxchar) {
-            maxchar = c;
+        if (c == '"') {
+            rval = _PyUnicodeWriter_Finish(&writer);
+            end = next;
+            break;
         }
-        output_size++;
-    }
-    if (end == len) {
-        raise_errmsg("Unterminated string", pyfilename, pystr, begin, end);
-        goto bail;
+        next++;
+        if (next == len) {
+            raise_errmsg("Expecting escaped character", pyfilename, pystr, next, 0);
+            goto bail;
+        }
+        c = PyUnicode_READ(kind, str, next);
+        if (c != 'u') {
+            /* Non-unicode backslash escapes */
+            end = next + 1;
+            switch (c) {
+                case '"': break;
+                case '\\': break;
+                case '/': break;
+                case 'b': c = '\b'; break;
+                case 'f': c = '\f'; break;
+                case 'n': c = '\n'; break;
+                case 'r': c = '\r'; break;
+                case 't': c = '\t'; break;
+                default:
+                    if (c == '\n' || c == '\r') {
+                        raise_errmsg("Expecting escaped character", pyfilename, pystr, end - 1, 0);
+                    }
+                    else {
+                        raise_errmsg("Invalid backslash escape", pyfilename, pystr, end - 2, end);
+                    }
+                    goto bail;
+            }
+        }
+        else {
+            c = 0;
+            next++;
+            end = next + 4;
+            if (end > len) {
+                raise_errmsg("Expecting 4 hex digits", pyfilename, pystr, next, -4);
+                goto bail;
+            }
+            /* Decode 4 hex digits */
+            for (; next < end; next++) {
+                Py_UCS4 digit = PyUnicode_READ(kind, str, next);
+                c <<= 4;
+                switch (digit) {
+                    case '0': case '1': case '2': case '3': case '4':
+                    case '5': case '6': case '7': case '8': case '9':
+                        c |= (digit - '0'); break;
+                    case 'a': case 'b': case 'c': case 'd': case 'e':
+                    case 'f':
+                        c |= (digit - 'a' + 10); break;
+                    case 'A': case 'B': case 'C': case 'D': case 'E':
+                    case 'F':
+                        c |= (digit - 'A' + 10); break;
+                    default:
+                        raise_errmsg("Expecting 4 hex digits", pyfilename, pystr, end - 4, -4);
+                        goto bail;
+                }
+            }
+            /* Surrogate pair */
+            if (Py_UNICODE_IS_HIGH_SURROGATE(c)) {
+                if (end + 2 < len &&
+                    PyUnicode_READ(kind, str, next++) == '\\' &&
+                    PyUnicode_READ(kind, str, next++) == 'u')
+                {
+                    if (end + 6 > len) {
+                        raise_errmsg("Expecting 4 hex digits", pyfilename, pystr, end + 2, -4);
+                        goto bail;
+                    }
+                    Py_UCS4 c2 = 0;
+                    /* Decode 4 hex digits */
+                    for (; next < end + 6; next++) {
+                        Py_UCS4 digit = PyUnicode_READ(kind, str, next);
+                        c2 <<= 4;
+                        switch (digit) {
+                            case '0': case '1': case '2': case '3': case '4':
+                            case '5': case '6': case '7': case '8': case '9':
+                                c2 |= (digit - '0'); break;
+                            case 'a': case 'b': case 'c': case 'd': case 'e':
+                            case 'f':
+                                c2 |= (digit - 'a' + 10); break;
+                            case 'A': case 'B': case 'C': case 'D': case 'E':
+                            case 'F':
+                                c2 |= (digit - 'A' + 10); break;
+                            default:
+                                raise_errmsg("Expecting 4 hex digits", pyfilename, pystr, end + 2, -4);
+                                goto bail;
+                        }
+                    }
+                    if (Py_UNICODE_IS_LOW_SURROGATE(c2)) {
+                        end += 6;
+                        c = Py_UNICODE_JOIN_SURROGATES(c, c2);
+                    }
+                    else if (!s->allow_surrogates) {
+                        raise_errmsg("Surrogates are not allowed", pyfilename, pystr, end - 6, end);
+                        goto bail;
+                    }
+                }
+                else if (!s->allow_surrogates) {
+                    raise_errmsg("Surrogates are not allowed", pyfilename, pystr, end - 6, end);
+                    goto bail;
+                }
+            }
+            else if (Py_UNICODE_IS_LOW_SURROGATE(c) && !s->allow_surrogates) {
+                raise_errmsg("Surrogates are not allowed", pyfilename, pystr, end - 6, end);
+                goto bail;
+            }
+        }
+        if (_PyUnicodeWriter_WriteChar(&writer, c) < 0) {
+            goto bail;
+        }
     }
 
     Py_ASSERT(end < len && PyUnicode_READ(kind, str, end) == '"');
-    rval = PyUnicode_New(output_size, maxchar);
     if (rval == NULL) {
         goto bail;
     }
-    output_kind = PyUnicode_KIND(rval);
-
-#define DECODE_OUTPUT do { \
-        chars = 0; \
-        for (i = begin + 1; i < end;) { \
-            Py_UCS4 c = PyUnicode_READ(kind, str, i); \
-            Py_ASSERT(c != '"' && c > 0x1f); \
-            if (c != '\\') { \
-                i++; \
-            } else { \
-                i = scanstring_unichar(s, pyfilename, pystr, str, kind, len, i + 1, &c); \
-                Py_ASSERT(i >= 0); \
-            } \
-            output[chars++] = c; \
-        } \
-    } while (0)
-
-    if (output_kind == PyUnicode_1BYTE_KIND) {
-        Py_UCS1 *output = PyUnicode_1BYTE_DATA(rval);
-        DECODE_OUTPUT;
-    } else if (output_kind == PyUnicode_2BYTE_KIND) {
-        Py_UCS2 *output = PyUnicode_2BYTE_DATA(rval);
-        DECODE_OUTPUT;
-    } else {
-        Py_UCS4 *output = PyUnicode_4BYTE_DATA(rval);
-        Py_ASSERT(output_kind == PyUnicode_4BYTE_KIND);
-        DECODE_OUTPUT;
-    }
-#undef DECODE_OUTPUT
-
     if (s->str_hook != (PyObject *)&PyUnicode_Type) {
         Py_SETREF(rval, PyObject_CallOneArg(s->str_hook, rval));
     }
@@ -615,6 +590,7 @@ scanstring_unicode(PyScannerObject *s, PyObject *pyfilename, PyObject *pystr, co
 
 bail:
     *next_end_ptr = -1;
+    _PyUnicodeWriter_Dealloc(&writer);
     return NULL;
 }
 
