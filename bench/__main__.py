@@ -8,10 +8,10 @@ import json
 import sys
 from functools import partial
 from math import inf
-from timeit import Timer
+from timeit import timeit
 from typing import TYPE_CHECKING, Any
 
-import fastsimdjson
+import fastsimdjson  # type: ignore[import-not-found]
 import msgspec
 import orjson
 from tabulate import tabulate  # type: ignore[import-untyped]
@@ -32,9 +32,10 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
     _Func = Callable[[Any], Any]
+    _Factory = Callable[[int], Any]
 
 
-def _raw(obj: str | list[Any] | dict[str, Any]) -> str:
+def _raws(obj: str | list[Any] | dict[str, Any]) -> str:
     if isinstance(obj, str):
         return f'"{obj}"'
 
@@ -42,89 +43,93 @@ def _raw(obj: str | list[Any] | dict[str, Any]) -> str:
         return f'[{",".join(map(str, obj))}]'
 
     return f"""{{{
-        ",".join([f"{_raw(key)}:{value}" for key, value in obj.items()])
+        ",".join([f"{_raws(key)}:{value}" for key, value in obj.items()])
     }}}"""
 
 
-_ENCODE_CASES: dict[str, Any] = {
+def _rawb(obj: str | list[Any] | dict[str, Any]) -> bytes:
+    return _raws(obj).encode()
+
+
+_ENCODE_CASES: dict[str, _Factory] = {
     # characters
-    "65,536 5-bit characters": "\x00" * 65_536,
-    "65,536 7-bit characters": "\x20" * 65_536,
-    "65,536 8-bit characters": "\x80" * 65_536,
-    "65,536 11-bit characters": "\u0100" * 65_536,
-    "65,536 16-bit characters": "\u0800" * 65_536,
-    "65,536 21-bit characters": "\U00010000" * 65_536,
+    "5-bit character": lambda n: "\x00" * n,
+    "7-bit character": lambda n: "\x20" * n,
+    "8-bit character": lambda n: "\x80" * n,
+    "11-bit character": lambda n: "\u0100" * n,
+    "16-bit character": lambda n: "\u0800" * n,
+    "21-bit character": lambda n: "\U00010000" * n,
 
     # constants
-    "65,536 nulls": [None] * 65_536,
-    "65,536 booleans": [False] * 65_536,
+    "null": lambda n: [None] * n,
+    "boolean": lambda n: [False] * n,
 
     # strings and keys
-    "65,536 empty strings": [""] * 65_536,
-    "65,536 ASCII keys": {f"{i}": None for i in range(65_536)},
+    "empty string": lambda n: [""] * n,
+    "7-digit key": lambda n: {f"{i:07x}": None for i in range(n)},
 
     # floats
-    "65,536 fixed-point floats": [0.0] * 65_536,
-    "65,536 scientific floats": [1e-05] * 65_536,
-    "65,536 subnormal floats": [5e-324] * 65_536,
-    "65,536 near-overflow floats": [1e308] * 65_536,
+    "fixed-point float": lambda n: [0.0] * n,
+    "scientific float": lambda n: [1e-05] * n,
+    "subnormal float": lambda n: [5e-324] * n,
+    "near-overflow float": lambda n: [1e308] * n,
 
     # integers
-    "65,536 31-bit integers": [0] * 65_536,
-    "65,536 32-bit integers": [2 ** 31] * 65_536,
-    "65,536 63-bit integers": [2 ** 32] * 65_536,
-    "65,536 64-bit integers": [2 ** 63] * 65_536,
-    "65,536 >64-bit integers": [2 ** 64] * 65_536,
+    "31-bit integer": lambda n: [0] * n,
+    "32-bit integer": lambda n: [2 ** 31] * n,
+    "63-bit integer": lambda n: [2 ** 32] * n,
+    "64-bit integer": lambda n: [2 ** 63] * n,
+    ">64-bit integer": lambda n: [2 ** 64] * n,
 
     # lists
-    "65,536 empty lists": [[]] * 65_536,
-    "65,536 non-empty lists": [[None]] * 65_536,
+    "empty list": lambda n: [[]] * n,  # type: ignore
+    "non-empty list": lambda n: [[None]] * n,
 
     # dictionaries
-    "65,536 empty dictionaries": [{}] * 65_536,
-    "65,536 non-empty dictionaries": [{"": None}] * 65_536,
+    "empty dictionary": lambda n: [{}] * n,  # type: ignore
+    "non-empty dictionary": lambda n: [{"": None}] * n,
 }
-_DECODE_CASES: dict[str, bytes] = {case: s.encode() for case, s in {
+_DECODE_CASES: dict[str, _Factory] = {
     # characters
-    "65,536 7-bit characters": _raw("\x20" * 65_536),
-    "65,536 8-bit characters": _raw("\x80" * 65_536),
-    "65,536 11-bit characters": _raw("\u0100" * 65_536),
-    "65,536 16-bit characters": _raw("\u0800" * 65_536),
-    "65,536 21-bit characters": _raw("\U00010000" * 65_536),
+    "7-bit character": lambda n: _rawb("\x20" * n),
+    "8-bit character": lambda n: _rawb("\x80" * n),
+    "11-bit character": lambda n: _rawb("\u0100" * n),
+    "16-bit character": lambda n: _rawb("\u0800" * n),
+    "21-bit character": lambda n: _rawb("\U00010000" * n),
 
     # escapes
-    "65,536 7-bit escapes": _raw(r"\u0020" * 65_536),
-    "65,536 8-bit escapes": _raw(r"\u0080" * 65_536),
-    "65,536 11-bit escapes": _raw(r"\u0100" * 65_536),
-    "65,536 16-bit escapes": _raw(r"\u0800" * 65_536),
-    "65,536 21-bit escapes": _raw(r"\ud800\udc00" * 65_536),
+    "7-bit escape": lambda n: _rawb(r"\u0020" * n),
+    "8-bit escape": lambda n: _rawb(r"\u0080" * n),
+    "11-bit escape": lambda n: _rawb(r"\u0100" * n),
+    "16-bit escape": lambda n: _rawb(r"\u0800" * n),
+    "21-bit escape": lambda n: _rawb(r"\ud800\udc00" * n),
 
     # constants
-    "65,536 nulls": _raw(["null"] * 65_536),
-    "65,536 booleans": _raw(["false"] * 65_536),
+    "null": lambda n: _rawb(["null"] * n),
+    "boolean": lambda n: _rawb(["false"] * n),
 
     # strings and keys
-    "65,536 empty strings": _raw(['""'] * 65_536),
-    "65,536 ASCII keys": _raw({f"{i}": "null" for i in range(65_536)}),
+    "empty string": lambda n: _rawb(['""'] * n),
+    "7-digit key": lambda n: _rawb({f"{i:07x}": "null" for i in range(n)}),
 
     # floats
-    "65,536 fixed-point floats": _raw(["0.0"] * 65_536),
-    "65,536 scientific floats": _raw(["1e-05"] * 65_536),
-    "65,536 subnormal floats": _raw(["5e-324"] * 65_536),
-    "65,536 near-overflow floats": _raw(["1e308"] * 65_536),
-    "65,536 overflow floats": _raw(["1e309"] * 65_536),
+    "fixed-point float": lambda n: _rawb(["0.0"] * n),
+    "scientific float": lambda n: _rawb(["1e-05"] * n),
+    "subnormal float": lambda n: _rawb(["5e-324"] * n),
+    "near-overflow float": lambda n: _rawb(["1e308"] * n),
+    "overflow float": lambda n: _rawb(["1e309"] * n),
 
     # integers
-    "65,536 31-bit integers": _raw([0] * 65_536),
-    "65,536 32-bit integers": _raw([2 ** 31] * 65_536),
-    "65,536 63-bit integers": _raw([2 ** 32] * 65_536),
-    "65,536 64-bit integers": _raw([2 ** 63] * 65_536),
-    "65,536 >64-bit integers": _raw([2 ** 64] * 65_536),
+    "31-bit integer": lambda n: _rawb([0] * n),
+    "32-bit integer": lambda n: _rawb([2 ** 31] * n),
+    "63-bit integer": lambda n: _rawb([2 ** 32] * n),
+    "64-bit integer": lambda n: _rawb([2 ** 63] * n),
+    ">64-bit integer": lambda n: _rawb([2 ** 64] * n),
 
     # lists and dictionaries
-    "65,536 empty lists": _raw(["[]"] * 65_536),
-    "65,536 empty dictionaries": _raw(["{}"] * 65_536),
-}.items()}
+    "empty list": lambda n: _rawb(["[]"] * n),
+    "empty dictionary": lambda n: _rawb(["{}"] * n),
+}
 
 
 def _make_dumpb(func: _Func) -> _Func:
@@ -154,18 +159,24 @@ _DECODE_FUNCS: dict[str, _Func] = {
 
 
 def _run_benchmark(
-    name: str, cases: dict[str, Any], funcs: dict[str, _Func],
+    name: str, cases: dict[str, _Factory], funcs: dict[str, _Func],
 ) -> None:
     rows: list[list[str]] = []
     speedups: list[float] = []
-    for case, obj in cases.items():
+    for case, make_obj in cases.items():
         times: dict[str, float] = {}
         for lib, func in funcs.items():
             print(end=".", flush=True)
             try:
-                timer: Timer = Timer(partial(func, obj))
-                number, time_taken = timer.autorange()
-                times[lib] = time_taken / number
+                n: int = 1
+                while True:
+                    obj: Any = make_obj(n)
+                    time_taken: float = timeit(partial(func, obj), number=1)
+                    if time_taken >= 0.2 or n >= 2 ** 26:
+                        times[lib] = time_taken / n
+                        break
+
+                    n *= 2
             except (ValueError, TypeError):
                 times[lib] = inf
 
@@ -174,7 +185,7 @@ def _run_benchmark(
         fastest_time: float = min(times.values())
         row: list[str] = [case]
         row.extend(f"{time / fastest_time:.02f}x" for time in times.values())
-        row.append(f"{1_000_000 * fastest_time:.02f} \u03bcs")
+        row.append(f"{1e9 * fastest_time:.02f} ns")
         rows.append(row)
 
     del funcs["pyjsonyx"]

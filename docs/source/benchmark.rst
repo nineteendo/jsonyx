@@ -1,6 +1,8 @@
 Benchmark (Sep 30, 2026)
 ========================
 
+Benchmark code: https://github.com/nineteendo/jsonyx/blob/main/bench/__main__.py
+
 We recommend to use :pypi:`orjson` or :pypi:`msgspec` or :pypi:`yyjson` for
 performance critical applications:
 
