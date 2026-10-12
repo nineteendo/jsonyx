@@ -44,12 +44,17 @@ def _raw(obj: bytes | list[bytes]) -> bytes:
 
 _ENCODE_CASES: dict[str, _Factory] = {
     # characters
-    "5-bit character": lambda n: "\x00" * n,
-    "7-bit character": lambda n: "\x20" * n,
-    "8-bit character": lambda n: "\x80" * n,
+    "7-bit character": lambda n: "\u0020" * n,
+    "8-bit character": lambda n: "\u0080" * n,
     "11-bit character": lambda n: "\u0100" * n,
     "16-bit character": lambda n: "\u0800" * n,
     "21-bit character": lambda n: "\U00010000" * n,
+
+    # escapes
+    "double quote escape": lambda n: '"' * n,
+    "backslash escape": lambda n: "\\" * n,
+    "character escape": lambda n: "\b" * n,
+    "7-bit escape": lambda n: "\u0000" * n,
 
     # constants
     "null": lambda n: [None] * n,
@@ -61,15 +66,15 @@ _ENCODE_CASES: dict[str, _Factory] = {
     # floats
     "fixed-point float": lambda n: [0.0] * n,
     "scientific float": lambda n: [1e-05] * n,
-    "subnormal float": lambda n: [5e-324] * n,
-    "near-overflow float": lambda n: [1e308] * n,
+    "minimum float": lambda n: [5e-324] * n,
+    "maximum float": lambda n: [1.7976931348623157e+308] * n,
 
     # integers
     "31-bit integer": lambda n: [0] * n,
-    "32-bit integer": lambda n: [2 ** 31] * n,
-    "63-bit integer": lambda n: [2 ** 32] * n,
-    "64-bit integer": lambda n: [2 ** 63] * n,
-    ">64-bit integer": lambda n: [2 ** 64] * n,
+    "32-bit integer": lambda n: [2147483648] * n,
+    "63-bit integer": lambda n: [4294967296] * n,
+    "64-bit integer": lambda n: [9223372036854775808] * n,
+    ">64-bit integer": lambda n: [18446744073709551616] * n,
 
     # lists
     "empty list": lambda n: [[]] * n,  # type: ignore
@@ -85,13 +90,16 @@ _DECODE_CASES: dict[str, _Factory] = {
 
     # characters
     "7-bit character": lambda n: _raw(b"\x20" * n),
-    "8-bit character": lambda n: _raw(b"\x80" * n),
+    "8-bit character": lambda n: _raw(b"\xc2\x80" * n),
     "11-bit character": lambda n: _raw(b"\xc4\x80" * n),
     "16-bit character": lambda n: _raw(b"\xe0\xa0\x80" * n),
     "21-bit character": lambda n: _raw(b"\xf0\x90\x80\x80" * n),
 
     # escapes
-    "7-bit escape": lambda n: _raw(rb"\u0020" * n),
+    "double quote escape": lambda n: _raw(rb"\"" * n),
+    "backslash escape": lambda n: _raw(rb"\\" * n),
+    "character escape": lambda n: _raw(rb"\b" * n),
+    "7-bit escape": lambda n: _raw(rb"\u0000" * n),
     "8-bit escape": lambda n: _raw(rb"\u0080" * n),
     "11-bit escape": lambda n: _raw(rb"\u0100" * n),
     "16-bit escape": lambda n: _raw(rb"\u0800" * n),
@@ -107,9 +115,10 @@ _DECODE_CASES: dict[str, _Factory] = {
     # floats
     "fixed-point float": lambda n: _raw([b"0.0"] * n),
     "scientific float": lambda n: _raw([b"1e-05"] * n),
-    "subnormal float": lambda n: _raw([b"5e-324"] * n),
-    "near-overflow float": lambda n: _raw([b"1e308"] * n),
-    "overflow float": lambda n: _raw([b"1e309"] * n),
+    "minimum float": lambda n: _raw([b"5e-324"] * n),
+    "<minimum float": lambda n: _raw([b"2e-324"] * n),
+    "maximum float": lambda n: _raw([b"1.7976931348623157e+308"] * n),
+    ">maximum float": lambda n: _raw([b"1.7976931348623159e+308"] * n),
 
     # integers
     "31-bit integer": lambda n: _raw([b"0"] * n),
