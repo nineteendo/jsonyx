@@ -1709,7 +1709,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
         PyObject *encoded;
         if (PyLong_CheckExact(obj) && s->int_formatter == (PyObject *)&PyUnicode_Type) {
             // Fast-path for exact integers
-#ifdef PyUnicodeWriter_WriteRepr
+#if PY_VERSION_HEX >= 0x030E0000
             return PyUnicodeWriter_WriteRepr((PyUnicodeWriter*)writer, obj);
 #else
             encoded = PyObject_Str(obj);

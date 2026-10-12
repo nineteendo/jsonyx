@@ -14,7 +14,8 @@ jsonyx 2.5.0 (Unreleased)
 -------------------------
 
 Changes:
-    - Sped up string decoding.
+    - Sped up :class:`int` encoding.
+    - Sped up :class:`str` decoding.
 
 jsonyx 2.4.0 (Oct 6, 2026)
 --------------------------
@@ -62,7 +63,7 @@ jsonyx 2.3.0 (Apr 30, 2025)
 ---------------------------
 
 Changes:
-    - Sped up string encoding
+    - Sped up :class:`str` encoding
 
 jsonyx 2.2.1 (Apr 21, 2025)
 ---------------------------
