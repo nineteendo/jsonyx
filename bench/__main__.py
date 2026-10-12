@@ -35,20 +35,11 @@ if TYPE_CHECKING:
     _Factory = Callable[[int], Any]
 
 
-def _raws(obj: str | list[Any] | dict[str, Any]) -> str:
-    if isinstance(obj, str):
-        return f'"{obj}"'
+def _raw(obj: bytes | list[bytes]) -> bytes:
+    if isinstance(obj, bytes):
+        return b'"' + obj + b'"'
 
-    if isinstance(obj, list):
-        return f'[{",".join(map(str, obj))}]'
-
-    return f"""{{{
-        ",".join([f"{_raws(key)}:{value}" for key, value in obj.items()])
-    }}}"""
-
-
-def _rawb(obj: str | list[Any] | dict[str, Any]) -> bytes:
-    return _raws(obj).encode()
+    return b"[" + b",".join(obj) + b"]"
 
 
 _ENCODE_CASES: dict[str, _Factory] = {
@@ -64,9 +55,8 @@ _ENCODE_CASES: dict[str, _Factory] = {
     "null": lambda n: [None] * n,
     "boolean": lambda n: [False] * n,
 
-    # strings and keys
+    # strings
     "empty string": lambda n: [""] * n,
-    "7-digit key": lambda n: {f"{i:07x}": None for i in range(n)},
 
     # floats
     "fixed-point float": lambda n: [0.0] * n,
@@ -90,45 +80,47 @@ _ENCODE_CASES: dict[str, _Factory] = {
     "non-empty dictionary": lambda n: [{"": None}] * n,
 }
 _DECODE_CASES: dict[str, _Factory] = {
+    # whitespace
+    "space": lambda n: b" " * n + b"null",
+
     # characters
-    "7-bit character": lambda n: _rawb("\x20" * n),
-    "8-bit character": lambda n: _rawb("\x80" * n),
-    "11-bit character": lambda n: _rawb("\u0100" * n),
-    "16-bit character": lambda n: _rawb("\u0800" * n),
-    "21-bit character": lambda n: _rawb("\U00010000" * n),
+    "7-bit character": lambda n: _raw(b"\x20" * n),
+    "8-bit character": lambda n: _raw(b"\x80" * n),
+    "11-bit character": lambda n: _raw(b"\xc4\x80" * n),
+    "16-bit character": lambda n: _raw(b"\xe0\xa0\x80" * n),
+    "21-bit character": lambda n: _raw(b"\xf0\x90\x80\x80" * n),
 
     # escapes
-    "7-bit escape": lambda n: _rawb(r"\u0020" * n),
-    "8-bit escape": lambda n: _rawb(r"\u0080" * n),
-    "11-bit escape": lambda n: _rawb(r"\u0100" * n),
-    "16-bit escape": lambda n: _rawb(r"\u0800" * n),
-    "21-bit escape": lambda n: _rawb(r"\ud800\udc00" * n),
+    "7-bit escape": lambda n: _raw(rb"\u0020" * n),
+    "8-bit escape": lambda n: _raw(rb"\u0080" * n),
+    "11-bit escape": lambda n: _raw(rb"\u0100" * n),
+    "16-bit escape": lambda n: _raw(rb"\u0800" * n),
+    "21-bit escape": lambda n: _raw(rb"\ud800\udc00" * n),
 
     # constants
-    "null": lambda n: _rawb(["null"] * n),
-    "boolean": lambda n: _rawb(["false"] * n),
+    "null": lambda n: _raw([b"null"] * n),
+    "boolean": lambda n: _raw([b"false"] * n),
 
-    # strings and keys
-    "empty string": lambda n: _rawb(['""'] * n),
-    "7-digit key": lambda n: _rawb({f"{i:07x}": "null" for i in range(n)}),
+    # strings
+    "empty string": lambda n: _raw([b'""'] * n),
 
     # floats
-    "fixed-point float": lambda n: _rawb(["0.0"] * n),
-    "scientific float": lambda n: _rawb(["1e-05"] * n),
-    "subnormal float": lambda n: _rawb(["5e-324"] * n),
-    "near-overflow float": lambda n: _rawb(["1e308"] * n),
-    "overflow float": lambda n: _rawb(["1e309"] * n),
+    "fixed-point float": lambda n: _raw([b"0.0"] * n),
+    "scientific float": lambda n: _raw([b"1e-05"] * n),
+    "subnormal float": lambda n: _raw([b"5e-324"] * n),
+    "near-overflow float": lambda n: _raw([b"1e308"] * n),
+    "overflow float": lambda n: _raw([b"1e309"] * n),
 
     # integers
-    "31-bit integer": lambda n: _rawb([0] * n),
-    "32-bit integer": lambda n: _rawb([2 ** 31] * n),
-    "63-bit integer": lambda n: _rawb([2 ** 32] * n),
-    "64-bit integer": lambda n: _rawb([2 ** 63] * n),
-    ">64-bit integer": lambda n: _rawb([2 ** 64] * n),
+    "31-bit integer": lambda n: _raw([b"0"] * n),
+    "32-bit integer": lambda n: _raw([b"2147483648"] * n),
+    "63-bit integer": lambda n: _raw([b"4294967296"] * n),
+    "64-bit integer": lambda n: _raw([b"9223372036854775808"] * n),
+    ">64-bit integer": lambda n: _raw([b"18446744073709551616"] * n),
 
     # lists and dictionaries
-    "empty list": lambda n: _rawb(["[]"] * n),
-    "empty dictionary": lambda n: _rawb(["{}"] * n),
+    "empty list": lambda n: _raw([b"[]"] * n),
+    "empty dictionary": lambda n: _raw([b"{}"] * n),
 }
 
 
