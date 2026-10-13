@@ -730,9 +730,9 @@ class Decoder:
     def loads(
         self, s: bytearray | bytes | str, *, filename: _StrPath = "<string>",
     ) -> Any:
-        r"""Deserialize a JSON string to a Python object.
+        r"""Deserialize a JSON string or bytes to a Python object.
 
-        :param s: a JSON string
+        :param s: a JSON string or bytes
         :param filename: the path to the JSON file
         :raises RecursionError: if the JSON string is too deeply nested
         :raises TruncatedSyntaxError: when failing to decode the string
@@ -740,12 +740,21 @@ class Decoder:
         :return: a Python object
 
         Example:
+            Loading from a string:
+
             >>> import jsonyx as json
             >>> decoder = json.Decoder()
             >>> decoder.loads('{"foo": ["bar", null, 1.0, 2]}')
             {'foo': ['bar', None, 1.0, 2]}
             >>> decoder.loads(r'"\"foo\bar"')
             '"foo\x08ar'
+
+            Loading from bytes:
+
+            >>> import jsonyx as json
+            >>> decoder = json.Decoder()
+            >>> decoder.loads(b'\x00"\x00f\x00o\x00o\x00"')
+            'foo'
 
         .. tip:: Specify ``filename`` to display the filename in error
             messages.

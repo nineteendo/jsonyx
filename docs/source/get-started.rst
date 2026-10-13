@@ -176,6 +176,12 @@ Loading from a string:
 >>> json.loads(r'"\"foo\bar"')
 '"foo\x08ar'
 
+Loading from bytes:
+
+>>> import jsonyx as json
+>>> json.loads(b'\x00"\x00f\x00o\x00o\x00"')
+'foo'
+
 Reading from an open file:
 
 >>> import jsonyx as json
