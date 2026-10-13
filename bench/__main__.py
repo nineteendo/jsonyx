@@ -189,10 +189,9 @@ def _run_benchmark(
             try:
                 n: int = 1
                 while True:
-                    obj: Any = make_obj(n)
-                    time_taken: float = timeit(partial(func, obj), number=1)
-                    del obj
-                    if time_taken >= 0.2:
+                    if (time_taken := timeit(
+                        partial(func, make_obj(n)), number=1,
+                    )) >= 0.2:
                         times[lib] = time_taken / n
                         break
 
@@ -217,5 +216,6 @@ def _run_benchmark(
 
 
 if __name__ == "__main__":
+    print(f"Python {sys.version}")
     _run_benchmark("encode", _ENCODE_CASES, _ENCODE_FUNCS)
     _run_benchmark("decode", _DECODE_CASES, _DECODE_FUNCS)
