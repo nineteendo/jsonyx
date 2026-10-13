@@ -191,7 +191,8 @@ def _run_benchmark(
                 while True:
                     obj: Any = make_obj(n)
                     time_taken: float = timeit(partial(func, obj), number=1)
-                    if time_taken >= 0.2 or n >= 2 ** 26:
+                    del obj
+                    if time_taken >= 0.2:
                         times[lib] = time_taken / n
                         break
 
