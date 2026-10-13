@@ -3,7 +3,7 @@ from __future__ import annotations
 
 __all__: list[str] = []
 
-from io import StringIO
+from io import BytesIO, StringIO
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import TYPE_CHECKING
@@ -13,6 +13,7 @@ import pytest
 from jsonyx import JSONSyntaxError, detect_encoding, format_syntax_error
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from types import ModuleType
 
 
@@ -88,9 +89,15 @@ def test_format_syntax_error(
     )
 
 
-def test_load(json: ModuleType) -> None:
+@pytest.mark.parametrize("make_io", [
+    lambda: BytesIO(b"0"),
+    lambda: StringIO("0"),
+])
+def test_load(
+    json: ModuleType, make_io: Callable[[], BytesIO | StringIO],
+) -> None:
     """Test JSON load."""
-    assert json.load(StringIO("0")) == 0
+    assert json.load(make_io()) == 0
 
 
 def test_read(json: ModuleType) -> None:

@@ -152,7 +152,7 @@ def read(
     .. seealso::
 
         - :func:`jsonyx.load` for deserializing from an open file.
-        - :func:`jsonyx.loads` for deserializing from a string.
+        - :func:`jsonyx.loads` for deserializing from a string or bytes.
         - :func:`jsonyx.write` for serializing to a file.
 
     """
@@ -205,7 +205,7 @@ def load(
     .. seealso::
 
         - :func:`jsonyx.read` for deserializing from a file.
-        - :func:`jsonyx.loads` for deserializing from a string.
+        - :func:`jsonyx.loads` for deserializing from a string or bytes.
         - :func:`jsonyx.dump` for serializing to an open file.
 
     """
@@ -222,13 +222,13 @@ def loads(
     filename: _StrPath = "<string>",
     hooks: dict[str, _Hook] | None = None,
 ) -> Any:
-    r"""Deserialize a JSON string to a Python object.
+    r"""Deserialize a JSON string or bytes to a Python object.
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
     .. versionchanged:: 2.2 Added ``cache_keys`` (default ``False`` instead of
       ``True``).
 
-    :param s: a JSON string
+    :param s: a JSON string or bytes
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param cache_keys: re-use the keys of objects
     :param filename: the path to the JSON file
@@ -244,6 +244,8 @@ def loads(
         {'foo': ['bar', None, 1.0, 2]}
         >>> json.loads(r'"\"foo\bar"')
         '"foo\x08ar'
+        >>> json.loads(b'\x00"\x00f\x00o\x00o\x00"')
+        'foo'
 
     .. tip::
 
@@ -574,7 +576,7 @@ def dumps(
 
         - :func:`jsonyx.write` for serializing to a file.
         - :func:`jsonyx.dump` for serializing to an open file.
-        - :func:`jsonyx.load` for deserializing from a string.
+        - :func:`jsonyx.loads` for deserializing from a string.
 
     """
     return Encoder(

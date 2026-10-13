@@ -168,13 +168,15 @@ Pretty printing
 Decoding JSON
 ^^^^^^^^^^^^^
 
-Loading from a string:
+Loading from a string or bytes:
 
 >>> import jsonyx as json
 >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
 {'foo': ['bar', None, 1.0, 2]}
 >>> json.loads(r'"\"foo\bar"')
 '"foo\x08ar'
+>>> json.loads(b'\x00"\x00f\x00o\x00o\x00"')
+'foo'
 
 Reading from an open file:
 
