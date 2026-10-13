@@ -740,19 +740,12 @@ class Decoder:
         :return: a Python object
 
         Example:
-            Loading from a string:
-
             >>> import jsonyx as json
             >>> decoder = json.Decoder()
             >>> decoder.loads('{"foo": ["bar", null, 1.0, 2]}')
             {'foo': ['bar', None, 1.0, 2]}
             >>> decoder.loads(r'"\"foo\bar"')
             '"foo\x08ar'
-
-            Loading from bytes:
-
-            >>> import jsonyx as json
-            >>> decoder = json.Decoder()
             >>> decoder.loads(b'\x00"\x00f\x00o\x00o\x00"')
             'foo'
 

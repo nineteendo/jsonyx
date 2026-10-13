@@ -239,17 +239,11 @@ def loads(
     :return: a Python object
 
     Example:
-        Loading from a string:
-
         >>> import jsonyx as json
         >>> json.loads('{"foo": ["bar", null, 1.0, 2]}')
         {'foo': ['bar', None, 1.0, 2]}
         >>> json.loads(r'"\"foo\bar"')
         '"foo\x08ar'
-
-        Loading from bytes:
-
-        >>> import jsonyx as json
         >>> json.loads(b'\x00"\x00f\x00o\x00o\x00"')
         'foo'
 
