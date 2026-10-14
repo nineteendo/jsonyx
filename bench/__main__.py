@@ -51,10 +51,10 @@ _ENCODE_CASES: dict[str, _Factory] = {
     "21-bit character": lambda n: "\U00010000" * n,
 
     # variable length characters
-    "7-bit in 11-bit character": lambda n: "\u0020" * n + "\u0100",
-    "7-bit in 21-bit character": lambda n: "\u0020" * n + "\U00010000",
-    "11-bit in 21-bit character": lambda n: "\u0100" * n + "\U00010000",
-    "16-bit in 21-bit character": lambda n: "\u0800" * n + "\U00010000",
+    "7-in-16-bit character": lambda n: "\u0020" * n + "\u0100",
+    "7-in-32-bit character": lambda n: "\u0020" * n + "\U00010000",
+    "11-in-32-bit character": lambda n: "\u0100" * n + "\U00010000",
+    "16-in-32-bit character": lambda n: "\u0800" * n + "\U00010000",
 
     # escapes
     "double quote escape": lambda n: '"' * n,
@@ -92,7 +92,8 @@ _ENCODE_CASES: dict[str, _Factory] = {
 }
 _DECODE_CASES: dict[str, _Factory] = {
     # whitespace
-    "space": lambda n: b" " * n + b"null",
+    "outer space": lambda n: b" " * n + b"null",
+    "inner space": lambda n: b"[" + b" " * n + b"]",
 
     # characters
     "7-bit character": lambda n: _raw(b"\x20" * n),
@@ -102,14 +103,12 @@ _DECODE_CASES: dict[str, _Factory] = {
     "21-bit character": lambda n: _raw(b"\xf0\x90\x80\x80" * n),
 
     # variable length characters
-    "7-bit in 11-bit character": lambda n: _raw(b"\x20" * n + b"\xc4\x80"),
-    "7-bit in 21-bit character": lambda n: _raw(
-        b"\x20" * n + b"\xf0\x90\x80\x80",
-    ),
-    "11-bit in 21-bit character": lambda n: _raw(
+    "7-in-16-bit character": lambda n: _raw(b"\x20" * n + b"\xc4\x80"),
+    "7-in-32-bit character": lambda n: _raw(b"\x20" * n + b"\xf0\x90\x80\x80"),
+    "11-in-32-bit character": lambda n: _raw(
         b"\xc4\x80" * n + b"\xf0\x90\x80\x80",
     ),
-    "16-bit in 21-bit character": lambda n: _raw(
+    "16-in-32-bit character": lambda n: _raw(
         b"\xe0\xa0\x80" * n + b"\xf0\x90\x80\x80",
     ),
 
