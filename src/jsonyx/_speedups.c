@@ -3,6 +3,7 @@
 // TODO(Nice Zombies): Request float writer
 
 #include <Python.h>
+#include <stdatomic.h>
 #include <stdbool.h> // bool
 
 #define _Py_EnterRecursiveCall Py_EnterRecursiveCall
@@ -14,6 +15,12 @@
 #define Py_ASSERT(cond) do {} while(0)
 #endif
 
+#if SIZEOF_VOID_P > 4
+#define Py_SEEN_FLAG (1 << 30)
+#else
+#define Py_SEEN_FLAG (1 << 29)
+#endif
+
 #if PY_VERSION_HEX < 0x030F0000
 #define PyAnyDict_Check PyDict_Check
 #define PyAnyDict_CheckExact PyDict_CheckExact
@@ -23,6 +30,10 @@
 #define Py_BEGIN_CRITICAL_SECTION(op) {
 #define Py_END_CRITICAL_SECTION() }
 #endif /* PY_VERSION_HEX < 0x030D0000 */
+
+#if PY_VERSION_HEX < 0x030C0000
+#define _Py_IsImmortal(obj) false
+#endif /* PY_VERSION_HEX < 0x030C0000 */
 
 #if PY_VERSION_HEX < 0x030A0000
 static inline
@@ -2044,6 +2055,32 @@ _encoder_encode_dict_lock_held(PyEncoderObject *s, PyObject *markers,
     return 0;
 }
 
+static int Py_TEST_AND_SET_SEEN(PyObject *op)
+{
+    if (_Py_IsImmortal(op)) {
+        return 0;
+    }
+#ifdef Py_GIL_DISABLED
+    return (atomic_fetch_or((_Atomic(uint32_t)*)&op->ob_ref_local, Py_SEEN_FLAG) & Py_SEEN_FLAG) != 0;
+#else
+    Py_ssize_t refcnt = op->ob_refcnt;
+    op->ob_refcnt = refcnt | Py_SEEN_FLAG;
+    return (refcnt & Py_SEEN_FLAG) != 0;
+#endif
+}
+
+static void Py_UNSET_SEEN(PyObject *op)
+{
+    if (_Py_IsImmortal(op)) {
+        return;
+    }
+#ifdef Py_GIL_DISABLED
+    atomic_fetch_and((_Atomic(uint32_t)*)&op->ob_ref_local, ~Py_SEEN_FLAG);
+#else
+    op->ob_refcnt &= ~Py_SEEN_FLAG;
+#endif
+}
+
 static int
 encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
                            _PyUnicodeWriter *writer, PyObject *mapping,
@@ -2053,7 +2090,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
     PyObject *ident = NULL;
     bool first = true;
 
-    if (markers != Py_None) {
+    if (markers != Py_None && Py_TEST_AND_SET_SEEN(mapping)) {
         int has_key;
         ident = PyLong_FromVoidPtr(mapping);
         if (ident == NULL)
@@ -2137,9 +2174,10 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
     }
 
     if (markers != Py_None) {
-        if (PySet_Discard(markers, ident) < 0)
+        Py_UNSET_SEEN(mapping);
+        if (ident != NULL && PySet_Discard(markers, ident) < 0)
             goto bail;
-    }
+        }
     Py_CLEAR(ident);
     if (!first && indented) {
         indent_level--;
@@ -2155,6 +2193,9 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
     return 0;
 
 bail:
+    if (markers != Py_None) {
+        Py_UNSET_SEEN(mapping);
+    }
     Py_XDECREF(ident);
     return -1;
 }
@@ -2246,7 +2287,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers,
     if (s_fast == NULL)
         return -1;
 
-    if (markers != Py_None) {
+    if (markers != Py_None && Py_TEST_AND_SET_SEEN(seq)) {
         int has_key;
         ident = PyLong_FromVoidPtr(seq);
         if (ident == NULL)
@@ -2302,7 +2343,8 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers,
         goto bail;
     }
     if (markers != Py_None) {
-        if (PySet_Discard(markers, ident) < 0)
+        Py_UNSET_SEEN(seq);
+        if (ident != NULL && PySet_Discard(markers, ident) < 0)
             goto bail;
     }
     Py_CLEAR(ident);
@@ -2322,6 +2364,9 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers,
     return 0;
 
 bail:
+    if (markers != Py_None) {
+        Py_UNSET_SEEN(seq);
+    }
     Py_XDECREF(ident);
     Py_DECREF(s_fast);
     return -1;

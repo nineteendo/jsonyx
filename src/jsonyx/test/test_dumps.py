@@ -314,7 +314,7 @@ def test_list_max_indent_level(json: ModuleType) -> None:
 def test_list_recursion(json: ModuleType) -> None:
     """Test list recursion."""
     obj: list[object] = []
-    for _ in range(100_000):
+    for _ in range(1_000_000):
         obj = [obj]
 
     with pytest.raises(RecursionError):
@@ -562,7 +562,7 @@ def test_dict_max_indent_level(json: ModuleType) -> None:
 def test_dict_recursion(json: ModuleType) -> None:
     """Test dict recursion."""
     obj: dict[str, object] = {}
-    for _ in range(100_000):
+    for _ in range(1_000_000):
         obj = {"": obj}
 
     with pytest.raises(RecursionError):
