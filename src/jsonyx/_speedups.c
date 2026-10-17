@@ -1472,7 +1472,7 @@ encoder_call(PyObject *op, PyObject *args, PyObject *kwds)
         }
     }
     if (self->check_circular) {
-        markers = PyDict_New();
+        markers = PySet_New(NULL);
         if (markers == NULL) {
             goto bail;
         }
@@ -2058,7 +2058,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
         ident = PyLong_FromVoidPtr(mapping);
         if (ident == NULL)
             goto bail;
-        has_key = PyDict_Contains(markers, ident);
+        has_key = PySet_Contains(markers, ident);
         if (has_key == -1)
         {
             goto bail;
@@ -2067,7 +2067,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
             PyErr_SetString(PyExc_ValueError, "Unexpected circular reference");
             goto bail;
         }
-        if (PyDict_SetItem(markers, ident, mapping) < 0) {
+        if (PySet_Add(markers, ident) < 0) {
             goto bail;
         }
     }
@@ -2137,7 +2137,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
     }
 
     if (markers != Py_None) {
-        if (PyDict_DelItem(markers, ident) < 0)
+        if (PySet_Discard(markers, ident) < 0)
             goto bail;
     }
     Py_CLEAR(ident);
@@ -2251,7 +2251,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers,
         ident = PyLong_FromVoidPtr(seq);
         if (ident == NULL)
             goto bail;
-        has_key = PyDict_Contains(markers, ident);
+        has_key = PySet_Contains(markers, ident);
         if (has_key == -1)
             goto bail;
 
@@ -2259,7 +2259,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers,
             PyErr_SetString(PyExc_ValueError, "Unexpected circular reference");
             goto bail;
         }
-        if (PyDict_SetItem(markers, ident, seq) < 0) {
+        if (PySet_Add(markers, ident) < 0) {
             goto bail;
         }
     }
@@ -2302,7 +2302,7 @@ encoder_listencode_sequence(PyEncoderObject *s, PyObject *markers,
         goto bail;
     }
     if (markers != Py_None) {
-        if (PyDict_DelItem(markers, ident) < 0)
+        if (PySet_Discard(markers, ident) < 0)
             goto bail;
     }
     Py_CLEAR(ident);

@@ -190,7 +190,7 @@ def _run_benchmark(
                 while True:
                     if (time_taken := timeit(
                         partial(func, make_obj(n)), number=1,
-                    )) >= 0.2:
+                    )) >= 0.2 or n >= 2 ** 26:
                         times[lib] = time_taken / n
                         break
 

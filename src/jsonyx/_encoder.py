@@ -91,7 +91,7 @@ except ImportError:
         trailing_comma: bool,
     ) -> _Encoder:
         """Make JSON encoder."""
-        markers: dict[int, object] | None = {} if check_circular else None
+        markers: set[int] | None = set() if check_circular else None
         if hook is None:
             def new_hook(obj: Any) -> Any:
                 return obj
@@ -161,7 +161,7 @@ except ImportError:
                     msg: str = "Unexpected circular reference"
                     raise ValueError(msg)
 
-                markers[markerid] = seq
+                markers.add(markerid)
 
             io.write("[")
             current_indent: str = old_indent
@@ -192,7 +192,7 @@ except ImportError:
                     raise
 
             if markers is not None:
-                del markers[markerid]  # type: ignore
+                markers.remove(markerid)  # type: ignore
 
             if not first and indented:
                 if trailing_comma:
@@ -213,7 +213,7 @@ except ImportError:
                     msg: str = "Unexpected circular reference"
                     raise ValueError(msg)
 
-                markers[markerid] = mapping
+                markers.add(markerid)
 
             io.write("{")
             current_indent: str = old_indent
@@ -278,7 +278,7 @@ except ImportError:
                     raise
 
             if markers is not None:
-                del markers[markerid]  # type: ignore
+                markers.remove(markerid)  # type: ignore
 
             if not first and indented:
                 if trailing_comma:
