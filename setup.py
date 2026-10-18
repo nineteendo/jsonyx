@@ -10,9 +10,9 @@ from pathlib import Path
 from setuptools import Extension, setup  # type: ignore
 
 if sys.platform != "win32":
-    extra_compile_args: list[str] | None = None
+    _EXTRA_COMPILE_ARGS: list[str] | None = None
 else:
-    extra_compile_args = ["/std:c11", "/experimental:c11atomics"]
+    _EXTRA_COMPILE_ARGS = ["/std:c11", "/experimental:c11atomics"]
 
 if __name__ == "__main__":
     setup(
@@ -29,7 +29,7 @@ if __name__ == "__main__":
         ext_modules=[Extension(
             "_jsonyx",
             ["src/jsonyx/_speedups.c"],
-            extra_compile_args=extra_compile_args,
+            extra_compile_args=_EXTRA_COMPILE_ARGS,
             optional=True,
         )],
         classifiers=[
