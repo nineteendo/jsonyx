@@ -35,11 +35,15 @@ if TYPE_CHECKING:
     _Factory = Callable[[int], Any]
 
 
-def _raw(obj: bytes | list[bytes]) -> bytes:
+def _raw(obj: bytes | list[bytes], encoding: str = "utf-8") -> bytes:
     if isinstance(obj, bytes):
-        return b'"' + obj + b'"'
+        return '"'.encode(encoding) + obj + '"'.encode(encoding)
 
-    return b"[" + b",".join(obj) + b"]"
+    return (
+        "[".encode(encoding)
+        + ",".encode(encoding).join(obj)
+        + "]".encode(encoding)
+    )
 
 
 _ENCODE_CASES: dict[str, _Factory] = {
@@ -112,6 +116,13 @@ _DECODE_CASES: dict[str, _Factory] = {
         b"\xe0\xa0\x80" * n + b"\xf0\x90\x80\x80",
     ),
 
+    # encodings
+    "utf-8-sig character": lambda n: b"\xef\xbb\xbf" + _raw(b"\x20" * n),
+    "utf-16le character": lambda n: _raw(b"\x00\x01" * n, "utf-16le"),
+    "utf-16be character": lambda n: _raw(b"\x01\x00" * n, "utf-16be"),
+    "utf-32le character": lambda n: _raw(b"\x00\x00\x01\x00" * n, "utf-32le"),
+    "utf-32be character": lambda n: _raw(b"\x00\x01\x00\x00" * n, "utf-32be"),
+
     # escapes
     "double quote escape": lambda n: _raw(rb"\"" * n),
     "backslash escape": lambda n: _raw(rb"\\" * n),
@@ -154,6 +165,17 @@ def _make_dumpb(func: _Func) -> _Func:
     return lambda obj: func(obj).encode()
 
 
+def _make_loadb(func: _Func, encodings: set[str]) -> _Func:
+    def loadb(s: Any) -> Any:
+        encoding: str = jsonyx.detect_encoding(s)  # type: ignore
+        if encoding not in encodings:
+            s = s.decode(encoding)
+
+        return func(s)
+
+    return loadb
+
+
 _ENCODE_FUNCS: dict[str, _Func] = {
     "json": _make_dumpb(json.JSONEncoder().encode),
     "jsonyx": _make_dumpb(jsonyx.Encoder().dumps),
@@ -168,11 +190,13 @@ _DECODE_FUNCS: dict[str, _Func] = {
     "json": json.loads,
     "jsonyx": jsonyx.Decoder().loads,
     "pyjsonyx": pyjsonyx.Decoder().loads,
-    # pylint: disable-next=I1101
-    "fastsimdjson": fastsimdjson.loads,  # type: ignore
-    "msgspec": msgspec.json.Decoder().decode,
+    "fastsimdjson": _make_loadb(
+        # pylint: disable-next=I1101
+        fastsimdjson.loads, {"utf-8", "utf-8-sig"},  # type: ignore
+    ),
+    "msgspec": _make_loadb(msgspec.json.Decoder().decode, {"utf-8"}),
     # pylint: disable-next=E1101
-    "orjson": orjson.loads,
+    "orjson": _make_loadb(orjson.loads, {"utf-8"}),
 }
 
 
