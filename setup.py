@@ -3,10 +3,16 @@ from __future__ import annotations
 
 __all__: list[str] = []
 
+import sys
 from pathlib import Path
 
 # pylint: disable-next=E0401
 from setuptools import Extension, setup  # type: ignore
+
+if sys.platform != "win32":
+    extra_compile_args: list[str] | None = None
+else:
+    extra_compile_args = ["/std:c11", "/experimental:c11atomics"]
 
 if __name__ == "__main__":
     setup(
@@ -20,9 +26,12 @@ if __name__ == "__main__":
         maintainer="Nice Zombies",
         maintainer_email="nineteendo19d0@gmail.com",
         packages=["jsonyx", "jsonyx.test"],
-        ext_modules=[
-            Extension("_jsonyx", ["src/jsonyx/_speedups.c"], optional=True),
-        ],
+        ext_modules=[Extension(
+            "_jsonyx",
+            ["src/jsonyx/_speedups.c"],
+            extra_compile_args=extra_compile_args,
+            optional=True,
+        )],
         classifiers=[
             "Development Status :: 5 - Production/Stable",
             "Intended Audience :: Developers",
