@@ -615,14 +615,15 @@ for performance critical applications:
 
 .. warning:: The Python version of :mod:`jsonyx` is up to 90.64x slower for
     encoding an  up to 82.59x slower for decoding, so make sure you have a
-    `C compiler <https://wiki.python.org/moin/WindowsCompilers>`_ installe  on
+    `C compiler <https://wiki.python.org/moin/WindowsCompilers>`_ installed on
     Windows.
-.. seealso:: :pypi:`floatium` for enabling faster :class:`float` encoding.
+.. seealso:: :pypi:`floatium` and :pypi:`frepr` for enabling faster
+    :class:`float` encoding.
 
 .. rubric:: Footnotes
 
 .. [1] integer exceeds 64-bit range
 .. [2] see :issue:`msgspec/msgspec#1232`
-.. [3] overflow, reparse  with :mod:`json`
+.. [3] overflow, reparsed with :mod:`json`
 .. [4] overflow
 .. [5] converted to a float
