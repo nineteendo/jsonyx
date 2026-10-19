@@ -1,5 +1,4 @@
 """JSON benchmark."""
-# TODO(Nice Zombies): re-run benchmark
 from __future__ import annotations
 
 __all__: list[str] = []
@@ -80,12 +79,12 @@ _ENCODE_CASES: dict[str, _Factory] = {
     "maximum float": lambda n: [1.7976931348623157e+308] * n,
 
     # integers
-    "32-bit positive integer": lambda n: [0] * n,
-    "32-bit negative integer": lambda n: [-0] * n,
-    "64-bit positive integer": lambda n: [4294967296] * n,
-    "64-bit negative integer": lambda n: [-4294967296] * n,
-    ">64-bit positive integer": lambda n: [18446744073709551616] * n,
-    ">64-bit negative integer": lambda n: [-18446744073709551616] * n,
+    "32-bit (+) integer": lambda n: [0] * n,
+    "32-bit (-) integer": lambda n: [-0] * n,
+    "64-bit (+) integer": lambda n: [4294967296] * n,
+    "64-bit (-) integer": lambda n: [-4294967296] * n,
+    ">64-bit (+) integer": lambda n: [18446744073709551616] * n,
+    ">64-bit (-) integer": lambda n: [-18446744073709551616] * n,
 
     # lists
     "empty list": lambda n: [[]] * n,  # type: ignore
@@ -150,12 +149,12 @@ _DECODE_CASES: dict[str, _Factory] = {
     ">maximum float": lambda n: _raw([b"1.7976931348623159e+308"] * n),
 
     # integers
-    "32-bit positive integer": lambda n: _raw([b"0"] * n),
-    "32-bit negative integer": lambda n: _raw([b"-0"] * n),
-    "64-bit positive integer": lambda n: _raw([b"4294967296"] * n),
-    "64-bit negative integer": lambda n: _raw([b"-4294967296"] * n),
-    ">64-bit positive integer": lambda n: _raw([b"18446744073709551616"] * n),
-    ">64-bit negative integer": lambda n: _raw([b"-18446744073709551616"] * n),
+    "32-bit (+) integer": lambda n: _raw([b"0"] * n),
+    "32-bit (-) integer": lambda n: _raw([b"-0"] * n),
+    "64-bit (+) integer": lambda n: _raw([b"4294967296"] * n),
+    "64-bit (-) integer": lambda n: _raw([b"-4294967296"] * n),
+    ">64-bit (+) integer": lambda n: _raw([b"18446744073709551616"] * n),
+    ">64-bit (-) integer": lambda n: _raw([b"-18446744073709551616"] * n),
 
     # lists and dictionaries
     "empty list": lambda n: _raw([b"[]"] * n),
@@ -233,7 +232,7 @@ def _run_benchmark(
         rows.append(row)
 
     del funcs["pyjsonyx"]
-    headers: list[str] = [name, *funcs.keys(), "fastest time"]
+    headers: list[str] = [name, *funcs.keys(), "fastest\xa0time"]
     colalign: list[str] = ["left"] + ["right"] * (len(funcs) + 1)
     print()
     print(tabulate(rows, headers, "rst", colalign=colalign))
