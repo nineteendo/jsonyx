@@ -213,10 +213,13 @@ def _run_benchmark(
             try:
                 n: int = 1
                 while True:
-                    if (time_taken := timeit(
+                    if (timing := timeit(
                         partial(func, make_obj(n)), number=1,
-                    )) >= 0.2 or n >= 2 ** 26:
-                        times[lib] = time_taken / n
+                    )) >= 0.04 or n >= 2 ** 26:
+                        times[lib] = min(timing, *[
+                            timeit(partial(func, make_obj(n)), number=1)
+                            for _ in range(4)
+                        ]) / n
                         break
 
                     n *= 2
