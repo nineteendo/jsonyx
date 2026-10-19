@@ -79,8 +79,8 @@ _ENCODE_CASES: dict[str, _Factory] = {
     "maximum float": lambda n: [1.7976931348623157e+308] * n,
 
     # integers
-    "32-bit (+) integer": lambda n: [0] * n,
-    "32-bit (-) integer": lambda n: [-0] * n,
+    "32-bit (+) integer": lambda n: [1] * n,
+    "32-bit (-) integer": lambda n: [-1] * n,
     "64-bit (+) integer": lambda n: [4294967296] * n,
     "64-bit (-) integer": lambda n: [-4294967296] * n,
     ">64-bit (+) integer": lambda n: [18446744073709551616] * n,
@@ -149,8 +149,8 @@ _DECODE_CASES: dict[str, _Factory] = {
     ">maximum float": lambda n: _raw([b"1.7976931348623159e+308"] * n),
 
     # integers
-    "32-bit (+) integer": lambda n: _raw([b"0"] * n),
-    "32-bit (-) integer": lambda n: _raw([b"-0"] * n),
+    "32-bit (+) integer": lambda n: _raw([b"1"] * n),
+    "32-bit (-) integer": lambda n: _raw([b"-1"] * n),
     "64-bit (+) integer": lambda n: _raw([b"4294967296"] * n),
     "64-bit (-) integer": lambda n: _raw([b"-4294967296"] * n),
     ">64-bit (+) integer": lambda n: _raw([b"18446744073709551616"] * n),
