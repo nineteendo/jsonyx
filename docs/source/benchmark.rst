@@ -624,4 +624,4 @@ for performance critical applications:
 .. [2] see :issue:`msgspec/msgspec#1232`
 .. [3] overflow, reparse  with :mod:`json`
 .. [4] overflow
-.. [5] converte  to a float
+.. [5] converted to a float
