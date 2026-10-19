@@ -80,11 +80,12 @@ _ENCODE_CASES: dict[str, _Factory] = {
     "maximum float": lambda n: [1.7976931348623157e+308] * n,
 
     # integers
-    "31-bit integer": lambda n: [0] * n,
-    "32-bit integer": lambda n: [2147483648] * n,
-    "63-bit integer": lambda n: [4294967296] * n,
-    "64-bit integer": lambda n: [9223372036854775808] * n,
-    ">64-bit integer": lambda n: [18446744073709551616] * n,
+    "32-bit positive integer": lambda n: [0] * n,
+    "32-bit negative integer": lambda n: [-0] * n,
+    "64-bit positive integer": lambda n: [4294967296] * n,
+    "64-bit negative integer": lambda n: [-4294967296] * n,
+    ">64-bit positive integer": lambda n: [18446744073709551616] * n,
+    ">64-bit negative integer": lambda n: [-18446744073709551616] * n,
 
     # lists
     "empty list": lambda n: [[]] * n,  # type: ignore
@@ -149,11 +150,12 @@ _DECODE_CASES: dict[str, _Factory] = {
     ">maximum float": lambda n: _raw([b"1.7976931348623159e+308"] * n),
 
     # integers
-    "31-bit integer": lambda n: _raw([b"0"] * n),
-    "32-bit integer": lambda n: _raw([b"2147483648"] * n),
-    "63-bit integer": lambda n: _raw([b"4294967296"] * n),
-    "64-bit integer": lambda n: _raw([b"9223372036854775808"] * n),
-    ">64-bit integer": lambda n: _raw([b"18446744073709551616"] * n),
+    "32-bit positive integer": lambda n: _raw([b"0"] * n),
+    "32-bit negative integer": lambda n: _raw([b"-0"] * n),
+    "64-bit positive integer": lambda n: _raw([b"4294967296"] * n),
+    "64-bit negative integer": lambda n: _raw([b"-4294967296"] * n),
+    ">64-bit positive integer": lambda n: _raw([b"18446744073709551616"] * n),
+    ">64-bit negative integer": lambda n: _raw([b"-18446744073709551616"] * n),
 
     # lists and dictionaries
     "empty list": lambda n: _raw([b"[]"] * n),
