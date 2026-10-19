@@ -120,15 +120,18 @@ Encoding arbitrary objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 >>> import jsonyx as json
->>> def complex_hook(obj):
-...     if isinstance(obj, complex):
-...         return {"__complex__": True, "real": obj.real, "imag": obj.imag}
+>>> from functools import singledispatch
+>>> @singledispatch
+... def type_to_obj_hook(obj):
 ...     return obj
 ... 
->>> json.dump(1 + 2j, hook=complex_hook)
-{"__complex__": true, "real": 1.0, "imag": 2.0}
+>>> @type_to_obj_hook.register(complex)
+... def complex_to_obj_hook(obj):
+...     return {"__type__": "complex", "real": obj.real, "imag": obj.imag}
+... 
+>>> json.dump(1 + 2j, hook=type_to_obj_hook)
+{"__type__": "complex", "real": 1.0, "imag": 2.0}
 
-.. tip:: Use :func:`functools.singledispatch` to make this extensible.
 .. warning:: This function is called for **every object** during encoding, even
   if the object is normally serializable.
 .. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
@@ -138,14 +141,19 @@ Decoding arbitrary objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 >>> import jsonyx as json
->>> def object_hook(obj):
-...     obj = dict(obj)
-...     if "__complex__" in obj:
-...         return complex(obj["real"], obj["imag"])
+>>> obj_to_type_hooks = {}
+>>> def obj_to_type_hook(items):
+...     obj = dict(items)
+...     if "__type__" in obj:
+...         return obj_to_type_hooks[obj["__type__"]](obj)
 ...     return obj
 ... 
->>> s = '{"__complex__": true, "real": 1.0, "imag": 2.0}'
->>> json.loads(s, hooks={"object": object_hook})
+>>> def obj_to_complex_hook(obj):
+...     return complex(obj["real"], obj["imag"])
+... 
+>>> obj_to_type_hooks["complex"] = obj_to_complex_hook
+>>> s = '{"__type__": "complex", "real": 1.0, "imag": 2.0}'
+>>> json.loads(s, hooks={"object": obj_to_type_hook})
 (1+2j)
 
 .. note:: ``hooks["object"]`` is called with a list of tuples, not a dict.

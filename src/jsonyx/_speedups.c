@@ -2207,7 +2207,7 @@ encoder_listencode_mapping(PyEncoderObject *s, PyObject *markers,
         Py_UNSET_SEEN(mapping);
         if (ident != NULL && PySet_Discard(markers, ident) < 0)
             goto bail;
-        }
+    }
     Py_CLEAR(ident);
     if (!first && indented) {
         indent_level--;
