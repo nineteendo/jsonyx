@@ -617,6 +617,7 @@ for performance critical applications:
     encoding an  up to 82.59x slower for decoding, so make sure you have a
     `C compiler <https://wiki.python.org/moin/WindowsCompilers>`_ installe  on
     Windows.
+.. seealso:: :pypi:`floatium` for enabling faster :class:`float` encoding.
 
 .. rubric:: Footnotes
 
