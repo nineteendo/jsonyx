@@ -238,6 +238,8 @@ jsonyx.JSONSyntaxError: Expecting value
 Better error messages for encoding strings
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. versionadded:: 2.0
+
 >>> import jsonyx as json
 >>> try:
 ...     "café".encode("ascii")
@@ -256,6 +258,8 @@ jsonyx.TruncatedSyntaxError: (unicode error) 'ascii' codec can't encode characte
 
 Better error messages for decoding bytes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. versionadded:: 2.0
 
 >>> import jsonyx as json
 >>> try:
