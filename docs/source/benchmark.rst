@@ -1,4 +1,4 @@
-Benchmark (Oct 19, 2026)
+Benchmark (Oct 20, 2026)
 ========================
 
 Benchmark code: https://github.com/nineteendo/jsonyx/blob/main/bench/__main__.py
@@ -35,12 +35,12 @@ for performance critical applications:
         null                    5.23x  5.21x        1.00x     1.35x    1.15x      4.39 ns
         boolean                 4.75x  4.90x        1.00x     1.32x    1.01x      5.58 ns
         empty string            5.46x  5.97x        1.51x     1.83x    1.00x      4.93 ns
-        fixed-point float      12.68x 14.10x        1.32x     1.00x    1.11x      7.32 ns
-        scientific float       13.05x 13.47x        1.12x     1.81x    1.00x     29.43 ns
-        minimum float          25.71x 26.07x        1.07x     1.00x    1.33x     24.83 ns
-        maximum float          79.89x 80.30x        1.00x     1.28x    1.03x     30.29 ns
-        32-bit (+) integer      5.23x  5.44x        1.14x     1.04x    1.00x      5.95 ns
-        32-bit (-) integer      5.39x  5.59x        1.14x     1.02x    1.00x      5.94 ns
+        fixed-point float      12.55x  9.07x        1.24x     1.00x    1.10x      7.38 ns
+        scientific float       10.58x  9.32x        1.12x     1.86x    1.00x     29.32 ns
+        minimum float          22.49x 20.99x        1.08x     1.00x    1.32x     25.12 ns
+        maximum float          79.03x 77.72x        1.00x     1.28x    1.04x     30.05 ns
+        32-bit (+) integer      7.80x  8.00x        1.33x     1.07x    1.00x      5.71 ns
+        32-bit (-) integer      7.37x  7.30x        1.15x     1.08x    1.00x      6.30 ns
         64-bit (+) integer      4.77x  4.96x        1.41x     1.00x    2.64x     13.54 ns
         64-bit (-) integer      4.38x  4.39x        1.29x     1.00x    2.48x     14.75 ns
         >64-bit (+) integer     1.00x  1.03x     DNF [1]_     1.09x DNF [1]_     86.16 ns
@@ -80,12 +80,12 @@ for performance critical applications:
         null                    5.03x  4.85x        1.01x     1.05x    1.00x      5.12 ns
         boolean                 4.92x  4.62x        1.10x     1.20x    1.00x      5.70 ns
         empty string            9.95x  4.97x        1.16x     1.45x    1.00x      5.89 ns
-        fixed-point float      14.95x 15.85x        1.26x     1.15x    1.00x      8.17 ns
-        scientific float       13.52x 11.77x        1.17x     1.90x    1.00x     28.62 ns
-        minimum float          26.27x 26.63x        1.20x     1.00x    1.43x     23.13 ns
-        maximum float          66.23x 66.84x        1.00x     1.25x    1.03x     30.40 ns
-        32-bit (+) integer      6.32x  6.44x        1.17x     1.00x    1.09x      5.43 ns
-        32-bit (-) integer      6.37x  6.53x        1.20x     1.00x    1.10x      5.41 ns
+        fixed-point float      13.44x 12.54x        1.41x     1.00x    1.16x      7.02 ns
+        scientific float       11.07x 10.64x        1.17x     1.89x    1.00x     28.42 ns
+        minimum float          26.44x 26.02x        1.21x     1.00x    1.43x     22.94 ns
+        maximum float          65.29x 67.27x        1.00x     1.26x    1.00x     30.76 ns
+        32-bit (+) integer      9.05x  9.16x        1.19x     1.00x    1.06x      5.42 ns
+        32-bit (-) integer      9.67x  9.19x        1.27x     1.00x    1.17x      5.36 ns
         64-bit (+) integer      5.83x  5.76x        1.60x     1.00x    2.78x     12.93 ns
         64-bit (-) integer      5.66x  5.59x        1.56x     1.00x    2.70x     13.44 ns
         >64-bit (+) integer     1.00x  1.02x     DNF [1]_     1.11x DNF [1]_     98.87 ns
@@ -125,12 +125,12 @@ for performance critical applications:
         null                    5.91x  5.28x        1.00x     1.28x    1.13x      4.48 ns
         boolean                 4.60x  4.39x        1.03x     1.27x    1.00x      5.65 ns
         empty string           11.14x  5.53x        1.40x     1.76x    1.00x      4.93 ns
-        fixed-point float      12.32x 13.28x        1.32x     1.00x    1.05x      7.70 ns
-        scientific float       10.75x 11.01x        1.19x     1.91x    1.00x     28.48 ns
-        minimum float          24.14x 24.66x        1.23x     1.00x    1.46x     22.61 ns
-        maximum float          71.24x 71.06x        1.00x     1.22x    1.01x     30.42 ns
-        32-bit (+) integer     11.08x 12.52x        1.09x     1.00x    1.04x      5.71 ns
-        32-bit (-) integer     11.47x 12.84x        1.12x     1.00x    1.06x      5.57 ns
+        fixed-point float      11.61x  8.68x        1.32x     1.00x    1.05x      7.74 ns
+        scientific float       10.66x  9.69x        1.18x     1.87x    1.00x     28.51 ns
+        minimum float          23.47x 22.26x        1.20x     1.00x    1.43x     23.13 ns
+        maximum float          71.03x 70.12x        1.00x     1.21x    1.00x     30.50 ns
+        32-bit (+) integer     12.57x 13.80x        1.14x     1.00x    1.04x      5.46 ns
+        32-bit (-) integer     12.28x 13.38x        1.08x     1.00x    1.09x      5.78 ns
         64-bit (+) integer      6.79x  7.49x        1.50x     1.00x    2.77x     13.01 ns
         64-bit (-) integer      6.80x  7.28x        1.44x     1.00x    2.66x     13.83 ns
         >64-bit (+) integer     1.29x  1.37x     DNF [1]_     1.00x DNF [1]_     92.83 ns
@@ -170,12 +170,12 @@ for performance critical applications:
         null                    4.82x  5.24x        1.00x     1.15x    1.10x      4.44 ns
         boolean                 4.08x  4.77x        1.16x     1.29x    1.00x      5.43 ns
         empty string           10.59x  5.50x        1.36x     1.53x    1.00x      4.91 ns
-        fixed-point float      11.77x 13.41x        1.40x     1.00x    1.05x      7.55 ns
-        scientific float       10.68x 11.65x        1.19x     1.87x    1.00x     28.50 ns
-        minimum float          23.84x 24.31x        1.22x     1.00x    1.45x     22.69 ns
-        maximum float          68.42x 68.93x        1.00x     1.22x    1.02x     30.20 ns
-        32-bit (+) integer     13.94x 16.49x        1.29x     1.28x    1.00x      4.80 ns
-        32-bit (-) integer     13.95x 16.44x        1.27x     1.18x    1.00x      4.82 ns
+        fixed-point float      11.81x  9.31x        1.41x     1.00x    1.04x      7.57 ns
+        scientific float       10.73x  9.83x        1.20x     1.88x    1.00x     28.50 ns
+        minimum float          24.13x 22.73x        1.18x     1.00x    1.47x     22.40 ns
+        maximum float          68.41x 67.73x        1.00x     1.22x    1.02x     30.22 ns
+        32-bit (+) integer     16.27x 19.10x        1.38x     1.33x    1.00x      4.51 ns
+        32-bit (-) integer     14.56x 17.02x        1.22x     1.16x    1.00x      5.18 ns
         64-bit (+) integer      7.44x  8.50x        1.45x     1.00x    2.79x     12.86 ns
         64-bit (-) integer      6.76x  7.69x        1.31x     1.00x    2.67x     14.15 ns
         >64-bit (+) integer     1.00x  1.73x     DNF [1]_     1.05x DNF [1]_    130.69 ns
@@ -215,12 +215,12 @@ for performance critical applications:
         null                   10.79x  4.95x        1.00x     1.38x    1.09x      4.47 ns
         boolean                 9.30x  4.20x        1.02x     1.33x    1.00x      5.45 ns
         empty string           16.04x  5.27x        1.52x     1.70x    1.00x      4.87 ns
-        fixed-point float      14.83x 12.12x        1.25x     1.00x    1.11x      7.71 ns
-        scientific float       10.57x 10.28x        1.18x     1.93x    1.00x     28.33 ns
-        minimum float          26.57x 26.35x        1.21x     1.00x    1.49x     22.28 ns
-        maximum float          66.91x 66.90x        1.00x     1.25x    1.04x     29.71 ns
-        32-bit (+) integer     15.24x 11.54x        1.72x     1.00x    2.12x      6.24 ns
-        32-bit (-) integer     16.11x 11.95x        1.83x     1.00x    2.23x      6.03 ns
+        fixed-point float      14.76x  7.99x        1.29x     1.00x    1.14x      7.53 ns
+        scientific float       10.55x  8.92x        1.18x     1.93x    1.00x     28.38 ns
+        minimum float          26.18x 24.31x        1.25x     1.00x    1.46x     22.58 ns
+        maximum float          66.98x 65.01x        1.00x     1.23x    1.03x     29.80 ns
+        32-bit (+) integer     17.54x 13.18x        1.98x     1.07x    1.00x      5.77 ns
+        32-bit (-) integer     18.09x 14.24x        2.12x     1.51x    1.00x      5.62 ns
         64-bit (+) integer      8.51x  7.09x        1.35x     1.00x    2.44x     14.34 ns
         64-bit (-) integer      7.73x  6.13x        1.25x     1.00x    2.29x     15.69 ns
         >64-bit (+) integer     1.59x  1.35x     DNF [1]_     1.00x DNF [1]_     90.55 ns
@@ -260,12 +260,12 @@ for performance critical applications:
         null                   10.08x  5.44x        1.00x     1.31x    1.13x      4.34 ns
         boolean                 8.28x  4.28x        1.02x     1.28x    1.00x      5.47 ns
         empty string           15.68x  5.56x        1.28x     1.34x    1.00x      4.92 ns
-        fixed-point float      13.90x 12.39x        1.28x     1.00x    1.10x      7.81 ns
-        scientific float        9.92x  9.73x        1.17x     1.86x    1.00x     28.54 ns
-        minimum float          23.34x 22.90x        1.20x     1.00x    1.45x     22.96 ns
-        maximum float          70.28x 70.30x        1.00x     1.24x    1.04x     29.76 ns
-        32-bit (+) integer     15.56x 12.82x        1.72x     1.00x    2.31x      5.85 ns
-        32-bit (-) integer     15.34x 12.33x        1.65x     1.00x    2.26x      6.03 ns
+        fixed-point float      13.18x  8.31x        1.33x     1.00x    1.12x      7.68 ns
+        scientific float       10.24x  8.57x        1.17x     1.88x    1.00x     28.41 ns
+        minimum float          23.68x 21.79x        1.22x     1.00x    1.48x     22.56 ns
+        maximum float          71.16x 69.22x        1.00x     1.23x    1.04x     29.65 ns
+        32-bit (+) integer     18.46x 14.59x        1.98x     1.00x    1.10x      5.30 ns
+        32-bit (-) integer     17.04x 13.65x        2.01x     1.51x    1.00x      5.66 ns
         64-bit (+) integer      8.24x  7.18x        1.48x     1.00x    2.58x     13.75 ns
         64-bit (-) integer      8.03x  6.89x        1.45x     1.00x    2.51x     14.41 ns
         >64-bit (+) integer     1.46x  1.38x     DNF [1]_     1.00x DNF [1]_     89.52 ns
@@ -323,8 +323,8 @@ for performance critical applications:
         <minimum float         13.54x 13.03x        1.00x 151.55x [2]_      1.08x     45.02 ns
         maximum float           8.32x  8.14x        1.00x 183.23x [2]_      1.32x     54.56 ns
         >maximum float          1.03x  1.00x   1.03x [3]_     DNF [4]_   DNF [4]_    675.87 ns
-        32-bit (+) integer      5.50x  2.95x        1.30x        1.78x      1.00x     11.53 ns
-        32-bit (-) integer      4.36x  2.42x        1.00x        1.36x      1.11x     15.26 ns
+        32-bit (+) integer      5.71x  3.14x        1.36x        1.82x      1.00x     11.04 ns
+        32-bit (-) integer      4.40x  2.46x        1.00x        1.38x      1.07x     15.04 ns
         64-bit (+) integer      2.48x  1.47x        1.00x        1.14x      1.07x     47.99 ns
         64-bit (-) integer      2.56x  1.54x        1.00x        1.23x      1.10x     47.58 ns
         >64-bit (+) integer     2.30x  1.79x        1.69x        2.00x 1.00x [5]_     70.20 ns
@@ -379,8 +379,8 @@ for performance critical applications:
         <minimum float         14.74x 14.22x        1.00x 145.54x [2]_      1.10x     47.22 ns
         maximum float           9.13x  8.81x        1.00x 177.44x [2]_      1.39x     53.71 ns
         >maximum float          1.02x  1.00x   1.02x [3]_     DNF [4]_   DNF [4]_    742.71 ns
-        32-bit (+) integer      5.10x  2.70x        1.25x        1.41x      1.00x     12.28 ns
-        32-bit (-) integer      4.41x  2.34x        1.00x        1.04x      1.10x     15.37 ns
+        32-bit (+) integer      5.34x  3.04x        1.30x        1.53x      1.00x     11.78 ns
+        32-bit (-) integer      4.26x  2.52x        1.00x        1.13x      1.07x     15.35 ns
         64-bit (+) integer      2.39x  1.58x        1.00x        1.13x      1.13x     46.20 ns
         64-bit (-) integer      2.42x  1.60x        1.00x        1.15x      1.13x     46.50 ns
         >64-bit (+) integer     2.06x  1.85x        1.64x        1.97x 1.00x [5]_     72.59 ns
@@ -435,8 +435,8 @@ for performance critical applications:
         <minimum float         13.30x 12.83x        1.00x 153.79x [2]_      1.10x     44.87 ns
         maximum float           8.16x  8.07x        1.00x 189.96x [2]_      1.34x     53.36 ns
         >maximum float          1.01x  1.00x   1.01x [3]_     DNF [4]_   DNF [4]_    652.76 ns
-        32-bit (+) integer      5.53x  2.92x        1.30x        1.52x      1.00x     11.57 ns
-        32-bit (-) integer      4.65x  2.53x        1.00x        1.18x      1.13x     15.04 ns
+        32-bit (+) integer      6.02x  3.14x        1.36x        1.57x      1.00x     11.00 ns
+        32-bit (-) integer      4.70x  2.45x        1.00x        1.23x      1.10x     15.02 ns
         64-bit (+) integer      2.31x  1.59x        1.00x        1.08x      1.07x     46.20 ns
         64-bit (-) integer      2.33x  1.63x        1.00x        1.16x      1.12x     46.42 ns
         >64-bit (+) integer     2.26x  1.68x        1.56x        1.90x 1.00x [5]_     72.34 ns
@@ -455,51 +455,51 @@ for performance critical applications:
         :widths: grid
         :class: longtable
 
-        ======================== ====== ====== ============ ============ ========== ============
-        decode                     json jsonyx fastsimdjson      msgspec     orjson fastest time
-        ======================== ====== ====== ============ ============ ========== ============
-        outer space              29.60x  9.62x        1.00x        5.86x     10.32x      0.10 ns
-        inner space              10.98x  8.81x        1.00x        4.75x      6.24x      0.10 ns
-        7-bit character           3.64x  2.68x        1.08x        1.00x      2.00x      0.50 ns
-        8-bit character           2.17x  1.90x        1.00x        1.59x      1.52x      1.82 ns
-        11-bit character          2.33x  1.68x        1.00x        1.26x      1.54x      1.84 ns
-        16-bit character          2.35x  1.90x        1.00x        1.73x      1.42x      2.66 ns
-        21-bit character          1.76x  1.33x        1.01x        1.30x      1.00x      4.38 ns
-        7-in-16-bit character     4.19x  2.73x        1.00x        1.25x      1.74x      0.82 ns
-        7-in-32-bit character     2.48x  1.40x        1.21x        1.34x      1.00x      1.71 ns
-        11-in-32-bit character    3.12x  2.13x        1.00x        2.11x      1.59x      1.89 ns
-        16-in-32-bit character    2.97x  2.27x        1.00x        2.02x      1.40x      2.79 ns
-        utf-8-sig character       3.51x  2.62x        1.00x        1.41x      2.30x      0.54 ns
-        utf-16le character        1.68x  1.00x        2.51x        2.85x      3.08x      1.78 ns
-        utf-16be character        1.57x  1.00x        2.26x        2.57x      2.74x      2.13 ns
-        utf-32le character        1.57x  1.00x        2.87x        3.37x      2.89x      3.32 ns
-        utf-32be character        1.50x  1.00x        2.65x        3.08x      2.69x      3.78 ns
-        double quote escape       1.92x  1.82x        1.77x        1.85x      1.00x      3.17 ns
-        backslash escape          1.93x  1.82x        1.74x        1.86x      1.00x      3.17 ns
-        character escape          2.01x  1.69x        1.65x        1.80x      1.00x      3.41 ns
-        7-bit escape              3.01x  3.53x        1.00x        3.16x      1.94x      3.61 ns
-        8-bit escape              2.17x  2.59x        1.00x        2.93x      1.72x      4.91 ns
-        11-bit escape             2.38x  2.77x        1.00x        2.93x      1.78x      4.80 ns
-        16-bit escape             1.99x  2.29x        1.00x        2.94x      1.44x      5.74 ns
-        21-bit escape             2.41x  2.45x        1.00x        2.56x      1.60x      9.51 ns
-        null                      2.68x  3.45x        1.00x        1.58x      1.91x      7.55 ns
-        boolean                   2.60x  3.39x        1.00x        1.61x      1.93x      8.02 ns
-        empty string              2.22x  2.59x        1.00x        1.26x      1.16x     13.44 ns
-        fixed-point float         2.63x  2.15x        1.16x        1.20x      1.00x     37.59 ns
-        scientific float          2.53x  2.12x        1.02x        1.11x      1.00x     43.19 ns
-        minimum float             8.89x  8.48x        1.00x 125.44x [2]_      1.10x     46.19 ns
-        <minimum float           13.10x 12.79x        1.00x 152.60x [2]_      1.09x     45.29 ns
-        maximum float             8.19x  8.02x        1.00x 177.46x [2]_      1.31x     53.70 ns
-        >maximum float            1.01x  1.00x   1.03x [3]_     DNF [4]_   DNF [4]_    660.20 ns
-        32-bit (+) integer        5.79x  3.07x        1.32x        1.51x      1.00x     11.17 ns
-        32-bit (-) integer        4.56x  2.45x        1.00x        1.22x      1.09x     14.79 ns
-        64-bit (+) integer        2.45x  1.60x        1.00x        1.09x      1.09x     46.83 ns
-        64-bit (-) integer        2.42x  1.60x        1.00x        1.13x      1.10x     46.78 ns
-        >64-bit (+) integer       2.20x  1.74x        1.55x        2.06x 1.00x [5]_     70.30 ns
-        >64-bit (-) integer       2.22x  1.76x        1.50x        2.07x 1.00x [5]_     69.78 ns
-        empty list                1.27x  1.39x        1.02x        1.15x      1.00x     59.26 ns
-        empty dictionary          1.25x  1.36x        1.02x        1.16x      1.00x     59.21 ns
-        ======================== ====== ====== ============ ============ ========== ============
+        ====================== ====== ====== ============ ============ ========== ============
+        decode                   json jsonyx fastsimdjson      msgspec     orjson fastest time
+        ====================== ====== ====== ============ ============ ========== ============
+        outer space            29.60x  9.62x        1.00x        5.86x     10.32x      0.10 ns
+        inner space            10.98x  8.81x        1.00x        4.75x      6.24x      0.10 ns
+        7-bit character         3.64x  2.68x        1.08x        1.00x      2.00x      0.50 ns
+        8-bit character         2.17x  1.90x        1.00x        1.59x      1.52x      1.82 ns
+        11-bit character        2.33x  1.68x        1.00x        1.26x      1.54x      1.84 ns
+        16-bit character        2.35x  1.90x        1.00x        1.73x      1.42x      2.66 ns
+        21-bit character        1.76x  1.33x        1.01x        1.30x      1.00x      4.38 ns
+        7-in-16-bit character   4.19x  2.73x        1.00x        1.25x      1.74x      0.82 ns
+        7-in-32-bit character   2.48x  1.40x        1.21x        1.34x      1.00x      1.71 ns
+        11-in-32-bit character  3.12x  2.13x        1.00x        2.11x      1.59x      1.89 ns
+        16-in-32-bit character  2.97x  2.27x        1.00x        2.02x      1.40x      2.79 ns
+        utf-8-sig character     3.51x  2.62x        1.00x        1.41x      2.30x      0.54 ns
+        utf-16le character      1.68x  1.00x        2.51x        2.85x      3.08x      1.78 ns
+        utf-16be character      1.57x  1.00x        2.26x        2.57x      2.74x      2.13 ns
+        utf-32le character      1.57x  1.00x        2.87x        3.37x      2.89x      3.32 ns
+        utf-32be character      1.50x  1.00x        2.65x        3.08x      2.69x      3.78 ns
+        double quote escape     1.92x  1.82x        1.77x        1.85x      1.00x      3.17 ns
+        backslash escape        1.93x  1.82x        1.74x        1.86x      1.00x      3.17 ns
+        character escape        2.01x  1.69x        1.65x        1.80x      1.00x      3.41 ns
+        7-bit escape            3.01x  3.53x        1.00x        3.16x      1.94x      3.61 ns
+        8-bit escape            2.17x  2.59x        1.00x        2.93x      1.72x      4.91 ns
+        11-bit escape           2.38x  2.77x        1.00x        2.93x      1.78x      4.80 ns
+        16-bit escape           1.99x  2.29x        1.00x        2.94x      1.44x      5.74 ns
+        21-bit escape           2.41x  2.45x        1.00x        2.56x      1.60x      9.51 ns
+        null                    2.68x  3.45x        1.00x        1.58x      1.91x      7.55 ns
+        boolean                 2.60x  3.39x        1.00x        1.61x      1.93x      8.02 ns
+        empty string            2.22x  2.59x        1.00x        1.26x      1.16x     13.44 ns
+        fixed-point float       2.63x  2.15x        1.16x        1.20x      1.00x     37.59 ns
+        scientific float        2.53x  2.12x        1.02x        1.11x      1.00x     43.19 ns
+        minimum float           8.89x  8.48x        1.00x 125.44x [2]_      1.10x     46.19 ns
+        <minimum float         13.10x 12.79x        1.00x 152.60x [2]_      1.09x     45.29 ns
+        maximum float           8.19x  8.02x        1.00x 177.46x [2]_      1.31x     53.70 ns
+        >maximum float          1.01x  1.00x   1.03x [3]_     DNF [4]_   DNF [4]_    660.20 ns
+        32-bit (+) integer      6.14x  3.11x        1.32x        1.59x      1.00x     11.12 ns
+        32-bit (-) integer      4.73x  2.43x        1.00x        1.21x      1.10x     14.82 ns
+        64-bit (+) integer      2.45x  1.60x        1.00x        1.09x      1.09x     46.83 ns
+        64-bit (-) integer      2.42x  1.60x        1.00x        1.13x      1.10x     46.78 ns
+        >64-bit (+) integer     2.20x  1.74x        1.55x        2.06x 1.00x [5]_     70.30 ns
+        >64-bit (-) integer     2.22x  1.76x        1.50x        2.07x 1.00x [5]_     69.78 ns
+        empty list              1.27x  1.39x        1.02x        1.15x      1.00x     59.26 ns
+        empty dictionary        1.25x  1.36x        1.02x        1.16x      1.00x     59.21 ns
+        ====================== ====== ====== ============ ============ ========== ============
 
 .. tab:: Python 3.11.17
 
@@ -547,8 +547,8 @@ for performance critical applications:
         <minimum float         16.67x 16.26x        1.00x 175.40x [2]_      1.20x     39.25 ns
         maximum float           9.61x  9.12x        1.00x 210.77x [2]_      1.40x     47.96 ns
         >maximum float          1.04x  1.00x   1.04x [3]_     DNF [4]_   DNF [4]_    709.44 ns
-        32-bit (+) integer      5.96x  3.04x        1.56x        1.55x      1.00x     11.01 ns
-        32-bit (-) integer      3.92x  2.18x        1.01x        1.17x      1.00x     16.60 ns
+        32-bit (+) integer      6.08x  2.99x        1.51x        1.64x      1.00x     11.04 ns
+        32-bit (-) integer      3.94x  2.12x        1.00x        1.13x      1.00x     16.74 ns
         64-bit (+) integer      2.47x  1.48x        1.00x        1.08x      1.05x     45.33 ns
         64-bit (-) integer      2.52x  1.52x        1.00x        1.12x      1.10x     45.46 ns
         >64-bit (+) integer     2.43x  2.04x        1.91x        2.23x 1.00x [5]_     65.15 ns
@@ -603,8 +603,8 @@ for performance critical applications:
         <minimum float         14.53x 14.02x        1.00x 177.75x [2]_      1.16x     38.67 ns
         maximum float           8.17x  7.34x        1.00x 206.30x [2]_      1.34x     49.57 ns
         >maximum float          1.07x  1.00x   1.07x [3]_     DNF [4]_   DNF [4]_    594.04 ns
-        32-bit (+) integer      5.97x  3.15x        1.40x        1.64x      1.00x     10.55 ns
-        32-bit (-) integer      4.34x  2.38x        1.00x        1.19x      1.12x     14.84 ns
+        32-bit (+) integer      5.80x  3.17x        1.38x        1.55x      1.00x     10.63 ns
+        32-bit (-) integer      4.39x  2.33x        1.00x        1.25x      1.12x     14.84 ns
         64-bit (+) integer      2.40x  1.48x        1.00x        1.11x      1.09x     44.55 ns
         64-bit (-) integer      2.45x  1.57x        1.00x        1.16x      1.07x     44.66 ns
         >64-bit (+) integer     2.45x  2.01x        1.85x        2.18x 1.00x [5]_     65.50 ns
