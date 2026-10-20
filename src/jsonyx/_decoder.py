@@ -627,7 +627,7 @@ class Decoder:
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.`
     .. versionchanged:: 2.2 Added ``cache_keys`` (default ``False`` instead of
-      ``True``).
+        ``True``).
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param cache_keys: re-use the keys of objects

@@ -195,7 +195,7 @@ Compact float example:
 [1e-3, 1e1]
 
 .. note:: Case variations of ``"nan"``, ``"inf"``, ``"infinity"``, ``"-inf"``
-  and ``"-infinity"`` are normalized.
+    and ``"-infinity"`` are normalized.
 
 Encoding :class:`enum.ReprEnum`
 -------------------------------
@@ -209,7 +209,7 @@ Encoding :class:`enum.ReprEnum`
 0
 
 .. warning:: Don't use :class:`enum.Enum`, because it overrides the string
-  representation.
+    representation.
 
 Encoding and decoding big integers
 ----------------------------------

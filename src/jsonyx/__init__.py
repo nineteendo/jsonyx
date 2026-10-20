@@ -124,7 +124,7 @@ def read(
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
     .. versionchanged:: 2.2 Added ``cache_keys`` (default ``False`` instead of
-      ``True``).
+        ``True``).
 
     :param filename: the path to the JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
@@ -173,7 +173,7 @@ def load(
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
     .. versionchanged:: 2.2 Added ``cache_keys`` (default ``False`` instead of
-      ``True``).
+        ``True``).
 
     :param fp: an open JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
@@ -226,7 +226,7 @@ def loads(
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
     .. versionchanged:: 2.2 Added ``cache_keys`` (default ``False`` instead of
-      ``True``).
+        ``True``).
 
     :param s: a JSON string or bytes
     :param allow: the JSON deviations from :mod:`jsonyx.allow`

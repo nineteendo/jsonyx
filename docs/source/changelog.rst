@@ -8,7 +8,7 @@ Changelog
 - The **fix** version increments for bug or security fixes.
 
 .. warning:: Breaking changes can occur in major and feature versions, so read
-  the changelog before updating.
+    the changelog before updating.
 
 jsonyx 2.5.0 (Unreleased)
 -------------------------
