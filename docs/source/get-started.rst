@@ -140,6 +140,8 @@ Compact encoding
 >>> json.dumps({"a": 1, "b": 2, "c": 3}, end="", separators=(",", ":"))
 '{"a":1,"b":2,"c":3}'
 
+.. seealso:: :ref:`compact float formatter <compact_float_formatter>`
+
 Pretty printing
 ^^^^^^^^^^^^^^^
 

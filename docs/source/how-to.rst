@@ -160,6 +160,7 @@ Decoding arbitrary objects
 .. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
     suited for this.
 
+.. _compact_float_formatter:
 .. _formatters:
 
 Formatting numbers
@@ -180,11 +181,21 @@ Formatter    Default       Called with
 ``"int"``    :class:`str`  :class:`int` or ``types["int"]``
 ============ ============= ====================================
 
-Example:
+Compact float example:
 
 >>> import jsonyx as json
->>> json.dump([1.234, 5.678], formatters={"float": "{:.2f}".format})
-[1.23, 5.68]
+>>> def compact_float_formatter(x):
+...     if "e" in (scientific := f"{x:.16e}"): # skip NaN and infinity
+...         mantissa, exp = scientific.split("e")
+...         mantissa = mantissa.rstrip("0").rstrip(".")
+...         scientific = f"{mantissa}e{int(exp)}"
+...     return min(repr(x), scientific, key=len)
+... 
+>>> json.dump([0.001, 10.0], formatters={"float": compact_float_formatter})
+[1e-3, 1e1]
+
+.. note:: Case variations of ``"nan"``, ``"inf"``, ``"infinity"``, ``"-inf"``
+  and ``"-infinity"`` are normalized.
 
 Encoding :class:`enum.ReprEnum`
 -------------------------------
