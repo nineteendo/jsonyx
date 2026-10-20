@@ -1,6 +1,8 @@
 JSON Patch Specification
 ========================
 
+.. versionadded:: 2.0
+
 JSON Patch is a format for describing changes to a `JSON <https://json.org>`_
 document.
 

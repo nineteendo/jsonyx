@@ -1,6 +1,8 @@
 JSON Path Specification
 =======================
 
+.. versionadded:: 2.0
+
 JSON Path is a query language for JSON documents.
 
 Selectors

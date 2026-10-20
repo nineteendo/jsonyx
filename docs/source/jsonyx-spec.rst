@@ -7,6 +7,8 @@ developer convenience.
 Example
 -------
 
+.. versionchanged:: 2.0 Added support for unquoted keys.
+
 .. code-block:: javascript
 
     {
@@ -155,6 +157,8 @@ of the special values ``NaN``, ``Infinity`` and ``-Infinity``.
 
 key
 ^^^
+
+.. versionchanged:: 2.0 Added support for identifiers.
 
 A key can be a string or an identifier.
 
