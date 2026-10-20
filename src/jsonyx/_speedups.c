@@ -1538,6 +1538,43 @@ bail:
     return NULL;
 }
 
+static int
+encoder_write_float_exact(PyEncoderObject *s, _PyUnicodeWriter *writer, PyObject *obj)
+{
+    /* Write the JSON representation of a PyFloat into writer. */
+    double i = PyFloat_AS_DOUBLE(obj);
+    if (isfinite(i)) {
+        // Similar to float_repr(), but writes directly into writer
+        char *buf = PyOS_double_to_string(i, 'r', 0, Py_DTSF_ADD_DOT_0, NULL);
+        if (!buf) {
+            PyErr_NoMemory();
+            return -1;
+        }
+        int res = _PyUnicodeWriter_WriteASCIIString(writer, buf, strlen(buf));
+        PyMem_Free(buf);
+        return res;
+    }
+    const char *str;
+    size_t len;
+    if (i > 0) {
+        str = "Infinity";
+        len = 8;
+    }
+    else if (i < 0) {
+        str = "-Infinity";
+        len = 9;
+    }
+    else {
+        str = "NaN";
+        len = 3;
+    }
+    if (!s->allow_nan_and_infinity) {
+        PyErr_Format(PyExc_ValueError, "%s is not allowed", str);
+        return -1;
+    }
+    return _PyUnicodeWriter_WriteASCIIString(writer, str, len);
+}
+
 static PyObject *
 encoder_encode_float_exact(PyEncoderObject *s, PyObject *obj)
 {
@@ -1742,11 +1779,9 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *markers, _PyUnicodeWriter *
     else if (PyFloat_Check(obj)) {
         PyObject *encoded;
         if (PyFloat_CheckExact(obj) && s->float_formatter == (PyObject *)&PyUnicode_Type) {
-            encoded = encoder_encode_float_exact(s, obj);
+            return encoder_write_float_exact(s, writer, obj);
         }
-        else {
-            encoded = encoder_encode_float(s, obj);
-        }
+        encoded = encoder_encode_float(s, obj);
         if (encoded == NULL)
             return -1;
         return _steal_accumulate(writer, encoded);

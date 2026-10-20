@@ -1,4 +1,5 @@
 """JSON benchmark."""
+# TODO(Nice Zombies): re-run benchmark
 from __future__ import annotations
 
 __all__: list[str] = []

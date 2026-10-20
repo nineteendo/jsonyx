@@ -15,6 +15,7 @@ jsonyx 2.5.0 (Unreleased)
 
 Changes:
     - Sped up ``check_circular=True``
+    - Sped up :class:`float` encoding
     - Sped up :class:`int` encoding on Python 3.14+
     - Sped up :class:`float` and :class:`int` decoding
 
