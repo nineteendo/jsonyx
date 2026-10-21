@@ -216,9 +216,9 @@ By default, :mod:`jsonyx` does not allow ``NaN``, ``Infinity`` or
 :data:`jsonyx.allow.NAN_AND_INFINITY` to ``allow``:
 
 >>> import jsonyx as json
+>>> from math import inf, nan
 >>> json.loads("[NaN, Infinity, -Infinity]", allow=json.allow.NAN_AND_INFINITY)
 [nan, inf, -inf]
->>> from math import inf, nan
 >>> json.dump([nan, inf, -inf], allow=json.allow.NAN_AND_INFINITY)
 [NaN, Infinity, -Infinity]
 

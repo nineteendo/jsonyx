@@ -44,9 +44,9 @@ NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
 """Allow ``NaN``, ``Infinity`` and ``-Infinity``.
 
 >>> import jsonyx as json
+>>> from math import inf, nan
 >>> json.loads("[NaN, Infinity, -Infinity]", allow=json.allow.NAN_AND_INFINITY)
 [nan, inf, -inf]
->>> from math import inf, nan
 >>> json.dump([nan, inf, -inf], allow=json.allow.NAN_AND_INFINITY)
 [NaN, Infinity, -Infinity]
 

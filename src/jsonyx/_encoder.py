@@ -491,7 +491,6 @@ class Encoder:
 
             >>> import jsonyx as json
             >>> encoder = json.Encoder()
-            >>> import jsonyx as json
             >>> encoder.dump('"foo\bar')
             "\"foo\bar"
             >>> encoder.dump("\\")
