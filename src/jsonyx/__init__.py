@@ -7,6 +7,7 @@ __all__: list[str] = [
     "JSONSyntaxError",
     "Manipulator",
     "TruncatedSyntaxError",
+    "allow",
     "apply_filter",
     "apply_patch",
     "detect_encoding",
@@ -25,6 +26,7 @@ __version__: str = "2.5.0"
 
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
+from jsonyx import allow
 from jsonyx._decoder import (
     Decoder, JSONSyntaxError, TruncatedSyntaxError, detect_encoding,
 )

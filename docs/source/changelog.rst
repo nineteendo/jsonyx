@@ -125,10 +125,8 @@ Breaking Changes:
       .. code-block:: diff
 
            >>> import jsonyx as json
-           >>> import jsonyx.allow
-          ->>> allow = jsonyx.allow.EVERYTHING
-          +>>> allow = jsonyx.allow.EVERYTHING - jsonyx.allow.NON_STR_KEYS
-           >>> json.dump({1: 0}, allow=allow)
+          ->>> json.dump({1: 0}, allow=json.allow.EVERYTHING)
+          +>>> json.dump({1: 0}, allow=json.allow.EVERYTHING - json.allow.NON_STR_KEYS)
            TypeError: Non-string keys are not allowed
 
     - Added :data:`jsonyx.allow.UNQUOTED_KEYS` (included in
@@ -137,10 +135,9 @@ Breaking Changes:
       .. code-block:: diff
 
            >>> import jsonyx as json
-           >>> import jsonyx.allow
-          ->>> allow = jsonyx.allow.EVERYTHING
-          +>>> allow = jsonyx.allow.EVERYTHING - jsonyx.allow.UNQUOTED_KEYS
-           >>> json.loads('{key: "value"}', allow=allow)
+           >>> s = '{key: "value"}'
+          ->>> json.loads(s, allow=json.allow.EVERYTHING)
+          +>>> json.loads(s, allow=json.allow.EVERYTHING - json.allow.UNQUOTED_KEYS)
            Traceback (most recent call last):
              File "<string>", line 1
                {key: "value"}
@@ -178,8 +175,7 @@ Breaking Changes:
       .. code-block:: diff
 
            >>> import jsonyx as json
-          ->>> import jsonyx.allow
-          ->>> json.loads('{"a": 1, "a": 2, "a": 3}', allow=jsonyx.allow.DUPLICATE_KEYS)
+          ->>> json.loads('{"a": 1, "a": 2, "a": 3}', allow=json.allow.DUPLICATE_KEYS)
           -{'a': 1, 'a': 2, 'a': 3}
           +>>> from multidict import MultiDict
           +>>> json.loads('{"a": 1, "a": 2, "a": 3}', hooks={"object": MultiDict})

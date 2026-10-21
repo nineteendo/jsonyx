@@ -6,7 +6,7 @@ __all__: list[str] = []
 from threading import Barrier, Thread
 from typing import TYPE_CHECKING, Any
 
-import jsonyx.allow
+from jsonyx.allow import NON_STR_KEYS
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -49,7 +49,7 @@ def _encode_json_helper(
             t.start()
 
         for _ in range(number_of_json_encodings):
-            allow: frozenset[str] = jsonyx.allow.NON_STR_KEYS
+            allow: frozenset[str] = NON_STR_KEYS
             types: dict[str, type] = {"object": _MyMapping}
             json.dumps(
                 data, allow=allow, indent=1, indent_leaves=False, types=types,
