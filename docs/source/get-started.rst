@@ -208,8 +208,8 @@ Reading from a file:
     - The input is not read incrementally, but in one-shot.
     - The encoding is detected using :func:`jsonyx.detect_encoding`.
 
-Allow non-standard numeric values
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Allowing non-standard numeric values
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default, :mod:`jsonyx` does not allow ``NaN``, ``Infinity`` or
 ``-Infinity``. To enable them, pass
