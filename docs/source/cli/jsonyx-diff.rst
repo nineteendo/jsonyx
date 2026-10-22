@@ -43,7 +43,8 @@ Options
 -C, --no-commas         Don't separate items by commas when indented.
 -i, --indent SPACES     Indent using the specified number of spaces.
 -l, --no-indent-leaves  Don't indent leaf objects and arrays.
--L, --max-indent-level  The level up to which to indent.
+-L, --max-indent-level LEVEL
+                        The level up to which to indent.
 -q, --unquoted-keys     Don't quote keys which are
                         :ref:`identifiers <identifiers>`.
 -s, --sort-keys         Sort the keys of objects.
