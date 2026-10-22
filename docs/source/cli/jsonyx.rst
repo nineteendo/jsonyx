@@ -15,10 +15,5 @@ Usage
 Options
 -------
 
-.. option:: -h, --help
-
-    Show the help message and exit.
-
-.. option:: -v, --version
-
-    Show the version number and exit.
+-h, --help      Show the help message and exit.
+-v, --version   Show the version number and exit.

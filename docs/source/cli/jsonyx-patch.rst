@@ -30,4 +30,21 @@ Positional arguments
     The path to the output JSON file. If not specified, write to
     :data:`sys.stdout`.
 
-See :doc:`/cli/jsonyx-format` for the formatting options.
+Options
+-------
+
+.. versionchanged:: 2.4 Removed ``--use-decimal`` (alias ``-d``)
+
+-h, --help              Show the help message and exit.
+-a, --ensure-ascii      Escape non-ASCII characters.
+-c, --compact           Avoid unnecessary whitespace after ``","`` and ``":"``.
+-C, --no-commas         Don't separate items by commas when indented.
+-i, --indent SPACES     Indent using the specified number of spaces.
+-l, --no-indent-leaves  Don't indent leaf objects and arrays.
+-L, --max-indent-level  The level up to which to indent.
+-q, --unquoted-keys     Don't quote keys which are
+                        :ref:`identifiers <identifiers>`.
+-s, --sort-keys         Sort the keys of objects.
+-S, --nonstrict         Allow all JSON deviations provided by :mod:`jsonyx`.
+-t, --trailing-comma    Add a trailing comma when indented.
+-T, --indent-tab        Indent using tabs.
