@@ -1,11 +1,11 @@
 jsonyx diff
 ===========
 
-.. versionchanged:: 2.4 Improved diffing algorithm.
-
 .. program:: jsonyx diff
 
 Compare two JSON files and generate a diff in JSON patch format.
+
+.. versionchanged:: 2.4 Improved diffing algorithm.
 
 Usage
 -----
