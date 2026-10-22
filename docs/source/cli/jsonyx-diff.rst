@@ -62,3 +62,5 @@ Example
         "op": "del",
         "path": "$[1]"
     }
+
+.. seealso:: :doc:`/cli/jsonyx-patch` for applying a patch.

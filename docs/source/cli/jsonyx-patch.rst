@@ -59,3 +59,4 @@ Example
     [1, 3]
 
 .. tip:: A :ref:`filter` is more robust than an index.
+.. seealso:: :doc:`/cli/jsonyx-diff` for making a patch.
