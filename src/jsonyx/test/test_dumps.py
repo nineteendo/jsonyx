@@ -52,7 +52,7 @@ class _IntEnum(int, Enum):
     ZERO = 0
 
 
-class _StrEnum(str, Enum):
+class _StrEnum(str, Enum):  # ruff: ignore[UP042]
     EMPTY = ""
 
 

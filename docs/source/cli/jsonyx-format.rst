@@ -29,7 +29,7 @@ Positional arguments
 Options
 -------
 
-.. versionchanged:: 2.4 Removed ``--use-decimal`` (alias ``-d``)
+.. versionchanged:: 2.4 Removed ``--use-decimal`` (alias ``-d``).
 
 -h, --help              Show the help message and exit.
 -a, --ensure-ascii      Escape non-ASCII characters.

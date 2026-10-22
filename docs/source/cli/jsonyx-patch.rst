@@ -33,7 +33,7 @@ Positional arguments
 Options
 -------
 
-.. versionchanged:: 2.4 Removed ``--use-decimal`` (alias ``-d``)
+.. versionchanged:: 2.4 Removed ``--use-decimal`` (alias ``-d``).
 
 -h, --help              Show the help message and exit.
 -a, --ensure-ascii      Escape non-ASCII characters.
@@ -48,3 +48,13 @@ Options
 -S, --nonstrict         Allow all JSON deviations provided by :mod:`jsonyx`.
 -t, --trailing-comma    Add a trailing comma when indented.
 -T, --indent-tab        Indent using tabs.
+
+Example
+-------
+
+.. code-block:: shell-session
+
+    $ echo "[1, 2, 3]" | jsonyx patch <(echo '{"op": "del", "path": "$[1]"}')
+    [1, 3]
+
+.. tip:: A :ref:`filter` is more robust than an index.

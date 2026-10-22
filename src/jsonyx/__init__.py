@@ -117,7 +117,7 @@ def format_syntax_error(exc: TruncatedSyntaxError) -> list[str]:
 
 def read(
     filename: _StrPath,
-    *,
+    *,  # pylint: disable-next=W0621
     allow: Container[str] = NOTHING,
     cache_keys: bool = False,
     hooks: dict[str, _Hook] | None = None,
@@ -165,7 +165,7 @@ def read(
 
 def load(
     fp: Reader[bytes | str],
-    *,
+    *,  # pylint: disable-next=W0621
     allow: Container[str] = NOTHING,
     cache_keys: bool = False,
     hooks: dict[str, _Hook] | None = None,
@@ -218,7 +218,7 @@ def load(
 
 def loads(
     s: bytearray | bytes | str,
-    *,
+    *,  # pylint: disable-next=W0621
     allow: Container[str] = NOTHING,
     cache_keys: bool = False,
     filename: _StrPath = "<string>",
@@ -271,7 +271,7 @@ def write(
     obj: object,
     filename: _StrPath,
     encoding: str = "utf-8",
-    *,
+    *,  # pylint: disable-next=W0621
     allow: Container[str] = NOTHING,
     check_circular: bool = True,
     commas: bool = True,
@@ -385,7 +385,7 @@ def write(
 def dump(
     obj: object,
     fp: Writer[str] | None = None,
-    *,
+    *,  # pylint: disable-next=W0621
     allow: Container[str] = NOTHING,
     check_circular: bool = True,
     commas: bool = True,
@@ -504,7 +504,7 @@ def dump(
 
 def dumps(
     obj: object,
-    *,
+    *,  # pylint: disable-next=W0621
     allow: Container[str] = NOTHING,
     check_circular: bool = True,
     commas: bool = True,
@@ -604,7 +604,7 @@ def dumps(
 def apply_patch(
     obj: Any,
     patch: _Operation | list[_Operation],
-    *,
+    *,  # pylint: disable-next=W0621
     allow: Container[str] = NOTHING,
 ) -> Any:
     """Apply a JSON patch to a Python object.
@@ -643,7 +643,7 @@ def paste_values(
     current_nodes: _Node | list[_Node],
     values: Any | list[Any],
     operation: _Operation,
-    *,
+    *,  # pylint: disable-next=W0621
     allow: Container[str] = NOTHING,
 ) -> None:
     """Paste value to a node or values to a list of nodes.
@@ -679,7 +679,7 @@ def paste_values(
 def select_nodes(
     nodes: _Node | list[_Node],
     query: str,
-    *,
+    *,  # pylint: disable-next=W0621
     allow: Container[str] = NOTHING,
     allow_slice: bool = False,
     relative: bool = False,
@@ -720,7 +720,7 @@ def select_nodes(
     )
 
 
-def apply_filter(
+def apply_filter(  # pylint: disable-next=W0621
     nodes: _Node | list[_Node], query: str, *, allow: Container[str] = NOTHING,
 ) -> list[_Node]:
     """Apply a JSON filter query to a node or a list of nodes.
@@ -751,6 +751,7 @@ def apply_filter(
     return Manipulator(allow=allow).apply_filter(nodes, query)
 
 
+# pylint: disable-next=W0621
 def load_query_value(s: str, *, allow: Container[str] = NOTHING) -> Any:
     """Deserialize a JSON query value to a Python object.
 
