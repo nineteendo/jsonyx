@@ -47,10 +47,6 @@ Options
 
     Don't separate items by commas when indented.
 
-.. option:: -d, --use-decimal
-
-    Use :class:`decimal.Decimal` instead of :class:`float`.
-
 .. option:: -i, --indent SPACES
 
     Indent using the specified number of spaces.
