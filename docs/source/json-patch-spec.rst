@@ -42,8 +42,8 @@ https://github.com/nineteendo/jsonyx/blob/2.4.x/json-patch.schema.json
 Operations
 ----------
 
-append
-^^^^^^
+append operation
+^^^^^^^^^^^^^^^^
 
 Append a value to the end of an array.
 
@@ -72,8 +72,8 @@ Example:
 
         [1, 2, 3, 4]
 
-assert
-^^^^^^
+assert operation
+^^^^^^^^^^^^^^^^
 
 Test if a condition is true.
 
@@ -103,8 +103,8 @@ Example:
 
         {"op": "assert", "expr": "@ == true"}
 
-clear
-^^^^^
+clear operation
+^^^^^^^^^^^^^^^
 
 Remove all items from an array or all properties from an object.
 
@@ -134,8 +134,8 @@ Example:
 
 .. _copy:
 
-copy
-^^^^
+copy operation
+^^^^^^^^^^^^^^
 
 Copy a value.
 
@@ -180,8 +180,8 @@ Example:
 
 .. note:: You can't use a :ref:`filter` in the **from** and **to** fields.
 
-del
-^^^
+del operation
+^^^^^^^^^^^^^
 
 Delete an item from an array or a property from an object.
 
@@ -210,8 +210,8 @@ Example:
 
 .. tip:: A :ref:`filter` is more robust than an index.
 
-extend
-^^^^^^
+extend operation
+^^^^^^^^^^^^^^^^
 
 Extend an array with the values of another array.
 
@@ -240,8 +240,8 @@ Example:
 
         [1, 2, 3, 4, 5, 6]
 
-insert
-^^^^^^
+insert operation
+^^^^^^^^^^^^^^^^
 
 Insert a value at the specified index in an array.
 
@@ -274,8 +274,8 @@ Example:
 
 .. _move:
 
-move
-^^^^
+move operation
+^^^^^^^^^^^^^^
 
 Move a value.
 
@@ -320,8 +320,8 @@ Example:
 
 .. note:: You can't use a :ref:`filter` in the **from** and **to** fields.
 
-reverse
-^^^^^^^
+reverse operation
+^^^^^^^^^^^^^^^^^
 
 Reverse the items from an array.
 
@@ -349,8 +349,8 @@ Example:
 
         [3, 2, 1]
 
-set
-^^^
+set operation
+^^^^^^^^^^^^^
 
 Replace an item of an array, a property of an object or the root.
 
@@ -379,8 +379,8 @@ Example:
 
         true
 
-sort
-^^^^
+sort operation
+^^^^^^^^^^^^^^
 
 Sort an array.
 
@@ -409,8 +409,8 @@ Example:
 
         [1, 2, 3]
 
-update
-^^^^^^
+update operation
+^^^^^^^^^^^^^^^^
 
 Update an object with the properties of another object, overwriting existing
 properties.
