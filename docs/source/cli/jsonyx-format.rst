@@ -58,7 +58,7 @@ Example
         "foo": [1, 2, 3],
         "bar": {"a": 1, "b": 2, "c": 3}
     }
-    $ echo "{1.2: 3.4}" | jsonyx format
+    $ echo "{1.2: 3.4}" | jsonyx format > /dev/null
       File "<stdin>", line 1, column 2
         {1.2: 3.4}
          ^
