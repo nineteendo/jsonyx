@@ -93,6 +93,13 @@ def _configure(parser: ArgumentParser) -> None:
         metavar="LEVEL",
     )
     parent_parser.add_argument(
+        "-q",
+        "--unquoted-keys",
+        action="store_false",
+        dest="quoted_keys",
+        help="don't quote keys which are identifiers",
+    )
+    parent_parser.add_argument(
         "-s",
         "--sort-keys",
         action="store_true",
@@ -117,13 +124,6 @@ def _configure(parser: ArgumentParser) -> None:
         const="\t",
         dest="indent",
         help="indent using tabs",
-    )
-    parent_parser.add_argument(
-        "-q",
-        "--unquoted-keys",
-        action="store_false",
-        dest="quoted_keys",
-        help="don't quote keys which are identifiers",
     )
     commands = parser.add_subparsers(title="commands", dest="command")
 

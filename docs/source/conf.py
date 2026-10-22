@@ -9,7 +9,7 @@ from typing import Any
 # -- Project information
 
 branch: str = getenv("READTHEDOCS_GIT_IDENTIFIER", "main")
-year: int = datetime.now(tz=timezone.utc).year
+year: int = datetime.now(tz=timezone.utc).year  # ruff: ignore[UP017]
 
 author: str = "Nice Zombies"
 # pylint: disable-next=W0622
