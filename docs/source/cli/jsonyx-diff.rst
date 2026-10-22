@@ -10,8 +10,8 @@ Usage
 
 .. code-block:: none
 
-    jsonyx diff [-h] [-a] [-c] [-C] [-i SPACES] [-l] [-L LEVEL] [-s] [-S] [-t]
-                [-T] [-q] old_input_filename [input_filename] [output_filename]
+    jsonyx diff [-h] [-a] [-c] [-C] [-i SPACES] [-l] [-L LEVEL] [-q] [-s] [-S]
+                [-t] [-T] old_input_filename [input_filename] [output_filename]
 
 Positional arguments
 --------------------
