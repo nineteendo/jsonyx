@@ -20,7 +20,19 @@ __all__: list[str] = [
 ]
 
 NOTHING: frozenset[str] = frozenset()
-"""Raise an error for all deviations from :rfc:`8259`."""
+r"""Raise an error for all deviations from :rfc:`8259`.
+
+>>> import jsonyx as json
+>>> from math import inf, nan
+>>> json.loads("[NaN, Infinity, -Infinity]")
+Traceback (most recent call last):
+  File "<string>", line 1, column 2-5
+    [NaN, Infinity, -Infinity]
+     ^^^
+jsonyx.JSONSyntaxError: NaN is not allowed
+>>> json.dump([nan, inf, -inf])
+ValueError: NaN is not allowed
+"""
 
 COMMENTS: frozenset[str] = frozenset({"comments"})
 """Allow block and line comments.
@@ -104,13 +116,23 @@ EVERYTHING: frozenset[str] = (
     COMMENTS | MISSING_COMMAS | NAN_AND_INFINITY | NON_STR_KEYS | SURROGATES
     | TRAILING_COMMA | UNQUOTED_KEYS
 )
-"""Allow all JSON deviations.
+r"""Allow all supported deviations from :rfc:`8259`.
 
 .. versionchanged:: 2.0
 
     - Added ``NON_STR_KEYS | UNQUOTED_KEYS``.
     - Removed ``DUPLICATE_KEYS``.
 
-This is equivalent to ``COMMENTS | MISSING_COMMAS | NAN_AND_INFINITY
-| NON_STR_KEYS | SURROGATES | TRAILING_COMMA | UNQUOTED_KEYS``.
+>>> import jsonyx as json
+>>> from math import inf, nan
+>>> json.loads("[NaN, Infinity, -Infinity]", allow=json.allow.EVERYTHING)
+[nan, inf, -inf]
+>>> json.dump([nan, inf, -inf], allow=json.allow.EVERYTHING)
+[NaN, Infinity, -Infinity]
+
+.. note::
+
+    - ``Decimal("sNan")`` can't be (de)serialised this way.
+    - This is equivalent to ``COMMENTS | MISSING_COMMAS | NAN_AND_INFINITY
+    | NON_STR_KEYS | SURROGATES | TRAILING_COMMA | UNQUOTED_KEYS``.
 """
