@@ -37,16 +37,17 @@ Example with :mod:`numpy`:
 >>> obj = np.array([
 ...     np.bool_(), np.int8(), np.uint8(), np.int16(), np.uint16(), np.int32(),
 ...     np.uint32(), np.intp(), np.uintp(), np.int64(), np.uint64(), np.float16(),
-...     np.float32(), np.float64()
+...     np.float32(), np.float64(), np.str_()
 ... ], dtype="O")
 >>> types = {
 ...     "array": np.ndarray,
 ...     "bool": np.bool_,
 ...     "float": np.floating,
-...     "int": np.integer
+...     "int": np.integer,
+...     "str": np.str_
 ... }
 >>> json.dump(obj, types=types)
-[false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0]
+[false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0, ""]
 
 .. note:: Custom types must be registered manually, :mod:`jsonyx` does not
     infer serializability based on method presence.
@@ -83,10 +84,11 @@ Example with :mod:`numpy`:
 ...     "array": partial(np.array, dtype="O"),
 ...     "bool": np.bool_,
 ...     "float": np.float64,
-...     "int": np.int64
+...     "int": np.int64,
+...     "str": np.str_
 ... }
->>> json.loads("[false, 0.0, 0]", hooks=hooks)
-array([np.False_, np.float64(0.0), np.int64(0)], dtype=object)
+>>> json.loads('[false, 0.0, 0, ""]', hooks=hooks)
+array([np.False_, np.float64(0.0), np.int64(0), np.str_('')], dtype=object)
 
 Using :class:`decimal.Decimal` instead of :class:`float`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
