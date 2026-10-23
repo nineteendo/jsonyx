@@ -20,7 +20,7 @@ __all__: list[str] = [
 ]
 
 NOTHING: frozenset[str] = frozenset()
-r"""Raise an error for all deviations from :rfc:`8259`.
+"""Raise an error for all deviations from :rfc:`8259`.
 
 >>> import jsonyx as json
 >>> from math import inf, nan
@@ -116,7 +116,7 @@ EVERYTHING: frozenset[str] = (
     COMMENTS | MISSING_COMMAS | NAN_AND_INFINITY | NON_STR_KEYS | SURROGATES
     | TRAILING_COMMA | UNQUOTED_KEYS
 )
-r"""Allow all supported deviations from :rfc:`8259`.
+"""Allow all supported deviations from :rfc:`8259`.
 
 .. versionchanged:: 2.0
 

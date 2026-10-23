@@ -340,7 +340,7 @@ except ImportError:
 
 
 class Encoder:
-    r"""A configurable JSON encoder.
+    """A configurable JSON encoder.
 
     .. versionchanged:: 2.0
 
