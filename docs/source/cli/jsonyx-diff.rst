@@ -29,7 +29,7 @@ Positional arguments
 
 .. option:: output_filename
 
-    The path to the output :doc:`JSON patch </json-patch-spec>` file. If not
+    The path to the output :doc:`JSON patch </spec/json-patch>` file. If not
     specified, write to :data:`sys.stdout`.
 
 Options

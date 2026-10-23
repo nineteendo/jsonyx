@@ -1,6 +1,6 @@
 """Allow minimal and unambiguous JSON deviations for developer convenience.
 
-See :doc:`the specification </jsonyx-spec>` for more information.
+See :doc:`the specification </spec/jsonyx>` for more information.
 
 .. tip:: Flags can also be combined (e.g. ``COMMENTS | UNQUOTED_KEYS``) or
     excluded (e.g. ``EVERYTHING - NON_STR_KEYS``).

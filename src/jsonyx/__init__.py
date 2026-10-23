@@ -613,7 +613,7 @@ def apply_patch(
     .. versionchanged:: 2.4 Removed ``use_decimal``.
 
     :param obj: a Python object
-    :param patch: a :doc:`JSON patch </json-patch-spec>`
+    :param patch: a :doc:`JSON patch </spec/json-patch>`
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :raises AssertionError: if an assertion fails
     :raises IndexError: if an index is out of range

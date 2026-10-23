@@ -1,8 +1,7 @@
 jsonyx Specification
 ====================
 
-jsonyx allows minimal and unambiguous `JSON <https://json.org>`_ deviations for
-developer convenience.
+A superset of JSON with less restrictive syntax.
 
 Example
 -------

@@ -31,7 +31,7 @@ Key Features
       }
 
 - Optionally supports these JSON deviations (according to
-  :doc:`this specification </jsonyx-spec>`):
+  :doc:`this specification </spec/jsonyx>`):
 
   .. code-block:: javascript
 
@@ -74,21 +74,8 @@ how to :ref:`install <installation>` the project.
     benchmark
     api/index
     cli/index
-
-.. toctree::
-    :caption: Specification
-    :hidden:
-
-    jsonyx-spec
-    json-patch-spec
-    json-path-spec
-
-.. toctree::
-    :caption: About the Project
-    :hidden:
-
+    spec/index
     changelog
-    License <https://github.com/nineteendo/jsonyx/blob/main/LICENSE>
 
 .. toctree::
     :caption: Project Links
@@ -98,5 +85,6 @@ how to :ref:`install <installation>` the project.
     Conda Package <https://anaconda.org/conda-forge/jsonyx>
     GitHub Repository <https://github.com/nineteendo/jsonyx>
     Issue Tracker <https://github.com/nineteendo/jsonyx/issues>
+    License <https://github.com/nineteendo/jsonyx/blob/main/LICENSE>
     PDF Documentation <https://jsonyx.readthedocs.io/_/downloads/en/2.4.x/pdf/>
     Sponser <https://paypal.me/nineteendo>

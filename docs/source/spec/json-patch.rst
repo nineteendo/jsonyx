@@ -3,8 +3,7 @@ JSON Patch Specification
 
 .. versionadded:: 2.0
 
-JSON Patch is a format for describing changes to a `JSON <https://json.org>`_
-document.
+A format for describing changes to a JSON document.
 
 The patch documents are themselves JSON documents, consisting of a
 single operation or an array of operations.

@@ -222,7 +222,7 @@ By default, :mod:`jsonyx` does not allow ``NaN``, ``Infinity`` or
 >>> json.dump([nan, inf, -inf], allow=json.allow.NAN_AND_INFINITY)
 [NaN, Infinity, -Infinity]
 
-Making a :doc:`patch </json-patch-spec>` from two Python objects
+Making a :doc:`patch </spec/json-patch>` from two Python objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. versionadded:: 2.0
@@ -231,7 +231,7 @@ Making a :doc:`patch </json-patch-spec>` from two Python objects
 >>> json.make_patch([1, 2, 3], [1, 3])
 [{'op': 'del', 'path': '$[1]'}]
 
-Applying a :doc:`patch </json-patch-spec>`
+Applying a :doc:`patch </spec/json-patch>`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. versionadded:: 2.0
