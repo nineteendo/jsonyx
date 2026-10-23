@@ -131,7 +131,7 @@ ogp_enable_meta_description: bool = True
 # -- Options for sphinx_sitemap
 
 sitemap_excludes: list[str] = [
-    "_modules", "contents.html", "forword.html", "genindex.html",
+    "404.html", "_modules/*", "contents.html", "forword.html", "genindex.html",
     "py-modindex.html", "search.html",
 ]
 sitemap_url_scheme: str = "{link}"
