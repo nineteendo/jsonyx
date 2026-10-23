@@ -123,7 +123,7 @@ def _unescape_unicode(filename: str, s: str, end: int) -> int:
 
 
 class TruncatedSyntaxError(SyntaxError):
-    """Syntax error trucated to fit within the terminal width.
+    """Syntax error truncated to fit within the terminal width.
 
     .. versionadded:: 2.0
 
@@ -142,7 +142,7 @@ class TruncatedSyntaxError(SyntaxError):
             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         jsonyx.TruncatedSyntaxError: msg
 
-    .. tip:: Set the ``COLUMNS`` environment variable to overwrite the width.
+    .. tip:: Set the ``COLUMNS`` environment variable to override the width.
     .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the
         exception.
 
@@ -215,7 +215,28 @@ TruncatedSyntaxError.__module__ = "jsonyx"
 
 
 class JSONSyntaxError(TruncatedSyntaxError):
-    """Invalid JSON (query) syntax."""
+    """JSON (query) syntax error truncated to fit within the terminal width.
+
+    :param msg: an error message
+    :param filename: the path to the file
+    :param doc: a string
+    :param start: the start position
+    :param end: the end position or negative offset
+
+    Example:
+        >>> import jsonyx as json
+        >>> raise json.JSONSyntaxError("Expecting value", "<string>", "[,]", 1)
+        Traceback (most recent call last):
+          File "<string>", line 1, column 2
+            [,]
+             ^
+        jsonyx.JSONSyntaxError: Expecting value
+
+    .. tip:: Set the ``COLUMNS`` environment variable to override the width.
+    .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the
+        exception.
+
+    """
 
 
 JSONSyntaxError.__module__ = "jsonyx"
@@ -295,7 +316,7 @@ except ImportError:
         """Make JSON scanner."""
         memo: dict[Any, Any] | None = {} if cache_keys else None
 
-        def skip_comments(filename: str, s: str, end: int) -> int:
+        def skip_comments(filename: str, s: str, end: int = 0) -> int:
             while True:
                 if match := _WHITESPACE.match(s, end):
                     end = match.end()
@@ -606,7 +627,7 @@ except ImportError:
                 msg: str = "Unexpected UTF-8 BOM"
                 raise _errmsg(msg, filename, s, 0, 1)
 
-            end: int = skip_comments(filename, s, 0)
+            end: int = skip_comments(filename, s)
             try:
                 obj, end = scan_value(filename, s, end)
             finally:

@@ -200,7 +200,7 @@ class Manipulator:
         return value, end
 
     def _apply_filter(
-        self, nodes: list[_Node], query: str, end: int,
+        self, nodes: list[_Node], query: str, end: int = 0,
     ) -> tuple[list[_Node], int]:
         while True:
             if negate_filter := query[end:end + 1] == "!":
@@ -670,7 +670,7 @@ class Manipulator:
         if isinstance(nodes, tuple):
             nodes = [nodes]
 
-        nodes, end = self._apply_filter(nodes, query, 0)
+        nodes, end = self._apply_filter(nodes, query)
         if end < len(query):
             msg: str = "Expecting end of file"
             raise _errmsg(msg, query, end)
