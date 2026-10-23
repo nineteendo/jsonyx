@@ -183,7 +183,11 @@ Whitespace, including comments can be inserted between any pair of tokens.
 .. container:: highlight
 
     .. productionlist:: jsonyx-grammar
-        whitespace: ( '//' [^#xA#xD]* | '/*' ( ( [^*]* '*'+ ) ++ [^*/] ) '/' | [#x9#xA#xD#x20] )*
+        whitespace: (
+                  :     '//' [^#xA#xD]* ( [#xA#xD] | `!EOF` )
+                  :     | '/*' ( ( [^*]* '*'+ ) ++ [^*/] ) '/'
+                  :     | [#x9#xA#xD#x20]
+                  : )*
 
 .. image:: /_images/light/jsonyx/whitespace.*
     :class: only-light
