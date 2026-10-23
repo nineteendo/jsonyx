@@ -74,13 +74,13 @@ def test_invalid_clear() -> None:
 @pytest.mark.parametrize(("obj", "kwargs", "expected"), [
     # Without path
     ([0], {"mode": "append", "from": "@[0]"}, [0, 0]),
-    ({"a": 0}, {"mode": "set", "from": "@.a", "to": "@.b"}, {"a": 0, "b": 0}),
+    ({"a": 0}, {"from": "@.a", "to": "@.b"}, {"a": 0, "b": 0}),
 
     # With path
     ([[0]], {"mode": "append", "path": "$[0]", "from": "@[0]"}, [[0, 0]]),
     (
         [{"a": 0}],
-        {"mode": "set", "path": "$[0]", "from": "@.a", "to": "@.b"},
+        {"path": "$[0]", "from": "@.a", "to": "@.b"},
         [{"a": 0, "b": 0}],
     ),
 
@@ -95,8 +95,7 @@ def test_copy(obj: Any, kwargs: _Operation, expected: Any) -> None:
 def test_copy_copy() -> None:
     """Test if copy makes a copy."""
     value: list[Any] = [0]
-    patch: _Operation = {"op": "copy", "mode": "set", "from": "@[0]"}
-    result: list[Any] = apply_patch([value], patch)
+    result: list[Any] = apply_patch([value], {"op": "copy", "from": "@[0]"})
     assert result == value  # sanity check
     assert result is not value
 
@@ -172,15 +171,11 @@ def test_insert_root() -> None:
 @pytest.mark.parametrize(("obj", "kwargs", "expected"), [
     # Without path
     ([1, 2], {"mode": "append", "from": "@[0]"}, [2, 1]),
-    ({"a": 0}, {"mode": "set", "from": "@.a", "to": "@.b"}, {"b": 0}),
+    ({"a": 0}, {"from": "@.a", "to": "@.b"}, {"b": 0}),
 
     # With path
     ([[1, 2]], {"mode": "append", "path": "$[0]", "from": "@[0]"}, [[2, 1]]),
-    (
-        [{"a": 0}],
-        {"mode": "set", "path": "$[0]", "from": "@.a", "to": "@.b"},
-        [{"b": 0}],
-    ),
+    ([{"a": 0}], {"path": "$[0]", "from": "@.a", "to": "@.b"}, [{"b": 0}]),
 
     # Allow slice
     ([1, 2, 3], {"mode": "extend", "from": "@[::-1]"}, [3, 2, 1]),
@@ -193,7 +188,7 @@ def test_move(obj: Any, kwargs: _Operation, expected: Any) -> None:
 def test_move_current_object() -> None:
     """Test move current object."""
     with pytest.raises(ValueError, match="Can not move current object"):
-        apply_patch(0, {"op": "move", "mode": "set", "from": "@"})
+        apply_patch(0, {"op": "move", "from": "@"})
 
 
 @pytest.mark.parametrize(("obj", "kwargs", "expected"), [
