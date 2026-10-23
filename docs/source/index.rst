@@ -98,5 +98,5 @@ how to :ref:`install <installation>` the project.
     Conda Package <https://anaconda.org/conda-forge/jsonyx>
     GitHub Repository <https://github.com/nineteendo/jsonyx>
     Issue Tracker <https://github.com/nineteendo/jsonyx/issues>
-    PDF Documentation <https://jsonyx.readthedocs.io/_/downloads/en/2.4.x/pdf>
+    PDF Documentation <https://jsonyx.readthedocs.io/_/downloads/en/2.4.x/pdf/>
     Sponser <https://paypal.me/nineteendo>
