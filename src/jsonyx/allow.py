@@ -134,5 +134,6 @@ r"""Allow all supported deviations from :rfc:`8259`.
 
     - ``Decimal("sNan")`` can't be (de)serialised this way.
     - This is equivalent to ``COMMENTS | MISSING_COMMAS | NAN_AND_INFINITY
-    | NON_STR_KEYS | SURROGATES | TRAILING_COMMA | UNQUOTED_KEYS``.
+        | NON_STR_KEYS | SURROGATES | TRAILING_COMMA | UNQUOTED_KEYS``.
+
 """
