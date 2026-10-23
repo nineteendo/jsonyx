@@ -87,7 +87,7 @@ Generated with
 `RR - Railroad Diagram Generator <https://www.bottlecaps.de/rr/ui>`_ by
 `Gunther Rademacher <https://github.com/GuntherRademacher>`_.
 
-.. _query:
+.. _select_query:
 
 query
 ^^^^^
@@ -153,6 +153,7 @@ A relative query starts with ``@`` followed by zero or more child selectors.
 
 .. _expression:
 .. _filter:
+.. _filter_query:
 
 filter
 ^^^^^^

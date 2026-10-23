@@ -14,8 +14,8 @@ jsonyx 2.5.0 (Unreleased)
 -------------------------
 
 New Features:
-    - Made ``"set"`` the default paste mode for :ref:`copy` and :ref:`move`
-      operations.
+    - Made ``"set"`` the default paste mode for :ref:`copy_operation` and
+      :ref:`move_operation`.
 
 Other Changes:
     - Sped up ``check_circular=True``

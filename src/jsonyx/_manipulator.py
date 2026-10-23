@@ -570,7 +570,7 @@ class Manipulator:
 
         :param current_nodes: a node or a list of nodes
         :param values: a value or a list of values
-        :param operation: a JSON :ref:`copy` or :ref:`move` operation
+        :param operation: a JSON :ref:`copy_operation` or :ref:`move_operation`
         :raises IndexError: if an index is out of range
         :raises JSONSyntaxError: if a query is invalid
         :raises KeyError: if a key is not found
@@ -605,7 +605,7 @@ class Manipulator:
         """Select nodes from a node or a list of nodes.
 
         :param nodes: a node or a list of nodes
-        :param query: a :ref:`JSON select query <query>`
+        :param query: a JSON :ref:`select query <select_query>`
         :param allow_slice: allow slice
         :param relative: query must start with ``"@"`` instead of ``"$"``
         :raises IndexError: if an index is out of range
@@ -650,7 +650,7 @@ class Manipulator:
         """Apply a JSON filter query to a node or a list of nodes.
 
         :param nodes: a node or a list of nodes
-        :param query: a :ref:`JSON filter query <filter>`
+        :param query: a JSON :ref:`filter query <filter_query>`
         :raises IndexError: if an index is out of range
         :raises JSONSyntaxError: if the filter query is invalid
         :raises KeyError: if a key is not found
@@ -680,7 +680,7 @@ class Manipulator:
     def load_query_value(self, s: str) -> Any:
         """Deserialize a JSON query value to a Python object.
 
-        :param s: a :ref:`JSON query value <query_value>`
+        :param s: a JSON :ref:`query value <query_value>`
         :raises JSONSyntaxError: if the query value is invalid
         :raises ValueError: if a number is too big
         :return: a Python object

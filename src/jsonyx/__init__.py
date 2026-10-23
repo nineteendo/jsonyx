@@ -329,7 +329,7 @@ def write(
     :param skipkeys: skip non-string keys
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
-    :param types: a dictionary of :ref:`additional types <protocol_types>`
+    :param types: a dictionary of :ref:`additional types <additional_types>`
     :raises OSError: if the file can't be opened
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
@@ -442,7 +442,7 @@ def dump(
     :param skipkeys: skip non-string keys
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
-    :param types: a dictionary of :ref:`additional types <protocol_types>`
+    :param types: a dictionary of :ref:`additional types <additional_types>`
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
     :raises TruncatedSyntaxError: when failing to write to the file
@@ -560,7 +560,7 @@ def dumps(
     :param skipkeys: skip non-string keys
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
-    :param types: a dictionary of :ref:`additional types <protocol_types>`
+    :param types: a dictionary of :ref:`additional types <additional_types>`
     :raises RecursionError: if the object is too deeply nested
     :raises TypeError: for unserializable values
     :raises ValueError: for invalid values
@@ -653,7 +653,7 @@ def paste_values(
 
     :param current_nodes: a node or a list of nodes
     :param values: a value or a list of values
-    :param operation: a JSON :ref:`copy` or :ref:`move` operation
+    :param operation: a JSON :ref:`copy_operation` or :ref:`move_operation`
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :raises IndexError: if an index is out of range
     :raises JSONSyntaxError: if a query is invalid
@@ -690,7 +690,7 @@ def select_nodes(
     .. versionchanged:: 2.4 Removed ``use_decimal``.
 
     :param nodes: a node or a list of nodes
-    :param query: an :ref:`JSON select query <query>`
+    :param query: a JSON :ref:`select query <select_query>`
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param allow_slice: allow slice
     :param relative: query must start with ``"@"`` instead of ``"$"``
@@ -758,7 +758,7 @@ def load_query_value(s: str, *, allow: Container[str] = NOTHING) -> Any:
     .. versionadded:: 2.0
     .. versionchanged:: 2.4 Removed ``use_decimal``.
 
-    :param s: a :ref:`JSON query value <query_value>`
+    :param s: a JSON :ref:`query value <query_value>`
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :raises JSONSyntaxError: if the query value is invalid
     :raises ValueError: if a number is too big

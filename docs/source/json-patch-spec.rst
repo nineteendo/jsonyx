@@ -81,7 +81,7 @@ Fields:
     - **op** (string) - the operation to perform. Must be ``"assert"``.
     - **path** (string, default: ``"$"``) - the
       :ref:`absolute path <absolute_path>` where the expression is evaluated.
-    - **expr** (string) - :ref:`an expression <expression>`.
+    - **expr** (string) - an :ref:`expression <expression>`.
     - **msg** (string, default: ``"Path <path>: <expr>"``): an error message
 
 Example:
@@ -132,7 +132,7 @@ Example:
 
         []
 
-.. _copy:
+.. _copy_operation:
 
 copy operation
 ^^^^^^^^^^^^^^
@@ -274,7 +274,7 @@ Example:
 
 .. tip:: A :ref:`filter` is more robust than an index.
 
-.. _move:
+.. _move_operation:
 
 move operation
 ^^^^^^^^^^^^^^

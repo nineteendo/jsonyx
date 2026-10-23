@@ -6,7 +6,7 @@ Encoding and decoding protocol-based objects
 
 .. versionadded:: 2.0
 
-.. _protocol_types:
+.. _additional_types:
 
 Encoding protocol-based objects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

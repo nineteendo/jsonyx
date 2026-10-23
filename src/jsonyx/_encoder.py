@@ -377,7 +377,7 @@ class Encoder:
     :param skipkeys: skip non-string keys
     :param sort_keys: sort the keys of objects
     :param trailing_comma: add a trailing comma when indented
-    :param types: a dictionary of :ref:`additional types <protocol_types>`
+    :param types: a dictionary of :ref:`additional types <additional_types>`
 
     .. note:: The item separator is automatically stripped when indented.
     .. warning:: Avoid specifying ABCs for ``types``, that is very slow.
