@@ -61,7 +61,7 @@ def test_insert_current_object() -> None:
 ])
 def test_set(obj: Any, value: Any, kwargs: _Operation, expected: Any) -> None:
     """Test set."""
-    assert _apply_paste(obj, value, {"mode": "set", **kwargs}) == expected
+    assert _apply_paste(obj, value, kwargs) == expected
 
 
 @pytest.mark.parametrize(("obj", "kwargs", "expected"), [

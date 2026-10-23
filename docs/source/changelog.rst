@@ -13,7 +13,11 @@ Changelog
 jsonyx 2.5.0 (Unreleased)
 -------------------------
 
-Changes:
+New Features:
+    - Made ``"set"`` the default paste mode for :ref:`copy` and :ref:`move`
+      operations.
+
+Other Changes:
     - Sped up ``check_circular=True``
     - Sped up :class:`float` encoding
     - Sped up :class:`int` encoding on Python 3.14+

@@ -371,7 +371,7 @@ class Manipulator:
         values: list[Any],
         operation: _Operation,
     ) -> None:
-        if (mode := operation["mode"]) == "append":
+        if (mode := operation.get("mode", "set")) == "append":
             dst: str = operation.get("to", "@")
             dst_nodes: list[_Node] = self.select_nodes(
                 current_nodes, dst, relative=True,

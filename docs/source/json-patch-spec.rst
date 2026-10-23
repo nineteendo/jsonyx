@@ -139,9 +139,11 @@ copy operation
 
 Copy a value.
 
+.. versionchanged:: 2.5 Made ``"set"`` the default paste mode.
+
 Fields:
     - **op** (string) - the operation to perform. Must be ``"copy"``.
-    - **mode** (string) - the paste mode. Must be:
+    - **mode** (string, default: ``"set"``) - the paste mode. Must be:
 
       - ``"append"`` - append the source value to the end of a target array.
       - ``"extend"`` - extend the target array with the values of the source
@@ -170,7 +172,7 @@ Example:
 
     .. code-block:: json
 
-        {"op": "copy", "mode": "set", "from": "@.a", "to": "@.b"}
+        {"op": "copy", "from": "@.a", "to": "@.b"}
 
     Output:
 
@@ -279,9 +281,11 @@ move operation
 
 Move a value.
 
+.. versionchanged:: 2.5 Made ``"set"`` the default paste mode.
+
 Fields:
     - **op** (string) - the operation to perform. Must be ``"move"``.
-    - **mode** (string) - the paste mode. Must be:
+    - **mode** (string, default: ``"set"``) - the paste mode. Must be:
 
       - ``"append"`` - append the source value to the end of a target array.
       - ``"extend"`` - extend the target array with the values of the source
@@ -310,7 +314,7 @@ Example:
 
     .. code-block:: json
 
-        {"op": "move", "mode": "set", "from": "@.a", "to": "@.b"}
+        {"op": "move", "from": "@.a", "to": "@.b"}
 
     Output:
 

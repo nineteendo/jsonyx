@@ -60,12 +60,13 @@
                             "mode": {
                                 "description": "The paste mode.",
                                 "type": "string",
-                                "enum": ["append", "extend", "insert", "set", "update"]
+                                "enum": ["append", "extend", "insert", "set", "update"],
+                                "default": "set"
                             },
                             "from": {"description": "The relative source JSON path.", "type": "string", "default": "@"},
                             "to": {"description": "The relative destination JSON path.", "type": "string", "default": "@"}
                         },
-                        "required": ["mode", "from"],
+                        "required": ["from"],
                         "if": {
                             "properties": {
                                 "mode": {"const": "insert"}
