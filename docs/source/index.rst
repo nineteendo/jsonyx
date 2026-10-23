@@ -72,10 +72,15 @@ how to :ref:`install <installation>` the project.
     get-started
     how-to
     benchmark
+    changelog
+
+.. toctree::
+    :caption: Reference
+    :hidden:
+
     api/index
     cli/index
     spec/index
-    changelog
 
 .. toctree::
     :caption: Project Links
@@ -87,4 +92,4 @@ how to :ref:`install <installation>` the project.
     Issue Tracker <https://github.com/nineteendo/jsonyx/issues>
     License <https://github.com/nineteendo/jsonyx/blob/main/LICENSE>
     PDF Documentation <https://jsonyx.readthedocs.io/_/downloads/en/2.4.x/pdf/>
-    Sponser <https://paypal.me/nineteendo>
+    Sponsor <https://paypal.me/nineteendo>
