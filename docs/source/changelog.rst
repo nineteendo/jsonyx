@@ -10,8 +10,11 @@ Changelog
 .. warning:: Breaking changes can occur in major and feature versions, so read
     the changelog before updating.
 
+jsonyx 2.x
+----------
+
 jsonyx 2.5.0 (Unreleased)
--------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 New Features:
     - Made ``"set"`` the default paste mode for :ref:`copy_operation` and
@@ -24,7 +27,7 @@ Other Changes:
     - Sped up :class:`float` and :class:`int` decoding
 
 jsonyx 2.4.0 (Oct 6, 2026)
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 New Features:
     - Added ``formatters`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
@@ -66,20 +69,20 @@ Bug Fixes:
       :func:`jsonyx.dumps` mapping iteration via re-entrant key encoder
 
 jsonyx 2.3.0 (Apr 30, 2025)
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes:
     - Sped up :class:`str` encoding
 
 jsonyx 2.2.1 (Apr 21, 2025)
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Bug Fixes:
     - Fixed :issue:`36`: Fatal Python error: none_dealloc
     - Fixed :issue:`33`: Performance regression compared to :mod:`json`
 
 jsonyx 2.2.0 (Mar 31, 2025)
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Breaking Changes:
     - Added ``cache_keys`` (default ``False`` instead of ``True``) to
@@ -87,7 +90,7 @@ Breaking Changes:
       :func:`jsonyx.read`
 
 jsonyx 2.1.0 (Mar 30, 2025)
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 New Features:
     - Added ``check_circular``, ``hook`` and ``skipkeys`` to
@@ -95,7 +98,7 @@ New Features:
       :func:`jsonyx.write`
 
 jsonyx 2.0.0 (Mar 27, 2025)
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 New Features:
     - Added the ``jsonyx`` application
@@ -145,7 +148,7 @@ Breaking Changes:
            Traceback (most recent call last):
              File "<string>", line 1
                {key: "value"}
-                ^^^
+                -^^
            jsonyx.JSONSyntaxError: Unquoted keys are not allowed
 
     - Allowed overriding serialization in subclasses of :class:`float` and
@@ -238,8 +241,11 @@ Bug Fixes:
     - Fixed :issue:`python/cpython#125682`: Python implementation of
       :func:`jsonyx.loads` accepts non-ascii digits
 
+jsonyx 1.x
+----------
+
 jsonyx 1.2.1 (Aug 3, 2024)
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes:
     - First conda release
@@ -248,7 +254,7 @@ Bug Fixes:
     - Fixed :issue:`2`: Middle of error context is truncated incorrectly
 
 jsonyx 1.2.0 (Aug 3, 2024)
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 New Features:
     - Added :option:`!output_filename`
@@ -266,13 +272,13 @@ Other Changes:
     - Renamed :option:`!filename` to :option:`!input_filename`
 
 jsonyx 1.1.0 (Aug 3, 2024)
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Breaking Changes:
     - Renamed ``python -m jsonyx.tool`` to ``python -m jsonyx``
 
 jsonyx 1.0.0 (Aug 3, 2024)
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Changes:
    - Initial release
