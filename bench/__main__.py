@@ -202,7 +202,7 @@ _DECODE_FUNCS: dict[str, _Func] = {
 
 
 def _run_benchmark(
-    name: str, cases: dict[str, _Factory], funcs: dict[str, _Func],
+    cases: dict[str, _Factory], funcs: dict[str, _Func],
 ) -> None:
     rows: list[list[str]] = []
     speedups: list[float] = []
@@ -235,14 +235,14 @@ def _run_benchmark(
         rows.append(row)
 
     del funcs["pyjsonyx"]
-    headers: list[str] = [name, *funcs.keys(), "fastest\xa0time"]
+    headers: list[str] = ["case", *funcs.keys(), "fastest\xa0time"]
     colalign: list[str] = ["left"] + ["right"] * (len(funcs) + 1)
     print()
     print(tabulate(rows, headers, "rst", colalign=colalign))
-    print(f"max {name} speedup: {max(speedups):.02f}x")
+    print(f"max speedup: {max(speedups):.02f}x")
 
 
 if __name__ == "__main__":
     print(f"Python {sys.version}")
-    _run_benchmark("encode", _ENCODE_CASES, _ENCODE_FUNCS)
-    _run_benchmark("decode", _DECODE_CASES, _DECODE_FUNCS)
+    _run_benchmark(_ENCODE_CASES, _ENCODE_FUNCS)
+    _run_benchmark(_DECODE_CASES, _DECODE_FUNCS)

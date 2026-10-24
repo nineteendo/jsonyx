@@ -6,18 +6,21 @@ Benchmark code: https://github.com/nineteendo/jsonyx/blob/main/bench/__main__.py
 We recommend to use :pypi:`orjson` or :pypi:`msgspec` or :pypi:`fastsimdjson`
 for performance critical applications:
 
+Encoding JSON
+-------------
+
 .. tab:: Python 3.15.0
 
     .. only:: latex
 
-        .. rubric:: encode (Python 3.15.0)
+        .. rubric:: Python 3.15.0
 
     .. table::
         :widths: grid
         :class: longtable
 
         ====================== ====== ====== ============ ========= ======== ============
-        encode                   json jsonyx fastsimdjson   msgspec   orjson fastest time
+        case                     json jsonyx fastsimdjson   msgspec   orjson fastest time
         ====================== ====== ====== ============ ========= ======== ============
         7-bit character         6.72x  4.07x        1.26x     1.00x    1.18x      0.39 ns
         8-bit character         2.14x  1.12x        1.08x     1.00x    1.06x      2.47 ns
@@ -55,14 +58,14 @@ for performance critical applications:
 
     .. only:: latex
 
-        .. rubric:: encode (Python 3.14.8)
+        .. rubric:: Python 3.14.8
 
     .. table::
         :widths: grid
         :class: longtable
 
         ====================== ====== ====== ============ ========= ======== ============
-        encode                   json jsonyx fastsimdjson   msgspec   orjson fastest time
+        case                     json jsonyx fastsimdjson   msgspec   orjson fastest time
         ====================== ====== ====== ============ ========= ======== ============
         7-bit character         7.78x  4.79x        1.19x     1.00x    1.22x      0.39 ns
         8-bit character         2.73x  1.08x        1.07x     1.00x    1.06x      2.39 ns
@@ -100,14 +103,14 @@ for performance critical applications:
 
     .. only:: latex
 
-        .. rubric:: encode (Python 3.13.16)
+        .. rubric:: Python 3.13.16
 
     .. table::
         :widths: grid
         :class: longtable
 
         ====================== ====== ====== ============ ========= ======== ============
-        encode                   json jsonyx fastsimdjson   msgspec   orjson fastest time
+        case                     json jsonyx fastsimdjson   msgspec   orjson fastest time
         ====================== ====== ====== ============ ========= ======== ============
         7-bit character         8.78x  4.78x        1.19x     1.00x    1.21x      0.39 ns
         8-bit character         3.22x  1.69x        1.08x     1.00x    1.12x      1.93 ns
@@ -145,14 +148,14 @@ for performance critical applications:
 
     .. only:: latex
 
-        .. rubric:: encode (Python 3.12.15)
+        .. rubric:: Python 3.12.15
 
     .. table::
         :widths: grid
         :class: longtable
 
         ====================== ====== ====== ============ ========= ======== ============
-        encode                   json jsonyx fastsimdjson   msgspec   orjson fastest time
+        case                     json jsonyx fastsimdjson   msgspec   orjson fastest time
         ====================== ====== ====== ============ ========= ======== ============
         7-bit character         7.94x  4.78x        1.19x     1.00x    1.16x      0.39 ns
         8-bit character         3.16x  1.27x        1.05x     1.00x    1.05x      2.21 ns
@@ -190,14 +193,14 @@ for performance critical applications:
 
     .. only:: latex
 
-        .. rubric:: encode (Python 3.11.17)
+        .. rubric:: Python 3.11.17
 
     .. table::
         :widths: grid
         :class: longtable
 
         ====================== ====== ====== ============ ========= ======== ============
-        encode                   json jsonyx fastsimdjson   msgspec   orjson fastest time
+        case                     json jsonyx fastsimdjson   msgspec   orjson fastest time
         ====================== ====== ====== ============ ========= ======== ============
         7-bit character         9.37x  5.29x        1.20x     1.00x    1.18x      0.39 ns
         8-bit character         3.47x  1.46x        1.08x     1.00x    1.08x      2.14 ns
@@ -235,14 +238,14 @@ for performance critical applications:
 
     .. only:: latex
 
-        .. rubric:: encode (Python 3.10.22)
+        .. rubric:: Python 3.10.22
 
     .. table::
         :widths: grid
         :class: longtable
 
         ====================== ====== ====== ============ ========= ======== ============
-        encode                   json jsonyx fastsimdjson   msgspec   orjson fastest time
+        case                     json jsonyx fastsimdjson   msgspec   orjson fastest time
         ====================== ====== ====== ============ ========= ======== ============
         7-bit character         8.39x  4.78x        1.19x     1.00x    1.19x      0.38 ns
         8-bit character         2.41x  1.22x        1.07x     1.00x    1.06x      2.29 ns
@@ -276,19 +279,21 @@ for performance critical applications:
         non-empty dictionary   15.41x  4.24x        1.10x     1.32x    1.00x     19.65 ns
         ====================== ====== ====== ============ ========= ======== ============
 
+Decoding JSON
+-------------
+
 .. tab:: Python 3.15.0
-    :new-set:
 
     .. only:: latex
 
-        .. rubric:: decode (Python 3.15.0)
+        .. rubric:: Python 3.15.0
 
     .. table::
         :widths: grid
         :class: longtable
 
         ====================== ====== ====== ============ ============ ========== ============
-        decode                   json jsonyx fastsimdjson      msgspec     orjson fastest time
+        case                     json jsonyx fastsimdjson      msgspec     orjson fastest time
         ====================== ====== ====== ============ ============ ========== ============
         outer space            28.81x  9.67x        1.00x        5.48x      8.15x      0.10 ns
         inner space             7.22x  9.54x        1.00x        4.87x      6.34x      0.10 ns
@@ -337,14 +342,14 @@ for performance critical applications:
 
     .. only:: latex
 
-        .. rubric:: decode (Python 3.14.8)
+        .. rubric:: Python 3.14.8
 
     .. table::
         :widths: grid
         :class: longtable
 
         ====================== ====== ====== ============ ============ ========== ============
-        decode                   json jsonyx fastsimdjson      msgspec     orjson fastest time
+        case                     json jsonyx fastsimdjson      msgspec     orjson fastest time
         ====================== ====== ====== ============ ============ ========== ============
         outer space            34.86x 10.32x        1.00x        5.78x      8.66x      0.10 ns
         inner space            12.69x 10.34x        1.00x        5.14x      6.77x      0.10 ns
@@ -393,14 +398,14 @@ for performance critical applications:
 
     .. only:: latex
 
-        .. rubric:: decode (Python 3.13.16)
+        .. rubric:: Python 3.13.16
 
     .. table::
         :widths: grid
         :class: longtable
 
         ====================== ====== ====== ============ ============ ========== ============
-        decode                   json jsonyx fastsimdjson      msgspec     orjson fastest time
+        case                     json jsonyx fastsimdjson      msgspec     orjson fastest time
         ====================== ====== ====== ============ ============ ========== ============
         outer space            33.07x 10.30x        1.00x        5.89x      8.92x      0.09 ns
         inner space             5.12x 11.10x        1.00x        5.60x      5.13x      0.15 ns
@@ -449,14 +454,14 @@ for performance critical applications:
 
     .. only:: latex
 
-        .. rubric:: encode (Python 3.12.15)
+        .. rubric:: Python 3.12.15
 
     .. table::
         :widths: grid
         :class: longtable
 
         ====================== ====== ====== ============ ============ ========== ============
-        decode                   json jsonyx fastsimdjson      msgspec     orjson fastest time
+        case                     json jsonyx fastsimdjson      msgspec     orjson fastest time
         ====================== ====== ====== ============ ============ ========== ============
         outer space            29.60x  9.62x        1.00x        5.86x     10.32x      0.10 ns
         inner space            10.98x  8.81x        1.00x        4.75x      6.24x      0.10 ns
@@ -505,14 +510,14 @@ for performance critical applications:
 
     .. only:: latex
 
-        .. rubric:: decode (Python 3.11.17)
+        .. rubric:: Python 3.11.17
 
     .. table::
         :widths: grid
         :class: longtable
 
         ====================== ====== ====== ============ ============ ========== ============
-        decode                   json jsonyx fastsimdjson      msgspec     orjson fastest time
+        case                     json jsonyx fastsimdjson      msgspec     orjson fastest time
         ====================== ====== ====== ============ ============ ========== ============
         outer space            37.44x  9.71x        1.00x        5.90x      9.60x      0.09 ns
         inner space             5.88x  8.57x        1.00x        4.27x      6.03x      0.12 ns
@@ -561,14 +566,14 @@ for performance critical applications:
 
     .. only:: latex
 
-        .. rubric:: decode (Python 3.10.22)
+        .. rubric:: Python 3.10.22
 
     .. table::
         :widths: grid
         :class: longtable
 
         ====================== ====== ====== ============ ============ ========== ============
-        decode                   json jsonyx fastsimdjson      msgspec     orjson fastest time
+        case                     json jsonyx fastsimdjson      msgspec     orjson fastest time
         ====================== ====== ====== ============ ============ ========== ============
         outer space            44.39x  8.55x        1.00x        5.82x      8.75x      0.10 ns
         inner space            14.41x  8.57x        1.00x        7.71x      6.89x      0.10 ns
