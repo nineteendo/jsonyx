@@ -4,11 +4,11 @@ button.copybtn {
 button.copybtn:focus, .tab-set > input:focus + label {
     outline-style: auto;
 }
-[role=main] .tab-content > .table-wrapper.container {
+[role=main] .tab-content > .table-wrapper.container:first-child {
     margin-top: 0;
-    padding-top: 0;
-    padding-left: 0;
-    padding-right: 0;
+}
+[role=main] .table-wrapper.container {
+    padding: 0;
 }
 table.docutils {
     width: 100%;
