@@ -7,3 +7,12 @@ button.copybtn:focus, .tab-set > input:focus + label {
 table.docutils {
     width: 100%;
 }
+table.docutils th {
+    background: var(--color-table-border)
+}
+table.docutils tr:nth-child(2n) {
+    background: var(--color-table-header-background)
+}
+table.docutils td, table.docutils th {
+    border: none;
+}
