@@ -48,7 +48,7 @@ intersphinx_mapping: dict[str, tuple[str, None]] = {
 intersphinx_disabled_domains: list[str] = ["std"]
 nitpicky: bool = True
 nitpick_ignore: list[tuple[str, str]] = []
-templates_path = ["_templates"]
+templates_path: list[str] = ["_templates"]
 
 # -- Options for HTML output
 
@@ -68,8 +68,8 @@ html_context: dict[str, Any] = {
 if "READTHEDOCS" in environ:
     html_context["READTHEDOCS"] = True
 
-html_css_files = ["custom.css"]
-html_static_path = ["_static"]
+html_css_files: list[str] = ["custom.css"]
+html_static_path: list[str] = ["_static"]
 html_theme: str = "furo"
 html_theme_options: dict[str, Any] = {
     "navigation_with_keys": True,
@@ -84,15 +84,12 @@ epub_show_urls: str = "no"
 
 # -- Options for PDF output
 
-latex_documents: list[tuple[str, str, str, str, str]] = [
-    (
-        "contents",
-        f"{project}.tex",
-        f"{project} Documentation",
-        author,
-        "manual",
-    ),
-]
+latex_documents: list[tuple[str, str, str, str, str]] = [(
+    "contents", f"{project}.tex", f"{project} Documentation", author, "manual",
+)]
+latex_elements: dict[str, str] = {
+    "preamble": r"\renewcommand\sphinxthefootnotemark[2]{#1}",
+}
 latex_engine: str = "xelatex"
 latex_use_xindy: bool = False
 
