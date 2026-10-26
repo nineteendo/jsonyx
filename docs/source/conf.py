@@ -35,6 +35,7 @@ extensions: list[str] = [
     "sphinx_inline_tabs",
     "sphinx_issues",
     "sphinx_last_updated_by_git",
+    "sphinx_llm.txt",
     "sphinx_sitemap",
 ]
 
@@ -125,6 +126,12 @@ issues_github_path: str = "nineteendo/jsonyx"
 # -- Options for sphinxext.opengraph
 
 ogp_enable_meta_description: bool = True
+
+# -- Options for sphinx_llm.txt
+
+llms_txt_full_build: bool = True
+llms_txt_suffix_mode: str = "replace"
+llms_txt_exclude: list[str] = ["contents", "forword"]
 
 # -- Options for sphinx_sitemap
 

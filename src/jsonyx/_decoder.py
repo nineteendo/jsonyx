@@ -646,7 +646,7 @@ except ImportError:
 class Decoder:
     """A configurable JSON decoder.
 
-    .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.`
+    .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
     .. versionchanged:: 2.2 Added ``cache_keys`` (default ``False`` instead of
         ``True``).
 
