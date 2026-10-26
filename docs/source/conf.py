@@ -129,9 +129,10 @@ ogp_enable_meta_description: bool = True
 
 # -- Options for sphinx_llm.txt
 
+llms_txt_exclude: list[str] = ["contents", "forword"]
 llms_txt_full_build: bool = True
 llms_txt_suffix_mode: str = "replace"
-llms_txt_exclude: list[str] = ["contents", "forword"]
+llms_txt_suppress_unknown_node_warnings: bool = True
 
 # -- Options for sphinx_sitemap
 
