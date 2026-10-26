@@ -87,6 +87,7 @@ epub_show_urls: str = "no"
 latex_documents: list[tuple[str, str, str, str, str]] = [(
     "contents", f"{project}.tex", f"{project} Documentation", author, "manual",
 )]
+latex_domain_indices: bool = False
 latex_elements: dict[str, str] = {
     "preamble": r"\renewcommand\sphinxthefootnotemark[2]{#1}",
 }
