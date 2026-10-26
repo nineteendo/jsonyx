@@ -17,18 +17,20 @@ By default, protocol types are encoded from instances of the corresponding
 Python types shown below. Additional types can be registered with ``types``.
 
 .. tabularcolumns:: \X{1}{4}\X{1}{4}\X{1}{2}
+.. table::
+    :class: longtable
 
-============ ===================================== ===================================================================================
-Type         Default                               Required methods
-============ ===================================== ===================================================================================
-``"array"``  :class:`list` and :class:`tuple`      :meth:`~object.__iter__` or :meth:`~object.__len__` and :meth:`~object.__getitem__`
-``"bool"``   ``True`` and ``False``                :meth:`~object.__bool__`, :meth:`~object.__len__` or neither (``true``)
-``"float"``  :class:`float`                        :meth:`~object.__str__` or :meth:`~object.__repr__`
-``"int"``    :class:`int`                          :meth:`~object.__str__` or :meth:`~object.__repr__`
-``"null"``   ``None``                              none (not extensible)
-``"object"`` :class:`dict` and :class:`frozendict` :meth:`!values` and :meth:`!items`
-``"str"``    :class:`str`                          :meth:`~object.__str__` or :meth:`~object.__repr__`
-============ ===================================== ===================================================================================
+    ============ ===================================== ===================================================================================
+    Type         Default                               Required methods
+    ============ ===================================== ===================================================================================
+    ``"array"``  :class:`list` and :class:`tuple`      :meth:`~object.__iter__` or :meth:`~object.__len__` and :meth:`~object.__getitem__`
+    ``"bool"``   ``True`` and ``False``                :meth:`~object.__bool__`, :meth:`~object.__len__` or neither (``true``)
+    ``"float"``  :class:`float`                        :meth:`~object.__str__` or :meth:`~object.__repr__`
+    ``"int"``    :class:`int`                          :meth:`~object.__str__` or :meth:`~object.__repr__`
+    ``"null"``   ``None``                              none (not extensible)
+    ``"object"`` :class:`dict` and :class:`frozendict` :meth:`!values` and :meth:`!items`
+    ``"str"``    :class:`str`                          :meth:`~object.__str__` or :meth:`~object.__repr__`
+    ============ ===================================== ===================================================================================
 
 Example with :mod:`numpy`:
 
@@ -62,18 +64,20 @@ By default, decoded protocol types are converted to the corresponding Python
 types shown below. The conversion can be customized with ``hooks``.
 
 .. tabularcolumns:: \X{1}{4}\X{1}{4}\X{1}{2}
+.. table::
+    :class: longtable
 
-============ ======================= ===============================
-Hook         Default                 Called with
-============ ======================= ===============================
-``"array"``  :class:`list`           :class:`list`
-``"bool"``   :class:`bool`           ``True`` or ``False``
-``"float"``  :class:`float`          :class:`str`
-``"int"``    :class:`int`            :class:`str`
-``"null"``   :class:`types.NoneType` nothing (not customizable)
-``"object"`` :class:`dict`           ``list[tuple[Any, Any]]``
-``"str"``    :class:`str`            :class:`str`
-============ ======================= ===============================
+    ============ ======================= ===============================
+    Hook         Default                 Called with
+    ============ ======================= ===============================
+    ``"array"``  :class:`list`           :class:`list`
+    ``"bool"``   :class:`bool`           ``True`` or ``False``
+    ``"float"``  :class:`float`          :class:`str`
+    ``"int"``    :class:`int`            :class:`str`
+    ``"null"``   :class:`types.NoneType` nothing (not customizable)
+    ``"object"`` :class:`dict`           ``list[tuple[Any, Any]]``
+    ``"str"``    :class:`str`            :class:`str`
+    ============ ======================= ===============================
 
 Example with :mod:`numpy`:
 
@@ -175,13 +179,15 @@ be registered with ``formatters``. Formatters must return a string containing
 a valid JSON number.
 
 .. tabularcolumns:: \X{1}{4}\X{1}{4}\X{1}{2}
+.. table::
+    :class: longtable
 
-============ ============= ====================================
-Formatter    Default       Called with
-============ ============= ====================================
-``"float"``  :class:`str`  :class:`float` or ``types["float"]``
-``"int"``    :class:`str`  :class:`int` or ``types["int"]``
-============ ============= ====================================
+    ============ ============= ====================================
+    Formatter    Default       Called with
+    ============ ============= ====================================
+    ``"float"``  :class:`str`  :class:`float` or ``types["float"]``
+    ``"int"``    :class:`str`  :class:`int` or ``types["int"]``
+    ============ ============= ====================================
 
 Compact float example:
 

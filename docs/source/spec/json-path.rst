@@ -9,21 +9,23 @@ Selectors
 ---------
 
 .. tabularcolumns:: \X{1}{2}\X{1}{2}
+.. table::
+    :class: longtable
 
-==================== =====================
-Selectors            Description
-==================== =====================
-``$``                The root object
-``@``                The current object
-``.<name>``          Dot-notated child
-``[<string>]``       Bracket-notated child
-``[<number>]``       Array index
-``[start:end]``      Array slice
-``[start:end:step]`` Extended array slice
-``[<expression>]``   Filter
-``{<expression>}``   Non-descending filter
-``?``                Existence check
-==================== =====================
+    ==================== =====================
+    Selectors            Description
+    ==================== =====================
+    ``$``                The root object
+    ``@``                The current object
+    ``.<name>``          Dot-notated child
+    ``[<string>]``       Bracket-notated child
+    ``[<number>]``       Array index
+    ``[start:end]``      Array slice
+    ``[start:end:step]`` Extended array slice
+    ``[<expression>]``   Filter
+    ``{<expression>}``   Non-descending filter
+    ``?``                Existence check
+    ==================== =====================
 
 Examples
 --------
@@ -63,22 +65,24 @@ Examples
     }
 
 .. tabularcolumns:: \X{1}{2}\X{1}{2}
+.. table::
+    :class: longtable
 
-==================================================== =======================================
-JSON Path                                            Result
-==================================================== =======================================
-``$.books[@]``                                       All books
-``$.books[:].author``                                The authors of all books
-``$.books[2]``                                       The third book
-``$.books[-1]``                                      The last book
-``$.books[:2]``                                      The first two books
-``$.books[@.isbn]``                                  All books with an ISBN
-``$.books[:].isbn?``                                 The ISBNs of all books with an ISBN
-``$.books[@.price < 10]``                            All books cheaper than 10
-``$.books[:].price{@ < 10}``                         The prices of all books cheaper than 10
-``$.books[@.category == 'fiction' && @.price < 20]`` All fiction books cheaper than 20
-``$['~'~~~'']``                                      The value of the key ``'~'``
-==================================================== =======================================
+    ==================================================== =======================================
+    JSON Path                                            Result
+    ==================================================== =======================================
+    ``$.books[@]``                                       All books
+    ``$.books[:].author``                                The authors of all books
+    ``$.books[2]``                                       The third book
+    ``$.books[-1]``                                      The last book
+    ``$.books[:2]``                                      The first two books
+    ``$.books[@.isbn]``                                  All books with an ISBN
+    ``$.books[:].isbn?``                                 The ISBNs of all books with an ISBN
+    ``$.books[@.price < 10]``                            All books cheaper than 10
+    ``$.books[:].price{@ < 10}``                         The prices of all books cheaper than 10
+    ``$.books[@.category == 'fiction' && @.price < 20]`` All fiction books cheaper than 20
+    ``$['~'~~~'']``                                      The value of the key ``'~'``
+    ==================================================== =======================================
 
 Grammar
 -------
