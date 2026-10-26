@@ -128,6 +128,10 @@ issues_github_path: str = "nineteendo/jsonyx"
 
 ogp_enable_meta_description: bool = True
 
+# -- Options for sphinx_last_updated_by_git
+
+git_untracked_show_sourcelink: bool = True
+
 # -- Options for sphinx_sitemap
 
 sitemap_excludes: list[str] = [
