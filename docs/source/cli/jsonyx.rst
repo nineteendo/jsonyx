@@ -19,7 +19,7 @@ Options
 -v, --version   Show the version number and exit.
 
 Example
-^^^^^^^
+-------
 
 .. code-block:: console
 
