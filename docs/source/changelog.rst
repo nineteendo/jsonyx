@@ -148,7 +148,7 @@ Breaking Changes:
            Traceback (most recent call last):
              File "<string>", line 1
                {key: "value"}
-                -^^
+                ^^^
            jsonyx.JSONSyntaxError: Unquoted keys are not allowed
 
     - Allowed overriding serialization in subclasses of :class:`float` and
@@ -267,9 +267,6 @@ New Features:
     - Added :option:`!-S` as an alias to :option:`!--nonstrict`
     - Added :option:`!-t` as an alias to :option:`!--trailing-comma`
     - Added :option:`!-T` as an alias to :option:`!--indent-tab`
-
-Other Changes:
-    - Renamed :option:`!filename` to :option:`!input_filename`
 
 jsonyx 1.1.0 (Aug 3, 2024)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
