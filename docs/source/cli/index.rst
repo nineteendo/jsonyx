@@ -3,6 +3,8 @@ Command Line Interface
 
 .. versionadded:: 2.0
 
+.. rubric:: Commands
+
 .. tabularcolumns:: \X{1}{2}\X{1}{2}
 .. table::
     :class: longtable

@@ -1,6 +1,8 @@
 Specification
 =============
 
+.. rubric:: Data Formats
+
 .. tabularcolumns:: \X{1}{2}\X{1}{2}
 .. table::
     :class: longtable
