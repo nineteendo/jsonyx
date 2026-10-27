@@ -14,14 +14,14 @@ table.docutils {
     width: 100%;
 }
 table.docutils th {
-    background: var(--color-table-border)
+    background: var(--color-table-border);
+    text-align: left;
 }
 table.docutils tr:nth-child(2n) {
-    background: var(--color-table-header-background)
+    background: var(--color-table-header-background);
 }
 table.docutils td, table.docutils th {
     border: none;
-    text-align: left
 }
 table.r1 th:nth-child(1), table.r1 td:nth-child(1),
 table.r2 th:nth-child(2), table.r2 td:nth-child(2),
@@ -30,5 +30,5 @@ table.r4 th:nth-child(4), table.r4 td:nth-child(4),
 table.r5 th:nth-child(5), table.r5 td:nth-child(5),
 table.r6 th:nth-child(6), table.r6 td:nth-child(6),
 table.r7 th:nth-child(7), table.r7 td:nth-child(7) {
-    text-align: right
+    text-align: right;
 }

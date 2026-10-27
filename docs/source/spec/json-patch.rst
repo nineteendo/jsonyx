@@ -1,9 +1,9 @@
 JSON Patch Specification
 ========================
 
-.. versionadded:: 2.0
-
 A format for describing changes to a JSON document.
+
+.. versionadded:: 2.0
 
 The patch documents are themselves JSON documents, consisting of a
 single operation or an array of operations.

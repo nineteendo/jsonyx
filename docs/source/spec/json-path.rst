@@ -1,9 +1,9 @@
 JSON Path Specification
 =======================
 
-.. versionadded:: 2.0
-
 A query language for selecting values from JSON a document.
+
+.. versionadded:: 2.0
 
 Selectors
 ---------
