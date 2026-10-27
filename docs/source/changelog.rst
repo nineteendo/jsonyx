@@ -53,10 +53,9 @@ Breaking Changes:
       .. code-block:: diff
 
            >>> import jsonyx as json
-          ->>> from enum import Enum
-          ->>> class MyEnum(str, Enum):
-          +>>> from enum import ReprEnum
-          +>>> class MyEnum(str, ReprEnum):
+           >>> import enum
+          ->>> class MyEnum(str, enum.Enum):
+          +>>> class MyEnum(str, enum.ReprEnum):
            ...     EMPTY = ""
            ... 
            >>> json.dump(MyEnum.EMPTY)
@@ -169,10 +168,9 @@ Breaking Changes:
       .. code-block:: diff
 
            >>> import jsonyx as json
-          ->>> from enum import Enum
-          ->>> class MyEnum(int, Enum):
-          +>>> from enum import ReprEnum
-          +>>> class MyEnum(int, ReprEnum):
+           >>> import enum
+          ->>> class MyEnum(int, enum.Enum):
+          +>>> class MyEnum(int, enum.ReprEnum):
            ...     ZERO = 0
            ... 
            >>> json.dump(MyEnum.ZERO)
