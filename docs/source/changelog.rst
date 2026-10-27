@@ -18,7 +18,12 @@ jsonyx 2.5.0 (Unreleased)
 
 New Features:
     - Made ``"set"`` the default paste mode for :ref:`copy_operation` and
-      :ref:`move_operation`.
+      :ref:`move_operation`:
+
+      .. code-block:: diff
+
+          ->>> {"op": "copy", "mode": "set", "from": "@.a", "to": "@.b"}
+          +>>> {"op": "copy", "from": "@.a", "to": "@.b"}
 
 Other Changes:
     - Sped up ``check_circular=True``
@@ -32,7 +37,14 @@ jsonyx 2.4.0 (Oct 6, 2026)
 New Features:
     - Added ``formatters`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
       :func:`jsonyx.dumps` and :func:`jsonyx.write`
-    - Made :class:`frozendict` serializable by default
+    - Made :class:`frozendict` serializable by default:
+
+      .. code-block:: diff
+
+           >>> import jsonyx as json
+          ->>> json.dump(frozendict({"a": 1, "b": 2, "c": 3}), types={"object": frozendict})
+          +>>> json.dump(frozendict({"a": 1, "b": 2, "c": 3}))
+           {"a": 1, "b": 2, "c": 3}
 
 Breaking Changes:
     - Allowed overriding serialization in subclasses of :class:`str` (e.g.
