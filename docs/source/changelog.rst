@@ -22,8 +22,8 @@ New Features:
 
       .. code-block:: diff
 
-          ->>> {"op": "copy", "mode": "set", "from": "@.a", "to": "@.b"}
-          +>>> {"op": "copy", "from": "@.a", "to": "@.b"}
+          -{"op": "copy", "mode": "set", "from": "@.a", "to": "@.b"}
+          +{"op": "copy", "from": "@.a", "to": "@.b"}
 
 Other Changes:
     - Sped up ``check_circular=True``
