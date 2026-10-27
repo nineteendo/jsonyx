@@ -570,7 +570,7 @@ class Manipulator:
 
         :param current_nodes: a node or a list of nodes
         :param values: a value or a list of values
-        :param operation: a JSON :ref:`copy_operation` or :ref:`move_operation`
+        :param operation: a JSON :ref:`copy` or :ref:`move` operation
         :raises IndexError: if an index is out of range
         :raises JSONSyntaxError: if a query is invalid
         :raises KeyError: if a key is not found

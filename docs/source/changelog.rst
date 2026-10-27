@@ -17,8 +17,8 @@ jsonyx 2.5.0 (Unreleased)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 New Features:
-    - Made ``"set"`` the default paste mode for :ref:`copy_operation` and
-      :ref:`move_operation`:
+    - Made ``"set"`` the default paste mode for :ref:`copy` and :ref:`move`
+      operations:
 
       .. code-block:: diff
 

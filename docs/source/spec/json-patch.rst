@@ -1,5 +1,5 @@
-JSON Patch Specification
-========================
+JSON Patch
+==========
 
 A format for describing changes to a JSON document.
 
@@ -41,8 +41,8 @@ https://github.com/nineteendo/jsonyx/blob/2.4.x/json-patch.schema.json
 Operations
 ----------
 
-append operation
-^^^^^^^^^^^^^^^^
+append
+^^^^^^
 
 Append a value to the end of an array.
 
@@ -71,8 +71,8 @@ Example:
 
         [1, 2, 3, 4]
 
-assert operation
-^^^^^^^^^^^^^^^^
+assert
+^^^^^^
 
 Test if a condition is true.
 
@@ -102,8 +102,8 @@ Example:
 
         {"op": "assert", "expr": "@ == true"}
 
-clear operation
-^^^^^^^^^^^^^^^
+clear
+^^^^^
 
 Remove all items from an array or all properties from an object.
 
@@ -131,10 +131,10 @@ Example:
 
         []
 
-.. _copy_operation:
+.. _copy:
 
-copy operation
-^^^^^^^^^^^^^^
+copy
+^^^^
 
 Copy a value.
 
@@ -181,8 +181,8 @@ Example:
 
 .. note:: You can't use a :ref:`filter` in the **from** and **to** fields.
 
-del operation
-^^^^^^^^^^^^^
+del
+^^^
 
 Delete an item from an array or a property from an object.
 
@@ -211,8 +211,8 @@ Example:
 
 .. tip:: A :ref:`filter` is more robust than an index.
 
-extend operation
-^^^^^^^^^^^^^^^^
+extend
+^^^^^^
 
 Extend an array with the values of another array.
 
@@ -241,8 +241,8 @@ Example:
 
         [1, 2, 3, 4, 5, 6]
 
-insert operation
-^^^^^^^^^^^^^^^^
+insert
+^^^^^^
 
 Insert a value at the specified index in an array.
 
@@ -273,10 +273,10 @@ Example:
 
 .. tip:: A :ref:`filter` is more robust than an index.
 
-.. _move_operation:
+.. _move:
 
-move operation
-^^^^^^^^^^^^^^
+move
+^^^^
 
 Move a value.
 
@@ -323,8 +323,8 @@ Example:
 
 .. note:: You can't use a :ref:`filter` in the **from** and **to** fields.
 
-reverse operation
-^^^^^^^^^^^^^^^^^
+reverse
+^^^^^^^
 
 Reverse the items from an array.
 
@@ -352,8 +352,8 @@ Example:
 
         [3, 2, 1]
 
-set operation
-^^^^^^^^^^^^^
+set
+^^^
 
 Replace an item of an array, a property of an object or the root.
 
@@ -382,8 +382,8 @@ Example:
 
         true
 
-sort operation
-^^^^^^^^^^^^^^
+sort
+^^^^
 
 Sort an array.
 
@@ -412,8 +412,8 @@ Example:
 
         [1, 2, 3]
 
-update operation
-^^^^^^^^^^^^^^^^
+update
+^^^^^^
 
 Update an object with the properties of another object, overwriting existing
 properties.

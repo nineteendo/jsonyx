@@ -1,5 +1,5 @@
-jsonyx Specification
-====================
+jsonyx
+======
 
 A superset of JSON with less restrictive syntax.
 

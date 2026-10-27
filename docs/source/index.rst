@@ -1,5 +1,5 @@
-Welcome to jsonyx's Documentation!
-==================================
+Overview
+========
 
 .. meta::
     :google-site-verification: Htf0oc5j12UrWDfRoSv2B_0mn4S_mJ2P7eFiE63wwgg
@@ -62,7 +62,7 @@ how to :ref:`install <installation>` the project.
 .. toctree::
     :hidden:
 
-    Home <self>
+    self
 
 .. _start_toctree:
 

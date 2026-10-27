@@ -1,5 +1,5 @@
-JSON Path Specification
-=======================
+JSON Path
+=========
 
 A query language for selecting values from JSON a document.
 

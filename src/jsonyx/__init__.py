@@ -653,7 +653,7 @@ def paste_values(
 
     :param current_nodes: a node or a list of nodes
     :param values: a value or a list of values
-    :param operation: a JSON :ref:`copy_operation` or :ref:`move_operation`
+    :param operation: a JSON :ref:`copy` or :ref:`move` operation
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :raises IndexError: if an index is out of range
     :raises JSONSyntaxError: if a query is invalid
