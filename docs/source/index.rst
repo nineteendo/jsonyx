@@ -91,5 +91,5 @@ how to :ref:`install <installation>` the project.
     GitHub Repository <https://github.com/nineteendo/jsonyx>
     Issue Tracker <https://github.com/nineteendo/jsonyx/issues>
     License <https://github.com/nineteendo/jsonyx/blob/main/LICENSE>
-    PDF Documentation <https://jsonyx.readthedocs.io/_/downloads/en/2.4.x/pdf/>
+    PDF Documentation <https://jsonyx.readthedocs.io/_/downloads/en/2.5.x/pdf/>
     Sponsor <https://paypal.me/nineteendo>

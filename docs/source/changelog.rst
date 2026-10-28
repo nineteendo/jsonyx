@@ -13,8 +13,8 @@ Changelog
 jsonyx 2.x
 ----------
 
-jsonyx 2.5.0 (Unreleased)
-^^^^^^^^^^^^^^^^^^^^^^^^^
+jsonyx 2.5.0 (Oct 28, 2026)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 New Features:
     - Made ``"set"`` the default paste mode for :ref:`copy` and :ref:`move`
