@@ -1,6 +1,5 @@
 /* JSON speedups */
 // TODO(Nice Zombies): Use public unicode writer API
-// TODO(Nice Zombies): Request float writer
 
 #include <Python.h>
 #include <stdatomic.h>
@@ -2128,9 +2127,9 @@ static int Py_TEST_AND_SET_SEEN(PyObject *op)
 #ifdef Py_GIL_DISABLED
     return (atomic_fetch_or((_Atomic(uint32_t)*)&op->ob_ref_local, Py_SEEN_FLAG) & Py_SEEN_FLAG) != 0;
 #else
-    Py_ssize_t refcnt = op->ob_refcnt;
-    op->ob_refcnt = refcnt | Py_SEEN_FLAG;
-    return (refcnt & Py_SEEN_FLAG) != 0;
+    int rv = (op->ob_refcnt & Py_SEEN_FLAG) != 0;
+    op->ob_refcnt |= Py_SEEN_FLAG;
+    return rv;
 #endif
 }
 
