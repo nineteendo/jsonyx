@@ -1,5 +1,5 @@
-Command Line Interface
-======================
+CLI
+===
 
 .. versionadded:: 2.0
 
