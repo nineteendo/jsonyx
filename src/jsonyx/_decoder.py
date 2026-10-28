@@ -142,7 +142,8 @@ class TruncatedSyntaxError(SyntaxError):
             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         jsonyx.TruncatedSyntaxError: msg
 
-    .. tip:: Set the ``COLUMNS`` environment variable to override the width.
+    .. tip:: Set the :envvar:`!COLUMNS` environment variable to override the
+        width.
     .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the
         exception.
 
@@ -232,7 +233,8 @@ class JSONSyntaxError(TruncatedSyntaxError):
              ^
         jsonyx.JSONSyntaxError: Expecting value
 
-    .. tip:: Set the ``COLUMNS`` environment variable to override the width.
+    .. tip:: Set the :envvar:`!COLUMNS` environment variable to override the
+        width.
     .. seealso:: :func:`jsonyx.format_syntax_error` for formatting the
         exception.
 

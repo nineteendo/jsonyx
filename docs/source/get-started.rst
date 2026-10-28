@@ -245,8 +245,8 @@ Applying a :doc:`patch </spec/json-patch>`
     - A :ref:`filter` is more robust than an index.
     - Use :class:`jsonyx.Manipulator` directly for better performance.
 
-Using the ``jsonyx`` application
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Using the :program:`jsonyx` application
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. versionadded:: 2.0
 

@@ -61,8 +61,9 @@ Breaking Changes:
            >>> json.dump(MyEnum.EMPTY)
            ""
 
-    - Removed ``--use-decimal`` (alias ``-d``) from ``jsonyx diff``,
-      ``jsonyx format`` and ``jsonyx patch``
+    - Removed :option:`!--use-decimal` (alias :option:`!-d`) from
+      :program:`jsonyx diff`, :program:`jsonyx format` and
+      :program:`jsonyx patch`
     - Removed ``use_decimal`` from :func:`jsonyx.apply_filter`,
       :func:`jsonyx.apply_patch`, :func:`jsonyx.load_query_value`,
       :func:`jsonyx.paste_values`, :func:`jsonyx.select_nodes`, and
@@ -89,8 +90,8 @@ jsonyx 2.2.1 (Apr 21, 2025)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Bug Fixes:
-    - Fixed :issue:`36`: Fatal Python error: none_dealloc
     - Fixed :issue:`33`: Performance regression compared to :mod:`json`
+    - Fixed :issue:`36`: Fatal Python error: none_dealloc
 
 jsonyx 2.2.0 (Mar 31, 2025)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -112,20 +113,22 @@ jsonyx 2.0.0 (Mar 27, 2025)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 New Features:
-    - Added the ``jsonyx`` application
     - Added ``commas``, ``indent_leaves``, ``max_indent_level``,
       ``quoted_keys`` and ``types`` to :class:`jsonyx.Encoder`,
       :func:`jsonyx.dump`, :func:`jsonyx.dumps` and :func:`jsonyx.write`
     - Added ``encoding`` to :func:`jsonyx.write` and
       :meth:`jsonyx.Encoder.write`
-    - Added ``python -m jsonyx diff``
-    - Added ``python -m jsonyx patch``
-    - Added ``--no-indent-leaves`` (alias ``-l``) to
-      ``python -m jsonyx format``
-    - Added ``--max-indent-level`` (alias ``-L``) to
-      ``python -m jsonyx format``
-    - Added ``--unquoted-keys`` (alias ``-q``) to ``python -m jsonyx format``
-    - Added ``--version`` (alias ``-v``) to ``python -m jsonyx``
+    - Added :option:`!--no-indent-leaves` (alias :option:`!-l`) to
+      :program:`python -m jsonyx format`
+    - Added :option:`!--max-indent-level` (alias :option:`!-L`) to
+      :program:`python -m jsonyx format`
+    - Added :option:`!--unquoted-keys` (alias :option:`!-q`) to
+      :program:`python -m jsonyx format`
+    - Added :option:`!--version` (alias :option:`!-v`) to
+      :program:`python -m jsonyx`
+    - Added :program:`jsonyx`
+    - Added :program:`python -m jsonyx diff`
+    - Added :program:`python -m jsonyx patch`
     - Added :func:`jsonyx.apply_filter`
     - Added :func:`jsonyx.apply_patch`
     - Added :func:`jsonyx.load_query_value`
@@ -214,7 +217,7 @@ Breaking Changes:
       See :class:`multidict.MultiDict` for more information.
 
     - Removed :mod:`!jsonyx.tool`
-    - Renamed ``python -m jsonyx`` to ``python -m jsonyx format``
+    - Renamed :program:`python -m jsonyx` to :program:`python -m jsonyx format`
     - Replaced ``item_separator`` and ``key_separator`` with ``separators`` for
       :class:`jsonyx.Encoder`, :func:`jsonyx.dump`, :func:`jsonyx.dumps` and
       :func:`jsonyx.write`:
@@ -282,7 +285,7 @@ jsonyx 1.1.0 (Aug 3, 2024)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Breaking Changes:
-    - Renamed ``python -m jsonyx.tool`` to ``python -m jsonyx``
+    - Renamed :program:`python -m jsonyx.tool` to :program:`python -m jsonyx`
 
 jsonyx 1.0.0 (Aug 3, 2024)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
