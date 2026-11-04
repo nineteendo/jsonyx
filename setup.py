@@ -45,6 +45,7 @@ if __name__ == "__main__":
             "Programming Language :: Python :: 3.13",
             "Programming Language :: Python :: 3.14",
             "Programming Language :: Python :: 3.15",
+            "Programming Language :: Python :: 3.16",
             "Programming Language :: Python :: Free Threading",
         ],
         license="LGPL-3.0",

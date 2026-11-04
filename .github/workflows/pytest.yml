@@ -27,6 +27,8 @@ jobs:
         - "3.14t"
         - "3.15"
         - "3.15t"
+        - "3.16"
+        - "3.16t"
     steps:
     - uses: actions/checkout@v7
     - name: Set up Python ${{ matrix.python-version }}
