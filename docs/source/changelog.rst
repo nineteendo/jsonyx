@@ -97,7 +97,7 @@ jsonyx 2.2.0 (Mar 31, 2025)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Breaking Changes:
-    - Added ``cache_keys`` (default ``False`` instead of ``True``) to
+    - Added ``cache_keys`` (default :obj:`False` instead of :obj:`True`) to
       :class:`jsonyx.Decoder`, :func:`jsonyx.load`, :func:`jsonyx.loads` and
       :func:`jsonyx.read`
 

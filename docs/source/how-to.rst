@@ -24,10 +24,10 @@ Python types shown below. Additional types can be registered with ``types``.
     Type         Default                               Required methods
     ============ ===================================== ===================================================================================
     ``"array"``  :class:`list` and :class:`tuple`      :meth:`~object.__iter__` or :meth:`~object.__len__` and :meth:`~object.__getitem__`
-    ``"bool"``   ``True`` and ``False``                :meth:`~object.__bool__`, :meth:`~object.__len__` or neither (``true``)
+    ``"bool"``   :obj:`True` and :obj:`False`          :meth:`~object.__bool__`, :meth:`~object.__len__` or neither (:obj:`True`)
     ``"float"``  :class:`float`                        :meth:`~object.__str__` or :meth:`~object.__repr__`
     ``"int"``    :class:`int`                          :meth:`~object.__str__` or :meth:`~object.__repr__`
-    ``"null"``   ``None``                              none (not extensible)
+    ``"null"``   :obj:`None`                           none (not extensible)
     ``"object"`` :class:`dict` and :class:`frozendict` :meth:`!values` and :meth:`!items`
     ``"str"``    :class:`str`                          :meth:`~object.__str__` or :meth:`~object.__repr__`
     ============ ===================================== ===================================================================================
@@ -71,7 +71,7 @@ types shown below. The conversion can be customized with ``hooks``.
     Hook         Default                 Called with
     ============ ======================= ===============================
     ``"array"``  :class:`list`           :class:`list`
-    ``"bool"``   :class:`bool`           ``True`` or ``False``
+    ``"bool"``   :class:`bool`           :obj:`True` or :obj:`False`
     ``"float"``  :class:`float`          :class:`str`
     ``"int"``    :class:`int`            :class:`str`
     ``"null"``   :class:`types.NoneType` nothing (not customizable)

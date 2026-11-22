@@ -125,8 +125,8 @@ def read(
     """Deserialize a JSON file to a Python object.
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
-    .. versionchanged:: 2.2 Added ``cache_keys`` (default ``False`` instead of
-        ``True``).
+    .. versionchanged:: 2.2 Added ``cache_keys`` (default :obj:`False` instead
+        of :obj:`True`).
 
     :param filename: the path to the JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
@@ -174,8 +174,8 @@ def load(
     """Deserialize an open JSON file to a Python object.
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
-    .. versionchanged:: 2.2 Added ``cache_keys`` (default ``False`` instead of
-        ``True``).
+    .. versionchanged:: 2.2 Added ``cache_keys`` (default :obj:`False` instead
+        of :obj:`True`).
 
     :param fp: an open JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
@@ -227,8 +227,8 @@ def loads(
     r"""Deserialize a JSON string or bytes to a Python object.
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
-    .. versionchanged:: 2.2 Added ``cache_keys`` (default ``False`` instead of
-        ``True``).
+    .. versionchanged:: 2.2 Added ``cache_keys`` (default :obj:`False` instead
+        of :obj:`True`).
 
     :param s: a JSON string or bytes
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
