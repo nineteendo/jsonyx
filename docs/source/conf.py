@@ -51,7 +51,7 @@ nitpicky: bool = True
 nitpick_ignore: list[tuple[str, str]] = []
 rst_prolog: str = """
 .. role:: javascript(code)
-    :language: python
+    :language: javascript
 
 .. role:: json(code)
     :language: json
