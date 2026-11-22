@@ -67,17 +67,17 @@ types shown below. The conversion can be customized with ``hooks``.
 .. table::
     :class: longtable
 
-    ================== ======================= ===============================
+    ================== ======================= =========================================================================
     Hook               Default                 Called with
-    ================== ======================= ===============================
+    ================== ======================= =========================================================================
     :python:`"array"`  :class:`list`           :class:`list`
     :python:`"bool"`   :class:`bool`           :python:`True` or :python:`False`
     :python:`"float"`  :class:`float`          :class:`str`
     :python:`"int"`    :class:`int`            :class:`str`
     :python:`"null"`   :class:`types.NoneType` nothing (not customizable)
-    :python:`"object"` :class:`dict`           ``list[tuple[Any, Any]]``
+    :python:`"object"` :class:`dict`           :class:`list`[:class:`tuple`[:class:`~typing.Any`, :class:`~typing.Any`]]
     :python:`"str"`    :class:`str`            :class:`str`
-    ================== ======================= ===============================
+    ================== ======================= =========================================================================
 
 Example with :mod:`numpy`:
 

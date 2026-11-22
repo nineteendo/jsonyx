@@ -44,6 +44,9 @@ A jsonyx document consists of a single value.
     .. image:: /_images/dark/jsonyx/jsonyx_document.svg
         :class: only-dark
 
+.. _any:
+.. _boolean:
+
 value
 ^^^^^
 
@@ -64,6 +67,8 @@ A value can be an object, array, string, number, :json:`true`, :json:`false` or
 
     .. image:: /_images/dark/jsonyx/value.svg
         :class: only-dark
+
+.. _object:
 
 object
 ^^^^^^
@@ -88,6 +93,8 @@ whitespace with an optional trailing comma.
     .. image:: /_images/dark/jsonyx/object.svg
         :class: only-dark
 
+.. _array:
+
 array
 ^^^^^
 
@@ -109,6 +116,8 @@ are separated by commas or whitespace with an optional trailing comma.
 
     .. image:: /_images/dark/jsonyx/array.svg
         :class: only-dark
+
+.. _string:
 
 string
 ^^^^^^
