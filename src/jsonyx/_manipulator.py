@@ -306,6 +306,10 @@ class Manipulator:
                     for target in _get_query_targets(node, relative=relative)
                 ]
             elif terminator == "{":
+                if relative:
+                    msg = "Conditions are not allowed in relative query"
+                    raise _errmsg(msg, query, end + 1)
+
                 condition_idx: int = end
                 end += 1
                 nodes = [
@@ -317,10 +321,6 @@ class Manipulator:
                         [key]
                     )
                 ]
-                if relative:
-                    msg = "Conditions are not allowed in relative query"
-                    raise _errmsg(msg, query, end)
-
                 nodes, end = self._apply_filter(nodes, query, end)
                 if query[end:end + 1] != "}":
                     msg = "Unterminated condition"
