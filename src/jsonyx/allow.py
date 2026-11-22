@@ -133,8 +133,8 @@ EVERYTHING: frozenset[str] = (
 
 .. note::
 
-    - python:`Decimal("sNan")` can't be (de)serialised this way.
-    - This is equivalent to :python:`COMMENTS | MISSING_COMMAS |
+    - :python:`Decimal("sNan")` can't be (de)serialised this way.
+    - This is equivalent to :python:`COMMENTS | MISSING_COMMAS
       | NAN_AND_INFINITY | NON_STR_KEYS | SURROGATES | TRAILING_COMMA
       | UNQUOTED_KEYS`.
 

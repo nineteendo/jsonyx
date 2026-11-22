@@ -203,9 +203,8 @@ Compact float example:
 >>> json.dump([0.001, 10.0], formatters={"float": compact_float_formatter})
 [1e-3, 1e1]
 
-.. note:: Case variations of :python:`"nan"`, :python:`"inf"`,
-    :python:`"infinity"`, :python:`"-inf"` and :python:`"-infinity"` are
-    normalized.
+.. note:: Case variations of :python:`["nan", "inf", "infinity", "-inf",
+    "-infinity"]` are normalized.
 
 Encoding :class:`enum.ReprEnum`
 -------------------------------

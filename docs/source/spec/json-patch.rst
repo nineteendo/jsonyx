@@ -155,7 +155,7 @@ Fields:
       - :json:`"extend"` - extend the target array with the values of the
         source array.
       - :json:`"insert"` - insert the source value at the specified index in
-        the target array. In this mode, the **to** field is required.
+        the target array. In this mode, the :json:`"to"` field is required.
       - :json:`"set"` - replace the target value with the source value.
       - :json:`"update"` - update the target object with the properties of the
         source object, overwriting existing properties.
@@ -186,7 +186,8 @@ Example:
 
         {"a": 0, "b": 0}
 
-.. note:: You can't use a :ref:`filter` in the **from** and **to** fields.
+.. note:: You can't use a :ref:`filter` in the :json:`"from"` and :json:`"to"`
+    fields.
 
 del
 ^^^
@@ -303,7 +304,7 @@ Fields:
       - :json:`"extend"` - extend the target array with the values of the
         source array.
       - :json:`"insert"` - insert the source value at the specified index in
-        the target array. In this mode, the **to** field is required.
+        the target array. In this mode, the :json:`"to"` field is required.
       - :json:`"set"` - replace the target value with the source value.
       - :json:`"update"` - update the target object with the items of the
         source object, overwriting existing properties.
@@ -334,7 +335,8 @@ Example:
 
         {"b": 0}
 
-.. note:: You can't use a :ref:`filter` in the **from** and **to** fields.
+.. note:: You can't use a :ref:`filter` in the :json:`"from"` and :json:`"to"`
+    fields.
 
 reverse
 ^^^^^^^
