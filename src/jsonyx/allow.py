@@ -2,8 +2,8 @@
 
 See :doc:`the specification </spec/jsonyx>` for more information.
 
-.. tip:: Flags can also be combined (e.g. ``COMMENTS | UNQUOTED_KEYS``) or
-    excluded (e.g. ``EVERYTHING - NON_STR_KEYS``).
+.. tip:: Flags can also be combined (e.g. :python:`COMMENTS | UNQUOTED_KEYS`)
+    or excluded (e.g. :python:`EVERYTHING - NON_STR_KEYS`).
 """
 from __future__ import annotations
 
@@ -62,7 +62,7 @@ NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
 >>> json.dump([nan, inf, -inf], allow=json.allow.NAN_AND_INFINITY)
 [NaN, Infinity, -Infinity]
 
-.. note:: ``Decimal("sNan")`` can't be (de)serialised this way.
+.. note:: :python:`Decimal("sNan")` can't be (de)serialised this way.
 """
 
 NON_STR_KEYS: frozenset[str] = frozenset({"non_str_keys"})
@@ -87,8 +87,9 @@ r"""Allow unpaired surrogates in strings.
 >>> json.dump("\ud800", allow=json.allow.SURROGATES, ensure_ascii=True)
 "\ud800"
 
-.. tip:: If you're not using ``read()`` or ``write()``, you still need to
-    use ``ensure_ascii=True`` or set the unicode error handler to
+.. tip:: If you're not using :func:`jsonyx.read`, :meth:`jsonyx.Decoder.read`,
+    :func:`jsonyx.write` or :meth:`jsonyx.Encoder.write`, you still need to
+    use :python:`ensure_ascii=True` or set the unicode error handler to
     :python:`"surrogatepass"`.
 """
 
@@ -120,7 +121,7 @@ EVERYTHING: frozenset[str] = (
 
 .. versionchanged:: 2.0
 
-    - Added ``NON_STR_KEYS | UNQUOTED_KEYS``.
+    - Added :python:`NON_STR_KEYS | UNQUOTED_KEYS`.
     - Removed ``DUPLICATE_KEYS``.
 
 >>> import jsonyx as json
@@ -132,8 +133,9 @@ EVERYTHING: frozenset[str] = (
 
 .. note::
 
-    - ``Decimal("sNan")`` can't be (de)serialised this way.
-    - This is equivalent to ``COMMENTS | MISSING_COMMAS | NAN_AND_INFINITY
-      | NON_STR_KEYS | SURROGATES | TRAILING_COMMA | UNQUOTED_KEYS``.
+    - python:`Decimal("sNan")` can't be (de)serialised this way.
+    - This is equivalent to :python:`COMMENTS | MISSING_COMMAS |
+      | NAN_AND_INFINITY | NON_STR_KEYS | SURROGATES | TRAILING_COMMA
+      | UNQUOTED_KEYS`.
 
 """

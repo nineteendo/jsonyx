@@ -162,7 +162,8 @@ Decoding arbitrary objects
 >>> json.loads(s, hooks={"object": obj_to_type_hook})
 (1+2j)
 
-.. note:: ``hooks["object"]`` is called with a list of tuples, not a dict.
+.. note:: :python:`hooks["object"]` is called with a list of tuples, not a
+    dict.
 .. seealso:: The :mod:`pickle` and :mod:`shelve` modules which are better
     suited for this.
 
@@ -182,12 +183,12 @@ a valid JSON number.
 .. table::
     :class: longtable
 
-    ================= ============= ====================================
+    ================= ============= ==========================================
     Formatter         Default       Called with
-    ================= ============= ====================================
-    :python:`"float"` :class:`str`  :class:`float` or ``types["float"]``
-    :python:`"int"`   :class:`str`  :class:`int` or ``types["int"]``
-    ================= ============= ====================================
+    ================= ============= ==========================================
+    :python:`"float"` :class:`str`  :class:`float` or :python:`types["float"]`
+    :python:`"int"`   :class:`str`  :class:`int` or :python:`types["int"]`
+    ================= ============= ==========================================
 
 Compact float example:
 
