@@ -13,6 +13,12 @@ Changelog
 jsonyx 2.x
 ----------
 
+jsonyx 2.6.0 (unreleased)
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+New Features:
+    - Added support for ``@.a == @.b`` to :ref:`filter`.
+
 jsonyx 2.5.0 (Oct 28, 2026)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

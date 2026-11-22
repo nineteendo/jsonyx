@@ -225,18 +225,36 @@ class Manipulator:
             if operator is None:
                 nodes = [node for node, _filter_node in filtered_pairs]
             elif negate_filter:
-                msg: str = "Unexpected operator"
+                msg: str = "Unexpected operator after negative filter"
                 raise _errmsg(msg, query, operator_idx, end)
             else:
                 if match := _WHITESPACE.match(query, end):
                     end = match.end()
 
-                value, end = self._scan_query_value(query, end)
-                nodes = [
-                    node
-                    for node, (filter_target, filter_key) in filtered_pairs
-                    if operator(filter_target[filter_key], value)
-                ]
+                if query[end:end + 1] not in {"@", "$"}:
+                    value, end = self._scan_query_value(query, end)
+                    nodes = [
+                        node
+                        for node, (filter_target, filter_key) in filtered_pairs
+                        if operator(filter_target[filter_key], value)
+                    ]
+                else:
+                    nodes = [node for node, _filter_node in filtered_pairs]
+                    filter2_nodes, end = self._select_nodes(
+                        nodes, query, end, relative=True,
+                    )
+                    nodes = [
+                        node
+                        for (
+                            (node, (filter_target, filter_key)),
+                            (filter2_target, filter2_key),
+                        ) in zip(filtered_pairs, filter2_nodes)
+                        if _has_key(filter2_target, filter2_key) and operator(
+                            filter_target[filter_key],
+                            filter2_target[filter2_key],
+                        )
+                    ]
+
                 old_end = end
                 if match := _WHITESPACE.match(query, end):
                     end = match.end()
@@ -299,6 +317,7 @@ class Manipulator:
                     for target in _get_query_targets(node, relative=relative)
                 ]
             elif terminator == "{":
+                condition_idx: int = end
                 end += 1
                 nodes = [
                     (target, new_key)
@@ -315,11 +334,12 @@ class Manipulator:
 
                 nodes, end = self._apply_filter(nodes, query, end)
                 if query[end:end + 1] != "}":
-                    msg = "Expecting a closing bracket"
-                    raise _errmsg(msg, query, end)
+                    msg = "Unterminated condition"
+                    raise _errmsg(msg, query, condition_idx, end)
 
                 end += 1
             elif terminator == "[":
+                subscript_idx: int = end
                 end += 1
                 targets: list[_Target] = [
                     target
@@ -355,8 +375,8 @@ class Manipulator:
                     nodes, end = self._apply_filter(nodes, query, end)
 
                 if query[end:end + 1] != "]":
-                    msg = "Expecting a closing bracket"
-                    raise _errmsg(msg, query, end)
+                    msg = "Unterminated subscript"
+                    raise _errmsg(msg, query, subscript_idx, end)
 
                 end += 1
             else:

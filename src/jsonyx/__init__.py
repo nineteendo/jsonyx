@@ -22,7 +22,7 @@ __all__: list[str] = [
     "select_nodes",
     "write",
 ]
-__version__: str = "2.5.0"
+__version__: str = "2.6.0"
 
 from typing import TYPE_CHECKING, Any, Protocol, TypeVar
 
@@ -730,7 +730,7 @@ def apply_filter(  # pylint: disable-next=W0621
     .. versionchanged:: 2.4 Removed ``use_decimal``.
 
     :param nodes: a node or a list of nodes
-    :param query: a :ref:`JSON filter query <filter>`
+    :param query: a JSON :ref:`filter query <filter_query>`
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :raises IndexError: if an index is out of range
     :raises JSONSyntaxError: if the filter query is invalid

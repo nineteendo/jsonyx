@@ -162,6 +162,8 @@ A relative query starts with ``@`` followed by zero or more child selectors.
 filter
 ^^^^^^
 
+.. versionchanged:: 2.6 Added support for ``@.a == @.b``.
+
 A filter consists of one or more (non-)existence checks / comparisons.
 
 .. container:: highlight
@@ -169,7 +171,9 @@ A filter consists of one or more (non-)existence checks / comparisons.
     .. productionlist:: json-path-grammar
         filter: (
               :     '!'? `relative_query`
-              :     | `relative_query` `whitespace` `operator` `whitespace` `value`
+              :     | `relative_query` `whitespace` `operator` `whitespace` (
+              :         `value` | `relative_query`
+              :     )
               : ) ++ ( `whitespace` '&&' `whitespace` )
 
 .. image:: /_images/light/json-path/filter.*
@@ -276,6 +280,9 @@ of the special values :javascript:`Infinity` and :javascript:`-Infinity`.
 
     .. image:: /_images/dark/json-path/number.svg
         :class: only-dark
+
+.. note:: ``@ == NaN`` is not allowed because :javascript:`NaN !== NaN`, use
+    ``@ != @`` instead.
 
 operator
 ^^^^^^^^

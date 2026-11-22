@@ -280,18 +280,22 @@ def test_query(obj: _Target, query: str, expected: _Node) -> None:
     assert select_nodes(([obj], 0), query) == [expected]
 
 
-@pytest.mark.parametrize(("query", "msg", "colno"), [
-    ("", "Expecting an absolute query", 1),
-    ("@", "Expecting an absolute query", 1),
-    ("$[0", "Expecting a closing bracket", 4),
-    ("$ $ $", "Expecting end of file", 2),
+@pytest.mark.parametrize(("query", "msg", "colno", "end_colno"), [
+    ("", "Expecting an absolute query", 1, -1),
+    ("@", "Expecting an absolute query", 1, -1),
+    ("$.", "Expecting property", 3, -1),
+    ("$[0", "Unterminated subscript", 2, 4),
+    ("${@", "Unterminated condition", 2, 4),
+    ("$ $ $", "Expecting end of file", 2, -1),
 ])
-def test_invalid_query(query: str, msg: str, colno: int) -> None:
+def test_invalid_query(
+    query: str, msg: str, colno: int, end_colno: int,
+) -> None:
     """Test invalid query."""
     with pytest.raises(JSONSyntaxError) as exc_info:
         select_nodes([], query)
 
-    check_syntax_err(exc_info, msg, colno)
+    check_syntax_err(exc_info, msg, colno, end_colno)
 
 
 @pytest.mark.parametrize("query", ["", "$"])

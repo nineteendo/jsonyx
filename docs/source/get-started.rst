@@ -73,7 +73,7 @@ Check if the correct version is installed
 .. code-block:: console
 
     $ jsonyx --version
-    jsonyx 2.5.0 (C extension)
+    jsonyx 2.6.0 (C extension)
 
 .. warning:: If the version number is followed by ``(Python)``, the performance
     will be up to 90.64x slower for encoding and up to 82.59x slower decoding,
