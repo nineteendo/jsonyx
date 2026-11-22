@@ -33,7 +33,8 @@ Options
 
 -h, --help              Show the help message and exit.
 -a, --ensure-ascii      Escape non-ASCII characters.
--c, --compact           Avoid unnecessary whitespace after ``","`` and ``":"``.
+-c, --compact           Avoid unnecessary whitespace after :json:`","` and
+                        :json:`":"`.
 -C, --no-commas         Don't separate items by commas when indented.
 -i, --indent SPACES     Indent using the specified number of spaces.
 -l, --no-indent-leaves  Don't indent leaf objects and arrays.

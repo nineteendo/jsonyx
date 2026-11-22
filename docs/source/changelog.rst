@@ -17,7 +17,7 @@ jsonyx 2.5.0 (Oct 28, 2026)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 New Features:
-    - Made ``"set"`` the default paste mode for :ref:`copy` and :ref:`move`
+    - Made :json:`"set"` the default paste mode for :ref:`copy` and :ref:`move`
       operations:
 
       .. code-block:: diff

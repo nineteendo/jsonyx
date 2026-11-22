@@ -211,8 +211,8 @@ Reading from a file:
 Allowing non-standard numeric values
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-By default, :mod:`jsonyx` does not allow ``NaN``, ``Infinity`` or
-``-Infinity``. To enable them, pass
+By default, :mod:`jsonyx` does not allow :javascript:`NaN`,
+:javascript:`Infinity` or :javascript:`-Infinity`. To enable them, pass
 :data:`jsonyx.allow.NAN_AND_INFINITY` to ``allow``:
 
 >>> import jsonyx as json

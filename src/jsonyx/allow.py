@@ -53,7 +53,7 @@ MISSING_COMMAS: frozenset[str] = frozenset({"missing_commas"})
 """
 
 NAN_AND_INFINITY: frozenset[str] = frozenset({"nan_and_infinity"})
-"""Allow ``NaN``, ``Infinity`` and ``-Infinity``.
+"""Allow :javascript:`NaN`, :javascript:`Infinity` and :javascript:`-Infinity`.
 
 >>> import jsonyx as json
 >>> from math import inf, nan

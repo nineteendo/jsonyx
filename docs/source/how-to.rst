@@ -24,7 +24,7 @@ Python types shown below. Additional types can be registered with ``types``.
     Type               Default                               Required methods
     ================== ===================================== ===================================================================================
     :python:`"array"`  :class:`list` and :class:`tuple`      :meth:`~object.__iter__` or :meth:`~object.__len__` and :meth:`~object.__getitem__`
-    :python:`"bool"`   :python:`True` and :python:`False`    :meth:`~object.__bool__`, :meth:`~object.__len__` or neither (``true``)
+    :python:`"bool"`   :python:`True` and :python:`False`    :meth:`~object.__bool__`, :meth:`~object.__len__` or neither (:json:`true`)
     :python:`"float"`  :class:`float`                        :meth:`~object.__str__` or :meth:`~object.__repr__`
     :python:`"int"`    :class:`int`                          :meth:`~object.__str__` or :meth:`~object.__repr__`
     :python:`"null"`   :python:`None`                        none (not extensible)

@@ -47,8 +47,8 @@ append
 Append a value to the end of an array.
 
 Fields:
-    - **op** (string) - the operation to perform. Must be ``"append"``.
-    - **path** (string, default: ``"$"``) - the
+    - **op** (string) - the operation to perform. Must be :json:`"append"`.
+    - **path** (string, default: :json:`"$"`) - the
       :ref:`absolute path <absolute_path>` to the array.
     - **value** (any) - a value.
 
@@ -77,11 +77,12 @@ assert
 Test if a condition is true.
 
 Fields:
-    - **op** (string) - the operation to perform. Must be ``"assert"``.
-    - **path** (string, default: ``"$"``) - the
+    - **op** (string) - the operation to perform. Must be :json:`"assert"`.
+    - **path** (string, default: :json:`"$"`) - the
       :ref:`absolute path <absolute_path>` where the expression is evaluated.
     - **expr** (string) - an :ref:`expression <expression>`.
-    - **msg** (string, default: ``"Path <path>: <expr>"``): an error message
+    - **msg** (string, default: :json:`"Path <path>: <expr>"`): an error
+      message
 
 Example:
     Input:
@@ -108,8 +109,8 @@ clear
 Remove all items from an array or all properties from an object.
 
 Fields:
-    - **op** (string) - the operation to perform. Must be ``"clear"``.
-    - **path** (string, default: ``"$"``) - the
+    - **op** (string) - the operation to perform. Must be :json:`"clear"`.
+    - **path** (string, default: :json:`"$"`) - the
       :ref:`absolute path <absolute_path>` to the array or object.
 
 Example:
@@ -138,26 +139,27 @@ copy
 
 Copy a value.
 
-.. versionchanged:: 2.5 Made ``"set"`` the default paste mode.
+.. versionchanged:: 2.5 Made :json:`"set"` the default paste mode.
 
 Fields:
-    - **op** (string) - the operation to perform. Must be ``"copy"``.
-    - **mode** (string, default: ``"set"``) - the paste mode. Must be:
+    - **op** (string) - the operation to perform. Must be :json:`"copy"`.
+    - **mode** (string, default: :json:`"set"`) - the paste mode. Must be:
 
-      - ``"append"`` - append the source value to the end of a target array.
-      - ``"extend"`` - extend the target array with the values of the source
+      - :json:`"append"` - append the source value to the end of a target
         array.
-      - ``"insert"`` - insert the source value at the specified index in the
-        target array. In this mode, the **to** field is required.
-      - ``"set"`` - replace the target value with the source value.
-      - ``"update"`` - update the target object with the properties of the
+      - :json:`"extend"` - extend the target array with the values of the
+        source array.
+      - :json:`"insert"` - insert the source value at the specified index in
+        the target array. In this mode, the **to** field is required.
+      - :json:`"set"` - replace the target value with the source value.
+      - :json:`"update"` - update the target object with the properties of the
         source object, overwriting existing properties.
 
-    - **path** (string, default: ``"$"``) - the
+    - **path** (string, default: :json:`"$"`) - the
       :ref:`absolute path <absolute_path>` where the operation is applied.
     - **from** (string) - the
       :ref:`relative path <relative_path>` to the source value.
-    - **to** (string, default: ``"@"``) - the
+    - **to** (string, default: :json:`"@"`) - the
       :ref:`relative path <relative_path>` to the target value.
 
 Example:
@@ -187,7 +189,7 @@ del
 Delete an item from an array or a property from an object.
 
 Fields:
-    - **op** (string) - the operation to perform. Must be ``"del"``.
+    - **op** (string) - the operation to perform. Must be :json:`"del"`.
     - **path** (string) - the :ref:`absolute path <absolute_path>` to the item.
 
 Example:
@@ -217,8 +219,8 @@ extend
 Extend an array with the values of another array.
 
 Fields:
-    - **op** (string) - the operation to perform. Must be ``"extend"``.
-    - **path** (string, default: ``"$"``) - the
+    - **op** (string) - the operation to perform. Must be :json:`"extend"`.
+    - **path** (string, default: :json:`"$"`) - the
       :ref:`absolute path <absolute_path>` to the array.
     - **values** (array) - another array.
 
@@ -247,7 +249,7 @@ insert
 Insert a value at the specified index in an array.
 
 Fields:
-    - **op** (string) - the operation to perform. Must be ``"insert"``.
+    - **op** (string) - the operation to perform. Must be :json:`"insert"`.
     - **path** (string) - the :ref:`absolute path <absolute_path>` with the
       index in the array.
     - **value** (any) - a value.
@@ -280,26 +282,27 @@ move
 
 Move a value.
 
-.. versionchanged:: 2.5 Made ``"set"`` the default paste mode.
+.. versionchanged:: 2.5 Made :json:`"set"` the default paste mode.
 
 Fields:
-    - **op** (string) - the operation to perform. Must be ``"move"``.
-    - **mode** (string, default: ``"set"``) - the paste mode. Must be:
+    - **op** (string) - the operation to perform. Must be :json:`"move"`.
+    - **mode** (string, default: :json:`"set"`) - the paste mode. Must be:
 
-      - ``"append"`` - append the source value to the end of a target array.
-      - ``"extend"`` - extend the target array with the values of the source
+      - :json:`"append"` - append the source value to the end of a target
         array.
-      - ``"insert"`` - insert the source value at the specified index in the
-        target array. In this mode, the **to** field is required.
-      - ``"set"`` - replace the target value with the source value.
-      - ``"update"`` - update the target object with the items of the source
-        object, overwriting existing properties.
+      - :json:`"extend"` - extend the target array with the values of the
+        source array.
+      - :json:`"insert"` - insert the source value at the specified index in
+        the target array. In this mode, the **to** field is required.
+      - :json:`"set"` - replace the target value with the source value.
+      - :json:`"update"` - update the target object with the items of the
+        source object, overwriting existing properties.
 
-    - **path** (string, default: ``"$"``) - the
+    - **path** (string, default: :json:`"$"`) - the
       :ref:`absolute path <absolute_path>` where the operation is applied.
     - **from** (string) - the
       :ref:`relative path <relative_path>` to the source value.
-    - **to** (string, default: ``"@"``) - the
+    - **to** (string, default: :json:`"@"`) - the
       :ref:`relative path <relative_path>` to the target value.
 
 Example:
@@ -329,8 +332,8 @@ reverse
 Reverse the items from an array.
 
 Fields:
-    - **op** (string) - the operation to perform. Must be ``"reverse"``.
-    - **path** (string, default: ``"$"``) - the
+    - **op** (string) - the operation to perform. Must be :json:`"reverse"`.
+    - **path** (string, default: :json:`"$"`) - the
       :ref:`absolute path <absolute_path>` to the array.
 
 Example:
@@ -358,8 +361,8 @@ set
 Replace an item of an array, a property of an object or the root.
 
 Fields:
-    - **op** (string) - the operation to perform. Must be ``"set"``.
-    - **path** (string, default: ``"$"``) - the
+    - **op** (string) - the operation to perform. Must be :json:`"set"`.
+    - **path** (string, default: :json:`"$"`) - the
       :ref:`absolute path <absolute_path>` to the value.
     - **value** (any) - a value.
 
@@ -388,10 +391,10 @@ sort
 Sort an array.
 
 Fields:
-    - **op** (string) - the operation to perform. Must be ``"sort"``.
-    - **path** (string, default: ``"$"``) - the
+    - **op** (string) - the operation to perform. Must be :json:`"sort"`.
+    - **path** (string, default: :json:`"$"`) - the
       :ref:`absolute path <absolute_path>` to the array.
-    - **reverse** (boolean, default: ``false``) - sort in descending order.
+    - **reverse** (boolean, default: :json:`false`) - sort in descending order.
 
 Example:
     Input:
@@ -419,8 +422,8 @@ Update an object with the properties of another object, overwriting existing
 properties.
 
 Fields:
-    - **op** (string) - the operation to perform. Must be ``"update"``.
-    - **path** (string, default: ``"$"``) - the
+    - **op** (string) - the operation to perform. Must be :json:`"update"`.
+    - **path** (string, default: :json:`"$"`) - the
       :ref:`absolute path <absolute_path>` to the object.
     - **properties** (object) - another object.
 

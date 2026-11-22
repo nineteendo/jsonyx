@@ -47,8 +47,8 @@ A jsonyx document consists of a single value.
 value
 ^^^^^
 
-A value can be an object, array, string, number, ``true``, ``false`` or
-``null``.
+A value can be an object, array, string, number, :json:`true`, :json:`false` or
+:json:`null`.
 
 .. container:: highlight
 
@@ -136,7 +136,8 @@ number
 ^^^^^^
 
 A number is a signed decimal number, optionally in scientific notation or one
-of the special values ``NaN``, ``Infinity`` and ``-Infinity``.
+of the special values :javascript:`NaN`, :javascript:`Infinity` and
+:javascript:`-Infinity`.
 
 .. container:: highlight
 

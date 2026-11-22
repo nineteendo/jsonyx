@@ -81,7 +81,7 @@ Examples
     ``$.books[@.price < 10]``                            All books cheaper than 10
     ``$.books[:].price{@ < 10}``                         The prices of all books cheaper than 10
     ``$.books[@.category == 'fiction' && @.price < 20]`` All fiction books cheaper than 20
-    ``$['~'~~~'']``                                      The value of the key ``"'~'"``
+    ``$['~'~~~'']``                                      The value of the key :json:`"'~'"`
     ==================================================== =======================================
 
 Grammar
@@ -185,7 +185,7 @@ A filter consists of one or more (non-)existence checks / comparisons.
 value
 ^^^^^
 
-A value can be a string, number, ``true``, ``false`` or ``null``.
+A value can be a string, number, :json:`true`, :json:`false` or :json:`null`.
 
 .. container:: highlight
 
@@ -259,7 +259,7 @@ number
 ^^^^^^
 
 A number is a signed decimal number, optionally in scientific notation or one
-of the special values ``Infinity`` and ``-Infinity``.
+of the special values :javascript:`Infinity` and :javascript:`-Infinity`.
 
 .. container:: highlight
 

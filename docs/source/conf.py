@@ -50,6 +50,12 @@ intersphinx_disabled_domains: list[str] = ["std"]
 nitpicky: bool = True
 nitpick_ignore: list[tuple[str, str]] = []
 rst_prolog: str = """
+.. role:: javascript(code)
+    :language: python
+
+.. role:: json(code)
+    :language: json
+
 .. role:: python(code)
    :language: python
 """
