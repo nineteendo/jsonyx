@@ -19,6 +19,15 @@ jsonyx 2.6.0 (unreleased)
 New Features:
     - Added support for ``@.a == @.b`` to :ref:`filter`.
 
+Breaking Changes:
+    - Switched from tilde escapes to doubling for
+      :ref:`query string <query_string>`:
+
+      .. code-block:: diff
+
+          -$['~'~~~'']
+          +$['''~''']
+
 jsonyx 2.5.0 (Oct 28, 2026)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

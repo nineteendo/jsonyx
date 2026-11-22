@@ -29,16 +29,16 @@ def test_string(key: str) -> None:
     assert make_patch({key: 0}, {}) == [{"op": "del", "path": f"$['{key}']"}]
 
 
-@pytest.mark.parametrize(("key", "expected"), [
-    # Tilde escapes
-    ("'", "~'"),
-    ("~", "~~"),
+@pytest.mark.parametrize("key", [
+    # Single quote
+    "'",
 
     # Multiple characters
-    ("foo~bar", "foo~~bar"),
+    "foo'bar",
 ])
-def test_string_escapes(key: str, expected: str) -> None:
-    """Test string escapes."""
+def test_string_doubling(key: str) -> None:
+    """Test string doubling."""
+    expected: str = key.replace("'", "''")
     assert make_patch({key: 0}, {}) == [
         {"op": "del", "path": f"$['{expected}']"},
     ]

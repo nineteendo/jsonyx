@@ -30,6 +30,8 @@ Selectors
 Examples
 --------
 
+.. versionchanged:: 2.6 Switched from tilde escapes to doubling.
+
 .. code-block:: json
 
     {
@@ -61,7 +63,7 @@ Examples
                 "price": 22.99
             }
         ],
-        "'~'": "value"
+        "foo'bar": "value"
     }
 
 .. tabularcolumns:: \X{1}{2}\X{1}{2}
@@ -81,7 +83,7 @@ Examples
     ``$.books[@.price < 10]``                            All books cheaper than 10
     ``$.books[:].price{@ < 10}``                         The prices of all books cheaper than 10
     ``$.books[@.category == 'fiction' && @.price < 20]`` All fiction books cheaper than 20
-    ``$['~'~~~'']``                                      The value of the key :json:`"'~'"`
+    ``$['foo''bar']``                                    The value of the key :json:`"foo'bar"`
     ==================================================== =======================================
 
 Grammar
@@ -222,16 +224,20 @@ A slice has a start and an end index (exclusive) with an optional step.
     .. image:: /_images/dark/json-path/slice.svg
         :class: only-dark
 
+.. _query_string:
+
 string
 ^^^^^^
 
-A string is a sequence of characters, wrapped in single quotes, using tilde
-escapes.
+.. versionchanged:: 2.6 Switched from tilde escapes to doubling.
+
+A string is a sequence of characters with doubled single quotes, wrapped in
+single quotes.
 
 .. container:: highlight
 
     .. productionlist:: json-path-grammar
-        string: "'" ( [^'~] | '~' ['~] )* "'"
+        string: ( "'" [^']* "'" )+
 
 .. image:: /_images/light/json-path/string.*
     :class: only-light

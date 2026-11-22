@@ -39,7 +39,7 @@ _SLICE: Pattern[str] = re.compile(
     (?::(-?0|-?[1-9][0-9]*)?)? # [":" [step]]
     """, _FLAGS,
 )
-_STR_CHUNK: Pattern[str] = re.compile(r"[^'~]*", _FLAGS)
+_STR_CHUNK: Pattern[str] = re.compile(r"[^']*", _FLAGS)
 _UNQUOTED_KEY: Pattern[str] = re.compile(r"(?:\w+|[^\x00-\x7f]+)+", _FLAGS)
 _WHITESPACE: Pattern[str] = re.compile(r"\ +", _FLAGS)
 
@@ -124,22 +124,11 @@ def _scan_query_string(s: str, end: int) -> tuple[str, int]:
             msg: str = "Unterminated string"
             raise _errmsg(msg, s, str_idx, end) from None
 
-        if terminator == "'":
+        if s[end:end + 2] != "''":
             return "".join(chunks), end + 1
 
-        end += 1
-        try:
-            esc: str = s[end]
-        except IndexError:
-            msg = "Expecting escaped character"
-            raise _errmsg(msg, s, end) from None
-
-        if esc not in {"'", "~"}:
-            msg = "Invalid tilde escape"
-            raise _errmsg(msg, s, end - 1, end + 1)
-
-        end += 1
-        chunks.append(esc)
+        end += 2
+        chunks.append(terminator)
 
 
 def _asc_range(r: range) -> range:

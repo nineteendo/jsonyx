@@ -3,9 +3,7 @@ from __future__ import annotations
 
 __all__: list[str] = ["make_patch"]
 
-import re
 from math import isnan
-from re import DOTALL, MULTILINE, VERBOSE, Pattern, RegexFlag
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -13,17 +11,13 @@ if TYPE_CHECKING:
 
     _Operation = dict[str, Any]
 
-_REPL: str = r"~\1"
-
-_FLAGS: RegexFlag = VERBOSE | MULTILINE | DOTALL
-_ESCAPE_CHARS: Pattern[str] = re.compile(r"(['~])", _FLAGS)
-
 
 def _encode_query_key(key: str) -> str:
     if key.isidentifier():
         return f".{key}"
 
-    return f"['{_ESCAPE_CHARS.sub(_REPL, key)}']"
+    key = key.replace("'", "''")
+    return f"['{key}']"
 
 
 def _eq(a: Any, b: Any) -> bool:

@@ -108,30 +108,25 @@ def test_string(s: str) -> None:
     assert load_query_value(f"'{s}'") == s
 
 
-@pytest.mark.parametrize(("s", "expected"), [
-    # Tilde escapes
-    ("~'", "'"),
-    ("~~", "~"),
+@pytest.mark.parametrize("expected", [
+    # Single quote
+    "'",
 
     # Multiple characters
-    ("foo~~bar", "foo~bar"),
+    "foo'bar",
 ])
-def test_string_escapes(s: str, expected: str) -> None:
-    """Test string escapes."""
+def test_string_doubling(expected: str) -> None:
+    """Test string doubling."""
+    s: str = expected.replace("'", "''")
     assert load_query_value(f"'{s}'") == expected
 
 
-@pytest.mark.parametrize(("s", "msg", "colno", "end_colno"), [
-    ("'foo", "Unterminated string", 1, 5),
-    ("'~", "Expecting escaped character", 3, -1),
-    ("'~a'", "Invalid tilde escape", 2, 4),
-])
-def test_invalid_string(s: str, msg: str, colno: int, end_colno: int) -> None:
-    """Test invalid JSON string."""
+def test_unterminated_string() -> None:
+    """Test unterminated JSON string."""
     with pytest.raises(JSONSyntaxError) as exc_info:
-        load_query_value(s)
+        load_query_value("'foo")
 
-    check_syntax_err(exc_info, msg, colno, end_colno)
+    check_syntax_err(exc_info, "Unterminated string", 1, 5)
 
 
 @pytest.mark.parametrize("s", ["", "NaN"])
