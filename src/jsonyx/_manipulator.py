@@ -285,9 +285,13 @@ class Manipulator:
                     _check_query_key(target, key, allow_slice=True)
 
                 nodes = [
-                    (target, key)
-                    for (target, key) in nodes
-                    if isinstance(key, slice) or _has_key(target, key)
+                    (target, new_key)
+                    for target, key in nodes
+                    for new_key in (
+                        _asc_range(range(len(target))[key])
+                        if isinstance(key, slice) else
+                        [key] if _has_key(target, key) else []
+                    )
                 ]
 
             if (terminator := query[end:end + 1]) == ".":
@@ -612,6 +616,8 @@ class Manipulator:
         relative: bool = False,
     ) -> list[_Node]:
         """Select nodes from a node or a list of nodes.
+
+        .. versionchanged:: 2.6 Made ``$[::2]?`` equivalent to ``$[::2]{@}``.
 
         :param nodes: a node or a list of nodes
         :param query: a JSON :ref:`select query <select_query>`

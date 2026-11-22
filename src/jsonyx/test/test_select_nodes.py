@@ -27,7 +27,6 @@ _slicer: _Slicer = _Slicer()
 
 @pytest.mark.parametrize(("node", "keep"), [
     # List
-    (([], _slicer[:]), True),
     (([], 0), False),
     (([0], 0), True),
 
@@ -39,6 +38,20 @@ def test_optional_marker(node: _Node, keep: bool) -> None:
     """Test optional marker."""
     expected: list[_Node] = [node] if keep else []
     assert select_nodes(node, "$?", allow_slice=True) == expected
+
+
+@pytest.mark.parametrize("key", [
+    # Ascending
+    _slicer[:],
+
+    # Descending
+    _slicer[::-1],
+])
+def test_optional_marker_slice(key: slice) -> None:
+    """Test optional marker with slice."""
+    obj: list[Any] = [1, 2, 3]
+    expected: list[_Node] = [(obj, 0), (obj, 1), (obj, 2)]
+    assert select_nodes((obj, key), "$?") == expected
 
 
 def test_optional_marker_not_allowed() -> None:
@@ -125,7 +138,7 @@ def test_condition(node: _Node, keep: bool) -> None:
     _slicer[::-1],
 ])
 def test_condition_slice(key: slice) -> None:
-    """Test condition."""
+    """Test condition with slice."""
     obj: list[Any] = [1, 2, 3]
     expected: list[_Node] = [(obj, 0), (obj, 1), (obj, 2)]
     assert select_nodes((obj, key), "${@}") == expected

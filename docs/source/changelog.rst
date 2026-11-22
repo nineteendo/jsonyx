@@ -18,6 +18,13 @@ jsonyx 2.6.0 (unreleased)
 
 New Features:
     - Added support for ``@.a == @.b`` to :ref:`filter`.
+    - Made ``$[::2]?`` equivalent to ``$[::2]{@}`` for
+      :func:`jsonyx.select_nodes` and :meth:`jsonyx.Manipulator.select_nodes`:
+
+      .. code-block:: diff
+
+          -{"op": "assert", "path": "$[::2]{@}", "expr": "@ == true"}
+          +{"op": "assert", "path": "$[::2]?", "expr": "@ == true"}
 
 Breaking Changes:
     - Switched from tilde escapes to doubling for
