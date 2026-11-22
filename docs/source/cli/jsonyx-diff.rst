@@ -24,7 +24,7 @@ Positional arguments
 
 .. option:: input_filename
 
-    The path to the input JSON file, or ``"-"`` for standard input. If not
+    The path to the input JSON file, or ``-`` for standard input. If not
     specified, read from :data:`sys.stdin`.
 
 .. option:: output_filename
@@ -35,7 +35,7 @@ Positional arguments
 Options
 -------
 
-.. versionchanged:: 2.4 Removed ``--use-decimal`` (alias ``-d``).
+.. versionchanged:: 2.4 Removed :option:`!--use-decimal` (alias :option:`!-d`).
 
 -h, --help              Show the help message and exit.
 -a, --ensure-ascii      Escape non-ASCII characters.

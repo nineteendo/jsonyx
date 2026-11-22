@@ -257,9 +257,9 @@ def detect_encoding(b: bytearray | bytes) -> str:
         >>> b.decode(json.detect_encoding(b))
         '"foo"'
 
-    .. note:: Supports only ``"utf-8"``, ``"utf-8-sig"``, ``"utf-16"``,
-        ``"utf-16-be"``, ``"utf-16-le"``, ``"utf-32"``, ``"utf-32-be"`` and
-        ``"utf-32-le"``.
+    .. note:: Supports only :python:`"utf-8"`, :python:`"utf-8-sig"`,
+        :python:`"utf-16"`, :python:`"utf-16-be"`, :python:`"utf-16-le"`,
+        :python:`"utf-32"`, :python:`"utf-32-be"` and :python:`"utf-32-le"`.
     .. seealso:: :ref:`better_decoding_error`
 
     """
@@ -649,8 +649,8 @@ class Decoder:
     """A configurable JSON decoder.
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
-    .. versionchanged:: 2.2 Added ``cache_keys`` (default :obj:`False` instead
-        of :obj:`True`).
+    .. versionchanged:: 2.2 Added ``cache_keys`` (default :python:`False`
+        instead of :python:`True`).
 
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param cache_keys: re-use the keys of objects

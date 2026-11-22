@@ -125,8 +125,8 @@ def read(
     """Deserialize a JSON file to a Python object.
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
-    .. versionchanged:: 2.2 Added ``cache_keys`` (default :obj:`False` instead
-        of :obj:`True`).
+    .. versionchanged:: 2.2 Added ``cache_keys`` (default :python:`False`
+        instead of :python:`True`).
 
     :param filename: the path to the JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
@@ -174,8 +174,8 @@ def load(
     """Deserialize an open JSON file to a Python object.
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
-    .. versionchanged:: 2.2 Added ``cache_keys`` (default :obj:`False` instead
-        of :obj:`True`).
+    .. versionchanged:: 2.2 Added ``cache_keys`` (default :python:`False`
+        instead of :python:`True`).
 
     :param fp: an open JSON file
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
@@ -227,8 +227,8 @@ def loads(
     r"""Deserialize a JSON string or bytes to a Python object.
 
     .. versionchanged:: 2.0 Replaced ``use_decimal`` with ``hooks``.
-    .. versionchanged:: 2.2 Added ``cache_keys`` (default :obj:`False` instead
-        of :obj:`True`).
+    .. versionchanged:: 2.2 Added ``cache_keys`` (default :python:`False`
+        instead of :python:`True`).
 
     :param s: a JSON string or bytes
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
@@ -693,7 +693,8 @@ def select_nodes(
     :param query: a JSON :ref:`select query <select_query>`
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param allow_slice: allow slice
-    :param relative: query must start with ``"@"`` instead of ``"$"``
+    :param relative: query must start with :python:`"@"` instead of
+        :python:`"$"`
     :raises IndexError: if an index is out of range
     :raises JSONSyntaxError: if the select query is invalid
     :raises KeyError: if a key is not found

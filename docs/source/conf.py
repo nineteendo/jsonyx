@@ -49,6 +49,10 @@ intersphinx_mapping: dict[str, tuple[str, None]] = {
 intersphinx_disabled_domains: list[str] = ["std"]
 nitpicky: bool = True
 nitpick_ignore: list[tuple[str, str]] = []
+rst_prolog: str = """
+.. role:: python(code)
+   :language: python
+"""
 templates_path: list[str] = ["_templates"]
 
 # -- Options for HTML output

@@ -607,7 +607,8 @@ class Manipulator:
         :param nodes: a node or a list of nodes
         :param query: a JSON :ref:`select query <select_query>`
         :param allow_slice: allow slice
-        :param relative: query must start with ``"@"`` instead of ``"$"``
+        :param relative: query must start with :python:`"@"` instead of
+            :python:`"$"`
         :raises IndexError: if an index is out of range
         :raises JSONSyntaxError: if the select query is invalid
         :raises KeyError: if a key is not found

@@ -20,17 +20,17 @@ Python types shown below. Additional types can be registered with ``types``.
 .. table::
     :class: longtable
 
-    ============ ===================================== ===================================================================================
-    Type         Default                               Required methods
-    ============ ===================================== ===================================================================================
-    ``"array"``  :class:`list` and :class:`tuple`      :meth:`~object.__iter__` or :meth:`~object.__len__` and :meth:`~object.__getitem__`
-    ``"bool"``   :obj:`True` and :obj:`False`          :meth:`~object.__bool__`, :meth:`~object.__len__` or neither (:obj:`True`)
-    ``"float"``  :class:`float`                        :meth:`~object.__str__` or :meth:`~object.__repr__`
-    ``"int"``    :class:`int`                          :meth:`~object.__str__` or :meth:`~object.__repr__`
-    ``"null"``   :obj:`None`                           none (not extensible)
-    ``"object"`` :class:`dict` and :class:`frozendict` :meth:`!values` and :meth:`!items`
-    ``"str"``    :class:`str`                          :meth:`~object.__str__` or :meth:`~object.__repr__`
-    ============ ===================================== ===================================================================================
+    ================== ===================================== ===================================================================================
+    Type               Default                               Required methods
+    ================== ===================================== ===================================================================================
+    :python:`"array"`  :class:`list` and :class:`tuple`      :meth:`~object.__iter__` or :meth:`~object.__len__` and :meth:`~object.__getitem__`
+    :python:`"bool"`   :python:`True` and :python:`False`    :meth:`~object.__bool__`, :meth:`~object.__len__` or neither (``true``)
+    :python:`"float"`  :class:`float`                        :meth:`~object.__str__` or :meth:`~object.__repr__`
+    :python:`"int"`    :class:`int`                          :meth:`~object.__str__` or :meth:`~object.__repr__`
+    :python:`"null"`   :python:`None`                        none (not extensible)
+    :python:`"object"` :class:`dict` and :class:`frozendict` :meth:`!values` and :meth:`!items`
+    :python:`"str"`    :class:`str`                          :meth:`~object.__str__` or :meth:`~object.__repr__`
+    ================== ===================================== ===================================================================================
 
 Example with :mod:`numpy`:
 
@@ -67,17 +67,17 @@ types shown below. The conversion can be customized with ``hooks``.
 .. table::
     :class: longtable
 
-    ============ ======================= ===============================
-    Hook         Default                 Called with
-    ============ ======================= ===============================
-    ``"array"``  :class:`list`           :class:`list`
-    ``"bool"``   :class:`bool`           :obj:`True` or :obj:`False`
-    ``"float"``  :class:`float`          :class:`str`
-    ``"int"``    :class:`int`            :class:`str`
-    ``"null"``   :class:`types.NoneType` nothing (not customizable)
-    ``"object"`` :class:`dict`           ``list[tuple[Any, Any]]``
-    ``"str"``    :class:`str`            :class:`str`
-    ============ ======================= ===============================
+    ================== ======================= ===============================
+    Hook               Default                 Called with
+    ================== ======================= ===============================
+    :python:`"array"`  :class:`list`           :class:`list`
+    :python:`"bool"`   :class:`bool`           :python:`True` or :python:`False`
+    :python:`"float"`  :class:`float`          :class:`str`
+    :python:`"int"`    :class:`int`            :class:`str`
+    :python:`"null"`   :class:`types.NoneType` nothing (not customizable)
+    :python:`"object"` :class:`dict`           ``list[tuple[Any, Any]]``
+    :python:`"str"`    :class:`str`            :class:`str`
+    ================== ======================= ===============================
 
 Example with :mod:`numpy`:
 
@@ -182,12 +182,12 @@ a valid JSON number.
 .. table::
     :class: longtable
 
-    ============ ============= ====================================
-    Formatter    Default       Called with
-    ============ ============= ====================================
-    ``"float"``  :class:`str`  :class:`float` or ``types["float"]``
-    ``"int"``    :class:`str`  :class:`int` or ``types["int"]``
-    ============ ============= ====================================
+    ================= ============= ====================================
+    Formatter         Default       Called with
+    ================= ============= ====================================
+    :python:`"float"` :class:`str`  :class:`float` or ``types["float"]``
+    :python:`"int"`   :class:`str`  :class:`int` or ``types["int"]``
+    ================= ============= ====================================
 
 Compact float example:
 
@@ -202,8 +202,9 @@ Compact float example:
 >>> json.dump([0.001, 10.0], formatters={"float": compact_float_formatter})
 [1e-3, 1e1]
 
-.. note:: Case variations of ``"nan"``, ``"inf"``, ``"infinity"``, ``"-inf"``
-    and ``"-infinity"`` are normalized.
+.. note:: Case variations of :python:`"nan"`, :python:`"inf"`,
+    :python:`"infinity"`, :python:`"-inf"` and :python:`"-infinity"` are
+    normalized.
 
 Encoding :class:`enum.ReprEnum`
 -------------------------------

@@ -81,7 +81,7 @@ Examples
     ``$.books[@.price < 10]``                            All books cheaper than 10
     ``$.books[:].price{@ < 10}``                         The prices of all books cheaper than 10
     ``$.books[@.category == 'fiction' && @.price < 20]`` All fiction books cheaper than 20
-    ``$['~'~~~'']``                                      The value of the key ``'~'``
+    ``$['~'~~~'']``                                      The value of the key ``"'~'"``
     ==================================================== =======================================
 
 Grammar

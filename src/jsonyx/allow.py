@@ -89,7 +89,7 @@ r"""Allow unpaired surrogates in strings.
 
 .. tip:: If you're not using ``read()`` or ``write()``, you still need to
     use ``ensure_ascii=True`` or set the unicode error handler to
-    ``"surrogatepass"``.
+    :python:`"surrogatepass"`.
 """
 
 TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
