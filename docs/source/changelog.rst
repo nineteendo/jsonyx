@@ -18,8 +18,7 @@ jsonyx 2.6.0 (unreleased)
 
 New Features:
     - Added support for comparing 2 paths to :ref:`filter`
-    - Made ``?`` equivalent to ``{@}`` for
-      :ref:`absolute path <absolute_path>`:
+    - Made ``?`` equivalent to ``{@}`` for :ref:`<absolute_query>`:
 
       .. code-block:: diff
 

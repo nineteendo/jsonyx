@@ -26,7 +26,7 @@ Generated with
 `RR - Railroad Diagram Generator <https://www.bottlecaps.de/rr/ui>`_ by
 `Gunther Rademacher <https://github.com/GuntherRademacher>`_.
 
-jsonyx_document
+jsonyx document
 ^^^^^^^^^^^^^^^
 
 A jsonyx document consists of a single value.

@@ -125,8 +125,9 @@ A query can be absolute or relative.
         :class: only-dark
 
 .. _absolute_path:
+.. _absolute_query:
 
-absolute_query
+absolute query
 ^^^^^^^^^^^^^^
 
 An absolute query starts with ``$`` followed by zero or more selectors.
@@ -150,7 +151,7 @@ An absolute query starts with ``$`` followed by zero or more selectors.
 
 .. _relative_path:
 
-relative_query
+relative query
 ^^^^^^^^^^^^^^
 
 A relative query starts with ``@`` followed by zero or more child selectors.
