@@ -64,15 +64,31 @@ def _check_query_key(
         raise TypeError(msg)
 
 
+def _flatten_nodes(nodes: list[_Node]) -> list[_Node]:
+    new_nodes: list[_Node] = []
+    for target, key in nodes:
+        _check_query_key(target, key, allow_slice=True)
+        if isinstance(key, slice):
+            r: range = range(len(target))[key]
+            new_nodes.extend(
+                (target, new_key) for new_key in (r if r.step > 0 else r[::-1])
+            )
+        else:
+            new_nodes.append((target, key))
+
+    return new_nodes
+
+
 def _get_query_targets(
-    node: _Node, *, relative: bool = False,
+    nodes: list[_Node], *, relative: bool = False,
 ) -> list[_Target]:
-    target, key = node
-    _check_query_key(target, key, allow_slice=not relative)
-    if isinstance(key, slice):
-        new_targets: list[Any] = target[key]
-    else:
-        new_targets = [target[key]]
+    new_targets: list[Any] = []
+    for target, key in nodes:
+        _check_query_key(target, key, allow_slice=not relative)
+        if isinstance(key, slice):
+            new_targets.extend(target[key])
+        else:
+            new_targets.append(target[key])
 
     for new_target in new_targets:
         if not isinstance(new_target, (dict, list)):
@@ -129,10 +145,6 @@ def _scan_query_string(s: str, end: int) -> tuple[str, int]:
 
         end += 2
         chunks.append(terminator)
-
-
-def _asc_range(r: range) -> range:
-    return r if r.step > 0 else r[::-1]
 
 
 class Manipulator:
@@ -281,17 +293,10 @@ class Manipulator:
                     raise _errmsg(msg, query, end, end + 1)
 
                 end += 1
-                for target, key in nodes:
-                    _check_query_key(target, key, allow_slice=True)
-
                 nodes = [
-                    (target, new_key)
-                    for target, key in nodes
-                    for new_key in (
-                        _asc_range(range(len(target))[key])
-                        if isinstance(key, slice) else
-                        [key] if _has_key(target, key) else []
-                    )
+                    (target, key)
+                    for target, key in _flatten_nodes(nodes)
+                    if _has_key(target, key)
                 ]
 
             if (terminator := query[end:end + 1]) == ".":
@@ -306,8 +311,7 @@ class Manipulator:
 
                 nodes = [
                     (target, key)
-                    for node in nodes
-                    for target in _get_query_targets(node, relative=relative)
+                    for target in _get_query_targets(nodes, relative=relative)
                 ]
             elif terminator == "{":
                 if relative:
@@ -316,18 +320,7 @@ class Manipulator:
 
                 condition_idx: int = end
                 end += 1
-                for target, key in nodes:
-                    _check_query_key(target, key, allow_slice=True)
-
-                nodes = [
-                    (target, new_key)
-                    for target, key in nodes
-                    for new_key in (
-                        _asc_range(range(len(target))[key])
-                        if isinstance(key, slice) else
-                        [key]
-                    )
-                ]
+                nodes = _flatten_nodes(nodes)
                 nodes, end = self._apply_filter(nodes, query, end)
                 if query[end:end + 1] != "}":
                     msg = "Unterminated condition"
@@ -337,11 +330,9 @@ class Manipulator:
             elif terminator == "[":
                 subscript_idx: int = end
                 end += 1
-                targets: list[_Target] = [
-                    target
-                    for node in nodes
-                    for target in _get_query_targets(node, relative=relative)
-                ]
+                targets: list[_Target] = _get_query_targets(
+                    nodes, relative=relative,
+                )
                 if match := _SLICE.match(query, end):
                     (start, stop, step), end = match.groups(), match.end()
                     key = slice(
@@ -363,7 +354,7 @@ class Manipulator:
                         (target, key)
                         for target in targets
                         for key in (
-                            target.keys()
+                            target
                             if isinstance(target, dict) else
                             range(len(target))
                         )
