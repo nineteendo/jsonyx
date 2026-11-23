@@ -1,7 +1,7 @@
 JSON Path
 =========
 
-A query language for selecting values from JSON a document.
+A query language for selecting values from a JSON document.
 
 .. versionadded:: 2.0
 
@@ -12,20 +12,20 @@ Selectors
 .. table::
     :class: longtable
 
-    ==================== =====================
-    Selectors            Description
-    ==================== =====================
-    ``$``                The root object
-    ``@``                The current object
-    ``.<name>``          Dot-notated child
-    ``[<string>]``       Bracket-notated child
-    ``[<number>]``       Array index
-    ``[start:end]``      Array slice
-    ``[start:end:step]`` Extended array slice
-    ``[<expression>]``   Filter
-    ``{<expression>}``   Non-descending filter
-    ``?``                Existence check
-    ==================== =====================
+    ========================== =====================
+    Selectors                  Description
+    ========================== =====================
+    ``$``                      The root object
+    ``@``                      The current object
+    ``.<name>``                Dot-notated child
+    ``[<string>]``             Bracket-notated child
+    ``[<number>]``             Array index
+    ``[<start>:<end>]``        Array slice
+    ``[<start>:<end>:<step>]`` Extended array slice
+    ``[<filter>]``             Child filter
+    ``{<filter>}``             Current object filter
+    ``?``                      Shorthand for ``{@}``
+    ========================== =====================
 
 Examples
 --------
@@ -138,8 +138,8 @@ An absolute query starts with ``$`` followed by zero or more selectors.
         absolute_query: '$' ( '?'? (
                       :     '.' `~python-grammar:identifier`
                       :     | '{' `filter` '}'
-                      :     | '[' ( `slice` | `integer` | `string` | `filter` ) ']' )
-                      : )* '?'?
+                      :     | '[' ( `slice` | `integer` | `string` | `filter` ) ']'
+                      : ) )* '?'?
 
 .. image:: /_images/light/json-path/absolute_query.*
     :class: only-light

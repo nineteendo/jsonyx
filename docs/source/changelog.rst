@@ -34,6 +34,9 @@ Breaking Changes:
           -$['~'~~~'']
           +$['''~''']
 
+Bug Fixes:
+    - Fixed :issue:`94`: A condition on a sliced dict doesn't raise
+
 jsonyx 2.5.0 (Oct 28, 2026)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

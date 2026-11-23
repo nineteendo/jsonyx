@@ -316,6 +316,9 @@ class Manipulator:
 
                 condition_idx: int = end
                 end += 1
+                for target, key in nodes:
+                    _check_query_key(target, key, allow_slice=True)
+
                 nodes = [
                     (target, new_key)
                     for target, key in nodes

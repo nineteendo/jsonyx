@@ -93,7 +93,7 @@ def test_invalid_property(key: str) -> None:
     "$.a",
 
     # In the middle
-    "$.a?", "$.a.b", "$.a[:]", "$.a[0]", "$.a['']", "$.a[@]",
+    "$.a?", "$.a.b", "$.a[:]", "$.a[0]", "$.a['']", "$.a[@]", "$.a{@}",
 ])
 def test_list_property(query: str) -> None:
     """Test property on a list."""
@@ -222,7 +222,7 @@ def test_slice_not_allowed(query: str) -> None:
     "$[:]",
 
     # In the middle
-    "$[:]?", "$[:].b", "$[:][:]", "$[:][0]", "$[:]['']", "$[:][@]",
+    "$[:]?", "$[:].b", "$[:][:]", "$[:][0]", "$[:]['']", "$[:][@]", "$[:]{@}",
 ])
 def test_dict_slice(query: str) -> None:
     """Test slice on a dict."""
@@ -253,7 +253,7 @@ def test_invalid_idx() -> None:
     "$[0]",
 
     # In the middle
-    "$[0]?", "$[0].b", "$[0][:]", "$[0][0]", "$[0]['']", "$[0][@]",
+    "$[0]?", "$[0].b", "$[0][:]", "$[0][0]", "$[0]['']", "$[0][@]", "$[0]{@}",
 ])
 def test_dict_idx(query: str) -> None:
     """Test index on a dict."""
@@ -325,7 +325,7 @@ def test_invalid_relative_query(query: str) -> None:
     "$[0]",
 
     # In the middle
-    "$[0]?", "$[0].b", "$[0][:]", "$[0][0]", "$[0]['']", "$[0][@]",
+    "$[0]?", "$[0].b", "$[0][:]", "$[0][0]", "$[0]['']", "$[0][@]", "$[0]{@}",
 ])
 def test_invalid_target(query: str) -> None:
     """Test invalid target."""
