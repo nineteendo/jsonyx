@@ -203,7 +203,7 @@ class Manipulator:
                 for node, (filter_target, filter_key) in zip(
                     nodes, filter_nodes,
                 )
-                if _has_key(filter_target, filter_key) != negate_filter
+                if _has_key(filter_target, filter_key) is not negate_filter
             ]
             old_end: int = end
             if match := _WHITESPACE.match(query, end):
@@ -616,8 +616,6 @@ class Manipulator:
         relative: bool = False,
     ) -> list[_Node]:
         """Select nodes from a node or a list of nodes.
-
-        .. versionchanged:: 2.6 Made ``$[::2]?`` equivalent to ``$[::2]{@}``.
 
         :param nodes: a node or a list of nodes
         :param query: a JSON :ref:`select query <select_query>`

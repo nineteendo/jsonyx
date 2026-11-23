@@ -17,9 +17,8 @@ jsonyx 2.6.0 (unreleased)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 New Features:
-    - Added support for ``@.a == @.b`` to :ref:`filter`.
-    - Made ``$[::2]?`` equivalent to ``$[::2]{@}`` for
-      :func:`jsonyx.select_nodes` and :meth:`jsonyx.Manipulator.select_nodes`:
+    - Added support for comparing 2 paths to :ref:`filter`
+    - Made ``?`` equivalent to ``{@}`` for :ref:`absolute_query`:
 
       .. code-block:: diff
 

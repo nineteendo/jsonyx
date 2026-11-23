@@ -30,7 +30,11 @@ Selectors
 Examples
 --------
 
-.. versionchanged:: 2.6 Switched from tilde escapes to doubling.
+.. versionchanged:: 2.6
+
+    - Added support for comparing 2 paths.
+    - Made ``?`` equivalent to ``{@}``.
+    - Switched from tilde escapes to doubling.
 
 .. code-block:: json
 
@@ -40,27 +44,31 @@ Examples
                 "category": "reference",
                 "author": "Nigel Rees",
                 "title": "Sayings of the Century",
-                "price": 8.95
+                "available": 1,
+                "total": 1
             },
             {
                 "category": "fiction",
                 "author": "Evelyn Waugh",
                 "title": "Sword of Honour",
-                "price": 12.99
+                "available": 3,
+                "total": 3
             },
             {
                 "category": "fiction",
                 "author": "Herman Melville",
                 "title": "Moby Dick",
                 "isbn": "0-553-21311-3",
-                "price": 8.99
+                "available": 0,
+                "total": 2
             },
             {
                 "category": "fiction",
                 "author": "J. R. R. Tolkien",
                 "title": "The Lord of the Rings",
                 "isbn": "0-395-19395-8",
-                "price": 22.99
+                "available": 1,
+                "total": 4
             }
         ],
         "foo'bar": "value"
@@ -70,21 +78,24 @@ Examples
 .. table::
     :class: longtable
 
-    ==================================================== =======================================
-    JSON Path                                            Result
-    ==================================================== =======================================
-    ``$.books[@]``                                       All books
-    ``$.books[:].author``                                The authors of all books
-    ``$.books[2]``                                       The third book
-    ``$.books[-1]``                                      The last book
-    ``$.books[:2]``                                      The first two books
-    ``$.books[@.isbn]``                                  All books with an ISBN
-    ``$.books[:].isbn?``                                 The ISBNs of all books with an ISBN
-    ``$.books[@.price < 10]``                            All books cheaper than 10
-    ``$.books[:].price{@ < 10}``                         The prices of all books cheaper than 10
-    ``$.books[@.category == 'fiction' && @.price < 20]`` All fiction books cheaper than 20
-    ``$['foo''bar']``                                    The value of the key :json:`"foo'bar"`
-    ==================================================== =======================================
+    ======================================================= ===========================================
+    JSON Path                                               Result
+    ======================================================= ===========================================
+    ``$.books``                                             The list of all books
+    ``$.books[@]``                                          All books
+    ``$.books[:].author``                                   The authors of all books
+    ``$.books[2]``                                          The third book
+    ``$.books[-1]``                                         The last book
+    ``$.books[:2]``                                         A list of the first two books
+    ``$.books[:2]?``                                        The first two books
+    ``$.books[@.isbn]``                                     All books with an ISBN
+    ``$.books[:].isbn?``                                    The ISBNs of all books with an ISBN
+    ``$.books[@.available > 0]``                            All available books
+    ``$.books[:].available{@ > 0}``                         The number of copies of all available books
+    ``$.books[@.category == 'fiction' && @.available > 0]`` All available fiction books
+    ``$.books[@.available < @.total]``                      All borrowed books
+    ``$['foo''bar']``                                       The value of the key :json:`"foo'bar"`
+    ======================================================= ===========================================
 
 Grammar
 -------
@@ -164,7 +175,7 @@ A relative query starts with ``@`` followed by zero or more child selectors.
 filter
 ^^^^^^
 
-.. versionchanged:: 2.6 Added support for ``@.a == @.b``.
+.. versionchanged:: 2.6 Added support for comparing 2 paths.
 
 A filter consists of one or more (non-)existence checks / comparisons.
 
@@ -173,9 +184,7 @@ A filter consists of one or more (non-)existence checks / comparisons.
     .. productionlist:: json-path-grammar
         filter: (
               :     '!'? `relative_query`
-              :     | `relative_query` `whitespace` `operator` `whitespace` (
-              :         `value` | `relative_query`
-              :     )
+              :     | `relative_query` `whitespace` `operator` `whitespace` ( `value` | `relative_query` )
               : ) ++ ( `whitespace` '&&' `whitespace` )
 
 .. image:: /_images/light/json-path/filter.*

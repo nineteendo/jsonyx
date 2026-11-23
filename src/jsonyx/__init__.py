@@ -688,7 +688,6 @@ def select_nodes(
 
     .. versionadded:: 2.0
     .. versionchanged:: 2.4 Removed ``use_decimal``.
-    .. versionchanged:: 2.6 Made ``$[::2]?`` equivalent to ``$[::2]{@}``.
 
     :param nodes: a node or a list of nodes
     :param query: a JSON :ref:`select query <select_query>`
