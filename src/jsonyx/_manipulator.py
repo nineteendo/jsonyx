@@ -440,7 +440,8 @@ class Manipulator:
                 expr: str = operation["expr"]
                 msg: str = operation.get("msg", f"Path {path}: {expr}")
                 current_nodes: list[_Node] = self.select_nodes(node, path)
-                if current_nodes != self.apply_filter(current_nodes, expr):
+                n: int = len(self.apply_filter(current_nodes, expr))
+                if n < len(current_nodes):
                     raise AssertionError(msg)
             elif op == "clear":
                 path = operation.get("path", "$")
