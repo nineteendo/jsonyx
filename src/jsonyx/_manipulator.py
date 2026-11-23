@@ -641,12 +641,8 @@ class Manipulator:
             nodes = [nodes]
 
         nodes, end = self._select_nodes(
-            nodes,
-            query,
-            allow_slice=allow_slice,
-            relative=relative,
+            nodes, query, allow_slice=allow_slice, relative=relative,
         )
-
         if end < len(query):
             msg: str = "Expecting end of file"
             raise _errmsg(msg, query, end)
