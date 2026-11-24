@@ -318,7 +318,6 @@ An operator can be ``<=``, ``<``, ``==``, ``!=``, ``>=`` or ``>``.
     .. image:: /_images/dark/json-path/operator.svg
         :class: only-dark
 
-
 whitespace
 ^^^^^^^^^^
 

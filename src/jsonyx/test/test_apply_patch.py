@@ -40,14 +40,14 @@ def test_assert(obj: Any, kwargs: _Operation) -> None:
     apply_patch(obj, {"op": "assert", "expr": "@ == 0", **kwargs})
 
 
-@pytest.mark.parametrize(("obj", "kwargs", "match"), [
+@pytest.mark.parametrize(("obj", "kwargs", "msg"), [
     (1, {}, "Path $: @ == 0"),
     ([1], {"path": "$[0]"}, "Path $[0]: @ == 0"),
     (1, {"msg": "msg"}, "msg"),
 ])
-def test_failed_assert(obj: Any, kwargs: _Operation, match: str) -> None:
+def test_failed_assert(obj: Any, kwargs: _Operation, msg: str) -> None:
     """Test failed assert."""
-    with pytest.raises(AssertionError, match=escape(match)):
+    with pytest.raises(AssertionError, match=escape(msg)):
         apply_patch(obj, {"op": "assert", "expr": "@ == 0", **kwargs})
 
 
@@ -71,25 +71,21 @@ def test_invalid_clear() -> None:
         apply_patch(0, {"op": "clear"})
 
 
-@pytest.mark.parametrize(("obj", "kwargs", "expected"), [
+@pytest.mark.parametrize(("obj", "src", "kwargs", "expected"), [
     # Without path
-    ([0], {"mode": "append", "from": "@[0]"}, [0, 0]),
-    ({"a": 0}, {"from": "@.a", "to": "@.b"}, {"a": 0, "b": 0}),
+    ([0], "@[0]", {"mode": "append"}, [0, 0]),
+    ({"a": 0}, "@.a", {"to": "@.b"}, {"a": 0, "b": 0}),
 
     # With path
-    ([[0]], {"mode": "append", "path": "$[0]", "from": "@[0]"}, [[0, 0]]),
-    (
-        [{"a": 0}],
-        {"path": "$[0]", "from": "@.a", "to": "@.b"},
-        [{"a": 0, "b": 0}],
-    ),
+    ([[0]], "@[0]", {"path": "$[0]", "mode": "append"}, [[0, 0]]),
+    ([{"a": 0}], "@.a", {"to": "@.b", "path": "$[0]"}, [{"a": 0, "b": 0}]),
 
     # Allow slice
-    ([1, 2, 3], {"mode": "extend", "from": "@[::-1]"}, [1, 2, 3, 3, 2, 1]),
+    ([1, 2, 3], "@[::-1]", {"mode": "extend"}, [1, 2, 3, 3, 2, 1]),
 ])
-def test_copy(obj: Any, kwargs: _Operation, expected: Any) -> None:
+def test_copy(obj: Any, src: str, kwargs: _Operation, expected: Any) -> None:
     """Test copy."""
-    assert apply_patch(obj, {"op": "copy", **kwargs}) == expected
+    assert apply_patch(obj, {"op": "copy", "from": src, **kwargs}) == expected
 
 
 def test_copy_copy() -> None:
@@ -168,21 +164,21 @@ def test_insert_root() -> None:
         apply_patch(0, {"op": "insert", "path": "$", "value": 0})
 
 
-@pytest.mark.parametrize(("obj", "kwargs", "expected"), [
+@pytest.mark.parametrize(("obj", "src", "kwargs", "expected"), [
     # Without path
-    ([1, 2], {"mode": "append", "from": "@[0]"}, [2, 1]),
-    ({"a": 0}, {"from": "@.a", "to": "@.b"}, {"b": 0}),
+    ([1, 2], "@[0]", {"mode": "append"}, [2, 1]),
+    ({"a": 0}, "@.a", {"to": "@.b"}, {"b": 0}),
 
     # With path
-    ([[1, 2]], {"mode": "append", "path": "$[0]", "from": "@[0]"}, [[2, 1]]),
-    ([{"a": 0}], {"path": "$[0]", "from": "@.a", "to": "@.b"}, [{"b": 0}]),
+    ([[1, 2]], "@[0]", {"path": "$[0]", "mode": "append"}, [[2, 1]]),
+    ([{"a": 0}], "@.a", {"to": "@.b", "path": "$[0]"}, [{"b": 0}]),
 
     # Allow slice
-    ([1, 2, 3], {"mode": "extend", "from": "@[::-1]"}, [3, 2, 1]),
+    ([1, 2, 3], "@[::-1]", {"mode": "extend"}, [3, 2, 1]),
 ])
-def test_move(obj: Any, kwargs: _Operation, expected: Any) -> None:
+def test_move(obj: Any, src: str, kwargs: _Operation, expected: Any) -> None:
     """Test move."""
-    assert apply_patch(obj, {"op": "move", **kwargs}) == expected
+    assert apply_patch(obj, {"op": "move", "from": src, **kwargs}) == expected
 
 
 def test_move_current_object() -> None:
@@ -200,18 +196,19 @@ def test_reverse(obj: Any, kwargs: _Operation, expected: Any) -> None:
     assert apply_patch(obj, {"op": "reverse", **kwargs}) == expected
 
 
-@pytest.mark.parametrize(("obj", "kwargs", "expected"), [
+@pytest.mark.parametrize(("obj", "value", "kwargs", "expected"), [
     # Normal
-    (0, {"value": 1}, 1),
-    ([0], {"path": "$[0]", "value": 1}, [1]),
-    ({"a": 0}, {"path": "$.a", "value": 1}, {"a": 1}),
+    (0, 1, {}, 1),
+    ([0], 1, {"path": "$[0]"}, [1]),
+    ({"a": 0}, 1, {"path": "$.a"}, {"a": 1}),
 
     # Allow slice
-    ([], {"path": "$[:]", "value": [1, 2, 3]}, [1, 2, 3]),
+    ([], [1, 2, 3], {"path": "$[:]"}, [1, 2, 3]),
 ])
-def test_set(obj: Any, kwargs: _Operation, expected: Any) -> None:
+def test_set(obj: Any, value: Any, kwargs: _Operation, expected: Any) -> None:
     """Test set."""
-    assert apply_patch(obj, {"op": "set", **kwargs}) == expected
+    patch: _Operation = {"op": "set", "value": value, **kwargs}
+    assert apply_patch(obj, patch) == expected
 
 
 def test_set_copy() -> None:
