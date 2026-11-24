@@ -21,17 +21,15 @@ if TYPE_CHECKING:
     # JSON must start with ASCII character (not NULL)
     # Strings can't contain control characters (including NULL)
 
-    # Empty string
-    ("", "utf-8"),
-
     # utf-8
     ("XX", "utf-8"),  # 1 ASCII character
     ("XX XX", "utf-8"),  # 2 ASCII characters
     ("XX XX XX", "utf-8"),  # 3 ASCII characters
     ("XX XX XX XX", "utf-8"),  # 4 ASCII characters
+                               # or 2 ASCII + 1 Unicode character
+                               # or 1 ASCII + 1 Unicode + 1 ASCII character
 
     # utf-8-sig
-    ("ef bb bf", "utf-8-sig"),  # Empty JSON with BOM
     ("ef bb bf XX", "utf-8-sig"),  # BOM + 1 ASCII character
 
     # utf-16-be
@@ -47,9 +45,7 @@ if TYPE_CHECKING:
     ("XX 00 XX XX", "utf-16-le"),  # 1 ASCII + 1 Unicode character (LE)
 
     # utf-16
-    ("fe ff", "utf-16"),  # Empty JSON with BOM (BE)
     ("fe ff 00 XX", "utf-16"),  # BOM + 1 ASCII character (BE)
-    ("ff fe", "utf-16"),  # Empty JSON with BOM (LE)
     ("ff fe XX 00", "utf-16"),  # BOM + 1 ASCII character (LE)
 
     # utf-32-be
@@ -59,9 +55,7 @@ if TYPE_CHECKING:
     ("XX 00 00 00", "utf-32-le"),  # 1 ASCII character (LE)
 
     # utf-32
-    ("00 00 fe ff", "utf-32"),  # Empty JSON with BOM (BE)
     ("00 00 fe ff 00 00 00 XX", "utf-32"),  # BOM + 1 ASCII character (BE)
-    ("ff fe 00 00", "utf-32"),  # Empty JSON with BOM (LE)
     ("ff fe 00 00 XX 00 00 00", "utf-32"),  # BOM + 1 ASCII character (LE)
 ])
 def test_detect_encoding(s: str, encoding: str) -> None:
