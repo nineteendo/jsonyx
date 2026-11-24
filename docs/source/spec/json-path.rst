@@ -12,20 +12,20 @@ Selectors
 .. table::
     :class: longtable
 
-    ========================== =====================
-    Selectors                  Description
-    ========================== =====================
-    ``$``                      The root object
-    ``@``                      The current object
-    ``.<name>``                Dot-notated child
-    ``[<string>]``             Bracket-notated child
-    ``[<number>]``             Array index
-    ``[<start>:<end>]``        Array slice
-    ``[<start>:<end>:<step>]`` Extended array slice
-    ``[<filter>]``             Child filter
-    ``{<filter>}``             Current object filter
-    ``?``                      Shorthand for ``{@}``
-    ========================== =====================
+    ================================ =====================
+    Selectors                        Description
+    ================================ =====================
+    ``$``                            The root value
+    ``@``                            The current value
+    ``.<name>``                      Dot-notated child
+    ``[<string>]``                   Bracket-notated child
+    ``[<number>]``                   Array index
+    ``[<number>:<number>]``          Array slice
+    ``[<number>:<number>:<number>]`` Extended array slice
+    ``[<filter>]``                   Child filter
+    ``{<filter>}``                   Current value filter
+    ``?``                            Shorthand for ``{@}``
+    ================================ =====================
 
 Examples
 --------
@@ -81,12 +81,12 @@ Examples
     ======================================================= ===========================================
     JSON Path                                               Result
     ======================================================= ===========================================
-    ``$.books``                                             The list of all books
+    ``$.books``                                             The array of all books
     ``$.books[@]``                                          All books
     ``$.books[:].author``                                   The authors of all books
     ``$.books[2]``                                          The third book
     ``$.books[-1]``                                         The last book
-    ``$.books[:2]``                                         A list of the first two books
+    ``$.books[:2]``                                         An array of the first two books
     ``$.books[:2]?``                                        The first two books
     ``$.books[@.isbn]``                                     All books with an ISBN
     ``$.books[:].isbn?``                                    The ISBNs of all books with an ISBN

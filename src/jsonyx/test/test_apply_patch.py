@@ -207,7 +207,7 @@ def test_reverse(obj: Any, kwargs: _Operation, expected: Any) -> None:
     ({"a": 0}, {"path": "$.a", "value": 1}, {"a": 1}),
 
     # Allow slice
-    ([1, 2, 3], {"path": "$[:]", "value": [4, 5, 6]}, [4, 5, 6]),
+    ([], {"path": "$[:]", "value": [1, 2, 3]}, [1, 2, 3]),
 ])
 def test_set(obj: Any, kwargs: _Operation, expected: Any) -> None:
     """Test set."""

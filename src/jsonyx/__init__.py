@@ -61,7 +61,7 @@ if TYPE_CHECKING:
     Writer.__module__ = "io"
     _ClassInfo = type | tuple["_ClassInfo", ...]
     _Formatter = Callable[[object], str]
-    _Node = tuple[dict[Any, Any] | list[Any], Any]
+    _Node = tuple[dict[str, Any] | list[Any], Any]
     _Operation = dict[str, Any]
     _StrPath = PathLike[str] | str
     _Hook = Callable[[Any], Any]

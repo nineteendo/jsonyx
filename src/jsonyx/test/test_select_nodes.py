@@ -11,7 +11,7 @@ from jsonyx import JSONSyntaxError, select_nodes
 from jsonyx.test import check_syntax_err
 
 if TYPE_CHECKING:
-    _Target = dict[Any, Any] | list[Any]
+    _Target = dict[str, Any] | list[Any]
     _Node = tuple[_Target, Any]
 
 
@@ -34,10 +34,11 @@ _slicer: _Slicer = _Slicer()
     (({}, ""), False),
     (({"": 0}, ""), True),
 ])  # type: ignore
-def test_optional_marker(node: _Node, keep: bool) -> None:
+@pytest.mark.parametrize("query", ["$?", "${@}"])
+def test_optional_marker(node: _Node, query: str, keep: bool) -> None:
     """Test optional marker."""
     expected: list[_Node] = [node] if keep else []
-    assert select_nodes(node, "$?", allow_slice=True) == expected
+    assert select_nodes(node, query) == expected
 
 
 @pytest.mark.parametrize("key", [
@@ -47,20 +48,26 @@ def test_optional_marker(node: _Node, keep: bool) -> None:
     # Descending
     _slicer[::-1],
 ])
-def test_optional_marker_slice(key: slice) -> None:
+@pytest.mark.parametrize("query", ["$?", "${@}"])
+def test_optional_marker_slice(key: slice, query: str) -> None:
     """Test optional marker with slice."""
     obj: list[Any] = [1, 2, 3]
     expected: list[_Node] = [(obj, 0), (obj, 1), (obj, 2)]
-    assert select_nodes((obj, key), "$?") == expected
+    assert select_nodes((obj, key), query) == expected
 
 
-def test_optional_marker_not_allowed() -> None:
+@pytest.mark.parametrize(("query", "msg", "end_colno"), [
+    ("@?", "Optional markers are not allowed in relative query", 3),
+    ("@{@}", "Conditions are not allowed in relative query", -1),
+])
+def test_optional_marker_not_allowed(
+    query: str, msg: str, end_colno: int,
+) -> None:
     """Test optional marker when not allowed."""
     with pytest.raises(JSONSyntaxError) as exc_info:
-        select_nodes([], "@?", relative=True)
+        select_nodes([], query, relative=True)
 
-    msg: str = "Optional markers are not allowed in relative query"
-    check_syntax_err(exc_info, msg, 2, 3)
+    check_syntax_err(exc_info, msg, 2, end_colno)
 
 
 @pytest.mark.parametrize("key", [
@@ -115,44 +122,6 @@ def test_relative_list_property(query: str) -> None:
         select_nodes(([[]], 0), query, relative=True)
 
 
-@pytest.mark.parametrize(("node", "keep"), [
-    # List
-    (([], 0), False),
-    (([0], 0), True),
-
-    # Dict
-    (({}, ""), False),
-    (({"": 0}, ""), True),
-])  # type: ignore
-def test_condition(node: _Node, keep: bool) -> None:
-    """Test condition."""
-    expected: list[_Node] = [node] if keep else []
-    assert select_nodes(node, "${@}") == expected
-
-
-@pytest.mark.parametrize("key", [
-    # Ascending
-    _slicer[:],
-
-    # Descending
-    _slicer[::-1],
-])
-def test_condition_slice(key: slice) -> None:
-    """Test condition with slice."""
-    obj: list[Any] = [1, 2, 3]
-    expected: list[_Node] = [(obj, 0), (obj, 1), (obj, 2)]
-    assert select_nodes((obj, key), "${@}") == expected
-
-
-def test_condition_not_allowed() -> None:
-    """Test condition when not allowed."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
-        select_nodes([], "@{@}", relative=True)
-
-    msg: str = "Conditions are not allowed in relative query"
-    check_syntax_err(exc_info, msg, 3)
-
-
 @pytest.mark.parametrize(("query", "expected"), [
     # Slice
     ("$[:]", _slicer[:]),
@@ -204,6 +173,10 @@ def test_invalid_slice(query: str) -> None:
         select_nodes([], query)
 
 
+@pytest.mark.parametrize(("obj", "msg"), [
+    ([], "List index must be int, not"),
+    ({}, "Dict key must be str, not"),
+])
 @pytest.mark.parametrize("query", [
     # At the end
     "@[:]",
@@ -211,23 +184,10 @@ def test_invalid_slice(query: str) -> None:
     # In the middle
     "@[:].b", "@[:][:]", "@[:][0]", "@[:]['']",
 ])
-def test_slice_not_allowed(query: str) -> None:
+def test_slice_not_allowed(obj: _Target, msg: str, query: str) -> None:
     """Test slice when not allowed."""
-    with pytest.raises(TypeError, match="List index must be int, not"):
-        select_nodes(([[]], 0), query, relative=True)
-
-
-@pytest.mark.parametrize("query", [
-    # At the end
-    "$[:]",
-
-    # In the middle
-    "$[:]?", "$[:].b", "$[:][:]", "$[:][0]", "$[:]['']", "$[:][@]", "$[:]{@}",
-])
-def test_dict_slice(query: str) -> None:
-    """Test slice on a dict."""
-    with pytest.raises(TypeError, match="Dict key must be str, not"):
-        select_nodes(([{}], 0), query)
+    with pytest.raises(TypeError, match=msg):
+        select_nodes(([obj], 0), query, relative=True)
 
 
 @pytest.mark.parametrize("num", [
@@ -261,13 +221,13 @@ def test_dict_idx(query: str) -> None:
         select_nodes(([{}], 0), query)
 
 
-@pytest.mark.parametrize(("obj", "query", "keys"), [
-    ([1, 2, 3], "$[@]", [0, 1, 2]),
-    ({"a": 1, "b": 2, "c": 3}, "$[@]", ["a", "b", "c"]),
+@pytest.mark.parametrize(("obj", "keys"), [
+    ([1, 2, 3], [0, 1, 2]),
+    ({"a": 1, "b": 2, "c": 3}, ["a", "b", "c"]),
 ])
-def test_filter(obj: _Target, query: str, keys: list[Any]) -> None:
+def test_filter(obj: _Target, keys: list[Any]) -> None:
     """Test filter."""
-    assert select_nodes(([obj], 0), query) == [(obj, key) for key in keys]
+    assert select_nodes(([obj], 0), "$[@]") == [(obj, key) for key in keys]
 
 
 def test_filter_not_allowed() -> None:

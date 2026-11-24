@@ -11,7 +11,7 @@ from jsonyx import JSONSyntaxError, apply_filter
 from jsonyx.test import check_syntax_err
 
 if TYPE_CHECKING:
-    _Node = tuple[dict[Any, Any] | list[Any], Any]
+    _Node = tuple[dict[str, Any] | list[Any], Any]
 
 
 @pytest.mark.parametrize(("node", "keep"), [
@@ -106,9 +106,7 @@ def test_operator_whitespace(query: str) -> None:
     ({"a": 0, "b": 1}, False),  # Different value
     ({"a": 0, "b": 0}, True),  # Same value
 ])
-def test_value_comparison(
-    obj: dict[Any, Any], keep: bool,
-) -> None:
+def test_value_comparison(obj: dict[str, Any], keep: bool) -> None:
     """Test comparison of two values."""
     expected: list[_Node] = [([obj], 0)] if keep else []
     assert apply_filter(([obj], 0), "@.a == @.b") == expected

@@ -15,7 +15,7 @@ from jsonyx.allow import NOTHING
 if TYPE_CHECKING:
     from collections.abc import Callable, Container
 
-    _Target = dict[Any, Any] | list[Any]
+    _Target = dict[str, Any] | list[Any]
     _Node = tuple[_Target, Any]
     _Operation = dict[str, Any]
     _Operator = Callable[[Any, Any], Any]
@@ -316,7 +316,7 @@ class Manipulator:
             elif terminator == "{":
                 if relative:
                     msg = "Conditions are not allowed in relative query"
-                    raise _errmsg(msg, query, end + 1)
+                    raise _errmsg(msg, query, end)
 
                 condition_idx: int = end
                 end += 1

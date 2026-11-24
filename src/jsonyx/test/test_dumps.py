@@ -760,5 +760,6 @@ def test_trailing_comma_indent(
 
 def test_no_commas_trailing_comma(json: ModuleType) -> None:
     """Test no commas and trailing_comma."""
-    with pytest.raises(ValueError, match="are mutually exclusive"):
+    msg: str = "not commas and trailing_comma are mutually exclusive"
+    with pytest.raises(ValueError, match=msg):
         assert json.dumps(None, commas=False, trailing_comma=True)
