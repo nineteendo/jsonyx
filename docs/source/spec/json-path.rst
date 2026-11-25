@@ -176,9 +176,9 @@ A relative query starts with ``@`` followed by zero or more child selectors.
 filter
 ^^^^^^
 
-.. versionchanged:: 2.6 Added support for comparing 2 paths.
-
 A filter consists of one or more (non-)existence checks / comparisons.
+
+.. versionchanged:: 2.6 Added support for comparing 2 paths.
 
 .. container:: highlight
 
@@ -239,10 +239,10 @@ A slice has a start and an end index (exclusive) with an optional step.
 string
 ^^^^^^
 
-.. versionchanged:: 2.6 Switched from tilde escapes to doubling.
-
 A string is a sequence of characters with doubled single quotes, wrapped in
 single quotes.
+
+.. versionchanged:: 2.6 Switched from tilde escapes to doubling.
 
 .. container:: highlight
 

@@ -170,9 +170,9 @@ of the special values :javascript:`NaN`, :javascript:`Infinity` and
 key
 ^^^
 
-.. versionchanged:: 2.0 Added support for identifiers.
-
 A key can be a string or an identifier.
+
+.. versionchanged:: 2.0 Added support for identifiers.
 
 .. container:: highlight
 

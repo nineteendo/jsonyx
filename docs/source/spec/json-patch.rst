@@ -77,9 +77,9 @@ Example:
 assert
 ^^^^^^
 
-.. versionchanged:: 2.6 Added :json:`"count"`.
-
 Test if a condition is true.
+
+.. versionchanged:: 2.6 Added :json:`"count"`.
 
 Fields:
     - **op** (:ref:`string`) - the operation to perform. Must be
