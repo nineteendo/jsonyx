@@ -72,8 +72,12 @@ Example:
 
         [1, 2, 3, 4]
 
+.. _assert:
+
 assert
 ^^^^^^
+
+.. versionchanged:: 2.6 Added :json:`"count"`.
 
 Test if a condition is true.
 
@@ -83,8 +87,9 @@ Fields:
     - **path** (:ref:`string`, default: :json:`"$"`) - the
       :ref:`absolute path <absolute_path>` where the expression is evaluated.
     - **expr** (:ref:`string`) - an :ref:`expression <expression>`.
-    - **msg** (:ref:`string`, default: :json:`"Path <path>: <expr>"`): an error
-      message
+    - **count** (:ref:`number` | :ref:`null`, default: :json:`null`) - the
+      expected number of matches.
+    - **msg** (:ref:`string`, optional): an error message
 
 Example:
     Input:
@@ -93,17 +98,17 @@ Example:
 
         false
 
-    Good patch:
-
-    .. code-block:: json
-
-        {"op": "assert", "expr": "@ == false"}
-
-    Bad patch:
+    Patch:
 
     .. code-block:: json
 
         {"op": "assert", "expr": "@ == true"}
+
+    Error:
+
+    .. code-block:: pytb
+
+        Assertion failed at $ for `@ == true`: expected 1 match(es), got 0
 
 clear
 ^^^^^

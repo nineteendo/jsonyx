@@ -432,10 +432,17 @@ class Manipulator:
             elif op == "assert":
                 path = operation.get("path", "$")
                 expr: str = operation["expr"]
-                msg: str = operation.get("msg", f"Path {path}: {expr}")
                 current_nodes: list[_Node] = self.select_nodes(node, path)
                 n: int = len(self.apply_filter(current_nodes, expr))
-                if n < len(current_nodes):
+                if (count := operation.get("count")) is None:
+                    count = len(current_nodes)
+
+                msg: str = operation.get(
+                    "msg",
+                    f"Assertion failed at {path} for `{expr}`: "
+                    f"expected {count} match(es), got {n}",
+                )
+                if n != count:
                     raise AssertionError(msg)
             elif op == "clear":
                 path = operation.get("path", "$")

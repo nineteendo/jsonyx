@@ -34,6 +34,7 @@ def test_append_copy() -> None:
 @pytest.mark.parametrize(("obj", "kwargs"), [
     (0, {}),
     ([0], {"path": "$[0]"}),
+    (1, {"count": 0}),
 ])
 def test_assert(obj: Any, kwargs: _Operation) -> None:
     """Test assert."""
@@ -41,8 +42,9 @@ def test_assert(obj: Any, kwargs: _Operation) -> None:
 
 
 @pytest.mark.parametrize(("obj", "kwargs", "msg"), [
-    (1, {}, "Path $: @ == 0"),
-    ([1], {"path": "$[0]"}, "Path $[0]: @ == 0"),
+    (1, {}, "Assertion failed at $ for `@ == 0`"),
+    ([1], {"path": "$[0]"}, "Assertion failed at $[0] for `@ == 0`"),
+    (0, {"count": 0}, "Assertion failed at $ for `@ == 0`"),
     (1, {"msg": "msg"}, "msg"),
 ])
 def test_failed_assert(obj: Any, kwargs: _Operation, msg: str) -> None:

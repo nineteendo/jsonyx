@@ -41,6 +41,7 @@
                     "then": {
                         "properties": {
                             "expr": {"description": "A JSON expression.", "type": "string", "default": "@"},
+                            "count": {"description": "The expected number of matches.", "type": ["number", "null"], "default": null},
                             "msg": {"description": "An error message.", "type": "string"}
                         },
                         "required": ["expr"]

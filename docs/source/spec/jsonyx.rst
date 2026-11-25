@@ -46,6 +46,7 @@ A jsonyx document consists of a single value.
 
 .. _any:
 .. _boolean:
+.. _null:
 
 value
 ^^^^^
@@ -140,6 +141,8 @@ escapes.
 
     .. image:: /_images/dark/jsonyx/string.svg
         :class: only-dark
+
+.. _number:
 
 number
 ^^^^^^

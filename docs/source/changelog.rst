@@ -17,6 +17,7 @@ jsonyx 2.6.0 (unreleased)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 New Features:
+    - Added :json:`"count"` to :ref:`assert`
     - Added support for comparing 2 paths to :ref:`filter`
     - Made ``?`` equivalent to ``{@}`` for :ref:`absolute_query`:
 
