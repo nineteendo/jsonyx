@@ -111,13 +111,6 @@ query
 
 A query can be absolute or relative.
 
-.. tab:: EBNF
-
-    .. container:: highlight
-
-        .. productionlist:: json-path-grammar
-            query: `absolute_query` | `relative_query`
-
 .. tab:: Diagram
 
     .. image:: /_images/light/json-path/query.*
@@ -128,6 +121,13 @@ A query can be absolute or relative.
         .. image:: /_images/dark/json-path/query.svg
             :class: only-dark
 
+.. tab:: EBNF
+
+    .. container:: highlight
+
+        .. productionlist:: json-path-grammar
+            query: `absolute_query` | `relative_query`
+
 .. _absolute_path:
 .. _absolute_query:
 
@@ -135,6 +135,16 @@ absolute query
 ^^^^^^^^^^^^^^
 
 An absolute query starts with ``$`` followed by zero or more selectors.
+
+.. tab:: Diagram
+
+    .. image:: /_images/light/json-path/absolute_query.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/json-path/absolute_query.svg
+            :class: only-dark
 
 .. tab:: EBNF
 
@@ -147,29 +157,12 @@ An absolute query starts with ``$`` followed by zero or more selectors.
                           :     | '[' ( `slice` | `integer` | `string` | `filter` ) ']'
                           : ) )* '?'?
 
-.. tab:: Diagram
-
-    .. image:: /_images/light/json-path/absolute_query.*
-        :class: only-light
-
-    .. only:: not latex
-
-        .. image:: /_images/dark/json-path/absolute_query.svg
-            :class: only-dark
-
 .. _relative_path:
 
 relative query
 ^^^^^^^^^^^^^^
 
 A relative query starts with ``@`` followed by zero or more child selectors.
-
-.. tab:: EBNF
-
-    .. container:: highlight
-
-        .. productionlist:: json-path-grammar
-            relative_query: '@' ( '.' `~python-grammar:identifier` | '[' ( `slice` | `string` | `integer` ) ']' )*
 
 .. tab:: Diagram
 
@@ -180,6 +173,13 @@ A relative query starts with ``@`` followed by zero or more child selectors.
 
         .. image:: /_images/dark/json-path/relative_query.svg
             :class: only-dark
+
+.. tab:: EBNF
+
+    .. container:: highlight
+
+        .. productionlist:: json-path-grammar
+            relative_query: '@' ( '.' `~python-grammar:identifier` | '[' ( `slice` | `string` | `integer` ) ']' )*
 
 .. _expression:
 .. _filter:
@@ -192,16 +192,6 @@ A filter consists of one or more (non-)existence checks / comparisons.
 
 .. versionchanged:: 2.6 Added support for comparing 2 paths.
 
-.. tab:: EBNF
-
-    .. container:: highlight
-
-        .. productionlist:: json-path-grammar
-            filter: (
-                  :     '!'? `relative_query`
-                  :     | `relative_query` `whitespace` `operator` `whitespace` ( `value` | `relative_query` )
-                  : ) ++ ( `whitespace` '&&' `whitespace` )
-
 .. tab:: Diagram
 
     .. image:: /_images/light/json-path/filter.*
@@ -212,19 +202,22 @@ A filter consists of one or more (non-)existence checks / comparisons.
         .. image:: /_images/dark/json-path/filter.svg
             :class: only-dark
 
+.. tab:: EBNF
+
+    .. container:: highlight
+
+        .. productionlist:: json-path-grammar
+            filter: (
+                  :     '!'? `relative_query`
+                  :     | `relative_query` `whitespace` `operator` `whitespace` ( `value` | `relative_query` )
+                  : ) ++ ( `whitespace` '&&' `whitespace` )
+
 .. _query_value:
 
 value
 ^^^^^
 
 A value can be a string, number, :json:`true`, :json:`false` or :json:`null`.
-
-.. tab:: EBNF
-
-    .. container:: highlight
-
-        .. productionlist:: json-path-grammar
-            value: `string` | `number` | 'true' | 'false' | 'null'
 
 .. tab:: Diagram
 
@@ -236,17 +229,17 @@ A value can be a string, number, :json:`true`, :json:`false` or :json:`null`.
         .. image:: /_images/dark/json-path/value.svg
             :class: only-dark
 
-slice
-^^^^^
-
-A slice has a start and an end index (exclusive) with an optional step.
-
 .. tab:: EBNF
 
     .. container:: highlight
 
         .. productionlist:: json-path-grammar
-            slice: `integer`? ':' `integer`? ( ':' `integer`? )?
+            value: `string` | `number` | 'true' | 'false' | 'null'
+
+slice
+^^^^^
+
+A slice has a start and an end index (exclusive) with an optional step.
 
 .. tab:: Diagram
 
@@ -258,6 +251,13 @@ A slice has a start and an end index (exclusive) with an optional step.
         .. image:: /_images/dark/json-path/slice.svg
             :class: only-dark
 
+.. tab:: EBNF
+
+    .. container:: highlight
+
+        .. productionlist:: json-path-grammar
+            slice: `integer`? ':' `integer`? ( ':' `integer`? )?
+
 .. _query_string:
 
 string
@@ -267,13 +267,6 @@ A string is a sequence of characters with doubled single quotes, wrapped in
 single quotes.
 
 .. versionchanged:: 2.6 Switched from tilde escapes to doubling.
-
-.. tab:: EBNF
-
-    .. container:: highlight
-
-        .. productionlist:: json-path-grammar
-            string: ( "'" [^']* "'" )+
 
 .. tab:: Diagram
 
@@ -285,17 +278,17 @@ single quotes.
         .. image:: /_images/dark/json-path/string.svg
             :class: only-dark
 
-integer
-^^^^^^^
-
-An integer is a signed whole number.
-
 .. tab:: EBNF
 
     .. container:: highlight
 
         .. productionlist:: json-path-grammar
-            integer: '-'? ( '0' | [1-9] [0-9]* )
+            string: ( "'" [^']* "'" )+
+
+integer
+^^^^^^^
+
+An integer is a signed whole number.
 
 .. tab:: Diagram
 
@@ -307,21 +300,18 @@ An integer is a signed whole number.
         .. image:: /_images/dark/json-path/integer.svg
             :class: only-dark
 
-number
-^^^^^^
-
-A number is a signed decimal number, optionally in scientific notation or one
-of the special values :javascript:`Infinity` and :javascript:`-Infinity`.
-
 .. tab:: EBNF
 
     .. container:: highlight
 
         .. productionlist:: json-path-grammar
-            number: '-'? (
-                  :     ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )?
-                  :     | 'Infinity'
-                  : )
+            integer: '-'? ( '0' | [1-9] [0-9]* )
+
+number
+^^^^^^
+
+A number is a signed decimal number, optionally in scientific notation or one
+of the special values :javascript:`Infinity` and :javascript:`-Infinity`.
 
 .. tab:: Diagram
 
@@ -333,6 +323,16 @@ of the special values :javascript:`Infinity` and :javascript:`-Infinity`.
         .. image:: /_images/dark/json-path/number.svg
             :class: only-dark
 
+.. tab:: EBNF
+
+    .. container:: highlight
+
+        .. productionlist:: json-path-grammar
+            number: '-'? (
+                  :     ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )?
+                  :     | 'Infinity'
+                  : )
+
 .. note:: ``@ == NaN`` is not allowed because :javascript:`NaN !== NaN`, use
     ``@ != @`` instead.
 
@@ -340,13 +340,6 @@ operator
 ^^^^^^^^
 
 An operator can be ``<=``, ``<``, ``==``, ``!=``, ``>=`` or ``>``.
-
-.. tab:: EBNF
-
-    .. container:: highlight
-
-        .. productionlist:: json-path-grammar
-            operator: '<=' | '<' | '==' | '!=' | '>=' | '>'
 
 .. tab:: Diagram
 
@@ -358,17 +351,17 @@ An operator can be ``<=``, ``<``, ``==``, ``!=``, ``>=`` or ``>``.
         .. image:: /_images/dark/json-path/operator.svg
             :class: only-dark
 
-whitespace
-^^^^^^^^^^
-
-Whitespace can be inserted around operators.
-
 .. tab:: EBNF
 
     .. container:: highlight
 
         .. productionlist:: json-path-grammar
-            whitespace: '#x20'*
+            operator: '<=' | '<' | '==' | '!=' | '>=' | '>'
+
+whitespace
+^^^^^^^^^^
+
+Whitespace can be inserted around operators.
 
 .. tab:: Diagram
 
@@ -379,3 +372,10 @@ Whitespace can be inserted around operators.
 
         .. image:: /_images/dark/json-path/whitespace.svg
             :class: only-dark
+
+.. tab:: EBNF
+
+    .. container:: highlight
+
+        .. productionlist:: json-path-grammar
+            whitespace: '#x20'*

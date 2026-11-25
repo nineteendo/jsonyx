@@ -31,13 +31,6 @@ jsonyx document
 
 A jsonyx document consists of a single value.
 
-.. tab:: EBNF
-
-    .. container:: highlight
-
-        .. productionlist:: jsonyx-grammar
-            jsonyx_document: `value`
-
 .. tab:: Diagram
 
     .. image:: /_images/light/jsonyx/jsonyx_document.*
@@ -47,6 +40,13 @@ A jsonyx document consists of a single value.
 
         .. image:: /_images/dark/jsonyx/jsonyx_document.svg
             :class: only-dark
+
+.. tab:: EBNF
+
+    .. container:: highlight
+
+        .. productionlist:: jsonyx-grammar
+            jsonyx_document: `value`
 
 .. _any:
 .. _boolean:
@@ -58,15 +58,6 @@ value
 A value can be an object, array, string, number, :json:`true`, :json:`false` or
 :json:`null`.
 
-.. tab:: EBNF
-
-    .. container:: highlight
-
-        .. productionlist:: jsonyx-grammar
-            value:  `whitespace`
-                 :  ( `object` | `array` | `string` | `number` | 'true' | 'false' | 'null' )
-                 :  `whitespace`
-
 .. tab:: Diagram
 
     .. image:: /_images/light/jsonyx/value.*
@@ -77,6 +68,15 @@ A value can be an object, array, string, number, :json:`true`, :json:`false` or
         .. image:: /_images/dark/jsonyx/value.svg
             :class: only-dark
 
+.. tab:: EBNF
+
+    .. container:: highlight
+
+        .. productionlist:: jsonyx-grammar
+            value:  `whitespace`
+                 :  ( `object` | `array` | `string` | `number` | 'true' | 'false' | 'null' )
+                 :  `whitespace`
+
 .. _object:
 
 object
@@ -85,16 +85,6 @@ object
 An object is an unordered set of key/value pairs enclosed in curly braces.
 Each key is followed by a colon and pairs are separated by commas or
 whitespace with an optional trailing comma.
-
-.. tab:: EBNF
-
-    .. container:: highlight
-
-        .. productionlist:: jsonyx-grammar
-            object: '{' (
-                  :     `whitespace`
-                  :     | ( ( `key` ':' `value` ) ++ ( ',' | `whitespace` - '' ) ) ( ',' `whitespace` )?
-                  : ) '}'
 
 .. tab:: Diagram
 
@@ -106,6 +96,16 @@ whitespace with an optional trailing comma.
         .. image:: /_images/dark/jsonyx/object.svg
             :class: only-dark
 
+.. tab:: EBNF
+
+    .. container:: highlight
+
+        .. productionlist:: jsonyx-grammar
+            object: '{' (
+                  :     `whitespace`
+                  :     | ( ( `key` ':' `value` ) ++ ( ',' | `whitespace` - '' ) ) ( ',' `whitespace` )?
+                  : ) '}'
+
 .. _array:
 
 array
@@ -113,16 +113,6 @@ array
 
 An array is an ordered collection of values enclosed in square brackets. Values
 are separated by commas or whitespace with an optional trailing comma.
-
-.. tab:: EBNF
-
-    .. container:: highlight
-
-        .. productionlist:: jsonyx-grammar
-            array:  '[' (
-                 :      `whitespace`
-                 :      | ( `value` ++ ( ',' | `whitespace` - '' ) ) ( ',' `whitespace` )?
-                 :  ) ']'
 
 .. tab:: Diagram
 
@@ -134,6 +124,16 @@ are separated by commas or whitespace with an optional trailing comma.
         .. image:: /_images/dark/jsonyx/array.svg
             :class: only-dark
 
+.. tab:: EBNF
+
+    .. container:: highlight
+
+        .. productionlist:: jsonyx-grammar
+            array:  '[' (
+                 :      `whitespace`
+                 :      | ( `value` ++ ( ',' | `whitespace` - '' ) ) ( ',' `whitespace` )?
+                 :  ) ']'
+
 .. _string:
 
 string
@@ -141,16 +141,6 @@ string
 
 A string is a sequence of characters, wrapped in double quotes, using backslash
 escapes.
-
-.. tab:: EBNF
-
-    .. container:: highlight
-
-        .. productionlist:: jsonyx-grammar
-            string: '"' (
-                  :     [^"\#x0-#x1F]
-                  :     | '\' ( ["\/bfnrt] | 'u' [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] )
-                  : )* '"'
 
 .. tab:: Diagram
 
@@ -162,6 +152,16 @@ escapes.
         .. image:: /_images/dark/jsonyx/string.svg
             :class: only-dark
 
+.. tab:: EBNF
+
+    .. container:: highlight
+
+        .. productionlist:: jsonyx-grammar
+            string: '"' (
+                  :     [^"\#x0-#x1F]
+                  :     | '\' ( ["\/bfnrt] | 'u' [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] )
+                  : )* '"'
+
 .. _number:
 
 number
@@ -170,16 +170,6 @@ number
 A number is a signed decimal number, optionally in scientific notation or one
 of the special values :javascript:`NaN`, :javascript:`Infinity` and
 :javascript:`-Infinity`.
-
-.. tab:: EBNF
-
-    .. container:: highlight
-
-        .. productionlist:: jsonyx-grammar
-            number: '-'? (
-                  :     ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )?
-                  :     | 'Infinity'
-                  : ) | 'NaN'
 
 .. tab:: Diagram
 
@@ -191,19 +181,22 @@ of the special values :javascript:`NaN`, :javascript:`Infinity` and
         .. image:: /_images/dark/jsonyx/number.svg
             :class: only-dark
 
+.. tab:: EBNF
+
+    .. container:: highlight
+
+        .. productionlist:: jsonyx-grammar
+            number: '-'? (
+                  :     ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )?
+                  :     | 'Infinity'
+                  : ) | 'NaN'
+
 key
 ^^^
 
 A key can be a string or an identifier.
 
 .. versionchanged:: 2.0 Added support for identifiers.
-
-.. tab:: EBNF
-
-    .. container:: highlight
-
-        .. productionlist:: jsonyx-grammar
-            key: `whitespace` ( `string` | `~python-grammar:identifier` ) `whitespace`
 
 .. tab:: Diagram
 
@@ -215,10 +208,27 @@ A key can be a string or an identifier.
         .. image:: /_images/dark/jsonyx/key.svg
             :class: only-dark
 
+.. tab:: EBNF
+
+    .. container:: highlight
+
+        .. productionlist:: jsonyx-grammar
+            key: `whitespace` ( `string` | `~python-grammar:identifier` ) `whitespace`
+
 whitespace
 ^^^^^^^^^^
 
 Whitespace, including comments can be inserted between any pair of tokens.
+
+.. tab:: Diagram
+
+    .. image:: /_images/light/jsonyx/whitespace.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/jsonyx/whitespace.svg
+            :class: only-dark
 
 .. tab:: EBNF
 
@@ -230,13 +240,3 @@ Whitespace, including comments can be inserted between any pair of tokens.
                       :     | '/*' ( ( [^*]* '*'+ ) ++ [^*/] ) '/'
                       :     | [#x9#xA#xD#x20]
                       : )*
-
-.. tab:: Diagram
-
-    .. image:: /_images/light/jsonyx/whitespace.*
-        :class: only-light
-
-    .. only:: not latex
-
-        .. image:: /_images/dark/jsonyx/whitespace.svg
-            :class: only-dark
