@@ -50,8 +50,18 @@ New Features:
           -{"op": "copy", "mode": "set", "from": "@.a", "to": "@.b"}
           +{"op": "copy", "from": "@.a", "to": "@.b"}
 
+    - Made :python:`check_circular=True` nearly free:
+
+      .. code-block:: diff
+
+           >>> import jsonyx as json
+           >>> lst = []
+           >>> lst.append(lst)
+          ->>> json.dump(lst, check_circular=False)
+          +>>> json.dump(lst)
+           ValueError: Unexpected circular reference
+
 Other Changes:
-    - Sped up :python:`check_circular=True`
     - Sped up :class:`float` encoding
     - Sped up :class:`int` encoding on Python 3.14+
     - Sped up :class:`float` and :class:`int` decoding
