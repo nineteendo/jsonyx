@@ -87,8 +87,8 @@ Fields:
     - **path** (:ref:`string`, default: :json:`"$"`) - the
       :ref:`absolute path <absolute_path>` where the expression is evaluated.
     - **expr** (:ref:`string`) - an :ref:`expression <expression>`.
-    - **count** (:ref:`number` | :ref:`null`, default: :json:`null`) - the
-      expected number of matches.
+    - **count** (:ref:`number` | :ref:`null <null>`, default: :json:`null`) -
+      the expected number of matches.
     - **msg** (:ref:`string`, optional): an error message
 
 Example:
