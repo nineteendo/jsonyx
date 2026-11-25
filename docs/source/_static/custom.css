@@ -10,6 +10,12 @@ button.copybtn:focus, .tab-set > input:focus + label {
 [role=main] .table-wrapper.container {
     padding: 0;
 }
+[role=main] .tab-content > img:first-child {
+    margin-top: 1rem;
+}
+img {
+    margin-top: 1rem;
+}
 table.docutils {
     width: 100%;
 }
