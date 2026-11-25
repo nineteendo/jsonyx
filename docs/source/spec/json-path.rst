@@ -111,18 +111,22 @@ query
 
 A query can be absolute or relative.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: json-path-grammar
-        query: `absolute_query` | `relative_query`
+    .. container:: highlight
 
-.. image:: /_images/light/json-path/query.*
-    :class: only-light
+        .. productionlist:: json-path-grammar
+            query: `absolute_query` | `relative_query`
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/json-path/query.svg
-        :class: only-dark
+    .. image:: /_images/light/json-path/query.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/json-path/query.svg
+            :class: only-dark
 
 .. _absolute_path:
 .. _absolute_query:
@@ -132,22 +136,26 @@ absolute query
 
 An absolute query starts with ``$`` followed by zero or more selectors.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: json-path-grammar
-        absolute_query: '$' ( '?'? (
-                      :     '.' `~python-grammar:identifier`
-                      :     | '{' `filter` '}'
-                      :     | '[' ( `slice` | `integer` | `string` | `filter` ) ']'
-                      : ) )* '?'?
+    .. container:: highlight
 
-.. image:: /_images/light/json-path/absolute_query.*
-    :class: only-light
+        .. productionlist:: json-path-grammar
+            absolute_query: '$' ( '?'? (
+                          :     '.' `~python-grammar:identifier`
+                          :     | '{' `filter` '}'
+                          :     | '[' ( `slice` | `integer` | `string` | `filter` ) ']'
+                          : ) )* '?'?
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/json-path/absolute_query.svg
-        :class: only-dark
+    .. image:: /_images/light/json-path/absolute_query.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/json-path/absolute_query.svg
+            :class: only-dark
 
 .. _relative_path:
 
@@ -156,18 +164,22 @@ relative query
 
 A relative query starts with ``@`` followed by zero or more child selectors.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: json-path-grammar
-        relative_query: '@' ( '.' `~python-grammar:identifier` | '[' ( `slice` | `string` | `integer` ) ']' )*
+    .. container:: highlight
 
-.. image:: /_images/light/json-path/relative_query.*
-    :class: only-light
+        .. productionlist:: json-path-grammar
+            relative_query: '@' ( '.' `~python-grammar:identifier` | '[' ( `slice` | `string` | `integer` ) ']' )*
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/json-path/relative_query.svg
-        :class: only-dark
+    .. image:: /_images/light/json-path/relative_query.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/json-path/relative_query.svg
+            :class: only-dark
 
 .. _expression:
 .. _filter:
@@ -180,21 +192,25 @@ A filter consists of one or more (non-)existence checks / comparisons.
 
 .. versionchanged:: 2.6 Added support for comparing 2 paths.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: json-path-grammar
-        filter: (
-              :     '!'? `relative_query`
-              :     | `relative_query` `whitespace` `operator` `whitespace` ( `value` | `relative_query` )
-              : ) ++ ( `whitespace` '&&' `whitespace` )
+    .. container:: highlight
 
-.. image:: /_images/light/json-path/filter.*
-    :class: only-light
+        .. productionlist:: json-path-grammar
+            filter: (
+                  :     '!'? `relative_query`
+                  :     | `relative_query` `whitespace` `operator` `whitespace` ( `value` | `relative_query` )
+                  : ) ++ ( `whitespace` '&&' `whitespace` )
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/json-path/filter.svg
-        :class: only-dark
+    .. image:: /_images/light/json-path/filter.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/json-path/filter.svg
+            :class: only-dark
 
 .. _query_value:
 
@@ -203,36 +219,44 @@ value
 
 A value can be a string, number, :json:`true`, :json:`false` or :json:`null`.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: json-path-grammar
-        value: `string` | `number` | 'true' | 'false' | 'null'
+    .. container:: highlight
 
-.. image:: /_images/light/json-path/value.*
-    :class: only-light
+        .. productionlist:: json-path-grammar
+            value: `string` | `number` | 'true' | 'false' | 'null'
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/json-path/value.svg
-        :class: only-dark
+    .. image:: /_images/light/json-path/value.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/json-path/value.svg
+            :class: only-dark
 
 slice
 ^^^^^
 
 A slice has a start and an end index (exclusive) with an optional step.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: json-path-grammar
-        slice: `integer`? ':' `integer`? ( ':' `integer`? )?
+    .. container:: highlight
 
-.. image:: /_images/light/json-path/slice.*
-    :class: only-light
+        .. productionlist:: json-path-grammar
+            slice: `integer`? ':' `integer`? ( ':' `integer`? )?
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/json-path/slice.svg
-        :class: only-dark
+    .. image:: /_images/light/json-path/slice.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/json-path/slice.svg
+            :class: only-dark
 
 .. _query_string:
 
@@ -244,36 +268,44 @@ single quotes.
 
 .. versionchanged:: 2.6 Switched from tilde escapes to doubling.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: json-path-grammar
-        string: ( "'" [^']* "'" )+
+    .. container:: highlight
 
-.. image:: /_images/light/json-path/string.*
-    :class: only-light
+        .. productionlist:: json-path-grammar
+            string: ( "'" [^']* "'" )+
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/json-path/string.svg
-        :class: only-dark
+    .. image:: /_images/light/json-path/string.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/json-path/string.svg
+            :class: only-dark
 
 integer
 ^^^^^^^
 
 An integer is a signed whole number.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: json-path-grammar
-        integer: '-'? ( '0' | [1-9] [0-9]* )
+    .. container:: highlight
 
-.. image:: /_images/light/json-path/integer.*
-    :class: only-light
+        .. productionlist:: json-path-grammar
+            integer: '-'? ( '0' | [1-9] [0-9]* )
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/json-path/integer.svg
-        :class: only-dark
+    .. image:: /_images/light/json-path/integer.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/json-path/integer.svg
+            :class: only-dark
 
 number
 ^^^^^^
@@ -281,21 +313,25 @@ number
 A number is a signed decimal number, optionally in scientific notation or one
 of the special values :javascript:`Infinity` and :javascript:`-Infinity`.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: json-path-grammar
-        number: '-'? (
-              :     ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )?
-              :     | 'Infinity'
-              : )
+    .. container:: highlight
 
-.. image:: /_images/light/json-path/number.*
-    :class: only-light
+        .. productionlist:: json-path-grammar
+            number: '-'? (
+                  :     ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )?
+                  :     | 'Infinity'
+                  : )
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/json-path/number.svg
-        :class: only-dark
+    .. image:: /_images/light/json-path/number.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/json-path/number.svg
+            :class: only-dark
 
 .. note:: ``@ == NaN`` is not allowed because :javascript:`NaN !== NaN`, use
     ``@ != @`` instead.
@@ -305,33 +341,41 @@ operator
 
 An operator can be ``<=``, ``<``, ``==``, ``!=``, ``>=`` or ``>``.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: json-path-grammar
-        operator: '<=' | '<' | '==' | '!=' | '>=' | '>'
+    .. container:: highlight
 
-.. image:: /_images/light/json-path/operator.*
-    :class: only-light
+        .. productionlist:: json-path-grammar
+            operator: '<=' | '<' | '==' | '!=' | '>=' | '>'
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/json-path/operator.svg
-        :class: only-dark
+    .. image:: /_images/light/json-path/operator.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/json-path/operator.svg
+            :class: only-dark
 
 whitespace
 ^^^^^^^^^^
 
 Whitespace can be inserted around operators.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: json-path-grammar
-        whitespace: '#x20'*
+    .. container:: highlight
 
-.. image:: /_images/light/json-path/whitespace.*
-    :class: only-light
+        .. productionlist:: json-path-grammar
+            whitespace: '#x20'*
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/json-path/whitespace.svg
-        :class: only-dark
+    .. image:: /_images/light/json-path/whitespace.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/json-path/whitespace.svg
+            :class: only-dark

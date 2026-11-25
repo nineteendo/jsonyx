@@ -31,18 +31,22 @@ jsonyx document
 
 A jsonyx document consists of a single value.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: jsonyx-grammar
-        jsonyx_document: `value`
+    .. container:: highlight
 
-.. image:: /_images/light/jsonyx/jsonyx_document.*
-    :class: only-light
+        .. productionlist:: jsonyx-grammar
+            jsonyx_document: `value`
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/jsonyx/jsonyx_document.svg
-        :class: only-dark
+    .. image:: /_images/light/jsonyx/jsonyx_document.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/jsonyx/jsonyx_document.svg
+            :class: only-dark
 
 .. _any:
 .. _boolean:
@@ -54,20 +58,24 @@ value
 A value can be an object, array, string, number, :json:`true`, :json:`false` or
 :json:`null`.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: jsonyx-grammar
-        value:  `whitespace`
-             :  ( `object` | `array` | `string` | `number` | 'true' | 'false' | 'null' )
-             :  `whitespace`
+    .. container:: highlight
 
-.. image:: /_images/light/jsonyx/value.*
-    :class: only-light
+        .. productionlist:: jsonyx-grammar
+            value:  `whitespace`
+                 :  ( `object` | `array` | `string` | `number` | 'true' | 'false' | 'null' )
+                 :  `whitespace`
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/jsonyx/value.svg
-        :class: only-dark
+    .. image:: /_images/light/jsonyx/value.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/jsonyx/value.svg
+            :class: only-dark
 
 .. _object:
 
@@ -78,21 +86,25 @@ An object is an unordered set of key/value pairs enclosed in curly braces.
 Each key is followed by a colon and pairs are separated by commas or
 whitespace with an optional trailing comma.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: jsonyx-grammar
-        object: '{' (
-              :     `whitespace`
-              :     | ( ( `key` ':' `value` ) ++ ( ',' | `whitespace` - '' ) ) ( ',' `whitespace` )?
-              : ) '}'
+    .. container:: highlight
 
-.. image:: /_images/light/jsonyx/object.*
-    :class: only-light
+        .. productionlist:: jsonyx-grammar
+            object: '{' (
+                  :     `whitespace`
+                  :     | ( ( `key` ':' `value` ) ++ ( ',' | `whitespace` - '' ) ) ( ',' `whitespace` )?
+                  : ) '}'
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/jsonyx/object.svg
-        :class: only-dark
+    .. image:: /_images/light/jsonyx/object.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/jsonyx/object.svg
+            :class: only-dark
 
 .. _array:
 
@@ -102,21 +114,25 @@ array
 An array is an ordered collection of values enclosed in square brackets. Values
 are separated by commas or whitespace with an optional trailing comma.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: jsonyx-grammar
-        array:  '[' (
-             :      `whitespace`
-             :      | ( `value` ++ ( ',' | `whitespace` - '' ) ) ( ',' `whitespace` )?
-             :  ) ']'
+    .. container:: highlight
 
-.. image:: /_images/light/jsonyx/array.*
-    :class: only-light
+        .. productionlist:: jsonyx-grammar
+            array:  '[' (
+                 :      `whitespace`
+                 :      | ( `value` ++ ( ',' | `whitespace` - '' ) ) ( ',' `whitespace` )?
+                 :  ) ']'
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/jsonyx/array.svg
-        :class: only-dark
+    .. image:: /_images/light/jsonyx/array.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/jsonyx/array.svg
+            :class: only-dark
 
 .. _string:
 
@@ -126,21 +142,25 @@ string
 A string is a sequence of characters, wrapped in double quotes, using backslash
 escapes.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: jsonyx-grammar
-        string: '"' (
-              :     [^"\#x0-#x1F]
-              :     | '\' ( ["\/bfnrt] | 'u' [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] )
-              : )* '"'
+    .. container:: highlight
 
-.. image:: /_images/light/jsonyx/string.*
-    :class: only-light
+        .. productionlist:: jsonyx-grammar
+            string: '"' (
+                  :     [^"\#x0-#x1F]
+                  :     | '\' ( ["\/bfnrt] | 'u' [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] )
+                  : )* '"'
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/jsonyx/string.svg
-        :class: only-dark
+    .. image:: /_images/light/jsonyx/string.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/jsonyx/string.svg
+            :class: only-dark
 
 .. _number:
 
@@ -151,21 +171,25 @@ A number is a signed decimal number, optionally in scientific notation or one
 of the special values :javascript:`NaN`, :javascript:`Infinity` and
 :javascript:`-Infinity`.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: jsonyx-grammar
-        number: '-'? (
-              :     ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )?
-              :     | 'Infinity'
-              : ) | 'NaN'
+    .. container:: highlight
 
-.. image:: /_images/light/jsonyx/number.*
-    :class: only-light
+        .. productionlist:: jsonyx-grammar
+            number: '-'? (
+                  :     ( '0' | [1-9] [0-9]* ) ( '.' [0-9]+ )? ( [eE] [+-]? [0-9]+ )?
+                  :     | 'Infinity'
+                  : ) | 'NaN'
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/jsonyx/number.svg
-        :class: only-dark
+    .. image:: /_images/light/jsonyx/number.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/jsonyx/number.svg
+            :class: only-dark
 
 key
 ^^^
@@ -174,37 +198,45 @@ A key can be a string or an identifier.
 
 .. versionchanged:: 2.0 Added support for identifiers.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: jsonyx-grammar
-        key: `whitespace` ( `string` | `~python-grammar:identifier` ) `whitespace`
+    .. container:: highlight
 
-.. image:: /_images/light/jsonyx/key.*
-    :class: only-light
+        .. productionlist:: jsonyx-grammar
+            key: `whitespace` ( `string` | `~python-grammar:identifier` ) `whitespace`
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/jsonyx/key.svg
-        :class: only-dark
+    .. image:: /_images/light/jsonyx/key.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/jsonyx/key.svg
+            :class: only-dark
 
 whitespace
 ^^^^^^^^^^
 
 Whitespace, including comments can be inserted between any pair of tokens.
 
-.. container:: highlight
+.. tab:: EBNF
 
-    .. productionlist:: jsonyx-grammar
-        whitespace: (
-                  :     '//' [^#xA#xD]* ( [#xA#xD] | `!EOF` )
-                  :     | '/*' ( ( [^*]* '*'+ ) ++ [^*/] ) '/'
-                  :     | [#x9#xA#xD#x20]
-                  : )*
+    .. container:: highlight
 
-.. image:: /_images/light/jsonyx/whitespace.*
-    :class: only-light
+        .. productionlist:: jsonyx-grammar
+            whitespace: (
+                      :     '//' [^#xA#xD]* ( [#xA#xD] | `!EOF` )
+                      :     | '/*' ( ( [^*]* '*'+ ) ++ [^*/] ) '/'
+                      :     | [#x9#xA#xD#x20]
+                      : )*
 
-.. only:: not latex
+.. tab:: Diagram
 
-    .. image:: /_images/dark/jsonyx/whitespace.svg
-        :class: only-dark
+    .. image:: /_images/light/jsonyx/whitespace.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/jsonyx/whitespace.svg
+            :class: only-dark
