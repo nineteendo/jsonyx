@@ -17,7 +17,7 @@ jsonyx 2.6.0 (unreleased)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 New Features:
-    - Added :json:`"count"` to :ref:`assert`
+    - Added :json:`"count"` to the :ref:`assert` operation
     - Added support for comparing 2 paths to :ref:`filter`
     - Made ``?`` equivalent to ``{@}`` for :ref:`absolute_query`:
 
@@ -42,8 +42,8 @@ jsonyx 2.5.0 (Oct 28, 2026)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 New Features:
-    - Made :json:`"set"` the default paste mode for :ref:`copy` and :ref:`move`
-      operations:
+    - Made :json:`"set"` the default paste mode for the :ref:`copy` and
+      :ref:`move` operations:
 
       .. code-block:: diff
 
