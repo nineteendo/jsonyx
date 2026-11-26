@@ -134,7 +134,7 @@ A query can be absolute or relative.
 absolute query
 ^^^^^^^^^^^^^^
 
-An absolute query starts with ``$`` followed by zero or more selectors.
+An absolute query starts with a dollar sign followed by zero or more selectors.
 
 .. tab:: Diagram
 
@@ -162,7 +162,8 @@ An absolute query starts with ``$`` followed by zero or more selectors.
 relative query
 ^^^^^^^^^^^^^^
 
-A relative query starts with ``@`` followed by zero or more child selectors.
+A relative query starts with an at sign followed by zero or more child
+selectors.
 
 .. tab:: Diagram
 
@@ -188,7 +189,8 @@ A relative query starts with ``@`` followed by zero or more child selectors.
 filter
 ^^^^^^
 
-A filter consists of one or more (non-)existence checks / comparisons.
+A filter consists of one or more (non-)existence checks / comparisons,
+separated by double ampersands.
 
 .. versionchanged:: 2.6 Added support for comparing 2 paths.
 
@@ -263,10 +265,10 @@ A slice has a start and an end index (exclusive) with an optional step.
 string
 ^^^^^^
 
-A string is a sequence of characters with doubled single quotes, wrapped in
-single quotes.
+A string is a sequence of characters, wrapped in single quotes, using quote
+doubling.
 
-.. versionchanged:: 2.6 Switched from tilde escapes to doubling.
+.. versionchanged:: 2.6 Switched from tilde escapes to quote doubling.
 
 .. tab:: Diagram
 

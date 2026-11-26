@@ -82,9 +82,11 @@ A value can be an object, array, string, number, :json:`true`, :json:`false` or
 object
 ^^^^^^
 
-An object is an unordered set of key/value pairs enclosed in curly braces.
-Each key is followed by a colon and pairs are separated by commas or
-whitespace with an optional trailing comma.
+An object is an unordered collection of key/value pairs enclosed in curly
+braces.
+
+Keys and values are separated by colons. Key/value pairs are separated by
+commas or whitespace with an optional trailing comma.
 
 .. tab:: Diagram
 
@@ -111,8 +113,9 @@ whitespace with an optional trailing comma.
 array
 ^^^^^
 
-An array is an ordered collection of values enclosed in square brackets. Values
-are separated by commas or whitespace with an optional trailing comma.
+An array is an ordered collection of values enclosed in square brackets.
+
+Values are separated by commas or whitespace with an optional trailing comma.
 
 .. tab:: Diagram
 

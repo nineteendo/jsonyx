@@ -27,7 +27,7 @@ New Features:
           +{"op": "assert", "path": "$[::2]?", "expr": "@ == true"}
 
 Breaking Changes:
-    - Switched from tilde escapes to doubling for
+    - Switched from tilde escapes to quote doubling for
       :ref:`query string <query_string>`:
 
       .. code-block:: diff
