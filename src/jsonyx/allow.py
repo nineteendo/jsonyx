@@ -87,10 +87,8 @@ r"""Allow unpaired surrogates in strings.
 >>> json.dump("\ud800", allow=json.allow.SURROGATES, ensure_ascii=True)
 "\ud800"
 
-.. tip:: If you're not using :func:`jsonyx.read`, :meth:`jsonyx.Decoder.read`,
-    :func:`jsonyx.write` or :meth:`jsonyx.Encoder.write`, you still need to
-    use :python:`ensure_ascii=True` or set the unicode error handler to
-    :python:`"surrogatepass"`.
+.. tip:: Use :python:`errors="surrogatepass"` for converting between strings
+    and bytes without :mod:`jsonyx`.
 """
 
 TRAILING_COMMA: frozenset[str] = frozenset({"trailing_comma"})
