@@ -6,7 +6,7 @@ __all__: list[str] = ["Manipulator"]
 import re
 from copy import deepcopy
 from operator import eq, ge, gt, le, lt, ne
-from re import DOTALL, MULTILINE, VERBOSE, Pattern, RegexFlag
+from re import DOTALL, MULTILINE, VERBOSE, Match, Pattern, RegexFlag
 from typing import TYPE_CHECKING, Any
 
 from jsonyx import JSONSyntaxError
@@ -107,6 +107,13 @@ def _has_key(target: _Target, key: Any) -> bool:
     return -len(target) <= key < len(target)  # type: ignore
 
 
+def _skip_whitespace(query: str, end: int) -> int:
+    if match := _WHITESPACE.match(query, end):
+        end = match.end()
+
+    return end
+
+
 def _scan_query_operator(query: str, end: int) -> tuple[_Operator | None, int]:
     if query[end:end + 2] == "<=":
         operator, end = le, end + 2
@@ -159,6 +166,8 @@ class Manipulator:
     def __init__(self, *, allow: Container[str] = NOTHING) -> None:
         """Create a new JSON manipulator."""
         self._allow_nan_and_infinity: bool = "nan_and_infinity" in allow
+        self._allow_missing_commas: bool = "missing_commas" in allow
+        self._allow_trailing_comma: bool = "trailing_comma" in allow
 
     def _scan_query_value(self, s: str, idx: int = 0) -> tuple[Any, int]:
         try:
@@ -218,9 +227,7 @@ class Manipulator:
                 if _has_key(filter_target, filter_key) is not negate_filter
             ]
             old_end: int = end
-            if match := _WHITESPACE.match(query, end):
-                end = match.end()
-
+            end = _skip_whitespace(query, end)
             operator_idx: int = end
             operator, end = _scan_query_operator(query, end)
             if operator is None:
@@ -229,9 +236,7 @@ class Manipulator:
                 msg: str = "Unexpected operator after negative filter"
                 raise _errmsg(msg, query, operator_idx, end)
             else:
-                if match := _WHITESPACE.match(query, end):
-                    end = match.end()
-
+                end = _skip_whitespace(query, end)
                 if query[end:end + 1] not in {"@", "$"}:
                     value, end = self._scan_query_value(query, end)
                     nodes = [
@@ -257,15 +262,65 @@ class Manipulator:
                     ]
 
                 old_end = end
-                if match := _WHITESPACE.match(query, end):
-                    end = match.end()
+                end = _skip_whitespace(query, end)
 
             if query[end:end + 2] != "&&":
                 return nodes, old_end
 
-            end += 2
-            if match := _WHITESPACE.match(query, end):
-                end = match.end()
+            end = _skip_whitespace(query, end + 2)
+
+    def _scan_idxs(
+        self, query: str, match: Match[str],
+    ) -> tuple[list[Any], int]:
+        keys: list[Any] = []
+        while True:
+            key, end = int(match.group()), match.end()
+            keys.append(key)
+            comma_idx: int = end
+            end = _skip_whitespace(query, end)
+            if query[end:end + 1] == ",":
+                comma_idx = end
+                end = _skip_whitespace(query, end + 1)
+            elif not (match := _INTEGER.match(query, end)):  # type: ignore
+                return keys, comma_idx
+            elif end == comma_idx:
+                msg = "Expecting comma"
+                raise _errmsg(msg, query, comma_idx)
+            elif not self._allow_missing_commas:
+                msg = "Missing commas are not allowed"
+                raise _errmsg(msg, query, comma_idx)
+
+            if not (match := _INTEGER.match(query, end)):  # type: ignore
+                end = comma_idx + 1
+                if not self._allow_trailing_comma:
+                    msg = "Trailing comma is not allowed"
+                    raise _errmsg(msg, query, comma_idx, end)
+
+                return keys, end
+
+    def _scan_properties(self, query: str, end: int) -> tuple[list[Any], int]:
+        keys: list[Any] = []
+        while True:
+            key, end = _scan_query_string(query, end + 1)
+            keys.append(key)
+            comma_idx: int = end
+            end = _skip_whitespace(query, end)
+            if query[end:end + 1] == ",":
+                comma_idx = end
+                end = _skip_whitespace(query, end + 1)
+            elif query[end:end + 1] != "'":
+                return keys, comma_idx
+            elif not self._allow_missing_commas:
+                msg = "Missing commas are not allowed"
+                raise _errmsg(msg, query, comma_idx)
+
+            if query[end:end + 1] != "'":
+                end = comma_idx + 1
+                if not self._allow_trailing_comma:
+                    msg = "Trailing comma is not allowed"
+                    raise _errmsg(msg, query, comma_idx, end)
+
+                return keys, end
 
     def _select_nodes(
         self,
@@ -341,11 +396,26 @@ class Manipulator:
                     )
                     nodes = [(target, key) for target in targets]
                 elif match := _INTEGER.match(query, end):
-                    key, end = int(match.group()), match.end()
-                    nodes = [(target, key) for target in targets]
+                    old_end: int = end
+                    keys, end = self._scan_idxs(query, match)
+                    if len(keys) > 1 and relative:
+                        msg = "Arrays are not allowed in relative query"
+                        raise _errmsg(msg, query, old_end, end)
+
+                    keys.sort(key=abs)
+                    nodes = [
+                        (target, key) for target in targets for key in keys
+                    ]
                 elif query[end:end + 1] == "'":
-                    key, end = _scan_query_string(query, end + 1)
-                    nodes = [(target, key) for target in targets]
+                    old_end = end
+                    keys, end = self._scan_properties(query, end)
+                    if len(keys) > 1 and relative:
+                        msg = "Arrays are not allowed in relative query"
+                        raise _errmsg(msg, query, old_end, end)
+
+                    nodes = [
+                        (target, key) for target in targets for key in keys
+                    ]
                 elif relative:
                     msg = "Filters are not allowed in relative query"
                     raise _errmsg(msg, query, end)

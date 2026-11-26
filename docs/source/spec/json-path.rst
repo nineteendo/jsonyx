@@ -12,20 +12,20 @@ Selectors
 .. table::
     :class: longtable
 
-    ================================ =====================
+    ================================ ==========================
     Selectors                        Description
-    ================================ =====================
+    ================================ ==========================
     ``$``                            The root value
     ``@``                            The current value
-    ``.<name>``                      Dot-notated child
-    ``[<string>]``                   Bracket-notated child
-    ``[<number>]``                   Array index
+    ``.<identifier>``                Single object property
+    ``[<strings>]``                  Multiple object properties
+    ``[<numbers>]``                  Array indices
     ``[<number>:<number>]``          Array slice
     ``[<number>:<number>:<number>]`` Extended array slice
     ``[<filter>]``                   Child filter
     ``{<filter>}``                   Current value filter
     ``?``                            Shorthand for ``{@}``
-    ================================ =====================
+    ================================ ==========================
 
 Examples
 --------
@@ -33,6 +33,7 @@ Examples
 .. versionchanged:: 2.6
 
     - Added support for comparing 2 paths.
+    - Allowed selecting multiple indices.
     - Made ``?`` expand slices like ``{@}``.
     - Switched from tilde escapes to doubling.
 
@@ -86,8 +87,9 @@ Examples
     ``$.books[:].author``                                   The authors of all books
     ``$.books[2]``                                          The third book
     ``$.books[-1]``                                         The last book
-    ``$.books[:2]``                                         An array of the first two books
-    ``$.books[:2]?``                                        The first two books
+    ``$.books[0, 1]``                                       The first two books
+    ``$.books[::2]``                                        An array of the even books
+    ``$.books[::2]?``                                       The even books
     ``$.books[@.isbn]``                                     All books with an ISBN
     ``$.books[:].isbn?``                                    The ISBNs of all books with an ISBN
     ``$.books[@.available > 0]``                            All available books
@@ -136,6 +138,8 @@ absolute query
 
 An absolute query starts with a dollar sign followed by zero or more selectors.
 
+.. versionchanged:: 2.6 Allowed selecting multiple indices or properties.
+
 .. tab:: Diagram
 
     .. image:: /_images/light/json-path/absolute_query.*
@@ -154,7 +158,7 @@ An absolute query starts with a dollar sign followed by zero or more selectors.
             absolute_query: '$' ( '?'? (
                           :     '.' `~python-grammar:identifier`
                           :     | '{' `filter` '}'
-                          :     | '[' ( `slice` | `integer` | `string` | `filter` ) ']'
+                          :     | '[' ( `slice` | `index_array` | `property_array` | `filter` ) ']'
                           : ) )* '?'?
 
 .. _relative_path:
@@ -213,6 +217,56 @@ separated by double ampersands.
                   :     '!'? `relative_query`
                   :     | `relative_query` `whitespace` `operator` `whitespace` ( `value` | `relative_query` )
                   : ) ++ ( `whitespace` '&&' `whitespace` )
+
+index array
+^^^^^^^^^^
+
+An index array is an ordered collection of one or more integers, separated by
+commas or whitespace with an optional trailing comma.
+
+.. versionadded:: 2.6
+
+.. tab:: Diagram
+
+    .. image:: /_images/light/json-path/index_array.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/json-path/index_array.svg
+            :class: only-dark
+
+.. tab:: EBNF
+
+    .. container:: highlight
+
+        .. productionlist:: json-path-grammar
+            property_array: ( `string` ++ ( ',' | `whitespace` - '' ) ) ','?
+
+property array
+^^^^^^^^^^^^^^
+
+A property array is an ordered collection of one or more strings, separated by
+commas or whitespace with an optional trailing comma.
+
+.. versionadded:: 2.6
+
+.. tab:: Diagram
+
+    .. image:: /_images/light/json-path/property_array.*
+        :class: only-light
+
+    .. only:: not latex
+
+        .. image:: /_images/dark/json-path/property_array.svg
+            :class: only-dark
+
+.. tab:: EBNF
+
+    .. container:: highlight
+
+        .. productionlist:: json-path-grammar
+            property_array: ( `string` ++ ( ',' | `whitespace` - '' ) ) ','?
 
 .. _query_value:
 
@@ -363,7 +417,7 @@ An operator can be ``<=``, ``<``, ``==``, ``!=``, ``>=`` or ``>``.
 whitespace
 ^^^^^^^^^^
 
-Whitespace can be inserted around operators.
+Whitespace can be inserted around operators and comma's.
 
 .. tab:: Diagram
 

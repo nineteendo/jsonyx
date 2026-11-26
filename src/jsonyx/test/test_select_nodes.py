@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any
 import pytest
 
 from jsonyx import JSONSyntaxError, select_nodes
+from jsonyx.allow import MISSING_COMMAS, TRAILING_COMMA
 from jsonyx.test import check_syntax_err
 
 if TYPE_CHECKING:
@@ -52,22 +53,8 @@ def test_optional_marker(node: _Node, query: str, keep: bool) -> None:
 def test_optional_marker_slice(key: slice, query: str) -> None:
     """Test optional marker with slice."""
     obj: list[Any] = [1, 2, 3]
-    expected: list[_Node] = [(obj, 0), (obj, 1), (obj, 2)]
+    expected: list[_Node] = [(obj, i) for i in range(3)]
     assert select_nodes((obj, key), query) == expected
-
-
-@pytest.mark.parametrize(("query", "msg", "end_colno"), [
-    ("@?", "Optional markers are not allowed in relative query", 3),
-    ("@{@}", "Conditions are not allowed in relative query", -1),
-])
-def test_optional_marker_not_allowed(
-    query: str, msg: str, end_colno: int,
-) -> None:
-    """Test optional marker when not allowed."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
-        select_nodes([], query, relative=True)
-
-    check_syntax_err(exc_info, msg, 2, end_colno)
 
 
 @pytest.mark.parametrize("key", [
@@ -156,8 +143,7 @@ def test_relative_list_property(query: str) -> None:
 ])
 def test_slice(query: str, expected: slice) -> None:
     """Test slice."""
-    node: _Node = [[]], 0
-    assert select_nodes(node, query, allow_slice=True) == [([], expected)]
+    assert select_nodes(([[]], 0), query, allow_slice=True) == [([], expected)]
 
 
 @pytest.mark.parametrize("query", [
@@ -208,6 +194,34 @@ def test_invalid_idx() -> None:
         select_nodes(([[]], 0), "$[1\uff10]")
 
 
+@pytest.mark.parametrize(("query", "keys"), [
+    # Whitespace
+    ("$[1,2,3]", [1, 2, 3]),  # no whitespace
+    ("$[1 ,2 ,3]", [1, 2, 3]),  # before commas
+    ("$[1, 2, 3]", [1, 2, 3]),  # after commas
+
+    # Sorting
+    ("$[3,2,1]", [1, 2, 3]),  # positive indices
+    ("$[-3, -2, -1]", [-1, -2, -3]),  # negative indices
+])
+def test_index_array(query: str, keys: list[Any]) -> None:
+    """Test index array."""
+    assert select_nodes(([[]], 0), query) == [([], key) for key in keys]
+
+
+@pytest.mark.parametrize(("query", "msg", "end_colno"), [
+    ("$[1-2-3]", "Expecting comma", -1),
+    ("$[1 2 3]", "Missing commas are not allowed", -1),
+    ("$[0,]", "Trailing comma is not allowed", 5),
+])
+def test_invalid_index_array(query: str, msg: str, end_colno: int) -> None:
+    """Test invalid index array."""
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        select_nodes(([[]], 0), query)
+
+    check_syntax_err(exc_info, msg, 4, end_colno)
+
+
 @pytest.mark.parametrize("query", [
     # At the end
     "$[0]",
@@ -221,6 +235,54 @@ def test_dict_idx(query: str) -> None:
         select_nodes(([{}], 0), query)
 
 
+@pytest.mark.parametrize(("query", "keys"), [
+    # One value
+    ("$['']", [""]),
+
+    # Multiple values
+    ("$['a','b','c']", ["a", "b", "c"]),  # no whitespace
+    ("$['a' ,'b' ,'c']", ["a", "b", "c"]),  # whitespace before commas
+    ("$['a', 'b', 'c']", ["a", "b", "c"]),  # whitespace after commas
+])
+def test_property_array(query: str, keys: list[Any]) -> None:
+    """Test property array."""
+    assert select_nodes(([{}], 0), query) == [({}, key) for key in keys]
+
+
+@pytest.mark.parametrize(("query", "msg", "colno", "end_colno"), [
+    ("$['a' 'b' 'c']", "Missing commas are not allowed", 6, -1),
+    ("$['',]", "Trailing comma is not allowed", 5, 6),
+])
+def test_invalid_property_array(
+    query: str, msg: str, colno: int, end_colno: int,
+) -> None:
+    """Test invalid property array."""
+    with pytest.raises(JSONSyntaxError) as exc_info:
+        select_nodes(([{}], 0), query)
+
+    check_syntax_err(exc_info, msg, colno, end_colno)
+
+
+@pytest.mark.parametrize(("obj", "query", "keys"), [
+    ([], "$[1 2 3]", [1, 2, 3]),
+    ({}, "$['a' 'b' 'c']", ["a", "b", "c"]),
+])
+def test_missing_commas(obj: Any, query: str, keys: list[Any]) -> None:
+    """Test missing commas."""
+    expected: list[_Node] = [(obj, key) for key in keys]
+    assert select_nodes(([obj], 0), query, allow=MISSING_COMMAS) == expected
+
+
+@pytest.mark.parametrize(("obj", "query", "key"), [
+    ([], "$[0,]", 0),
+    ({}, "$['',]", ""),
+])
+def test_trailing_comma(obj: Any, query: str, key: Any) -> None:
+    """Test missing comma."""
+    expected: list[_Node] = [(obj, key)]
+    assert select_nodes(([obj], 0), query, allow=TRAILING_COMMA) == expected
+
+
 @pytest.mark.parametrize(("obj", "keys"), [
     ([1, 2, 3], [0, 1, 2]),
     ({"a": 1, "b": 2, "c": 3}, ["a", "b", "c"]),
@@ -230,27 +292,19 @@ def test_filter(obj: _Target, keys: list[Any]) -> None:
     assert select_nodes(([obj], 0), "$[@]") == [(obj, key) for key in keys]
 
 
-def test_filter_not_allowed() -> None:
-    """Test filter when not allowed."""
-    with pytest.raises(JSONSyntaxError) as exc_info:
-        select_nodes([], "@[@]", relative=True)
+@pytest.mark.parametrize(("obj", "query"), [
+    # No selectors
+    (0, "$"),
 
-    check_syntax_err(exc_info, "Filters are not allowed in relative query", 3)
+    # One selector
+    ([0], "$[0]"),
 
-
-@pytest.mark.parametrize(("obj", "query", "expected"), [
-    # Root
-    (0, "$", ([0], 0)),
-
-    # Key
-    ({}, "$['']", ({}, "")),
-
-    # Multiple levels
-    ([[[0]]], "$[0][0][0]", ([0], 0)),
-])  # type: ignore
-def test_query(obj: _Target, query: str, expected: _Node) -> None:
-    """Test root."""
-    assert select_nodes(([obj], 0), query) == [expected]
+    # Multiple selectors
+    ([[[0]]], "$[0][0][0]"),
+])
+def test_query(obj: _Target, query: str) -> None:
+    """Test query."""
+    assert select_nodes(([obj], 0), query) == [([0], 0)]
 
 
 @pytest.mark.parametrize(("query", "msg", "colno", "end_colno"), [
@@ -271,13 +325,23 @@ def test_invalid_query(
     check_syntax_err(exc_info, msg, colno, end_colno)
 
 
-@pytest.mark.parametrize("query", ["", "$"])
-def test_invalid_relative_query(query: str) -> None:
+@pytest.mark.parametrize(("query", "msg", "colno", "end_colno"), [
+    ("", "Expecting a relative query", 1, -1),
+    ("$", "Expecting a relative query", 1, -1),
+    ("@?", "Optional markers are not allowed in relative query", 2, 3),
+    ("@{@}", "Conditions are not allowed in relative query", 2, -1),
+    ("@[@]", "Filters are not allowed in relative query", 3, -1),
+    ("@[1, 2, 3]", "Arrays are not allowed in relative query", 3, 10),
+    ("@['a', 'b', 'c']", "Arrays are not allowed in relative query", 3, 16),
+])
+def test_invalid_relative_query(
+    query: str, msg: str, colno: int, end_colno: int,
+) -> None:
     """Test invalid relative query."""
     with pytest.raises(JSONSyntaxError) as exc_info:
         select_nodes([], query, relative=True)
 
-    check_syntax_err(exc_info, "Expecting a relative query")
+    check_syntax_err(exc_info, msg, colno, end_colno)
 
 
 @pytest.mark.parametrize("query", [

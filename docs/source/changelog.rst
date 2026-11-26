@@ -19,6 +19,14 @@ jsonyx 2.6.0 (unreleased)
 New Features:
     - Added :json:`"count"` to the :ref:`assert` operation
     - Added support for comparing 2 paths to :ref:`filter`
+    - Allowed selecting multiple indices or properties for
+      :ref:`absolute_query`:
+
+      .. code-block:: diff
+
+          -[{"op": "del", "path": "$.a"}, {"op": "del", "path": "$.b"}]
+          +{"op": "del", "path": "$['a', 'b']"}
+
     - Made ``?`` expand slices like ``{@}`` for :ref:`absolute_query`:
 
       .. code-block:: diff

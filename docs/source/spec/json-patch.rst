@@ -22,8 +22,7 @@ Patch:
 .. code-block:: json
 
     [
-        {"op": "set", "path": "$.baz", "value": "boo"},
-        {"op": "set", "path": "$.hello", "value": ["world"]},
+        {"op": "update", "properties": {"baz": "boo", "hello": ["world"]}},
         {"op": "del", "path": "$.foo"}
     ]
 

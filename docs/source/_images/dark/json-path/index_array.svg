@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="303" height="157">
+   <defs>
+      <style type="text/css">
+    @namespace "http://www.w3.org/2000/svg";
+    .line                 {fill: none; stroke: #D9D9D9; stroke-width: 1;}
+    .bold-line            {stroke: #F5F5F5; shape-rendering: crispEdges; stroke-width: 2;}
+    .thin-line            {stroke: #F0F0F0; shape-rendering: crispEdges}
+    .filled               {fill: #D9D9D9; stroke: none;}
+    text.terminal         {font-family: Verdana, Sans-serif;
+                            font-size: 12px;
+                            fill: #F5F5F5;
+                            font-weight: bold;
+                          }
+    text.nonterminal      {font-family: Verdana, Sans-serif;
+                            font-size: 12px;
+                            fill: #F2F2F2;
+                            font-weight: normal;
+                          }
+    text.regexp           {font-family: Verdana, Sans-serif;
+                            font-size: 12px;
+                            fill: #F0F0F0;
+                            font-weight: normal;
+                          }
+    rect, circle, polygon {fill: #D9D9D9; stroke: #D9D9D9;}
+    rect.terminal         {fill: #000000; stroke: #D9D9D9; stroke-width: 1;}
+    rect.nonterminal      {fill: #000000; stroke: #D9D9D9; stroke-width: 1;}
+    rect.text             {fill: none; stroke: none;}
+    polygon.regexp        {fill: #000000; stroke: #D9D9D9; stroke-width: 1;}
+  </style>
+   </defs>
+   <polygon points="9 105 1 101 1 109"/>
+   <polygon points="17 105 9 101 9 109"/>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+      xlink:href="#integer"
+      xlink:title="integer">
+      <rect x="51" y="91" width="64" height="32"/>
+      <rect x="49" y="89" width="64" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="59" y="109">integer</text>
+   </a>
+   <rect x="51" y="47" width="24" height="32" rx="10"/>
+   <rect x="49"
+         y="45"
+         width="24"
+         height="32"
+         class="terminal"
+         rx="10"/>
+   <text class="terminal" x="59" y="65">,</text>
+   <polygon points="51 19 58 3 164 3 171 19 164 35 58 35"/>
+   <polygon points="49 17 56 1 162 1 169 17 162 33 56 33" class="regexp"/>
+   <text class="regexp" x="64" y="21">whitespace - ''</text>
+   <rect x="231" y="123" width="24" height="32" rx="10"/>
+   <rect x="229"
+         y="121"
+         width="24"
+         height="32"
+         class="terminal"
+         rx="10"/>
+   <text class="terminal" x="239" y="141">,</text>
+   <path class="line"
+         d="m17 105 h2 m20 0 h10 m64 0 h10 m0 0 h56 m-160 0 l20 0 m-1 0 q-9 0 -9 -10 l0 -24 q0 -10 10 -10 m140 44 l20 0 m-20 0 q10 0 10 -10 l0 -24 q0 -10 -10 -10 m-140 0 h10 m24 0 h10 m0 0 h96 m-150 10 l0 -44 q0 -10 10 -10 m150 54 l0 -44 q0 -10 -10 -10 m-140 0 h10 m120 0 h10 m40 88 h10 m0 0 h34 m-64 0 h20 m44 0 h20 m-84 0 q10 0 10 10 m64 0 q0 -10 10 -10 m-74 10 v12 m64 0 v-12 m-64 12 q0 10 10 10 m44 0 q10 0 10 -10 m-54 10 h10 m24 0 h10 m23 -32 h-3"/>
+   <polygon points="293 105 301 101 301 109"/>
+   <polygon points="293 105 285 101 285 109"/>
+</svg>

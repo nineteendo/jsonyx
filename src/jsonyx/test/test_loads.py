@@ -546,10 +546,10 @@ def test_expecting_value(json: ModuleType, s: str) -> None:
     ("[1 2 3]", [1, 2, 3]),
     ('{"a": 1 "b": 2 "c": 3}', {"a": 1, "b": 2, "c": 3}),
 ])
-def test_missing_comma(
+def test_missing_commas(
     json: ModuleType, s: str, expected: dict[str, object] | list[object],
 ) -> None:
-    """Test missing comma."""
+    """Test missing commas."""
     assert json.loads(s, allow=MISSING_COMMAS) == expected
 
 
