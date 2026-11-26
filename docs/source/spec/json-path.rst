@@ -33,7 +33,7 @@ Examples
 .. versionchanged:: 2.6
 
     - Added support for comparing 2 paths.
-    - Made ``?`` equivalent to ``{@}``.
+    - Made ``?`` expand slices like ``{@}``.
     - Switched from tilde escapes to doubling.
 
 .. code-block:: json

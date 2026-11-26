@@ -19,7 +19,7 @@ jsonyx 2.6.0 (unreleased)
 New Features:
     - Added :json:`"count"` to the :ref:`assert` operation
     - Added support for comparing 2 paths to :ref:`filter`
-    - Made ``?`` equivalent to ``{@}`` for :ref:`absolute_query`:
+    - Made ``?`` expand slices like ``{@}`` for :ref:`absolute_query`:
 
       .. code-block:: diff
 
@@ -50,7 +50,9 @@ New Features:
           -{"op": "copy", "mode": "set", "from": "@.a", "to": "@.b"}
           +{"op": "copy", "from": "@.a", "to": "@.b"}
 
-    - Made :python:`check_circular=True` nearly free:
+    - Made :python:`check_circular=False` unnecessary in single threaded
+      performance for :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
+      :func:`jsonyx.dumps` and :func:`jsonyx.write`:
 
       .. code-block:: diff
 
@@ -61,7 +63,7 @@ New Features:
           +>>> json.dump(lst)
            ValueError: Unexpected circular reference
 
-Other Changes:
+Improvements:
     - Sped up :class:`float` encoding
     - Sped up :class:`int` encoding on Python 3.14+
     - Sped up :class:`float` and :class:`int` decoding
@@ -70,6 +72,7 @@ jsonyx 2.4.0 (Oct 6, 2026)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 New Features:
+    - Added free threading support
     - Added ``formatters`` to :class:`jsonyx.Encoder`, :func:`jsonyx.dump`,
       :func:`jsonyx.dumps` and :func:`jsonyx.write`
     - Made :class:`frozendict` serializable by default:
@@ -80,6 +83,16 @@ New Features:
           ->>> json.dump(frozendict({"a": 1, "b": 2, "c": 3}), types={"object": frozendict})
           +>>> json.dump(frozendict({"a": 1, "b": 2, "c": 3}))
            {"a": 1, "b": 2, "c": 3}
+
+    - Combined :ref:`del` and :ref:`insert` operations in more situations for
+      :func:`jsonyx.make_patch` and :program:`jsonyx diff`:
+
+      .. code-block:: diff
+
+           >>> import jsonyx as json
+           >>> json.make_patch([0, 0], [1, 0])
+          -[{'op': 'insert', 'path': '$[0]', 'value': 1}, {'op': 'del', 'path': '$[2]'}]
+          +[{'op': 'set', 'path': '$[0]', 'value': 1}]
 
 Breaking Changes:
     - Allowed overriding serialization in subclasses of :class:`str` (e.g.
@@ -105,9 +118,7 @@ Breaking Changes:
       :class:`jsonyx.Manipulator`
     - Removed :class:`decimal.Decimal` support from :func:`jsonyx.make_patch`
 
-Other Changes:
-    - Added free threading support
-    - Improved diffing algorithm of :func:`jsonyx.make_patch`
+Improvements:
     - Improved error messages
     - Replaced GPL-3.0 license with LGPL-3.0
 
@@ -118,7 +129,7 @@ Bug Fixes:
 jsonyx 2.3.0 (Apr 30, 2025)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Changes:
+Improvements:
     - Sped up :class:`str` encoding
 
 jsonyx 2.2.1 (Apr 21, 2025)
@@ -148,6 +159,7 @@ jsonyx 2.0.0 (Mar 27, 2025)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 New Features:
+    - Added support for Python 3.8 and Python 3.9
     - Added ``commas``, ``indent_leaves``, ``max_indent_level``,
       ``quoted_keys`` and ``types`` to :class:`jsonyx.Encoder`,
       :func:`jsonyx.dump`, :func:`jsonyx.dumps` and :func:`jsonyx.write`
@@ -276,9 +288,8 @@ Breaking Changes:
           +>>> json.loads("1.1", hooks={"float": Decimal})
            Decimal('1.1')
 
-Other Changes:
+Improvements:
     - Added cache for indentations in the JSON encoder
-    - Added support for Python 3.8 and Python 3.9
     - Improved documentation
     - Improved error messages
 
@@ -295,7 +306,7 @@ jsonyx 1.x
 jsonyx 1.2.1 (Aug 3, 2024)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Changes:
+New Features:
     - First conda release
 
 Bug Fixes:
@@ -325,5 +336,5 @@ Breaking Changes:
 jsonyx 1.0.0 (Aug 3, 2024)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Changes:
+New Features:
    - Initial release

@@ -118,7 +118,7 @@ def make_patch(old: Any, new: Any) -> list[_Operation]:
     .. versionadded:: 2.0
     .. versionchanged:: 2.4
 
-        - Improved diffing algorithm.
+        - Combined :ref:`del` and :ref:`insert` operations in more situations.
         - Removed :class:`decimal.Decimal` support.
 
     :param old: the old Python object

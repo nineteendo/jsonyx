@@ -362,6 +362,9 @@ class Encoder:
           :class:`enum.Enum`).
         - Made :class:`frozendict` serializable by default.
 
+    .. versionchanged:: 2.5 Made :python:`check_circular=False` unnecessary in
+        single threaded performance
+
     :param allow: the JSON deviations from :mod:`jsonyx.allow`
     :param check_circular: check for circular references
     :param commas: separate items by commas when indented

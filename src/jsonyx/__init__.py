@@ -311,6 +311,9 @@ def write(
           :class:`enum.Enum`).
         - Made :class:`frozendict` serializable by default.
 
+    .. versionchanged:: 2.5 Made :python:`check_circular=False` unnecessary in
+        single threaded performance
+
     :param obj: a Python object
     :param filename: the path to the JSON file
     :param encoding: the JSON encoding
@@ -424,6 +427,9 @@ def dump(
         - Allowed overriding serialization in subclasses of :class:`str` (e.g.
           :class:`enum.Enum`).
         - Made :class:`frozendict` serializable by default.
+
+    .. versionchanged:: 2.5 Made :python:`check_circular=False` unnecessary in
+        single threaded performance
 
     :param obj: a Python object
     :param fp: an open JSON file
@@ -543,6 +549,9 @@ def dumps(
         - Allowed overriding serialization in subclasses of :class:`str` (e.g.
           :class:`enum.Enum`).
         - Made :class:`frozendict` serializable by default.
+
+    .. versionchanged:: 2.5 Made :python:`check_circular=False` unnecessary in
+        single threaded performance
 
     :param obj: a Python object
     :param allow: the JSON deviations from :mod:`jsonyx.allow`

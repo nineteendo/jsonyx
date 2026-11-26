@@ -194,6 +194,8 @@ Example:
 .. note:: You can't use a :ref:`filter` in the :json:`"from"` and :json:`"to"`
     fields.
 
+.. _del:
+
 del
 ^^^
 
@@ -255,6 +257,8 @@ Example:
     .. code-block:: json
 
         [1, 2, 3, 4, 5, 6]
+
+.. _insert:
 
 insert
 ^^^^^^

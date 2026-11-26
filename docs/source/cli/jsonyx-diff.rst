@@ -5,7 +5,8 @@ jsonyx diff
 
 Compare two JSON files and generate a diff in JSON patch format.
 
-.. versionchanged:: 2.4 Improved diffing algorithm.
+.. versionchanged:: 2.4 Combined :ref:`del` and :ref:`insert` operations in
+    more situations.
 
 Usage
 -----
