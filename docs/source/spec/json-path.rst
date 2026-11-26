@@ -219,7 +219,7 @@ separated by double ampersands.
                   : ) ++ ( `whitespace` '&&' `whitespace` )
 
 index array
-^^^^^^^^^^
+^^^^^^^^^^^
 
 An index array is an ordered collection of one or more integers, separated by
 commas or whitespace with an optional trailing comma.
