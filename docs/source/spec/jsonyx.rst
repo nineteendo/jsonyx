@@ -1,10 +1,10 @@
 jsonyx
 ======
 
-A superset of JSON with less restrictive syntax.
+A superset of JSON with individually configurable syntax extensions.
 
-Example
--------
+Syntax Extensions
+-----------------
 
 .. versionchanged:: 2.0 Added support for unquoted keys.
 

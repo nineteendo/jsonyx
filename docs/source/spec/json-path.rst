@@ -5,6 +5,21 @@ A query language for selecting values from a JSON document.
 
 .. versionadded:: 2.0
 
+Syntax Extensions
+-----------------
+
+.. versionchanged:: 2.6 Added support for missing commas and a trailing comma.
+
+Like for :doc:`/spec/jsonyx` these can be individually configured.
+
+.. code-block:: json
+
+    {
+        "Missing commas": "$[1 2 3]",
+        "Infinity": "$[@ >= -Infinity && @ <= Infinity]",
+        "Trailing comma": "$[0,]"
+    }
+
 Selectors
 ---------
 
@@ -417,7 +432,7 @@ An operator can be ``<=``, ``<``, ``==``, ``!=``, ``>=`` or ``>``.
 whitespace
 ^^^^^^^^^^
 
-Whitespace can be inserted around operators and comma's.
+Whitespace can be inserted around operators and commas.
 
 .. tab:: Diagram
 
