@@ -775,9 +775,11 @@ def load_query_value(s: str, *, allow: Container[str] = NOTHING) -> Any:
     :return: a Python object
 
     Example:
+        .. versionchanged:: 2.6 Replaced tilde escapes with quote doubling.
+
         >>> import jsonyx as json
-        >>> json.load_query_value("'~'foo'")
-        "'foo"
+        >>> json.load_query_value("'foo''bar'")
+        "foo'bar"
 
     .. tip:: Use :class:`jsonyx.Manipulator` directly for better performance.
 

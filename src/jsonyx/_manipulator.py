@@ -775,10 +775,12 @@ class Manipulator:
         :return: a Python object
 
         Example:
+            .. versionchanged:: 2.6 Replaced tilde escapes with quote doubling.
+
             >>> import jsonyx as json
             >>> manipulator = json.Manipulator()
-            >>> manipulator.load_query_value("'~'foo'")
-            "'foo"
+            >>> manipulator..load_query_value("'foo''bar'")
+            "foo'bar"
 
         """
         obj, end = self._scan_query_value(s)
