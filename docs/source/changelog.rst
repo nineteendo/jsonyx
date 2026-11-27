@@ -56,6 +56,7 @@ Breaking Changes:
 
 Bug Fixes:
     - Fixed :issue:`94`: A condition on a sliced dict doesn't raise an error
+    - Fixed :issue:`95`: Arrays can be extended with an iterable
 
 jsonyx 2.5.0 (Oct 28, 2026)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^

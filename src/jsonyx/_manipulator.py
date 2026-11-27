@@ -466,6 +466,12 @@ class Manipulator:
             dst = operation.get("to", "@")
             dst_nodes = self.select_nodes(current_nodes, dst, relative=True)
             for (target, key), value in zip(dst_nodes, values):
+                if not isinstance(value, list):
+                    msg: str = (
+                        f"Value must be list, not {type(value).__name__}"
+                    )
+                    raise TypeError(msg)
+
                 list.extend(target[key], value)  # type: ignore
         elif mode == "insert":
             dst = operation["to"]
@@ -476,7 +482,7 @@ class Manipulator:
                 current_nodes[::-1], dst_nodes[::-1], values[::-1],
             ):
                 if target is current_target:
-                    msg: str = "Can not insert at current object"
+                    msg = "Can not insert at current object"
                     raise ValueError(msg)
 
                 list.insert(target, key, value)  # type: ignore
@@ -486,7 +492,11 @@ class Manipulator:
                 current_nodes, dst, allow_slice=True, relative=True,
             )
             for (target, key), value in zip(dst_nodes, values):
-                target[key] = value
+                if isinstance(key, slice) and not isinstance(value, list):
+                    msg = f"Value must be list, not {type(value).__name__}"
+                    raise TypeError(msg)
+
+                target[key] = value  # type: ignore
         elif mode == "update":
             dst = operation.get("to", "@")
             dst_nodes = self.select_nodes(current_nodes, dst, relative=True)
@@ -509,9 +519,10 @@ class Manipulator:
             elif op == "assert":
                 path = operation.get("path", "$")
                 expr: str = operation["expr"]
+                count: int | None = operation.get("count")
                 current_nodes: list[_Node] = self.select_nodes(node, path)
                 n: int = len(self.apply_filter(current_nodes, expr))
-                if (count := operation.get("count")) is None:
+                if count is None:
                     count = len(current_nodes)
 
                 msg: str = operation.get(
@@ -558,7 +569,12 @@ class Manipulator:
                     del target[key]
             elif op == "extend":
                 path = operation.get("path", "$")
-                values = operation["values"]
+                if not isinstance(values := operation["values"], list):
+                    msg = (
+                        f"Values must be list, not {type(values).__name__}"
+                    )
+                    raise TypeError(msg)
+
                 for target, key in self.select_nodes(node, path):
                     list.extend(target[key], deepcopy(values))  # type: ignore
             elif op == "insert":
@@ -604,7 +620,13 @@ class Manipulator:
                 for target, key in self.select_nodes(
                     node, path, allow_slice=True,
                 ):
-                    target[key] = deepcopy(value)
+                    if isinstance(key, slice) and not isinstance(value, list):
+                        msg = (
+                            f"Value must be list, not {type(value).__name__}"
+                        )
+                        raise TypeError(msg)
+
+                    target[key] = deepcopy(value)  # type: ignore
             elif op == "sort":
                 path = operation.get("path", "$")
                 reverse: bool = operation.get("reverse", False)

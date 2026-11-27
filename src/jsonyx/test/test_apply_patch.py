@@ -138,6 +138,13 @@ def test_extend_copy() -> None:
     assert result is not value
 
 
+@pytest.mark.parametrize("values", ["abc", {"a": 1, "b": 2, "c": 3}])
+def test_extend_iterable(values: Any) -> None:
+    """Test extend with iterable instead of list."""
+    with pytest.raises(TypeError, match="Values must be list, not"):
+        apply_patch([], {"op": "extend", "values": values})
+
+
 @pytest.mark.parametrize(("path", "expected"), [
     # Normal
     ("$[0]", [0, 1, 2, 3]),
@@ -219,6 +226,13 @@ def test_set_copy() -> None:
     result: list[Any] = apply_patch([0], {"op": "set", "value": value})
     assert result == value  # sanity check
     assert result is not value
+
+
+@pytest.mark.parametrize("value", ["abc", {"a": 1, "b": 2, "c": 3}])
+def test_set_slice_iterable(value: Any) -> None:
+    """Test set slice with iterable of list."""
+    with pytest.raises(TypeError, match="Value must be list, not"):
+        apply_patch([], {"op": "set", "path": "$[:]", "value": value})
 
 
 @pytest.mark.parametrize(("obj", "kwargs", "expected"), [

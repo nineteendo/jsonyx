@@ -74,6 +74,17 @@ def test_update(obj: Any, kwargs: _Operation, expected: Any) -> None:
     assert _apply_paste(obj, value, {"mode": "update", **kwargs}) == expected
 
 
+@pytest.mark.parametrize("operation", [
+    {"mode": "extend"},
+    {"mode": "set", "to": "@[:]"},
+])
+@pytest.mark.parametrize("value", ["abc", {"a": 1, "b": 2, "c": 3}])
+def test_iterable(operation: _Operation, value: Any) -> None:
+    """Test iterable instead of list."""
+    with pytest.raises(TypeError, match="Value must be list, not"):
+        _apply_paste([], value, operation)
+
+
 @pytest.mark.parametrize("mode", [
     "assert", "clear", "copy", "del", "move", "reverse", "sort", "swap",
 ])
