@@ -12,20 +12,20 @@ Selectors
 .. table::
     :class: longtable
 
-    ================================ ==========================
-    Selectors                        Description
-    ================================ ==========================
-    ``$``                            The root value
-    ``@``                            The current value
-    ``.<identifier>``                Single object property
-    ``[<strings>]``                  Multiple object properties
-    ``[<numbers>]``                  Array indices
-    ``[<number>:<number>]``          Array slice
-    ``[<number>:<number>:<number>]`` Extended array slice
-    ``[<filter>]``                   Child filter
-    ``{<filter>}``                   Current value filter
-    ``?``                            Shorthand for ``{@}``
-    ================================ ==========================
+    =================================== =============================
+    Selector                            Description
+    =================================== =============================
+    ``$``                               The root value
+    ``@``                               The current value
+    ``.<identifier>``                   A single object property
+    ``[<string>, ...]``                 Multiple object properties
+    ``[<integer>, ...]``                Multiple array indices
+    ``[<integer>:<integer>]``           An array slice
+    ``[<integer>:<integer>:<integer>]`` An extended array slice
+    ``[<filter>]``                      A filter on the child values
+    ``{<filter>}``                      A filter on the current value
+    ``?``                               A shorthand for ``{@}``
+    =================================== =============================
 
 Examples
 --------
