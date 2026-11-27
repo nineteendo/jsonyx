@@ -18,7 +18,7 @@ jsonyx 2.6.0 (unreleased)
 
 New Features:
     - Added :json:`"count"` to the :ref:`assert` operation
-    - Added support for comparing 2 paths to :ref:`filter`
+    - Added support for comparing two relative paths to :ref:`filter`
     - Allowed selecting multiple indices or properties for
       :ref:`absolute_query`:
 
@@ -35,7 +35,7 @@ New Features:
           +{"op": "assert", "path": "$[::2]?", "expr": "@ == true"}
 
 Breaking Changes:
-    - Switched from tilde escapes to quote doubling for
+    - Replaced tilde escapes with quote doubling for
       :ref:`query string <query_string>`:
 
       .. code-block:: diff
@@ -44,7 +44,7 @@ Breaking Changes:
           +$['''~''']
 
 Bug Fixes:
-    - Fixed :issue:`94`: A condition on a sliced dict doesn't raise
+    - Fixed :issue:`94`: A condition on a sliced dict doesn't raise an error
 
 jsonyx 2.5.0 (Oct 28, 2026)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^

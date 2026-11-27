@@ -35,7 +35,7 @@ Examples
     - Added support for comparing 2 paths.
     - Allowed selecting multiple indices.
     - Made ``?`` expand slices like ``{@}``.
-    - Switched from tilde escapes to quote doubling.
+    - Replaced tilde escapes with quote doubling.
 
 .. code-block:: json
 
@@ -196,7 +196,7 @@ filter
 A filter consists of one or more (non-)existence checks / comparisons,
 separated by double ampersands.
 
-.. versionchanged:: 2.6 Added support for comparing 2 paths.
+.. versionchanged:: 2.6 Added support for comparing two relative paths.
 
 .. tab:: Diagram
 
@@ -322,7 +322,7 @@ string
 A string is a sequence of characters, wrapped in single quotes, using quote
 doubling.
 
-.. versionchanged:: 2.6 Switched from tilde escapes to quote doubling.
+.. versionchanged:: 2.6 Replaced tilde escapes with quote doubling.
 
 .. tab:: Diagram
 
