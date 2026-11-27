@@ -55,7 +55,8 @@ Breaking Changes:
           +$['''~''']
 
 Bug Fixes:
-    - Fixed :issue:`94`: A condition on a sliced dict doesn't raise an error
+    - Fixed :issue:`94`: A condition on a sliced empty dict doesn't raise an
+      error
     - Fixed :issue:`95`: Arrays can be extended with an iterable
     - Fixed :issue:`96`: Objects can be updated with an array of key/value
       pairs
