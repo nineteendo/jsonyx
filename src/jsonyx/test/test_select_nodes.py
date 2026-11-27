@@ -329,8 +329,8 @@ def test_invalid_query(
     ("", "Expecting a relative query", 1, -1),
     ("$", "Expecting a relative query", 1, -1),
     ("@?", "Optional markers are not allowed in relative query", 2, 3),
-    ("@{@}", "Conditions are not allowed in relative query", 2, -1),
-    ("@[@]", "Filters are not allowed in relative query", 3, -1),
+    ("@{@}", "Filters are not allowed in relative query", 3, 4),
+    ("@[@]", "Filters are not allowed in relative query", 3, 4),
     ("@[1, 2, 3]", "Arrays are not allowed in relative query", 3, 10),
     ("@['a', 'b', 'c']", "Arrays are not allowed in relative query", 3, 16),
 ])

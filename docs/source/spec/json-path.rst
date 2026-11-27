@@ -241,7 +241,7 @@ commas or whitespace with an optional trailing comma.
     .. container:: highlight
 
         .. productionlist:: json-path-grammar
-            index_array: ( `string` ++ ( ',' | `whitespace` - '' ) ) ','?
+            index_array: ( `integer` ++ ( ',' | `whitespace` - '' ) ) ','?
 
 property array
 ^^^^^^^^^^^^^^

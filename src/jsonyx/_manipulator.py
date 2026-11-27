@@ -86,7 +86,7 @@ def _get_query_targets(
     for target, key in nodes:
         _check_query_key(target, key, allow_slice=not relative)
         if isinstance(key, slice):
-            new_targets.extend(target[key])
+            new_targets.extend(target[key])  # type: ignore
         else:
             new_targets.append(target[key])
 
@@ -210,8 +210,14 @@ class Manipulator:
         return value, end
 
     def _apply_filter(
-        self, nodes: list[_Node], query: str, end: int = 0,
+        self,
+        nodes: list[_Node],
+        query: str,
+        end: int = 0,
+        *,
+        mapping: bool = False,
     ) -> tuple[list[_Node], int]:
+        filter_idx: int = end
         while True:
             if negate_filter := query[end:end + 1] == "!":
                 end += 1
@@ -265,6 +271,10 @@ class Manipulator:
                 end = _skip_whitespace(query, end)
 
             if query[end:end + 2] != "&&":
+                if mapping:
+                    msg = "Filters are not allowed in relative query"
+                    raise _errmsg(msg, query, filter_idx, old_end)
+
                 return nodes, old_end
 
             end = _skip_whitespace(query, end + 2)
@@ -369,14 +379,12 @@ class Manipulator:
                     for target in _get_query_targets(nodes, relative=relative)
                 ]
             elif terminator == "{":
-                if relative:
-                    msg = "Conditions are not allowed in relative query"
-                    raise _errmsg(msg, query, end)
-
                 condition_idx: int = end
                 end += 1
                 nodes = _flatten_nodes(nodes)
-                nodes, end = self._apply_filter(nodes, query, end)
+                nodes, end = self._apply_filter(
+                    nodes, query, end, mapping=relative,
+                )
                 if query[end:end + 1] != "}":
                     msg = "Unterminated condition"
                     raise _errmsg(msg, query, condition_idx, end)
@@ -416,9 +424,6 @@ class Manipulator:
                     nodes = [
                         (target, key) for target in targets for key in keys
                     ]
-                elif relative:
-                    msg = "Filters are not allowed in relative query"
-                    raise _errmsg(msg, query, end)
                 else:
                     nodes = [
                         (target, key)
@@ -429,7 +434,9 @@ class Manipulator:
                             range(len(target))
                         )
                     ]
-                    nodes, end = self._apply_filter(nodes, query, end)
+                    nodes, end = self._apply_filter(
+                        nodes, query, end, mapping=relative,
+                    )
 
                 if query[end:end + 1] != "]":
                     msg = "Unterminated subscript"
