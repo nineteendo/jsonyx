@@ -35,7 +35,7 @@ Output:
 Schema
 ------
 
-https://github.com/nineteendo/jsonyx/blob/2.5.x/json-patch.schema.json
+https://github.com/nineteendo/jsonyx/blob/2.6.x/json-patch.schema.json
 
 Operations
 ----------

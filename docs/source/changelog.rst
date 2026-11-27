@@ -13,8 +13,8 @@ Changelog
 jsonyx 2.x
 ----------
 
-jsonyx 2.6.0 (unreleased)
-^^^^^^^^^^^^^^^^^^^^^^^^^
+jsonyx 2.6.0 (Nov 27, 2026)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 New Features:
     - Added :json:`"count"` to the :ref:`assert` operation
