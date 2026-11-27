@@ -4,6 +4,9 @@ button.copybtn {
 button.copybtn:focus, .tab-set > input:focus + label {
     outline-style: auto;
 }
+.tab-set > label {
+    padding-top: 0.5em;
+}
 [role=main] .tab-content > .table-wrapper.container:first-child {
     margin-top: 0;
 }
