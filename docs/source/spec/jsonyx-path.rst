@@ -1,5 +1,5 @@
-JSON Path
-=========
+jsonyx Path
+===========
 
 A query language for selecting values from a JSON document.
 

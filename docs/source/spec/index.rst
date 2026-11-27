@@ -7,15 +7,15 @@ Specification
 .. table::
     :class: longtable
 
-    ======================= ====================================================================
-    :doc:`/spec/jsonyx`     A superset of JSON with individually configurable syntax extensions.
-    :doc:`/spec/json-patch` A format for describing changes to a JSON document.
-    :doc:`/spec/json-path`  A query language for selecting values from a JSON document.
-    ======================= ====================================================================
+    ========================= ====================================================================
+    :doc:`/spec/jsonyx`       A superset of JSON with individually configurable syntax extensions.
+    :doc:`/spec/jsonyx-patch` A format for describing changes to a JSON document.
+    :doc:`/spec/jsonyx-path`  A query language for selecting values from a JSON document.
+    ========================= ====================================================================
 
 .. toctree::
     :hidden:
 
     jsonyx
-    json-patch
-    json-path
+    jsonyx-patch
+    jsonyx-path

@@ -18,7 +18,7 @@ Positional arguments
 
 .. option:: patch_filename
 
-    The path to the :doc:`JSON patch </spec/json-patch>` file.
+    The path to the :doc:`JSON patch </spec/jsonyx-patch>` file.
 
 .. option:: input_filename
 

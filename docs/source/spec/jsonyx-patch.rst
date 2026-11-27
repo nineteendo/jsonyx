@@ -1,5 +1,5 @@
-JSON Patch
-==========
+jsonyx Patch
+============
 
 A format for describing changes to a JSON document.
 
