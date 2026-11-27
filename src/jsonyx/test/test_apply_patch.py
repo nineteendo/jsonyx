@@ -271,9 +271,17 @@ def test_swap(
 ])
 def test_update(obj: Any, kwargs: _Operation, expected: Any) -> None:
     """Test update."""
-    properties: dict[str, Any] = {"a": 4, "b": 5, "c": 6}
-    patch: _Operation = {"op": "update", "properties": properties, **kwargs}
-    assert apply_patch(obj, patch) == expected
+    assert apply_patch(obj, {
+        "op": "update", "properties": {"a": 4, "b": 5, "c": 6}, **kwargs,
+    }) == expected
+
+
+def test_update_array() -> None:
+    """Test update with array of key/value pairs."""
+    with pytest.raises(TypeError, match="Properties must be dict, not"):
+        apply_patch(
+            {}, {"op": "update", "properties": [("a", 1), ("b", 2), ("c", 3)]},
+        )
 
 
 def test_update_copy() -> None:

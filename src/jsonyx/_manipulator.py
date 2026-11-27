@@ -501,6 +501,10 @@ class Manipulator:
             dst = operation.get("to", "@")
             dst_nodes = self.select_nodes(current_nodes, dst, relative=True)
             for (target, key), value in zip(dst_nodes, values):
+                if not isinstance(value, dict):
+                    msg = f"Value must be dict, not {type(value).__name__}"
+                    raise TypeError(msg)
+
                 dict.update(target[key], value)  # type: ignore
         else:
             msg = "Unknown mode"
@@ -651,10 +655,17 @@ class Manipulator:
                     )
             elif op == "update":
                 path = operation.get("path", "$")
-                properties: dict[Any, Any] = operation["properties"]
+                properties: Any = operation["properties"]
+                if not isinstance(properties, dict):
+                    msg = (
+                        "Properties must be dict, not "
+                        f"{type(properties).__name__}"
+                    )
+                    raise TypeError(msg)
+
                 for target, key in self.select_nodes(node, path):
                     dict.update(  # type: ignore
-                        target[key], deepcopy(properties),
+                        target[key], deepcopy(properties),  # type: ignore
                     )
             else:
                 msg = "Unknown operation"

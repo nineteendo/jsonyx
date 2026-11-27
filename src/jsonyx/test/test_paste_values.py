@@ -74,6 +74,12 @@ def test_update(obj: Any, kwargs: _Operation, expected: Any) -> None:
     assert _apply_paste(obj, value, {"mode": "update", **kwargs}) == expected
 
 
+def test_update_array() -> None:
+    """Test update with array of key/value pairs."""
+    with pytest.raises(TypeError, match="Value must be dict, not"):
+        _apply_paste({}, [("a", 1), ("b", 2), ("c", 3)], {"mode": "update"})
+
+
 @pytest.mark.parametrize("operation", [
     {"mode": "extend"},
     {"mode": "set", "to": "@[:]"},
