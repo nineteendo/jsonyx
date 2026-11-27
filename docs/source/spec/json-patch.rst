@@ -212,11 +212,29 @@ Example:
 
         [1, 2, 3]
 
-    Patch:
+    .. only:: not latex
 
-    .. code-block:: json
+        Patch:
 
-        {"op": "del", "path": "$[1]"}
+    .. tab:: Index
+
+        .. only:: latex
+
+            Patch - index:
+
+        .. code-block:: json
+
+            {"op": "del", "path": "$[1]"}
+
+    .. tab:: Filter
+
+        .. only:: latex
+
+            Patch - filter:
+
+        .. code-block:: json
+
+            {"op": "del", "path": "$[@ == 2]"}
 
     Output:
 
@@ -289,8 +307,6 @@ Example:
     .. code-block:: json
 
         [0, 1, 2, 3]
-
-.. tip:: A :ref:`filter` is more robust than an index.
 
 .. _move:
 
