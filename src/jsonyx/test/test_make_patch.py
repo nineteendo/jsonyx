@@ -36,8 +36,8 @@ def test_string(key: str) -> None:
     # Multiple characters
     "foo'bar",
 ])
-def test_string_doubling(key: str) -> None:
-    """Test string doubling."""
+def test_quote_doubling(key: str) -> None:
+    """Test quote doubling."""
     expected: str = key.replace("'", "''")
     assert make_patch({key: 0}, {}) == [
         {"op": "del", "path": f"$['{expected}']"},

@@ -35,7 +35,7 @@ Examples
     - Added support for comparing 2 paths.
     - Allowed selecting multiple indices.
     - Made ``?`` expand slices like ``{@}``.
-    - Switched from tilde escapes to doubling.
+    - Switched from tilde escapes to quote doubling.
 
 .. code-block:: json
 

@@ -115,8 +115,8 @@ def test_string(s: str) -> None:
     # Multiple characters
     "foo'bar",
 ])
-def test_string_doubling(expected: str) -> None:
-    """Test string doubling."""
+def test_quote_doubling(expected: str) -> None:
+    """Test quote doubling."""
     s: str = expected.replace("'", "''")
     assert load_query_value(f"'{s}'") == expected
 
