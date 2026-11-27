@@ -454,6 +454,47 @@ Example:
 
         [1, 2, 3]
 
+.. _swap:
+
+swap
+^^^^
+
+Swap two values.
+
+.. versionadded:: 2.6.
+
+Fields:
+    - **op** (:ref:`string`) - the operation to perform. Must be
+      :json:`"swap"`.
+    - **path** (:ref:`string`, default: :json:`"$"`) - the
+      :ref:`absolute path <absolute_path>` where the operation is applied.
+    - **left** (:ref:`string`) - the
+      :ref:`relative path <relative_path>` to the left value.
+    - **right** (:ref:`string`) - the
+      :ref:`relative path <relative_path>` to the right value.
+
+Example:
+    Input:
+
+    .. code-block:: json
+
+        {"a": 1, "b": 2}
+
+    Patch:
+
+    .. code-block:: json
+
+        {"op": "swap", "left": "@.a", "right": "@.b"}
+
+    Output:
+
+    .. code-block:: json
+
+        {"a": 2, "b": 1}
+
+.. note:: You can't use a :ref:`filter` in the :json:`"left"` and
+    :json:`"right"` fields.
+
 update
 ^^^^^^
 

@@ -75,7 +75,7 @@ def test_update(obj: Any, kwargs: _Operation, expected: Any) -> None:
 
 
 @pytest.mark.parametrize("mode", [
-    "assert", "clear", "copy", "del", "move", "reverse", "sort",
+    "assert", "clear", "copy", "del", "move", "reverse", "sort", "swap",
 ])
 def test_unknown_mode(mode: str) -> None:
     """Test unknown mode."""

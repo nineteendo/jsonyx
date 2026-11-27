@@ -9,7 +9,7 @@
                 "op": {
                     "description": "The operation to perform.",
                     "type": "string",
-                    "enum": ["append", "assert", "clear", "copy", "del", "extend", "insert", "move", "reverse", "set", "sort", "update"]
+                    "enum": ["append", "assert", "clear", "copy", "del", "extend", "insert", "move", "reverse", "set", "sort", "swap", "update"]
                 },
                 "path": {"description": "An absolute JSON path.", "type": "string", "default": "$"}
             },
@@ -77,6 +77,21 @@
                         "then": {
                             "required": ["to"]
                         }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "op": {"const": "swap"}
+                        },
+                        "required": ["op"]
+                    },
+                    "then": {
+                        "properties": {
+                            "left": {"description": "The relative left JSON path.", "type": "string", "default": "@"},
+                            "right": {"description": "The relative right JSON path.", "type": "string", "default": "@"}
+                        },
+                        "required": ["left", "right"]
                     }
                 },
                 {

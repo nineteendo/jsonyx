@@ -231,6 +231,26 @@ def test_sort(obj: Any, kwargs: _Operation, expected: Any) -> None:
     assert apply_patch(obj, {"op": "sort", **kwargs}) == expected
 
 
+@pytest.mark.parametrize(("obj", "left", "right", "kwargs", "expected"), [
+    # Without path
+    ([1, 2], "@[0]", "@[1]", {}, [2, 1]),
+    ({"a": 1, "b": 2}, "@.a", "@.b", {}, {"a": 2, "b": 1}),
+
+    # With path
+    ([[1, 2]], "@[0]", "@[1]", {"path": "$[0]"}, [[2, 1]]),
+    ([{"a": 1, "b": 2}], "@.a", "@.b", {"path": "$[0]"}, [{"a": 2, "b": 1}]),
+
+    # Allow slice
+    ([[1, 2, 3], [3, 2, 1]], "@[0][:]", "@[1][:]", {}, [[3, 2, 1], [1, 2, 3]]),
+])
+def test_swap(
+    obj: Any, left: str, right: str, kwargs: _Operation, expected: Any,
+) -> None:
+    """Test swap."""
+    patch: _Operation = {"op": "swap", "left": left, "right": right, **kwargs}
+    assert apply_patch(obj, patch) == expected
+
+
 @pytest.mark.parametrize(("obj", "kwargs", "expected"), [
     ({"a": 1, "b": 2, "c": 3}, {}, {"a": 4, "b": 5, "c": 6}),
     ([{"a": 1, "b": 2, "c": 3}], {"path": "$[0]"}, [{"a": 4, "b": 5, "c": 6}]),

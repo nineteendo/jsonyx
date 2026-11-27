@@ -19,6 +19,7 @@ jsonyx 2.6.0 (unreleased)
 New Features:
     - Added :json:`"count"` to the :ref:`assert` operation
     - Added support for comparing two relative paths to :ref:`filter`
+    - Added the :ref:`swap` operation
     - Allowed selecting multiple indices or properties for
       :ref:`absolute_query`:
 

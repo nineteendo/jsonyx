@@ -610,6 +610,23 @@ class Manipulator:
                 reverse: bool = operation.get("reverse", False)
                 for target, key in self.select_nodes(node, path):
                     list.sort(target[key], reverse=reverse)  # type: ignore
+            elif op == "swap":
+                path = operation.get("path", "$")
+                left: str = operation["left"]
+                right: str = operation["right"]
+                current_nodes = self.select_nodes(node, path)
+                left_nodes = self.select_nodes(
+                    current_nodes, left, allow_slice=True, relative=True,
+                )
+                right_nodes: list[_Node] = self.select_nodes(
+                    current_nodes, right, allow_slice=True, relative=True,
+                )
+                for (left_target, left_key), (right_target, right_key) in zip(
+                    left_nodes, right_nodes,
+                ):
+                    left_target[left_key], right_target[right_key] = (
+                        right_target[right_key], left_target[left_key],
+                    )
             elif op == "update":
                 path = operation.get("path", "$")
                 properties: dict[Any, Any] = operation["properties"]
